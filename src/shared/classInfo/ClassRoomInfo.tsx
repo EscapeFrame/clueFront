@@ -1,7 +1,6 @@
 import styles from '@/shared/css/Class/ClassRoomInfo/Info.module.css';
-
 import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
-import ProgressBar from "./ProgressBar";
+import ProgressBar from './ProgressBar';
 import { FaUser } from "react-icons/fa6";
 
 type ClassHeaderProps = {

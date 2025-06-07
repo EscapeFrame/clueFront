@@ -1,7 +1,7 @@
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import Navbar from "@/widgets/Navbar";
-import ClassRoomInfo from '@/features/ClassComponent/classRoomInfo/ClassRoomInfo';
+import ClassRoomInfo from '@/shared/classInfo/ClassRoomInfo';
 import LessonGroup from '@/features/ClassComponent/classRoomInfo/LessonGroup';
 import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
 

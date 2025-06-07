@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 import TabSelector from "./TabSelector";
-import Lesson from "../lesson/Lesson";
-import Exam from "../exam/Exam";
-import { Assignment } from "../assignment/Assignment";
+import Lesson from "../Lesson/Lesson";
+import Exam from "../Exam/Exam";
+import { Assignment } from "../Assignment/Assignment";
 
 const LessonGroup: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<string>(() => {
