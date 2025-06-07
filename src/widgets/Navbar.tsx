@@ -35,8 +35,8 @@ export default function Navbar() {
                                     </div>
                                     <div>
                                         <div>
-                                            <p style={{fontSize:'24px', margin:0, border: '1 solid black'}}>{name}님</p>
-                                            <p style={{fontSize:'12px', margin:0}}>부산소프트웨어마이스터고 {studentNumber}</p>
+                                            <p className={styles.name}>{name}님</p>
+                                            <p className={styles.studentNumber}>부산소프트웨어마이스터고 {studentNumber}</p>
                                         </div>
                                     </div>
                                 </div>

@@ -141,3 +141,14 @@
     background-color: #F3F3F3;
     color: #666666;
 }
+
+.name {
+     font-size:24px;
+     margin:0;
+     border: 1 solid black;
+}
+
+.studentNumber {
+    font-size:12px;
+    margin:0;
+}
