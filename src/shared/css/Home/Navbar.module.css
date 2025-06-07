@@ -152,3 +152,7 @@
     font-size:12px;
     margin:0;
 }
+
+.verticalAlign {
+    vertical-align: middle;
+}

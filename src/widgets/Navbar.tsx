@@ -40,9 +40,9 @@ export default function Navbar() {
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#action3" className={styles.dropdownItem}><AiFillSetting style={{ verticalAlign: 'middle' }} />&nbsp; &nbsp;설정</a>
-                                <a href="#action4" className={styles.dropdownItem}><AiFillQuestionCircle style={{ verticalAlign: 'middle' }} />&nbsp; &nbsp;문의하기</a>
-                                <a href="#action5" className={styles.logout}><MdOutlineLogout style={{ verticalAlign: 'middle' }} />&nbsp; &nbsp;로그아웃</a>
+                                <a href="#action3" className={styles.dropdownItem}><AiFillSetting className={styles.verticalAlign}/>&nbsp; &nbsp;설정</a>
+                                <a href="#action4" className={styles.dropdownItem}><AiFillQuestionCircle className={styles.verticalAlign}/>&nbsp; &nbsp;문의하기</a>
+                                <a href="#action5" className={styles.logout}><MdOutlineLogout className={styles.verticalAlign}/>&nbsp; &nbsp;로그아웃</a>
                             </div>
                         )}
                     </div>
