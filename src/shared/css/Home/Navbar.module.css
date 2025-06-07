@@ -26,7 +26,7 @@
   
 .navbarNav {
     display: flex;
-    position: absolute;
+    position: fixed;
     right: 150px;
     align-items: center;
     height: 100%;
@@ -73,6 +73,7 @@
     color: black;
     padding: 0;
     overflow: hidden;
+    position: relative;
 }
 
 .dropdownButton img {
@@ -90,10 +91,11 @@
     border-radius: 0.25rem;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
     min-width: 16.5rem;
-    z-index: 999;
+    z-index: 1000;
     padding: 0.625rem 0 0 0;
     display: flex;
     flex-direction: column;
+    transform: translateZ(0);
 }
 
 .dropdownItem {
@@ -146,6 +148,12 @@
      font-size:24px;
      margin:0;
      border: 1 solid black;
+}
+
+.items {
+    display:flex;
+     vertical-align:middle;
+     align-items: center;
 }
 
 .studentNumber {

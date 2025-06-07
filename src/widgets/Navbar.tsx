@@ -29,7 +29,7 @@ export default function Navbar() {
                         </button>
                         {dropdownVisible && (
                             <div className={styles.dropdownMenu}>
-                                <div style={{display:'flex', verticalAlign:'middle', alignItems:'center'}}>
+                                <div className={styles.items}>
                                     <div className={styles.myImage}>
                                         <img src={myImage} alt="프로필"></img>
                                     </div>
