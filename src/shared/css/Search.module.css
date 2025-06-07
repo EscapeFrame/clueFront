@@ -1,0 +1,21 @@
+.Search {
+    display: flex;
+    align-items: center;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    padding: .6rem 1rem;
+    width: 20rem;
+}
+  
+.SearchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+}
+  
+.SearchIcon {
+    color: #666;
+    margin-left: .6rem;
+}

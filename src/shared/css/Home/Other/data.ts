@@ -1,4 +1,4 @@
-import { OtherCardType } from '@/features/Main_component/Other/OtherCard'
+import { OtherCardType } from '@/features/MainComponent/Other/OtherCard'
 
 
 const data: OtherCardType[] = [

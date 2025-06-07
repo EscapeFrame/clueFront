@@ -1,0 +1,22 @@
+.TabSelector {
+    padding: 0 10rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.TabButton {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.TabButton.Active {       
+    border-bottom: 2px solid #86C1FF;
+    font-weight: 600;
+    color: #86C1FF;   
+}

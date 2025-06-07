@@ -1,0 +1,43 @@
+.body {
+    padding: 40px 150px;
+    background-color: #fff;
+  }
+  
+  .TitleFont {
+    font-size: 32px;
+    margin-bottom: 24px;
+  }
+  
+  .CardContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .Card {
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    height: 189px;
+    box-sizing: border-box;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .ClassTittle {
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .ClassInform {
+    color: #666;
+    margin: 5px 0;
+    font-size: 18px;
+  }
+  
+  .GoToBtn {
+    color: #578FCA;
+    text-align: right;
+    cursor: pointer;
+  }
+  

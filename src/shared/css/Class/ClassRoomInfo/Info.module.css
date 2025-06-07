@@ -1,0 +1,42 @@
+.TittleFont {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.classInfo{
+    margin-top: 1rem;
+}
+
+.classBody{
+    padding: 0 9rem;
+    background-color: #fff;
+}
+
+.classHeader {
+    padding: 1rem 10rem;
+    background-color: #D6EAFF;
+    width: 100%;
+    height: 12rem;
+    display: flex; 
+    justify-content: space-between; /* 좌우로 배치 */
+    align-items: center;
+    overflow: hidden;         
+    box-sizing: border-box;
+}
+
+.BodyFont {
+    margin: 5px;
+    font-size: 16px;
+    color: #666;
+}
+
+.ProgressFont {
+    color: #111;
+    font-size: 12px;
+}
+
+.img {
+    width: 15rem;
+    height: auto;
+}

@@ -18,7 +18,7 @@ export default function Navbar() {
                 <a href="/" className={styles.brand}><img src="/clue.svg" alt="My Image" className={styles.image} /></a>
                 <nav className={styles.navbarNav}>
                     <ul className={styles.navLinks}>
-                        <li><a href="#action1" className={styles.navItem}>학습실로 가기</a></li>
+                        <li><a href="/class" className={styles.navItem}>학습실로 가기</a></li>
                         <li><a href="#action2" className={styles.navItem}>학습실 추가</a></li>
                         <li><a href="#action3" className={styles.navItem}>수강신청</a></li>
                         <li><a href="#action4" className={styles.navItem}>서비스 소개</a></li>
