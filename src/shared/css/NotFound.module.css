@@ -1,9 +1,12 @@
 .container {
-    text-align: center;
-    vertical-align:middle;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .gotomain{
+    display: flex;
+    justify-content: center;
     text-decoration: none;
     font-size:32px;
     color: black;
