@@ -3,6 +3,7 @@ import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
 import ProgressBar from './ProgressBar';
 import { FaUser } from "react-icons/fa6";
 
+
 type ClassHeaderProps = {
     classId: string;
     title: string;

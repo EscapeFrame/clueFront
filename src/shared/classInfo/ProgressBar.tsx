@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "@/shared/css/Class/ClassRoomInfo/ProgressBar.module.css";
 
+
 interface ProgressBarProps {
   maxProgress: number;
   progress: number;
