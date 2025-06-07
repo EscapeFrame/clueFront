@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import Home from '../pages/home';
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import Login from '../pages/Login'
+import Login from '../pages/login'
 import { UserContext } from '@/entities/Context/LoginContext';
 import { useState } from 'react';
 import NotFound from '@/pages/NotFound';

@@ -5,7 +5,7 @@ import Navbar from '@/widgets/Navbar';
 import NotSubmitted from '@/features/Main_component/Homework/NotSubmitted';
 import Announcement from '@/features/Main_component/Announcement/Announcement';
 import Other from '@/features/Main_component/Other/Other';
-import TeamFooter from '@/features/Main_component/Footer/TeamFooter';
+import TeamFooter from '@/shared/Footer/TeamFooter';
 
 export default function Home() {
     return (

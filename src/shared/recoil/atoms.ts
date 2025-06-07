@@ -5,3 +5,8 @@ export const scheduleState = atom<Subjects | null>({
   key: 'scheduleState',
   default: null,
 });
+
+export const studentNameState = atom<string>({
+  key: 'studentNameState',
+  default: '',
+});
