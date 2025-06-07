@@ -5,6 +5,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import Login from '../pages/Login'
 import { UserContext } from '@/entities/Context/LoginContext';
 import { useState } from 'react';
+import NotFound from '@/pages/NotFound';
 
 const clientId = import.meta.env.VITE_CLIENT_ID;
 
@@ -26,6 +27,7 @@ function App() {
               {/* <Route path="/class" element={<Class />} /> */}
               <Route path="/Login" element={<Login />} />
               {/* <Route path="/auth/callback/google" element={<Google />} /> */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </UserContext.Provider>
         </Router>
