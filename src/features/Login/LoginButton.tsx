@@ -1,10 +1,9 @@
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
 import { useSetRecoilState } from 'recoil';
 import { userState } from '@/shared/recoil/user';
-import { GoogleUser } from '@/shared/types/user';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
+import styles from '@/shared/css/Login/LoginButton.module.css';
+import axios from 'axios';
 
 function LoginButton() {
   const setUser = useSetRecoilState(userState);
@@ -12,53 +11,53 @@ function LoginButton() {
   if (!context) {
     throw new Error("LoginButton은 UserContext.Provider 안에서 사용되어야 합니다.");
   }
-  const { setAccessToken } = context;
+  const { setAccessToken, accessToken } = context;
+
+  const onGoogleLogin = () => {
+    const redirectUri = encodeURIComponent(
+      "http://localhost:3000/login/oauth2/code/google"
+    );
+    window.location.href = `http://localhost:8080/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
+  };
+
+  const onLogout = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/logout",
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: accessToken ? `Bearer ${accessToken}` : "",
+          },
+        }
+      );
+      if (res.status === 200) {
+        localStorage.removeItem("accessToken");
+        setAccessToken(null);
+        setUser({
+          name: '',
+          email: '',
+          picture: '',
+        });
+        window.location.href = "/";
+      }
+    } catch (err) {
+      console.error("로그아웃 중 오류:", err);
+    }
+  };
 
   return (
-    <div>
-      <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          const { credential } = credentialResponse || {};
-          if (credential) {
-            try {
-              const decoded = jwtDecode<GoogleUser>(credential);
-              console.log('Decoded user:', decoded);
-              setUser(decoded);
-              setAccessToken(credential);
-            } catch (error) {
-              console.log('Invalid token');
-            }
-          }
-        }}
-        // onSuccess={async (credentialResponse) => {
-        //   const { credential } = credentialResponse || {};
-        //   if (credential) {
-        //     try {
-        //       const decoded = jwtDecode<GoogleUser>(credential);
-        //       console.log("Decoded user:", decoded);
-        //       setUser(decoded);
-        //       setAccessToken(credential);
-        
-        //       const res = await axios.post(
-        //         "백엔드 주소",
-        //         {},
-        //         {
-        //           headers: {
-        //             Authorization: `Bearer ${credential}`,
-        //           },
-        //         }
-        //       );
-        //       console.log("백엔드 응답:", res.data);
-        //     } catch (error) {
-        //       console.error("로그인 처리 중 오류 발생:", error);
-        //     }
-        //   }
-        // }}
-        
-        onError={() => {
-          console.log('Login Failed');
-        }}
-      />
+    <div className={styles.container}>
+      {!accessToken ? (
+        <button onClick={onGoogleLogin} className={styles.loginButton}>
+          Google 로그인
+        </button>
+      ) : (
+        <button onClick={onLogout} className={styles.logoutButton}>
+          로그아웃
+        </button>
+      )}
     </div>
   );
 }

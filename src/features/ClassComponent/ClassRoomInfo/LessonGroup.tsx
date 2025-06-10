@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import TabSelector from "./TabSelector";
 import Lesson from "../Lesson/Lesson";
 import Exam from "../Exam/Exam";

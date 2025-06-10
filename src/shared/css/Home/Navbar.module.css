@@ -26,7 +26,8 @@
   
 .navbarNav {
     display: flex;
-    position: fixed;
+    position: absolute;
+    /* Fixed로 수정시 고정이 안됨 */
     right: 150px;
     align-items: center;
     height: 100%;
