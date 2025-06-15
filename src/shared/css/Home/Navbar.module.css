@@ -30,7 +30,6 @@
     /* Fixed로 수정시 고정이 안됨 */
     right: 150px;
     align-items: center;
-    height: 100%;
 }
   
 .navLinks {
@@ -39,7 +38,6 @@
     padding: 0;
     list-style: none;
     align-items: center;
-    height: 100%;
 }
   
 .navItem {
