@@ -4,7 +4,7 @@ import ClassRoomInfo from '@/shared/classInfo/ClassRoomInfo';
 import LessonGroup from '@/features/ClassComponent/ClassRoomInfo/LessonGroup';
 import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
 
-export default function ClassRoom() {
+export default function TClassRoom() {
     const { classId } = useParams<{ classId: string }>();
     const [searchParams] = useSearchParams();
     const viewParam = searchParams.get('view') || '수업';

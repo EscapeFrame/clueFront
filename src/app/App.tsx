@@ -7,6 +7,8 @@ import NotFound from '@/pages/NotFound';
 import Home from '../pages/home';
 import MyClass from '@/pages/MyClass';
 import ClassRoom from '@/pages/ClassRoom';
+import TMyclass from '@/pages/TMyclass';
+import TClassRoom from '@/pages/TClassRoom';
 import axios from 'axios';
 
 function App() {
@@ -61,6 +63,8 @@ function App() {
             {/* <Route path="/auth/callback/google" element={<Google />} /> */}
             <Route path="/class" element={<MyClass />} />
             <Route path="/class/:classId" element={<ClassRoom />} />
+            <Route path="/tclass" element={<TMyclass />} />
+            <Route path="/tclass/:classId" element={<TClassRoom />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </UserContext.Provider>
