@@ -1,10 +1,10 @@
 import styles from '@/shared/css/Class/Lesson/LessonCard.module.css';
 import { Lessons } from '@/shared/theme/LessonTheme';
 
-import LessonCard from './LessonCard';
-import InfoBoard from './InfoBoard';
+import LessonCard from './TLessonCard';
+import InfoBoard from './TInfoBoard';
 
-export default function Lesson() {
+export default function TLesson() {
   return (
     <div className={styles.container}>
       <div className={styles.lessonCardWrapper}>

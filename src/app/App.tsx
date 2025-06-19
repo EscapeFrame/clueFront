@@ -48,7 +48,7 @@ function App() {
     }
   }, [accessToken]);
 
-  console.log("액세스토큰 : ",accessToken);
+  console.log("액세스토큰 : ", accessToken);
 
   return (
     <RecoilRoot>
@@ -56,6 +56,7 @@ function App() {
         <UserContext.Provider
           value={{ accessToken, setAccessToken }}
         >
+
           <Routes>
             <Route path="/" element={<Home />} />
             {/* <Route path="/class" element={<Class />} /> */}

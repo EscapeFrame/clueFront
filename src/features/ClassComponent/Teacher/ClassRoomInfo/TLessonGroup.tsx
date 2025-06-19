@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import TabSelector from "../../ClassRoomInfo/TabSelector";
-import Lesson from "../Lesson/Lesson";
+import TLesson from "../Lesson/TLesson";
 import Exam from "../../Exam/Exam";
 import { TAssignment } from "../Assignment/TAssignment";
 
-const LessonGroup: React.FC = () => {
+const TLessonGroup: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<string>(() => {
     return localStorage.getItem("selectedTab") || "Lesson"; // 기본값으로 "Lesson" 설정
   });
@@ -15,14 +15,14 @@ const LessonGroup: React.FC = () => {
   }, [selectedTab]);
 
   return (
-    <>
+    <div>
       <TabSelector selectedTab={selectedTab} onSelectTab={setSelectedTab} />
 
-      {selectedTab === "Lesson" && <Lesson />}
+      {selectedTab === "Lesson" && <TLesson />}
       {selectedTab === "Assignment" && <TAssignment />}
       {selectedTab === "Exam" && <Exam />}
-    </>
+    </div>
   );
 };
 
-export default LessonGroup;
+export default TLessonGroup;

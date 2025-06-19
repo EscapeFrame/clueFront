@@ -1,8 +1,9 @@
 import { useParams, useSearchParams } from 'react-router-dom';
 import Navbar from "@/widgets/Navbar";
 import ClassRoomInfo from '@/shared/classInfo/ClassRoomInfo';
-import LessonGroup from '@/features/ClassComponent/ClassRoomInfo/LessonGroup';
+import TLessonGroup from '@/features/ClassComponent/Teacher/ClassRoomInfo/TLessonGroup';
 import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
+import styles from '@/shared/css/Class/ClassRoom.module.css';
 
 export default function TClassRoom() {
     const { classId } = useParams<{ classId: string }>();
@@ -13,7 +14,7 @@ export default function TClassRoom() {
     if (!post) return <div>404 - 클래스를 찾을 수 없습니다</div>;  // 404 메시지 추가
   
     return (
-        <>
+        <div className={styles.container}>
             <Navbar />
             <ClassRoomInfo 
                 classId={post.classId}
@@ -23,7 +24,7 @@ export default function TClassRoom() {
                 maxProgress={post.maxProgress}
                 progress={post.progress}
             />
-            <LessonGroup />
-        </>
+            <TLessonGroup />
+        </div>
     );
 }

@@ -15,13 +15,18 @@ const LessonGroup: React.FC = () => {
   }, [selectedTab]);
 
   return (
-    <>
+    <div style={{
+      gap: '10px',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      position: 'relative'
+    }}>
       <TabSelector selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-
       {selectedTab === "Lesson" && <Lesson />}
       {selectedTab === "Assignment" && <Assignment />}
       {selectedTab === "Exam" && <Exam />}
-    </>
+    </div>
   );
 };
 

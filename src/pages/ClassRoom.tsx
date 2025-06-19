@@ -13,7 +13,7 @@ export default function ClassRoom() {
     if (!post) return <div>404 - 클래스를 찾을 수 없습니다</div>;  // 404 메시지 추가
   
     return (
-        <>
+        <div style={{minHeight:'100%'}}>
             <Navbar />
             <ClassRoomInfo 
                 classId={post.classId}
@@ -24,6 +24,6 @@ export default function ClassRoom() {
                 progress={post.progress}
             />
             <LessonGroup />
-        </>
+        </div>
     );
 }

@@ -8,7 +8,7 @@ export default function TInquiry() {
   return (
     <>
       <div className={styles.inquiryWrapper}>
-        <h2 className={styles.TitleFont}>최근질문</h2>
+        <h2 className={styles.TitleFont}>최근 질문</h2>
         <ul className={styles.inquiryList}>
           {inquiries.map(({ id, title, studentId, content }) => (
             <li key={id} className={styles.inquiryItem}>
