@@ -26,19 +26,15 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const handleSubmit = async () => {
-    if (files.length === 0) {
-      alert("파일을 먼저 업로드 해주세요.");
-      return;
-    }
 
-    const url = `/class/${data.classId}/${data.lessonId}/upload/`;
+    const url = `/class/${data.classId}/${data.lessonId}/upload/`; //변경예정
     try {
       await fetch(url);
       setSubmitted(true);
-      alert("과제가 제출되었습니다.");
+      alert("등록이 완료되었습니다.");
       setShowUploadModal(false);
     } catch (error) {
-      alert("제출에 실패했습니다.");
+      alert("등록에 실패했습니다.");
       console.error(error);
     }
   };
@@ -87,7 +83,6 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
     setSubmitted(false);
   };
 
-  const statusClass = data.status === "제출됨" ? styles.statusSubmitted : styles.statusNotSubmitted;
 
   const onFileInfoClick = (file: FileInfo) => {
     if (!submitted) {
@@ -95,18 +90,20 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
     }
   };
 
+  const maxpeople = 16;
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
         <h3 className={styles.title}>{data.title}</h3>
-        <span className={`${styles.status} ${statusClass}`}>
-          {data.status}
+        <span className={`${styles.status} ${data.people === maxpeople ? styles.statusNotSubmitted : ''}`}>
+          
         </span>
       </div>
 
       <div className={styles.infoSection}>
         <div className={styles.infoItem}>
-          <IoCalendarClearOutline className={styles.icon} /> 
+          <IoCalendarClearOutline className={styles.icon} />
           마감일: {data.deadline}
         </div>
         <div className={styles.infoItem}>
@@ -119,10 +116,10 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
       {files.length > 0 && (
         <div className={styles.fileSection}>
           {files.map(file => (
-            <div 
+            <div
               key={file.id}
-              className={styles.fileItem} 
-              onClick={() => onFileInfoClick(file)} 
+              className={styles.fileItem}
+              onClick={() => onFileInfoClick(file)}
               style={{ cursor: submitted ? 'default' : 'pointer' }}
             >
               <div className={styles.fileInfo}>
@@ -154,23 +151,31 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
       )}
 
       {/* 제출 / 다시 제출하기 버튼 */}
-      {submitted ? (
-        <button
-          className={`${styles.button} ${styles.resubmitButton}`}
-          onClick={handleResubmitClick}
-        >
-          <MdOutlineFileDownload className={styles.icon} />
-          다시 제출하기
-        </button>
-      ) : (
+      <div className={styles.display}>
+        {submitted ? (
+          <button
+            className={`${styles.button} ${styles.resubmitButton}`}
+            onClick={handleResubmitClick}
+          >
+            <MdOutlineFileDownload className={styles.icon} />
+            내용수정
+          </button>
+        ) : (
+          <button
+            className={`${styles.button} ${styles.submitButton}`}
+            onClick={handleSubmit}
+          >
+            <MdOutlineFileDownload className={styles.icon} />
+            업로드
+          </button>
+        )}
         <button
           className={`${styles.button} ${styles.submitButton}`}
-          onClick={handleSubmit}
+          onClick={() => alert("과제 확인 페이지 이동")}
         >
-          <MdOutlineFileDownload className={styles.icon} />
-          과제 제출하기
+          확인/채점
         </button>
-      )}
+      </div>
 
       {/* 파일 업로드 모달 */}
       {showUploadModal && (
