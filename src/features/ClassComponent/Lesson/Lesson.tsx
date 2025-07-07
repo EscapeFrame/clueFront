@@ -6,12 +6,14 @@ import InfoBoard from './InfoBoard';
 
 export default function Lesson() {
   return (
-    <div className={styles.container}>
-      <div className={styles.lessonCardWrapper}>
-        <LessonCard sections={Lessons} />
-      </div>
-      <div className={styles.infoBoardWrapper}>
-        <InfoBoard />
+    <div className={styles.lessonPage}>
+      <div className={styles.container}>
+        <div className={styles.lessonCardWrapper}>
+          <LessonCard sections={Lessons} />
+        </div>
+        <div className={styles.infoBoardWrapper}>
+          <InfoBoard />
+        </div>
       </div>
     </div>
   );

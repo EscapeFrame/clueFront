@@ -13,6 +13,7 @@ export interface AssignmentData {
   buttonType: 'submit' | 'resubmit';
   classId: string;
   lessonId: string;
+  people: number;
 }
 
 export interface AssignmentGroup {
@@ -36,7 +37,8 @@ export const dummyDataGroups: AssignmentGroup[] = [
         buttonText: "과제 제출하기",
         buttonType: "submit",
         classId: "class01",
-        lessonId: "lesson01"
+        lessonId: "lesson01",
+        people: 16
       },
       {
         id: 2,
@@ -52,7 +54,8 @@ export const dummyDataGroups: AssignmentGroup[] = [
         buttonText: "다시 제출하기",
         buttonType: "resubmit",
         classId: "class01",
-        lessonId: "lesson01"
+        lessonId: "lesson01",
+        people: 16
       },
       {
         id: 3,
@@ -66,7 +69,8 @@ export const dummyDataGroups: AssignmentGroup[] = [
         buttonText: "과제 제출하기",
         buttonType: "submit",
         classId: "class01",
-        lessonId: "lesson01"
+        lessonId: "lesson01",
+        people: 13
       },
       {
         id: 4,
@@ -80,7 +84,8 @@ export const dummyDataGroups: AssignmentGroup[] = [
         buttonText: "과제 제출하기",
         buttonType: "submit",
         classId: "class01",
-        lessonId: "lesson01"
+        lessonId: "lesson01",
+        people: 14
       },
       {
         id: 5,
@@ -96,7 +101,8 @@ export const dummyDataGroups: AssignmentGroup[] = [
         buttonText: "다시 제출하기",
         buttonType: "resubmit",
         classId: "class01",
-        lessonId: "lesson01"
+        lessonId: "lesson01",
+        people: 15
       }
     ],
   },

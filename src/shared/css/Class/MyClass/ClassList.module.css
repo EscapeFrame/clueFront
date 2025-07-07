@@ -2,6 +2,29 @@
     padding: 40px 150px;
     background-color: #fff;
   }
+
+  .ClassCard {
+    display: flex;
+    margin-bottom: 0px;
+  }
+
+  .status {
+    padding: 5px 10px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    border-radius: 12px;
+  }
+
+  .status.active {
+    background-color: #86BEFF;
+    color: black;
+  }
+
+  .status.inactive {
+    background-color: #fff;
+    border: 2px solid #86BEFF;
+    color: black;
+  }
   
   .TitleFont {
     font-size: 32px;
@@ -23,6 +46,14 @@
     background-color: white;
     cursor: pointer;
   }
+
+    .tCard {
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    height: 189px;
+    background-color: white;
+  }
   
   .ClassTittle {
     margin: 10px 0;
@@ -40,4 +71,50 @@
     text-align: right;
     cursor: pointer;
   }
+
+  .view {
+    background-color: #86BEFF;
+    color: black;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    width: 50%;
+    text-align: center;
+    font-size: 21px;
+  }
+
+  .manage {
+    background-color: #fff;
+    border: 2px solid #86BEFF;
+    color: black;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    width: 50%;
+    text-align: center;
+    font-size: 21px;
+  }
   
+  .viewContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .TitleContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -10px;
+  }
+
+  .plus {
+    background-color: #86BEFF;
+    color: black;
+    border-radius: 8px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 18px;
+  }
