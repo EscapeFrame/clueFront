@@ -9,6 +9,7 @@ import MyClass from '@/pages/MyClass';
 import ClassRoom from '@/pages/ClassRoom';
 import TMyclass from '@/pages/TMyclass';
 import TClassRoom from '@/pages/TClassRoom';
+import Oauth2Test from '@/features/Login/text';
 import axios from 'axios';
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
             <Route path="/" element={<Home />} />
             {/* <Route path="/class" element={<Class />} /> */}
             <Route path="/Login" element={<Login />} />
+            <Route path="/Login/test" element={<Oauth2Test />} />
             {/* <Route path="/auth/callback/google" element={<Google />} /> */}
             <Route path="/class" element={<MyClass />} />
             <Route path="/class/:classId" element={<ClassRoom />} />

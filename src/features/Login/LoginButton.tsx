@@ -17,7 +17,7 @@ function LoginButton() {
     const redirectUri = encodeURIComponent(
       "http://localhost:3000/login/oauth2/code/google"
     );
-    window.location.href = `http://localhost:8080/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
+    window.location.href = `http://localhost:10.150.3.224/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
   };
 
   const onLogout = async () => {
