@@ -5,6 +5,7 @@ import { FaRegFile, FaXmark } from "react-icons/fa6";
 import { MdOutlineFileDownload, MdUpload } from "react-icons/md";
 import { AssignmentData } from '@/shared/theme/AssignmentTheme';
 import styles from '@/shared/css/Class/Assignment/Assignment.module.css';
+import { useNavigate } from 'react-router-dom';
 
 interface AssignmentCardProps {
   data: AssignmentData;
@@ -17,6 +18,7 @@ interface FileInfo {
 }
 
 export function TAssignmentCard({ data }: AssignmentCardProps) {
+  const navigate = useNavigate();
   const initialFiles: FileInfo[] = data.hasFile
     ? [{ id: crypto.randomUUID(), name: data.fileName!, size: data.fileSize! }]
     : [];
@@ -27,7 +29,7 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
 
   const handleSubmit = async () => {
 
-    const url = `/class/${data.classId}/${data.lessonId}/upload/`; //변경예정
+    const url = `/class/${data.classId}/${data.homeworkId}/upload/`; //변경예정
     try {
       await fetch(url);
       setSubmitted(true);
@@ -54,7 +56,7 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
       formData.append("file", f);
 
       try {
-        await fetch(`/class/${data.classId}/${data.lessonId}/upload`, {
+        await fetch(`/class/${data.classId}/${data.homeworkId}/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -97,7 +99,7 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
       <div className={styles.header}>
         <h3 className={styles.title}>{data.title}</h3>
         <span className={`${styles.status} ${data.people === maxpeople ? styles.statusNotSubmitted : ''}`}>
-          
+          {data.people === maxpeople ? '전원제출' : ''}
         </span>
       </div>
 
@@ -171,7 +173,9 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
         )}
         <button
           className={`${styles.button} ${styles.submitButton}`}
-          onClick={() => alert("과제 확인 페이지 이동")}
+          onClick={() => {
+            navigate(`/tclass/${data.classId}/homework/${data.homeworkId}`);
+          }}
         >
           확인/채점
         </button>

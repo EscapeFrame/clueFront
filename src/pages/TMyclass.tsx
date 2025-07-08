@@ -5,7 +5,6 @@ import Navbar from "@/widgets/Navbar";
 export default function TMyClass() {
     return (
         <>
-            <Navbar />
             <div className={styles.body}>
                 <div className={styles.TitleContainer}>
                     <h1 className={styles.TitleFont}>나의 학습실</h1>
