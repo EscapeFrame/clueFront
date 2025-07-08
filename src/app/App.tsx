@@ -10,7 +10,9 @@ import ClassRoom from '@/pages/ClassRoom';
 import TMyclass from '@/pages/TMyclass';
 import TClassRoom from '@/pages/TClassRoom';
 import Oauth2Test from '@/features/Login/text';
+import TCheckStudent from '@/features/ClassComponent/Teacher/Assignment/TCheckStudent';
 import axios from 'axios';
+import Navbar from '@/widgets/Navbar';
 
 function App() {
   const [accessToken, setAccessToken] = useState<string | null>(() => {
@@ -57,7 +59,7 @@ function App() {
         <UserContext.Provider
           value={{ accessToken, setAccessToken }}
         >
-
+          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             {/* <Route path="/class" element={<Class />} /> */}
@@ -68,6 +70,7 @@ function App() {
             <Route path="/class/:classId" element={<ClassRoom />} />
             <Route path="/tclass" element={<TMyclass />} />
             <Route path="/tclass/:classId" element={<TClassRoom />} />
+            <Route path="/tclass/:classId/homework/:lessonId" element={<TCheckStudent />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </UserContext.Provider>

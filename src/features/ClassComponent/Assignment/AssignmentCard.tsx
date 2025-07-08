@@ -31,7 +31,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       return;
     }
 
-    const url = `/class/${data.classId}/${data.lessonId}/upload/`;
+    const url = `/class/${data.classId}/${data.homeworkId}/upload/`;
     try {
       await fetch(url);
       setSubmitted(true);
@@ -58,7 +58,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       formData.append("file", f);
 
       try {
-        await fetch(`/class/${data.classId}/${data.lessonId}/upload`, {
+        await fetch(`/class/${data.classId}/${data.homeworkId}/upload`, {
           method: 'POST',
           body: formData,
         });

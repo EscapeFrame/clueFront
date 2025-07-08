@@ -10,7 +10,6 @@ import TeamFooter from '@/features/MainComponent/Footer/TeamFooter';
 export default function Home() {
     return (
         <div className={styles.container}>
-            <Navbar />
             <MySchedule />
             <GoToClass />
             <NotSubmitted/>
