@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styles from '@/shared/css/Class/MyClass/ClassList.module.css';
 
-import { Posts, type Post } from '@/shared/theme/MyClassTheme';
+import { type Post } from '@/shared/theme/MyClassTheme';
 
 export function ClassCard({ classId, title, subject, classRoom, people }: Post) {
   const navigate = useNavigate();

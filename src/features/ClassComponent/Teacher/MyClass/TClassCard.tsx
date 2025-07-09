@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from '@/shared/css/Class/MyClass/ClassList.module.css';
-import { TPosts, type TPost } from '@/shared/theme/Teacher/MyClassTheme';
+import { type TPost } from '@/shared/theme/Teacher/MyClassTheme';
 
 export function TClassCard({ classId, title, subject, classRoom, people, status }: TPost) {
   const navigate = useNavigate();

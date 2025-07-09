@@ -8,9 +8,9 @@ export type OtherCardType = {
 } 
 
 const OtherCard = ({ href, src = '/default.jpeg', homepage }: OtherCardType) => {
-  const handleCardClick = () => {
-    window.open(href, '_blank');
-  };
+  // const handleCardClick = () => {
+  //   window.open(href, '_blank');
+  // };
   return (
     <Link to={href} className={styles.card}>
       <div className={styles.logoBox}>

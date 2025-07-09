@@ -1,5 +1,5 @@
 import styles from '@/shared/css/Home/Homework/HomeworkCard.module.css';
-import { useNavigate } from 'react-router-dom'; // ✅ React Router용 hook
+import { useNavigate } from 'react-router-dom';
 
 interface CardType {
   date: number;
@@ -8,7 +8,7 @@ interface CardType {
 }
 
 export function Card({ date, body, link }: CardType) {
-  const navigate = useNavigate(); // ✅ useRouter 대신 useNavigate 사용
+  const navigate = useNavigate();
   const dayClass =
     date <= 7 ? 'before_week' : date <= 14 ? 'week' : 'after_week';
 
@@ -18,8 +18,8 @@ export function Card({ date, body, link }: CardType) {
       <p>{body}</p>
       <p
         className={styles.homeSchool}
-        onClick={() => navigate(link)} // ✅ 페이지 이동
-        style={{ cursor: 'pointer' }} // UX 향상
+        onClick={() => navigate(link)}
+        style={{ cursor: 'pointer' }}
       >
         제출 &gt;
       </p>

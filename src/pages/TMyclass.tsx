@@ -1,6 +1,5 @@
 import styles from '@/shared/css/Class/MyClass/ClassList.module.css';
 import { TClassList } from '@/features/ClassComponent/Teacher/MyClass/TClassList';
-import Navbar from "@/widgets/Navbar";
 
 export default function TMyClass() {
     return (

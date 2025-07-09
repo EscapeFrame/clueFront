@@ -66,7 +66,7 @@ function Oauth2Test() {
   }, []);
 
   // 3️⃣ 신규 사용자 폼 제출
-  const handleRegisterSubmit = async (e) => {
+  const handleRegisterSubmit = async (e:any) => {
     e.preventDefault();
     try {
       const payload = {

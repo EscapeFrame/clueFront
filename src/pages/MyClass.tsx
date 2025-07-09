@@ -1,6 +1,5 @@
 import styles from '@/shared/css/Class/MyClass/ClassList.module.css';
 import { ClassList } from "@/features/ClassComponent/MyClass/ClassList";
-import Navbar from "@/widgets/Navbar";
 
 export default function MyClass() {
     return (
