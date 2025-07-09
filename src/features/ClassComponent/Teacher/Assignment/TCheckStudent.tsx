@@ -143,16 +143,16 @@ export default function TCheckStudent(props: TCheckStudentProps) {
         {students.map((student) => {
           let statusText = '미제출';
           if (student.score === null && student.submitted === false) statusText = '미제출';
-          if (student.submitted === true) statusText = '제출취소';
+          if (student.submitted === true) statusText = '제출완료';
 
           return (
             <StudentRow key={student.id}>
               <InfoGroup>
-                <StudentCell submitted={statusText === '제출취소'}>{student.studentId.slice(-4)}</StudentCell>
-                <StudentCell submitted={statusText === '제출취소'}>{student.name}</StudentCell>
+                <StudentCell>{student.studentId.slice(-4)}</StudentCell>
+                <StudentCell>{student.name}</StudentCell>
               </InfoGroup>
               <ActionGroup>
-                <StudentCell>{statusText}</StudentCell>
+                <StudentCell submitted={statusText === '제출완료'}>{statusText}</StudentCell>
                 <StudentAction>채점하기</StudentAction>
               </ActionGroup>
             </StudentRow>

@@ -71,7 +71,7 @@ export const Wrap = styled.div`
 `;
 
 export const StudentCell = styled.span<{ submitted?: boolean }>`
-  color: ${({ submitted }) => submitted ? '#1ca661' : 'inherit'};
+  color: ${({ submitted }) => submitted ? '#0AC97B' : 'inherit'};
 `;
 
 export const StudentAction = styled.a<{ right?: boolean }>`
