@@ -8,11 +8,11 @@ export const blue = {
   };
 
 export const gray = {
-    100: 'F3F3F3',
-    200: 'CCCCCC',
-    300: '666666'
+    100: '#F3F3F3',
+    200: '#CCCCCC',
+    300: '#666666'
 }
 
-export const white = 'FFFFFF';
+export const white = '#FFFFFF';
 
-export const black = '111111';
+export const black = '#111111';
