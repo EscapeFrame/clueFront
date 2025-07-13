@@ -1,4 +1,4 @@
-import styles from '@/shared/css/Home/Schedule/TimeTable.module.css';
+import { Table, TdSmaller } from './TimeTable.styles';
 import axios, { AxiosResponse } from 'axios';
 import { useRecoilState } from 'recoil';
 import { scheduleState } from '@/shared/recoil/atoms';
@@ -16,7 +16,7 @@ export interface Subjects {
 const TableRow = ({ period, subjects }: { period: string; subjects: string[] }) => {
   return (
     <tr>
-      <td className={styles.td_smaller}>{period}</td>
+      <TdSmaller>{period}</TdSmaller>
       {subjects.map((subject, index) => (
         <td key={index}>{subject}</td>
       ))}
@@ -73,8 +73,8 @@ const TimeTable = () => {
   }
 
   return (
-    <div className={styles.tableWrapper}>
-      <table className={styles.table}>
+    <div>
+      <Table>
         <thead>
           <tr>
             <th>
@@ -92,7 +92,7 @@ const TimeTable = () => {
             <TableRow key={index} period={period} subjects={getSubjects(index)} />
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };

@@ -1,40 +1,40 @@
-import styles from '@/shared/css/Home/footer/TeamFooter.module.css';
+import { TopContainer, Container, Content, ItemList, Item } from './Footer.styles';
 
 export default function TeamFooter() {
   return (
-    <div className={styles.topContainer}>
-      <div className={styles.container}>
-        <div className={styles.content}>
+    <TopContainer>
+      <Container>
+        <Content>
           <img
             src="/TeamLogo.png"
             alt="샘플"
             width={245}
             height={45}
           />
-          <div className={styles.itemList}>
-            <div className={styles.content}>
-              <p className={styles.item}>김민재</p>
+          <ItemList>
+            <Content>
+              <Item>김민재</Item>
               <p>보안</p>
-            </div>
-            <div className={styles.content}>
-              <p className={styles.item}>김한결</p>
+            </Content>
+            <Content>
+              <Item>김한결</Item>
               <p>백엔드</p>
-            </div>
-            <div className={styles.content}>
-              <p className={styles.item}>공덕현</p>
+            </Content>
+            <Content>
+              <Item>공덕현</Item>
               <p>프론트엔드</p>
-            </div>
-            <div className={styles.content}>
-              <p className={styles.item}>안재민</p>
+            </Content>
+            <Content>
+              <Item>안재민</Item>
               <p>앱</p>
-            </div>
-            <div className={styles.content}>
-              <p className={styles.item}>노유현</p>
+            </Content>
+            <Content>
+              <Item>노유현</Item>
               <p>디자인</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Content>
+          </ItemList>
+        </Content>
+      </Container>
+    </TopContainer>
   );
 }

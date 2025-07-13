@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Subjects } from '@/features/MainComponent/Schedule/TimeTable';
+import { Subjects } from '@/features/MainComponent/Schedule/timeTable/TimeTable';
 
 export const scheduleState = atom<Subjects | null>({
   key: 'scheduleState',
