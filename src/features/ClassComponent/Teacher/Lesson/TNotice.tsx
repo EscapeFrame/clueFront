@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import styles from '@/shared/css/Class/Lesson/Notice.module.css';
+import {
+  TitleFont, NoticeWrapper, NoticeList,
+  NoticeItem, NoticeTitleButton, NoticeDate,
+  ModalOverlay, ModalContent, ModalTitle,
+  ModalDate, ModalDescription, CloseButton,
+} from '@/features/ClassComponent/Lesson/Notice/styles';
 import { Notices } from '@/shared/theme/NoticeTheme';
 
 export default function Notice() {
@@ -14,36 +19,29 @@ export default function Notice() {
   };
 
   return (
-    <div className={styles.noticeWrapper}>
-      <div className={styles.TitleFont}>새소식</div>
-      <ul className={styles.noticeList}>
-        {Notices.map((notice) => (
-          <li key={notice.id} className={styles.noticeItem}>
-            <button
-              type="button"
-              onClick={() => openModal(notice)}
-              className={styles.noticeTitleButton}
-            >
+    <NoticeWrapper>
+      <TitleFont>새소식</TitleFont>
+      <NoticeList>
+        {Notices.map(notice => (
+          <NoticeItem key={notice.id}>
+            <NoticeTitleButton type="button" onClick={() => openModal(notice)}>
               {notice.title}
-            </button>
-            <span className={styles.noticeDate}>{notice.date}</span>
-          </li>
+            </NoticeTitleButton>
+            <NoticeDate>{notice.date}</NoticeDate>
+          </NoticeItem>
         ))}
-      </ul>
+      </NoticeList>
 
       {selectedNotice && (
-        <div className={styles.modalOverlay} onClick={closeModal}>
-          <div
-            className={styles.modalContent}
-            onClick={e => e.stopPropagation()}
-          >
-            <h3 className={styles.modalTitle}>{selectedNotice.title}</h3>
-            <p className={styles.modalDate}>{selectedNotice.date}</p>
-            <p className={styles.modalDescription}>{selectedNotice.description}</p>
-            <button onClick={closeModal} className={styles.closeButton}>닫기</button>
-          </div>
-        </div>
+        <ModalOverlay onClick={closeModal}>
+          <ModalContent onClick={e => e.stopPropagation()}>
+            <ModalTitle>{selectedNotice.title}</ModalTitle>
+            <ModalDate>{selectedNotice.date}</ModalDate>
+            <ModalDescription>{selectedNotice.description}</ModalDescription>
+            <CloseButton onClick={closeModal}>닫기</CloseButton>
+          </ModalContent>
+        </ModalOverlay>
       )}
-    </div>
+    </NoticeWrapper>
   );
 }

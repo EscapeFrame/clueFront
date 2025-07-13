@@ -1,13 +1,13 @@
 import { dummyDataGroups } from '@/shared/theme/AssignmentTheme';
 import { AssignmentGroup } from './AssignmentGroup';
-import styles from '@/shared/css/Class/Assignment/Assignment.module.css';
+import { Container } from '@/features/ClassComponent/Assignment/styles';
 
 export function Assignment() {
   return (
-    <div className={styles.container}>
+    <Container>
       {dummyDataGroups.map((group, index) => (
         <AssignmentGroup key={index} cards={group.cards} />
       ))}
-    </div>
+    </Container>
   );
 }

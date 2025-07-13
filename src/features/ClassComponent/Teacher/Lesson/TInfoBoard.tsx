@@ -1,11 +1,12 @@
 import TInquiry from "./TInquiry";
 import TNotice from "./TNotice";
+import * as S from "@/features/ClassComponent/Lesson/InfoBoard/styles";
 
-export default function InfoBoard() {
-    return (
-        <div style={{ margin: '0', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '12rem',}}>
-            <TNotice />
-            <TInquiry />
-        </div>
-    );
+export default function TInfoBoard() {
+  return (
+    <S.Wrapper>
+      <TNotice />
+      <TInquiry />
+    </S.Wrapper>
+  );
 }
