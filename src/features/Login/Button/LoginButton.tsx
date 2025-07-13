@@ -2,8 +2,8 @@ import { useSetRecoilState } from 'recoil';
 import { userState } from '@/shared/recoil/user';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
-import styles from '@/shared/css/Login/LoginButton.module.css';
 import axios from 'axios';
+import { Container, LoginButtonStyled, LogoutButtonStyled } from './Button.styles';
 
 function LoginButton() {
   const setUser = useSetRecoilState(userState);
@@ -48,17 +48,17 @@ function LoginButton() {
   };
 
   return (
-    <div className={styles.container}>
+    <Container>
       {!accessToken ? (
-        <button onClick={onGoogleLogin} className={styles.loginButton}>
+        <LoginButtonStyled onClick={onGoogleLogin}>
           Google 로그인
-        </button>
+        </LoginButtonStyled>
       ) : (
-        <button onClick={onLogout} className={styles.logoutButton}>
+        <LogoutButtonStyled onClick={onLogout}>
           로그아웃
-        </button>
+        </LogoutButtonStyled>
       )}
-    </div>
+    </Container>
   );
 }
 
