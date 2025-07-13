@@ -1,4 +1,4 @@
-import styles from '@/shared/css/Home/home.module.css';
+import { Container } from './Home.styles';
 import MySchedule from '@/features/MainComponent/Schedule/MySchedule';
 import GoToClass from '@/features/MainComponent/Class/GoToClass';
 import NotSubmitted from '@/features/MainComponent/Homework/NotSubmitted';
@@ -8,13 +8,13 @@ import TeamFooter from '@/features/MainComponent/Footer/TeamFooter';
 
 export default function Home() {
     return (
-        <div className={styles.container}>
+        <Container>
             <MySchedule />
             <GoToClass />
             <NotSubmitted/>
             <Announcement />
             <Other />
             <TeamFooter />
-        </div>
+        </Container>
     );
 }

@@ -1,4 +1,4 @@
-import LoginButton from "@/features/Login/LoginButton";
+import LoginButton from "@/features/Login/Button/LoginButton";
 
 function Login() {
   return (
