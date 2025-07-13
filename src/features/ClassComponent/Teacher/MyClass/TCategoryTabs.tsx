@@ -1,6 +1,7 @@
-import styles from '@/shared/css/Class/MyClass/CategoryTab.module.css';
-import { SearchInput } from '@/widgets/Search';
-import { Setting } from '@/widgets/Setting';
+import React from 'react';
+import { Container, TabList, TabButton } from '@/features/ClassComponent/MyClass/CategoryTabs/styles';
+import { SearchInput } from '@/widgets/Search/Search';
+import { Setting } from '@/widgets/Setting/Setting';
 
 type TCategoryKey = '전체' | '활성화' | '비활성화';
 
@@ -18,22 +19,23 @@ export const TCategoryTabs: React.FC<TCategoryTabsProps> = ({
   const categories: TCategoryKey[] = ['전체', '활성화', '비활성화'];
 
   return (
-    <div className={styles.CategoryTabs}>
-      <div>
-        {categories.map((category) => (
-          <button
+    <Container>
+      <TabList>
+        {categories.map(category => (
+          <TabButton
             key={category}
+            isActive={selected === category}
             onClick={() => onSelect(category)}
-            className={`${styles.TabButton} ${selected === category ? styles.Active : ''}`}
           >
             {category}
-          </button>
+          </TabButton>
         ))}
-      </div>
-      <div className={styles.flex}>
+      </TabList>
+
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         <SearchInput onSearch={onSearch} />
         <Setting />
       </div>
-    </div>
+    </Container>
   );
 };

@@ -4,7 +4,7 @@ import { FaChevronDown } from "react-icons/fa";
 import { FaChevronUp } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { FaPencilAlt } from "react-icons/fa";
-import TAddContent from './TAddContent';
+import TAddContent from '@/features/ClassComponent/Teacher/Lesson/AddContent/TAddContent';
 
 export interface OrientationItem {
   id: number;
@@ -16,7 +16,6 @@ export interface OrientationItem {
 export interface OrientationSection {
   id: string;
   title: string;
-  count: number;
   items: OrientationItem[];
 }
 
@@ -128,7 +127,6 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
                 </div>
               )}
             </div>
-            <span className={styles.count}>{section.count}개</span>
           </button>
 
           {section.isExpanded && (

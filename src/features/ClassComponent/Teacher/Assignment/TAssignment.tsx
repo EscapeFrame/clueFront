@@ -1,13 +1,14 @@
+/** @jsxImportSource @emotion/react */
 import { dummyDataGroups } from '@/shared/theme/AssignmentTheme';
 import { TAssignmentGroup } from './TAssignmentGroup';
-import styles from '@/shared/css/Class/Assignment/Assignment.module.css';
+import * as S from '@/features/ClassComponent/Assignment/styles';
 
 export function TAssignment() {
   return (
-    <div className={styles.container}>
+    <S.Container>
       {dummyDataGroups.map((group, index) => (
         <TAssignmentGroup key={index} cards={group.cards} />
       ))}
-    </div>
+    </S.Container>
   );
 }

@@ -1,20 +1,22 @@
-import styles from '@/shared/css/Class/Lesson/LessonCard.module.css';
-import { Lessons } from '@/shared/theme/LessonTheme';
-
-import LessonCard from './LessonCard';
-import InfoBoard from './InfoBoard';
+import {
+  LessonPageContainer,ContentContainer,
+  LessonCardWrapper,InfoBoardWrapper,
+} from "./styles";
+import { Lessons } from "@/shared/theme/LessonTheme";
+import LessonCard from "./LessonCard";
+import InfoBoard from "./InfoBoard/InfoBoard";
 
 export default function Lesson() {
   return (
-    <div className={styles.lessonPage}>
-      <div className={styles.container}>
-        <div className={styles.lessonCardWrapper}>
+    <LessonPageContainer>
+      <ContentContainer>
+        <LessonCardWrapper>
           <LessonCard sections={Lessons} />
-        </div>
-        <div className={styles.infoBoardWrapper}>
+        </LessonCardWrapper>
+        <InfoBoardWrapper>
           <InfoBoard />
-        </div>
-      </div>
-    </div>
+        </InfoBoardWrapper>
+      </ContentContainer>
+    </LessonPageContainer>
   );
 }

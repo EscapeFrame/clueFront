@@ -4,9 +4,16 @@ import { LuClock4 } from "react-icons/lu";
 import { FaRegFile, FaXmark } from "react-icons/fa6";
 import { MdOutlineFileDownload, MdUpload } from "react-icons/md";
 import { AssignmentData } from '@/shared/theme/AssignmentTheme';
-import styles from '@/shared/css/Class/Assignment/Assignment.module.css';
 import { useParams } from 'react-router-dom';
 import TCheckStudent from './TCheckStudent';
+
+import {
+  Card, Header, Title, StatusNotSubmitted, SubmitButton,
+  InfoSection, InfoItem, Icon,
+  FileInfo, FileItem, FileName, FileSection, FileSize,
+  RemoveButton, ResubmitButton, UploadButton,
+  ModalOverlay, ModalContent
+} from '@/features/ClassComponent/Assignment/styles';
 
 interface AssignmentCardProps {
   data: AssignmentData;
@@ -31,8 +38,7 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
   const [showCheck, setShowCheck] = useState(false);
 
   const handleSubmit = async () => {
-
-    const url = `/class/${data.classId}/${data.homeworkId}/upload/`; //변경예정
+    const url = `/class/${data.classId}/${data.homeworkId}/upload/`;
     try {
       await fetch(url);
       setSubmitted(true);
@@ -83,11 +89,7 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
 
   const openUploadModal = () => setShowUploadModal(true);
   const closeUploadModal = () => setShowUploadModal(false);
-
-  const handleResubmitClick = () => {
-    setSubmitted(false);
-  };
-
+  const handleResubmitClick = () => setSubmitted(false);
 
   const onFileInfoClick = (file: FileInfo) => {
     if (!submitted) {
@@ -98,109 +100,90 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
   const maxpeople = 16;
 
   return (
-    <div className={styles.card}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>{data.title}</h3>
-        <span className={`${styles.status} ${data.people === maxpeople ? styles.statusNotSubmitted : ''}`}>
-          {data.people === maxpeople ? '전원제출' : ''}
-        </span>
-      </div>
+    <Card>
+      <Header>
+        <Title>{data.title}</Title>
+        {data.people === maxpeople && (
+          <StatusNotSubmitted>전원제출</StatusNotSubmitted>
+        )}
+      </Header>
 
-      <div className={styles.infoSection}>
-        <div className={styles.infoItem}>
-          <IoCalendarClearOutline className={styles.icon} />
-          마감일: {data.deadline}
-        </div>
-        <div className={styles.infoItem}>
-          <LuClock4 className={styles.icon} />
-          <span className={data.timeLeftColor}>{data.timeLeft}</span>
-        </div>
-      </div>
+      <InfoSection>
+        <InfoItem>
+          <Icon><IoCalendarClearOutline /></Icon> 마감일: {data.deadline}
+        </InfoItem>
+        <InfoItem>
+          <Icon><LuClock4 /></Icon>
+          <span style={{ color: data.timeLeftColor === 'red' ? '#fa5252' : '#20c997' }}>
+            {data.timeLeft}
+          </span>
+        </InfoItem>
+      </InfoSection>
 
-      {/* 파일 표시 영역 (제출 안 했으면 파일 목록과 업로드 버튼 모두 보임) */}
       {files.length > 0 && (
-        <div className={styles.fileSection}>
+        <FileSection>
           {files.map(file => (
-            <div
+            <FileItem
               key={file.id}
-              className={styles.fileItem}
               onClick={() => onFileInfoClick(file)}
               style={{ cursor: submitted ? 'default' : 'pointer' }}
             >
-              <div className={styles.fileInfo}>
-                <FaRegFile className={styles.icon} />
+              <FileInfo>
+                <Icon><FaRegFile /></Icon>
                 <div>
-                  <div className={styles.fileName}>{file.name}</div>
-                  <div className={styles.fileSize}>{file.size}</div>
+                  <FileName>{file.name}</FileName>
+                  <FileSize>{file.size}</FileSize>
                 </div>
-              </div>
+              </FileInfo>
               {!submitted && (
-                <FaXmark
-                  className={`${styles.icon} ${styles.removeButton}`}
+                <RemoveButton
                   onClick={e => {
                     e.stopPropagation();
                     handleFileRemove(file.id);
                   }}
                 />
               )}
-            </div>
+            </FileItem>
           ))}
-        </div>
+        </FileSection>
       )}
 
-      {/* 제출 안했으면 업로드 버튼도 계속 보여줌 */}
       {!submitted && (
-        <button className={styles.uploadButton} onClick={openUploadModal}>
-          <MdUpload className={styles.icon} /> 파일 업로드
-        </button>
+        <UploadButton onClick={openUploadModal}>
+          <MdUpload /> 파일 업로드
+        </UploadButton>
       )}
 
-      {/* 제출 / 다시 제출하기 버튼 */}
-      <div className={styles.display}>
+      <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
         {submitted ? (
-          <button
-            className={`${styles.button} ${styles.resubmitButton}`}
-            onClick={handleResubmitClick}
-          >
-            <MdOutlineFileDownload className={styles.icon} />
-            내용수정
-          </button>
+          <ResubmitButton onClick={handleResubmitClick}>
+            <MdOutlineFileDownload /> 내용수정
+          </ResubmitButton>
         ) : (
-          <button
-            className={`${styles.button} ${styles.submitButton}`}
-            onClick={handleSubmit}
-          >
-            <MdOutlineFileDownload className={styles.icon} />
-            업로드
-          </button>
+          <SubmitButton onClick={handleSubmit}>
+            <MdOutlineFileDownload /> 업로드
+          </SubmitButton>
         )}
-        <button
-          className={`${styles.button} ${styles.submitButton}`}
-          onClick={onCheck}
-        >
-          채점하기
-        </button>
+        <SubmitButton onClick={onCheck}>채점하기</SubmitButton>
       </div>
+
       {showCheck && (
         <div style={{ marginTop: 24, background: '#f8f9fa', borderRadius: 8, padding: 16 }}>
           <TCheckStudent classId={classId} lessonId={data.id} />
         </div>
       )}
 
-      {/* 파일 업로드 모달 */}
       {showUploadModal && (
-        <div className={styles.modalOverlay} onClick={closeUploadModal}>
-          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-            <p className={styles.title}>파일 업로드</p>
+        <ModalOverlay onClick={closeUploadModal}>
+          <ModalContent onClick={e => e.stopPropagation()}>
+            <Title>파일 업로드</Title>
             <input type="file" multiple onChange={handleFileUpload} style={{ marginTop: '1rem' }} />
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-              <button className={`${styles.button} ${styles.resubmitButton}`} onClick={closeUploadModal}>
-                취소
-              </button>
+              <ResubmitButton onClick={closeUploadModal}>취소</ResubmitButton>
             </div>
-          </div>
-        </div>
+          </ModalContent>
+        </ModalOverlay>
       )}
-    </div>
+    </Card>
   );
 }

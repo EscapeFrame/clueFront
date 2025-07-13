@@ -5,14 +5,14 @@ import { UserContext } from '@/entities/Context/LoginContext';
 import { useState, useEffect } from 'react';
 import NotFound from '@/pages/NotFound';
 import Home from '../pages/home';
-import MyClass from '@/pages/MyClass';
-import ClassRoom from '@/pages/ClassRoom';
-import TMyclass from '@/pages/TMyclass';
-import TClassRoom from '@/pages/TClassRoom';
+import MyClass from '@/pages/MyClass/MyClass';
+import ClassRoom from '@/pages/ClassRoom/ClassRoom';
+import TMyclass from '@/pages/TMyClass/TMyclass';
+import TClassRoom from '@/pages/TClassRoom/TClassRoom';
 import Oauth2Test from '@/features/Login/text';
 import TCheckStudent from '@/features/ClassComponent/Teacher/Assignment/TCheckStudent';
 import axios from 'axios';
-import Navbar from '@/widgets/Navbar';
+import Navbar from '@/widgets/Navbar/Navbar';
 
 function App() {
   const [accessToken, setAccessToken] = useState<string | null>(() => {

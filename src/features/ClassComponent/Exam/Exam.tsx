@@ -1,8 +1,9 @@
-import styles from '@/shared/css/Class/Exam/Exam.module.css';
+import { Container } from '@/features/ClassComponent/Assignment/styles';
 
 export default function Exam() {
     return (
-        <div className={styles.container}>
-        </div>
+         <Container>
+            <p>현재 존재하는 시험이 없습니다.</p>
+         </Container>
     );
 }

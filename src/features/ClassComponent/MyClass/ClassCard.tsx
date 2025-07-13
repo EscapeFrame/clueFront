@@ -1,32 +1,23 @@
 import { useNavigate } from 'react-router-dom';
-import styles from '@/shared/css/Class/MyClass/ClassList.module.css';
-
-import { type Post } from '@/shared/theme/MyClassTheme';
+import type { Post } from '@/shared/theme/MyClassTheme';
+import * as S from '@/features/ClassComponent/MyClass/styles';
 
 export function ClassCard({ classId, title, subject, classRoom, people }: Post) {
   const navigate = useNavigate();
 
   return (
-    <div
-        className={styles.Card}
-        style={{ cursor: 'pointer' }}
-        onClick={() => navigate(`/class/${classId}`)}
+    <S.CardWrapper onClick={() => navigate(`/class/${classId}`)}>
+      <S.ClassTitle>{title}</S.ClassTitle>
+      <S.ClassInfo>{subject} | {classRoom}</S.ClassInfo>
+      <S.ClassInfo>학생 {people}명</S.ClassInfo>
+      <S.GoToBtn
+        onClick={e => {
+          e.stopPropagation();
+          navigate(`/class/${classId}?view=과제`);
+        }}
       >
-        <h2 className={styles.ClassTittle}>{title}</h2>
-        <p className={styles.ClassInform}>
-          {subject} | {classRoom}
-        </p>
-        <p className={styles.ClassInform}>학생 {people}명</p>
-        <p
-          className={styles.GoToBtn}
-          onClick={e => {
-            e.stopPropagation();
-            navigate(`/class/${classId}?view=과제`);
-          }}
-          style={{ cursor: 'pointer' }}
-        >
-          과제보기 &gt;
-        </p>
-      </div>
+        과제보기 &gt;
+      </S.GoToBtn>
+    </S.CardWrapper>
   );
 }

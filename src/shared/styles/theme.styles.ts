@@ -9,8 +9,11 @@ export const blue = {
 
 export const gray = {
     100: '#F3F3F3',
+    150: '#F5F5F5',
     200: '#CCCCCC',
-    300: '#666666'
+    250: '#DDDDDD',
+    300: '#666666',
+    400: '#999999'
 }
 
 export const white = '#FFFFFF';

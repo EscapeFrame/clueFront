@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import styles from '@/shared/css/Class/Lesson/LessonCard.module.css';
-
-import { FaChevronDown } from "react-icons/fa";
-import { FaChevronUp } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa6";
+import {
+  Body, LessonSection, SectionHeader,
+  SectionTitleWrapper, SectionTitle, SectionItems, LessonItem,
+  StatusIndicator,CheckIcon,LessonButton,
+} from './styles';
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 export interface OrientationItem {
   id: number;
@@ -15,7 +16,6 @@ export interface OrientationItem {
 export interface OrientationSection {
   id: string;
   title: string;
-  count: number;
   items: OrientationItem[];
 }
 
@@ -24,7 +24,6 @@ interface LessonCardProps {
 }
 
 const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) => {
-  // 내부에서 펼침 상태와 읽음 상태 관리 위해 복사본 상태 생성해야됨!
   const [sections, setSections] = useState(
     initialSections.map(section => ({ ...section, isExpanded: false }))
   );
@@ -55,50 +54,40 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
 
     if (url) {
       alert(`${url} 페이지로 이동`);
-      /* 나중에 url 연결...! */
+      // 실제 페이지 이동은 라우터 등으로 처리 예정
     }
   };
 
   return (
-    <div className={styles.body}>
+    <Body>
       {sections.map(section => (
-        <div key={section.id} className={styles.lessonSection}>
-          <button
-            onClick={() => toggleSection(section.id)}
-            className={styles.sectionHeader}
-          >
-            <div className={styles.sectionTitleWrapper}>
-              {section.isExpanded ? (
-                <FaChevronUp />
-              ) : (
-                <FaChevronDown />
-              )}
-              <h2 className={styles.sectionTitle}>{section.title}</h2>
-            </div>
-            <span className={styles.count}>{section.count}개</span>
-          </button>
+        <LessonSection key={section.id}>
+          <SectionHeader onClick={() => toggleSection(section.id)}>
+            <SectionTitleWrapper>
+              {section.isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+              <SectionTitle>{section.title}</SectionTitle>
+            </SectionTitleWrapper>
+          </SectionHeader>
 
           {section.isExpanded && (
-            <div className={styles.sectionItems}>
+            <SectionItems>
               {section.items.map(item => (
-                <div key={item.id} className={styles.lessonItem}>
-                <div className={`${styles.statusIndicator} ${item.isRead ? styles.read : ''}`}>
-                    {item.isRead && <FaCheck className={styles.checkIcon} />}
-                </div>
-
-                <button
-                  onClick={() => handleLessonClick(section.id, item.id, item.url)}
-                  className={styles.lessonButton}
-                >
+                <LessonItem key={item.id}>
+                  <StatusIndicator isRead={item.isRead}>
+                    {item.isRead && <CheckIcon />}
+                  </StatusIndicator>
+                  <LessonButton
+                    onClick={() => handleLessonClick(section.id, item.id, item.url)}
+                  >
                     {item.title}
-                  </button>
-                </div>
+                  </LessonButton>
+                </LessonItem>
               ))}
-            </div>
+            </SectionItems>
           )}
-        </div>
+        </LessonSection>
       ))}
-    </div>
+    </Body>
   );
 };
 
