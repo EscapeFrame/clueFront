@@ -1,4 +1,4 @@
-import styles from '@/shared/css/Home/Class/Card.module.css'
+import { HomeSchool, Container } from "./Card.styles";
 
 interface CardProps {
   tittle: string;
@@ -9,11 +9,11 @@ interface CardProps {
 
 export function Card({ tittle, subject, classRoom, people }: CardProps) {
   return (
-    <div className={styles.container}>
+    <Container>
         <h2>{tittle}</h2>
         <p>{subject} | {classRoom}</p>
         <p>학생{people}명</p>
-        <p className={styles.homeSchool}>과제보기 &gt;</p>
-    </div>
+        <HomeSchool>과제보기 &gt;</HomeSchool>
+    </Container>
   );
 }
