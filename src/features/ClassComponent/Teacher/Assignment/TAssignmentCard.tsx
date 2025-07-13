@@ -5,10 +5,12 @@ import { FaRegFile, FaXmark } from "react-icons/fa6";
 import { MdOutlineFileDownload, MdUpload } from "react-icons/md";
 import { AssignmentData } from '@/shared/theme/AssignmentTheme';
 import styles from '@/shared/css/Class/Assignment/Assignment.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import TCheckStudent from './TCheckStudent';
 
 interface AssignmentCardProps {
   data: AssignmentData;
+  onCheck?: () => void;
 }
 
 interface FileInfo {
@@ -17,8 +19,8 @@ interface FileInfo {
   size: string;
 }
 
-export function TAssignmentCard({ data }: AssignmentCardProps) {
-  const navigate = useNavigate();
+export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
+  const { classId } = useParams<{ classId: string }>();
   const initialFiles: FileInfo[] = data.hasFile
     ? [{ id: crypto.randomUUID(), name: data.fileName!, size: data.fileSize! }]
     : [];
@@ -26,6 +28,7 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
   const [submitted, setSubmitted] = useState(data.buttonType === "resubmit");
   const [files, setFiles] = useState<FileInfo[]>(initialFiles);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showCheck, setShowCheck] = useState(false);
 
   const handleSubmit = async () => {
 
@@ -173,13 +176,16 @@ export function TAssignmentCard({ data }: AssignmentCardProps) {
         )}
         <button
           className={`${styles.button} ${styles.submitButton}`}
-          onClick={() => {
-            navigate(`/tclass/${data.classId}/homework/${data.homeworkId}`);
-          }}
+          onClick={onCheck}
         >
-          확인/채점
+          채점하기
         </button>
       </div>
+      {showCheck && (
+        <div style={{ marginTop: 24, background: '#f8f9fa', borderRadius: 8, padding: 16 }}>
+          <TCheckStudent classId={classId} lessonId={data.id} />
+        </div>
+      )}
 
       {/* 파일 업로드 모달 */}
       {showUploadModal && (

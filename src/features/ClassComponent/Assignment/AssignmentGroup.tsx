@@ -1,4 +1,3 @@
-import React from 'react';
 import { AssignmentGroup as AssignmentGroupType } from '@/shared/theme/AssignmentTheme';
 import { AssignmentCard } from './AssignmentCard';
 import styles from '@/shared/css/Class/Assignment/Assignment.module.css';

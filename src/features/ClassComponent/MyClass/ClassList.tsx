@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styles from '@/shared/css/Class/MyClass/ClassList.module.css';
-import Navbar from "@/widgets/Navbar";
 import { useNavigate } from "react-router-dom";
 import { CategoryTabs } from "./CategoryTabs";
 import { ClassCard } from "./ClassCard";

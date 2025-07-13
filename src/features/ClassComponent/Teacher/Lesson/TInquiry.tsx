@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from '@/shared/css/Class/Lesson/Inquiry.module.css';
 import { inquiries, InquiryItem } from '@/shared/theme/InquiryTheme';
 

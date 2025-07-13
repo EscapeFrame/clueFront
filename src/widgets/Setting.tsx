@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styles from '@/shared/css/Setting.module.css';
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 
