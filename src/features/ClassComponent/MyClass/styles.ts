@@ -4,7 +4,7 @@ import { fonts } from '@/shared/styles/font.styles';
 export const CardWrapper = styled.div`
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid ${gray[200]};
   height: 189px;
   box-sizing: border-box;
   background-color: ${white};

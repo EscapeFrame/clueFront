@@ -1,49 +1,35 @@
 import { useState } from 'react';
-import styles from '@/shared/css/Class/Lesson/Inquiry.module.css';
 import { inquiries, InquiryItem } from '@/shared/theme/InquiryTheme';
+import * as S from '@/features/ClassComponent/Lesson/Inquiry/styles';
 
-export default function TInquiry() {
+export default function Inquiry() {
   const [modalContent, setModalContent] = useState<InquiryItem | null>(null);
 
   return (
     <>
-      <div className={styles.inquiryWrapper}>
-        <h2 className={styles.TitleFont}>최근 질문</h2>
-        <ul className={styles.inquiryList}>
+      <S.InquiryWrapper>
+        <S.TitleFont>문의사항</S.TitleFont>
+        <S.InquiryList>
           {inquiries.map(({ id, title, studentId, content }) => (
-            <li key={id} className={styles.inquiryItem}>
-              <button
-                className={styles.inquiryTitleButton}
-                onClick={() => setModalContent({ id, title, studentId, content })}
-              >
+            <S.InquiryItem key={id}>
+              <S.InquiryTitleButton onClick={() => setModalContent({ id, title, studentId, content })}>
                 {title}
-              </button>
-              <span className={styles.studentId}>{studentId}</span>
-            </li>
+              </S.InquiryTitleButton>
+              <S.StudentId>{studentId}</S.StudentId>
+            </S.InquiryItem>
           ))}
-        </ul>
-      </div>
+        </S.InquiryList>
+      </S.InquiryWrapper>
 
       {modalContent && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => setModalContent(null)}
-        >
-          <div
-            className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className={styles.modalTitle}>{modalContent.title}</h3>
-            <p className={styles.modalStudentId}>{modalContent.studentId}</p>
-            <p className={styles.modalDescription}>{modalContent.content}</p>
-            <button
-              className={styles.closeButton}
-              onClick={() => setModalContent(null)}
-            >
-              닫기
-            </button>
-          </div>
-        </div>
+        <S.ModalOverlay onClick={() => setModalContent(null)}>
+          <S.ModalContent onClick={(e) => e.stopPropagation()}>
+            <S.ModalTitle>{modalContent.title}</S.ModalTitle>
+            <S.ModalStudentId>{modalContent.studentId}</S.ModalStudentId>
+            <S.ModalDescription>{modalContent.content}</S.ModalDescription>
+            <S.CloseButton onClick={() => setModalContent(null)}>닫기</S.CloseButton>
+          </S.ModalContent>
+        </S.ModalOverlay>
       )}
     </>
   );

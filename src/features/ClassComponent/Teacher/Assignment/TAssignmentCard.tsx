@@ -114,7 +114,7 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
         </InfoItem>
         <InfoItem>
           <Icon><LuClock4 /></Icon>
-          <span style={{ color: data.timeLeftColor === 'red' ? '#fa5252' : '#20c997' }}>
+          <span style={{ color: data.timeLeftColor === 'red' ? '#fa5252' : '#578FCA' }}>
             {data.timeLeft}
           </span>
         </InfoItem>
