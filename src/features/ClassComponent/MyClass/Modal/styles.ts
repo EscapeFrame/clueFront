@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { fonts } from '@/shared/styles/font.styles';
+import { blue, gray } from '@/shared/styles/theme.styles';
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -76,20 +77,20 @@ export const Button = styled.button<{ variant?: 'primary' | 'secondary' }>`
   ${({ variant = 'secondary' }) =>
     variant === 'primary'
       ? `
-        background-color: #007bff;
-        color: white;
-        &:hover {
-          background-color: #0056b3;
-        }
-      `
+          background-color: ${blue[500]};
+          color: white;
+          &:hover {
+            background-color: ${blue[600]};
+          }
+        `
       : `
-        background-color: #f8f9fa;
-        color: #333;
-        border: 1px solid #dee2e6;
-        &:hover {
-          background-color: #e9ecef;
-        }
-      `}
+          background-color: ${gray[100]};
+          color: #333;
+          border: 1px solid ${gray[200]};
+          &:hover {
+            background-color: ${gray[200]};
+          }
+        `}
 `;
 
 export const ModalInput = styled.input`
