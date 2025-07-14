@@ -13,6 +13,7 @@ import Oauth2Test from '@/features/Login/text';
 import TCheckStudent from '@/features/ClassComponent/Teacher/Assignment/TCheckStudent';
 import axios from 'axios';
 import Navbar from '@/widgets/Navbar/Navbar';
+import MakeClass from '@/pages/MakeClass/MakeClass';
 
 function App() {
   const [accessToken, setAccessToken] = useState<string | null>(() => {
@@ -71,6 +72,7 @@ function App() {
             <Route path="/tclass" element={<TMyclass />} />
             <Route path="/tclass/:classId" element={<TClassRoom />} />
             <Route path="/tclass/:classId/homework/:lessonId" element={<TCheckStudent />} />
+            <Route path="/tclass/make" element={<MakeClass />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </UserContext.Provider>

@@ -20,3 +20,5 @@ export const gray = {
 export const white = '#FFFFFF';
 
 export const black = '#111111';
+
+export const red = '#FF6363';

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { white, black, blue, gray } from '@/shared/styles/theme.styles';
+import { white, black, blue } from '@/shared/styles/theme.styles';
 import { fonts } from '@/shared/styles/font.styles';
+
 export const Body = styled.div`
   padding: 40px 150px;
   background-color: ${white};
