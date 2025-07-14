@@ -1,9 +1,10 @@
+import { fonts } from '@/shared/styles/font.styles';
+import { blue, gray } from '@/shared/styles/theme.styles';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Arial, sans-serif';
 `;
 
 export const AssignmentTitleBox = styled.div`
@@ -12,13 +13,13 @@ export const AssignmentTitleBox = styled.div`
 
 export const AssignmentTitle = styled.h2`
   margin: 0;
-  font-size: 22px;
+  ${fonts.P3}
 `;
 
 export const AssignmentDeadline = styled.div`
-  color: #666;
+  color: ${gray[300]};
   margin-top: 4px;
-  font-size: 14px;
+  ${fonts.P1}
 `;
 
 export const FilterBar = styled.div`
@@ -30,22 +31,22 @@ export const FilterBar = styled.div`
 
 export const FilterSelect = styled.select`
   padding: 6px 30px;
-  font-size: 14px;
-  background-color: #f8f9fa;
+  ${fonts.P1}
+  background-color: ${gray[150]};
 `;
 
 export const FilterInput = styled.input`
   flex-grow: 1;
   min-width: 0;
   padding: 8px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${gray[200]};
   border-radius: 4px;
 `;
 
 export const ListHeader = styled.div`
   display: flex;
-  font-weight: bold;
-  border-bottom: 2px solid #ddd;
+  font-weight: 500;
+  border-bottom: 2px solid ${gray[250]};
   padding-bottom: 8px;
   margin-bottom: 8px;
 `;
@@ -58,9 +59,9 @@ export const ListHeaderItem = styled.span<{ flex?: number; right?: boolean }>`
 export const StudentRow = styled.div`
   display: flex;
   padding: 8px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid ${gray[200]};
   align-items: center;
-  font-size: 14px;
+  ${fonts.P1}
   gap: 50%;
 `;
 
@@ -71,12 +72,12 @@ export const Wrap = styled.div`
 `;
 
 export const StudentCell = styled.span<{ submitted?: boolean }>`
-  color: ${({ submitted }) => submitted ? '#0AC97B' : 'inherit'};
+  color: ${({ submitted }) => submitted ? blue[650] : 'inherit'};
 `;
 
 export const StudentAction = styled.a<{ right?: boolean }>`
   ${({ right }) => right && 'text-align: right;'}
-  color: #007bff;
+  color: ${blue[650]};
   text-decoration: underline;
   cursor: pointer;
 `;

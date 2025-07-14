@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-
+import {blue} from '@/shared/styles/theme.styles';
+import {fonts} from '@/shared/styles/font.styles';
 export const TabSelector = styled.div`
   padding: 0 10rem;
   display: flex;
@@ -18,8 +19,8 @@ export const TabButton = styled.button<TabButtonProps>`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.9rem;
-  border-bottom: ${({ active }) => (active ? "2px solid #86C1FF" : "none")};
+  ${fonts.P2};
+  border-bottom: ${({ active }) => (active ? `2px solid ${blue[500]}` : "none")};
   font-weight: ${({ active }) => (active ? 600 : "normal")};
-  color: ${({ active }) => (active ? "#86C1FF" : "inherit")};
+  color: ${({ active }) => (active ? blue[500] : "inherit")};
 `;

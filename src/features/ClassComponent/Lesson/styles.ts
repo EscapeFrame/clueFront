@@ -1,4 +1,6 @@
 import styled from "@emotion/styled";
+import { black, gray, white, blue } from "@/shared/styles/theme.styles";
+import { fonts } from "@/shared/styles/font.styles";
 
 export const LessonPageContainer = styled.div``;
 export const ContentContainer = styled.div`
@@ -6,7 +8,7 @@ export const ContentContainer = styled.div`
   padding: 0 10rem;
   display: flex;
   gap: 2rem;
-  background-color: #f3f3f3;
+  background-color:${gray[100]};
   height: fit-content;
   min-height: 100%;
 `;
@@ -27,7 +29,7 @@ export const Body = styled.div`
 
 export const LessonSection = styled.div`
   margin-top: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid ${gray[200]};
   border-radius: 8px;
   overflow: hidden;
 `;
@@ -41,7 +43,7 @@ export const SectionHeader = styled.button`
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  background-color: #fff;
+  background-color: ${white};
 `;
 
 export const SectionTitleWrapper = styled.div`
@@ -51,16 +53,16 @@ export const SectionTitleWrapper = styled.div`
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: 24px;
+  ${fonts.P3};
   font-weight: 600;
-  color: #111;
+  color: ${black};
   margin: 0;
 `;
 
 export const SectionItems = styled.div`
-  border-top: 1px solid #ccc;
+  border-top: 1px solid ${gray[200]};
   padding: 10px 20px;
-  background-color: #fff;
+  background-color: ${white};
 `;
 
 export const LessonItem = styled.div`
@@ -78,7 +80,7 @@ export const StatusIndicator = styled.div<{ isRead: boolean }>`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background-color: #578fca;
+  background-color: ${blue[500]};
   color: #fff;
   visibility: ${({ isRead }) => (isRead ? 'visible' : 'hidden')};
 `;
@@ -94,7 +96,7 @@ export const LessonButton = styled.button`
   border: none;
   padding: 0;
   font-size: 1rem;
-  color: #111;
+  color: ${black};
   text-align: left;
   cursor: pointer;
   transition: color 0.2s ease;

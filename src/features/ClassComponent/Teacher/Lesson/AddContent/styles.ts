@@ -1,8 +1,10 @@
+import { fonts } from '@/shared/styles/font.styles';
+import { blue } from '@/shared/styles/theme.styles';
 import styled from '@emotion/styled';
 
 export const AddContentButton = styled.button`
-  background-color: #B7DAFF;
-  font-size: 18px;
+  background-color: ${blue[400]};
+  ${fonts.P2}
   text-align: center;
   width: 100%;
   padding: 10px 0;

@@ -5,6 +5,7 @@ export const blue = {
     400: '#B7DAFF',
     500: '#86C1FF',
     600: '#578FCA',
+    650: '#3f6db8'
   };
 
 export const gray = {
