@@ -1,0 +1,62 @@
+import styled from '@emotion/styled';
+import { blue, gray,red } from '@/shared/styles/theme.styles';
+import { fonts } from '@/shared/styles/font.styles';
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+export const Label = styled.label`
+  margin-bottom: 8px;
+  font-weight: 600;
+`;
+
+export const Select = styled.select`
+  padding: 10px 12px;
+  border: 1px solid ${gray[200]};
+  border-radius: 6px;
+  ${fonts.P2}
+  outline: none;
+  width: 100%;
+  &:focus {
+    border-color: ${blue[500]};
+    box-shadow: 0 0 3px ${blue[500]};
+  }
+`;
+
+export const Input = styled.input`
+  padding: 10px 12px;
+  border: 1px solid ${gray[200]};
+  border-radius: 6px;
+  ${fonts.P2}
+  width: 97%;
+  outline: none;
+  &:focus {
+    border-color: ${blue[500]};
+    box-shadow: 0 0 3px ${blue[500]};
+  }
+`;
+
+export const Span = styled.span`
+  color: ${blue[500]};
+`;
+
+// 여기에 추가: 학년/반 가로 래퍼
+export const GradeClassWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+`;
+
+export const GradeClassInput = styled(Input)`
+  flex: 1;
+`;
+
+export const ErrorText = styled.p`
+  color: ${red};
+  ${fonts.P1}
+  margin-top: 4px;
+`;
