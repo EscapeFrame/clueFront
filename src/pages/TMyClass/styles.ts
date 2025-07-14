@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
-
+import { white, black, blue, gray } from '@/shared/styles/theme.styles';
+import { fonts } from '@/shared/styles/font.styles';
 export const Body = styled.div`
   padding: 40px 150px;
-  background-color: #fff;
+  background-color: ${white};
 `;
 
 export const TitleFont = styled.h1`
-  font-size: 32px;
+${fonts.P4}
   margin-bottom: 24px;
 `;
 
@@ -18,10 +19,10 @@ export const TitleContainer = styled.div`
 `;
 
 export const Plus = styled.div`
-  background-color: #86BEFF;
-  color: black;
+${fonts.P2}
+  background-color: ${blue[400]};
+  color: ${black};
   border-radius: 8px;
   padding: 5px 15px;
   cursor: pointer;
-  font-size: 18px;
 `;

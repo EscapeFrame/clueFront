@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import styles from '@/shared/css/Class/Lesson/LessonCard.module.css';
-import { FaChevronDown } from "react-icons/fa";
-import { FaChevronUp } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa6";
-import { FaPencilAlt } from "react-icons/fa";
-import TAddContent from '@/features/ClassComponent/Teacher/Lesson/AddContent/TAddContent';
+import {
+  Body, LessonSection, SectionHeader,
+  SectionTitleWrapper, SectionTitle,
+  SectionItems, LessonItem, StatusIndicator,
+  CheckIcon, LessonButton, TitleContainer,
+  EditButton, TitleInput,
+} from './styles';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaCheck } from 'react-icons/fa6';
+import { FaPencilAlt } from 'react-icons/fa';
+import TAddContent from '../Lesson/AddContent/TAddContent';
 
 export interface OrientationItem {
   id: number;
@@ -29,7 +34,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
     initialSections.map(section => ({ ...section, isExpanded: false }))
   );
   const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
-  const [editingTitle, setEditingTitle] = useState("");
+  const [editingTitle, setEditingTitle] = useState('');
 
   const toggleSection = (sectionId: string) => {
     setSections(prev =>
@@ -72,11 +77,11 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
       prev.map(section =>
         section.id === sectionId
           ? {
-            ...section,
-            items: section.items.map(item =>
-              item.id === itemId ? { ...item, isRead: true } : item
-            ),
-          }
+              ...section,
+              items: section.items.map(item =>
+                item.id === itemId ? { ...item, isRead: true } : item
+              ),
+            }
           : section
       )
     );
@@ -88,68 +93,56 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
   };
 
   return (
-    <div className={styles.body}>
+    <Body>
       {sections.map(section => (
-        <div key={section.id} className={styles.lessonSection}>
-          <button
-            onClick={() => toggleSection(section.id)}
-            className={styles.sectionHeader}
-          >
-            <div className={styles.sectionTitleWrapper}>
-              {section.isExpanded ? (
-                <FaChevronUp />
-              ) : (
-                <FaChevronDown />
-              )}
+        <LessonSection key={section.id}>
+          <SectionHeader onClick={() => toggleSection(section.id)}>
+            <SectionTitleWrapper>
+              {section.isExpanded ? <FaChevronUp /> : <FaChevronDown />}
               {editingSectionId === section.id ? (
-                <input
+                <TitleInput
                   type="text"
                   value={editingTitle}
                   onChange={(e) => setEditingTitle(e.target.value)}
                   onKeyDown={(e) => handleKeyPress(e, section.id)}
                   onBlur={() => handleTitleEdit(section.id)}
-                  className={styles.titleInput}
                   onClick={(e) => e.stopPropagation()}
                   autoFocus
                 />
               ) : (
-                <div className={styles.titleContainer}>
-                  <h2 className={styles.sectionTitle}>{section.title}</h2>
-                  <button
+                <TitleContainer>
+                  <SectionTitle>{section.title}</SectionTitle>
+                  <EditButton
                     onClick={(e) => {
                       e.stopPropagation();
                       startEditing(section.id, section.title);
                     }}
-                    className={styles.editButton}
                   >
                     <FaPencilAlt />
-                  </button>
-                </div>
+                  </EditButton>
+                </TitleContainer>
               )}
-            </div>
-          </button>
+            </SectionTitleWrapper>
+          </SectionHeader>
 
           {section.isExpanded && (
-            <div className={styles.sectionItems}>
+            <SectionItems>
               {section.items.map(item => (
-                <div key={item.id} className={styles.lessonItem}>
-                  <div className={`${styles.statusIndicator} ${item.isRead ? styles.read : ''}`}>
-                    {item.isRead && <FaCheck className={styles.checkIcon} />}
-                  </div>
-                  <button
-                    onClick={() => handleLessonClick(section.id, item.id, item.url)}
-                    className={styles.lessonButton}
-                  >
+                <LessonItem key={item.id}>
+                  <StatusIndicator read={item.isRead}>
+                    {item.isRead && <CheckIcon as={FaCheck} />}
+                  </StatusIndicator>
+                  <LessonButton onClick={() => handleLessonClick(section.id, item.id, item.url)}>
                     {item.title}
-                  </button>
-                </div>
+                  </LessonButton>
+                </LessonItem>
               ))}
-            </div>
+            </SectionItems>
           )}
-        </div>
+        </LessonSection>
       ))}
       <TAddContent sections={sections} setSections={setSections} />
-    </div>
+    </Body>
   );
 };
 

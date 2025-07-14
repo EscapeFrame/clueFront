@@ -4,6 +4,7 @@ import TLessonGroup from '@/features/ClassComponent/Teacher/ClassRoomInfo/TLesso
 import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
 import TCheckStudent from '@/features/ClassComponent/Teacher/Assignment/TCheckStudent';
 import * as S from './styles';
+import NotFound from '../NotFound';
 
 export default function TClassRoom() {
   const { classId, lessonId } = useParams<{ classId: string; lessonId?: string }>();
@@ -13,7 +14,7 @@ export default function TClassRoom() {
   }
 
   const post = Posts.find(p => p.classId === classId);
-  if (!post) return <div>404 - 클래스를 찾을 수 없습니다</div>;
+  if (!post) return <NotFound />;
 
   return (
     <S.Container>

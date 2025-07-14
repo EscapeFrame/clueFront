@@ -1,16 +1,18 @@
+import { fonts } from '@/shared/styles/font.styles';
+import { blue, gray, white } from '@/shared/styles/theme.styles';
 import styled from '@emotion/styled';
 
 export const TitleFont = styled.div`
-  font-size: 24px;
+  ${fonts.P3}
   font-weight: 600;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid ${gray[200]};
 `;
 
 export const NoticeWrapper = styled.div`
-  border: 1px solid #ccc;
+  border: 1px solid ${gray[200]};
   border-radius: 8px;
   padding: 24px;
-  background-color: #fff;
+  background-color: ${white};
 `;
 
 export const NoticeList = styled.ul`
@@ -30,7 +32,7 @@ export const NoticeTitleButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  font-size: 18px;
+  ${fonts.P2}
   text-align: left;
   cursor: pointer;
   flex: 1; 
@@ -44,8 +46,8 @@ export const NoticeTitleButton = styled.button`
 `;
 
 export const NoticeDate = styled.span`
-  font-size: 12px;
-  color: #666;
+  ${fonts.P1}
+  color: ${gray[300]};
   margin-left: 12px;
   white-space: nowrap;
   flex-shrink: 0;
@@ -65,7 +67,7 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  background-color: #fff;
+  background-color: ${white};
   padding: 1.5rem 2rem;
   border-radius: 8px;
   max-width: 400px;
@@ -81,8 +83,8 @@ export const ModalTitle = styled.h3`
 `;
 
 export const ModalDate = styled.p`
-  color: #666;
-  font-size: 12px;
+  color: ${gray[300]};
+  ${fonts.P1}
   margin: 0;
   padding: 0;
   margin-bottom: 1rem;
@@ -96,14 +98,14 @@ export const ModalDescription = styled.p`
 
 export const CloseButton = styled.button`
   margin-top: 1rem;
-  background-color: #578FCA;
-  color: #fff;
+  background-color: ${blue[500]};
+  color: ${white};
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
 
   &:hover {
-    background-color: #3f6db8;
+    background-color: ${blue[600]};
   }
 `;

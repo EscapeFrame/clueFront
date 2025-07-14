@@ -1,17 +1,19 @@
 import styled from '@emotion/styled';
+import { black, blue, gray, white } from '@/shared/styles/theme.styles';
+import { fonts } from '@/shared/styles/font.styles'; 
 
 export const InquiryWrapper = styled.div`
-  border: 1px solid #ccc;
+  border: 1px solid ${gray[200]}
   border-radius: 8px;
   padding: 16px;
   margin: 0;
-  background-color: #fff;
+  background-color: ${white};
 `;
 
 export const TitleFont = styled.h2`
-  font-size: 24px;
+  ${fonts.P3}
   font-weight: 600;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid ${gray[200]};
   padding-bottom: 0.5rem;
   margin: 0 0 1rem 0;
 `;
@@ -34,7 +36,7 @@ export const InquiryTitleButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  font-size: 18px;
+  ${fonts.P2}
   text-align: left;
   cursor: pointer;
   flex: 1;
@@ -48,8 +50,8 @@ export const InquiryTitleButton = styled.button`
 `;
 
 export const StudentId = styled.span`
-  font-size: 12px;
-  color: #666;
+  ${fonts.P1}
+  color: ${gray[300]};
   margin-left: 12px;
   white-space: nowrap;
   flex-shrink: 0;
@@ -84,27 +86,27 @@ export const ModalTitle = styled.h3`
 `;
 
 export const ModalStudentId = styled.p`
-  color: #666;
-  font-size: 12px;
+  color: ${gray[300]};
+  ${fonts.P1}
   margin: 0 0 1rem 0;
 `;
 
 export const ModalDescription = styled.p`
   font-size: 1rem;
-  color: #111;
+  color: ${black};
   white-space: pre-wrap;
 `;
 
 export const CloseButton = styled.button`
   margin-top: 1rem;
-  background-color: #578FCA;
-  color: white;
+  background-color: ${blue[600]};
+  color: ${white};
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
 
   &:hover {
-    background-color: #3f6db8;
+    background-color: ${blue[650]};
   }
 `;
