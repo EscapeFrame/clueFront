@@ -1,13 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useState } from 'react';
-import styled from '@emotion/styled';
-import { AssignmentGroup as AssignmentGroupType } from '@/shared/theme/AssignmentTheme';
+import cardThemeDummy from '../../../../shared/theme/CardTheme';
 import { TAssignmentCard } from './TAssignmentCard';
 import { useParams } from 'react-router-dom';
 import TCheckStudent from './TCheckStudent';
 import {Button, GroupSection, CardGrid} from '@/features/ClassComponent/Assignment/styles';
 
-export function TAssignmentGroup({ cards }: AssignmentGroupType) {
+export function TAssignmentGroup({ cards }: { cards: typeof cardThemeDummy}) {
   const { classId } = useParams<{ classId: string }>();
   const [selectedLessonId, setSelectedLessonId] = useState<string | number | null>(null);
 
@@ -24,7 +23,7 @@ export function TAssignmentGroup({ cards }: AssignmentGroupType) {
     <GroupSection>
       <CardGrid>
         {cards.map(card => (
-          <TAssignmentCard key={card.id} data={card} onCheck={() => setSelectedLessonId(card.id)} />
+          <TAssignmentCard key={card.fileId} data={card} onCheck={() => setSelectedLessonId(card.fileId)} />
         ))}
       </CardGrid>
     </GroupSection>

@@ -3,18 +3,22 @@ import { IoCalendarClearOutline } from "react-icons/io5";
 import { LuClock4 } from "react-icons/lu";
 import { FaRegFile, FaXmark } from "react-icons/fa6";
 import { MdOutlineFileDownload, MdUpload } from "react-icons/md";
-import { AssignmentData } from '@/shared/theme/AssignmentTheme';
+import cardThemeDummy from '../../../shared/theme/CardTheme';
+
 import {
   Card, Header, Title,
   StatusSubmitted, StatusNotSubmitted,
-  InfoSection, InfoItem, FileSection, FileItem, 
+  InfoSection, InfoItem, FileSection, FileItem,
   FileInfo, FileName, FileSize, RemoveButton,
   UploadButton, SubmitButton, ResubmitButton,
   ModalOverlay, ModalContent, DisplayFlex
 } from '@/features/ClassComponent/Assignment/styles';
 
+// cardThemeDummy의 객체 타입 정의
+export type CardThemeType = typeof cardThemeDummy[number];
+
 interface AssignmentCardProps {
-  data: AssignmentData;
+  data: CardThemeType;
 }
 
 interface FileInfoType {
@@ -24,11 +28,12 @@ interface FileInfoType {
 }
 
 export function AssignmentCard({ data }: AssignmentCardProps) {
-  const initialFiles: FileInfoType[] = data.hasFile
-    ? [{ id: crypto.randomUUID(), name: data.fileName!, size: data.fileSize! }]
+  const initialFiles: FileInfoType[] = data.fileName
+    ? [{ id: String(data.fileId), name: data.fileName, size: data.fileSize }]
     : [];
 
-  const [submitted, setSubmitted] = useState(data.buttonType === "resubmit");
+  // buttonType, hasFile 등은 내부 상태로 관리
+  const [submitted, setSubmitted] = useState(false);
   const [files, setFiles] = useState<FileInfoType[]>(initialFiles);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
@@ -38,7 +43,8 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       return;
     }
 
-    const url = `/class/${data.classId}/${data.homeworkId}/upload/`;
+    // fileId를 과제 식별자로 사용
+    const url = `/class/dummy/${data.fileId}/upload/`;
     try {
       await fetch(url);
       setSubmitted(true);
@@ -65,7 +71,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       formData.append("file", f);
 
       try {
-        await fetch(`/class/${data.classId}/${data.homeworkId}/upload`, {
+        await fetch(`/class/dummy/${data.fileId}/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -94,7 +100,9 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     setSubmitted(false);
   };
 
-  const statusClass = data.status === "제출됨" ? <StatusSubmitted>{data.status}</StatusSubmitted> : <StatusNotSubmitted>{data.status}</StatusNotSubmitted>;
+  // status, deadline, timeLeft 등은 cardThemeDummy 구조에 맞게 매핑
+  // status: 제출됨/미제출 여부를 파일 업로드 상태로 대체
+  const statusClass = submitted ? <StatusSubmitted>제출됨</StatusSubmitted> : <StatusNotSubmitted>미제출</StatusNotSubmitted>;
 
   const onFileInfoClick = (file: FileInfoType) => {
     if (!submitted) {
@@ -112,11 +120,13 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       <InfoSection>
         <InfoItem>
           <IoCalendarClearOutline />
-          마감일: {data.deadline}
+          마감일: {data.endDate}
         </InfoItem>
         <InfoItem>
           <LuClock4 />
-          <span className={data.timeLeftColor}>{data.timeLeft}</span>
+          <span style={{ color: '#578FCA' }}>
+            {data.timeLeft}
+          </span>
         </InfoItem>
       </InfoSection>
 
