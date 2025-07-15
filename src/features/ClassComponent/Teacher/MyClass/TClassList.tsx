@@ -8,12 +8,12 @@ import { CardGrid } from './styles';
 type TCategoryKey = '전체' | '활성화' | '비활성화';
 
 interface TPost {
-  classId: string;
-  title: string;
-  subject: string;
-  classRoom: string;
-  people: number;
-  status: number;
+  classRoomId: string;
+  name: string;
+  sort: string;
+  target: string;
+  studentCount: number;
+  isActivation: number;
 }
 
 const TcategoryMap: Record<TCategoryKey, number> = {
@@ -31,10 +31,10 @@ export const TClassList: React.FC = () => {
   const filteredByCategory: TPost[] =
     selectCategory === '전체'
       ? TPosts
-      : TPosts.filter((post: TPost) => post.status === TcategoryMap[selectCategory]);
+      : TPosts.filter((post: TPost) => post.isActivation === TcategoryMap[selectCategory]);
 
   const filteredPosts: TPost[] = filteredByCategory.filter((post: TPost) =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+    post.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -47,7 +47,7 @@ export const TClassList: React.FC = () => {
 
       <CardGrid>
         {filteredPosts.map((post: TPost) => (
-          <TClassCard key={post.classId} {...post} />
+          <TClassCard key={post.classRoomId} {...post} />
         ))}
       </CardGrid>
     </>

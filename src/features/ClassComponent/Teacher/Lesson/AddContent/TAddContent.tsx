@@ -1,19 +1,28 @@
+import React from 'react';
 import { AddContentButton } from './styles';
-import { OrientationSection } from '@/features/ClassComponent/Teacher/Lesson/TLessonCard';
+import { DirectorySection, DirectoryItem } from '@/shared/theme/LessonTheme';
 
 interface TAddContentProps {
-  sections: (OrientationSection & { isExpanded: boolean })[];
-  setSections: React.Dispatch<React.SetStateAction<(OrientationSection & { isExpanded: boolean })[]>>;
+  sections: (DirectorySection & { isExpanded: boolean })[];
+  setSections: React.Dispatch<React.SetStateAction<(DirectorySection & { isExpanded: boolean })[]>>;
 }
 
 export default function TAddContent({ sections, setSections }: TAddContentProps) {
   const handleAddSection = () => {
     const newSectionNumber = sections.length + 1;
-    const newSection = {
-      id: `section${newSectionNumber}`,
+    const newSection: DirectorySection & { isExpanded: boolean } = {
+      classRoomId: `section${newSectionNumber}`,
       title: `${newSectionNumber}차시`,
-      items: [{ id: 1, title: '제목', isRead: false, url: '' }],
       isExpanded: false,
+      items: [
+        {
+          id: 1,
+          name: '제목',
+          directoryOrder: 1,
+          url: '',
+          isRead: false,
+        },
+      ],
     };
 
     setSections(prev => [...prev, newSection]);

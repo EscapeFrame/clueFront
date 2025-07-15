@@ -1,5 +1,5 @@
 import { Container, LessonCardWrapper, InfoBoardWrapper} from './styles';
-import { Lessons } from '@/shared/theme/LessonTheme';
+import { Directories } from '@/shared/theme/LessonTheme';
 
 import LessonCard from './TLessonCard';
 import InfoBoard from './TInfoBoard';
@@ -8,7 +8,7 @@ export default function TLesson() {
   return (
     <Container>
       <LessonCardWrapper>
-        <LessonCard sections={Lessons} />
+        <LessonCard sections={Directories} />
       </LessonCardWrapper>
       <InfoBoardWrapper>
         <InfoBoard />
