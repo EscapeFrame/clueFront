@@ -1,8 +1,6 @@
 import { fonts } from '@/shared/styles/font.styles';
-import { white } from '@/shared/styles/theme.styles';
+import { white, blue  } from '@/shared/styles/theme.styles';
 import styled from '@emotion/styled';
-import { blue } from '@/shared/styles/theme.styles';
-import { fonts } from '@/shared/styles/font.styles'; 
 
 export const Body = styled.div`
   padding: 40px 150px;
