@@ -1,88 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Body, LessonSection, SectionHeader,
-  SectionTitleWrapper, SectionTitle, SectionItems, LessonItem,
-  StatusIndicator,CheckIcon,LessonButton,
-} from './styles';
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+  Body, LessonSection,
+  SectionHeader,
+  SectionTitleWrapper,
+  SectionTitle,
+  SectionItems,
+  LessonItem,
+  StatusIndicator,
+  CheckIcon,
+  LessonButton,
+} from "./styles";
 
-export interface OrientationItem {
-  id: number;
-  title: string;
-  isRead: boolean;
-  url?: string;
-}
-
-export interface OrientationSection {
-  id: string;
-  title: string;
-  items: OrientationItem[];
-}
+import { DirectorySection } from "@/shared/theme/LessonTheme";
 
 interface LessonCardProps {
-  sections: OrientationSection[];
+  sections: DirectorySection[];
 }
 
-const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) => {
-  const [sections, setSections] = useState(
-    initialSections.map(section => ({ ...section, isExpanded: false }))
+const LessonCard: React.FC<LessonCardProps> = ({ sections }) => {
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(
+    () =>
+      sections.reduce((acc, section) => {
+        acc[section.classRoomId] = section.isExpanded ?? false;
+        return acc;
+      }, {} as Record<string, boolean>)
   );
 
-  const toggleSection = (sectionId: string) => {
-    setSections(prev =>
-      prev.map(section =>
-        section.id === sectionId
-          ? { ...section, isExpanded: !section.isExpanded }
-          : section
-      )
-    );
-  };
-
-  const handleLessonClick = (sectionId: string, itemId: number, url?: string) => {
-    setSections(prev =>
-      prev.map(section =>
-        section.id === sectionId
-          ? {
-              ...section,
-              items: section.items.map(item =>
-                item.id === itemId ? { ...item, isRead: true } : item
-              ),
-            }
-          : section
-      )
-    );
-
-    if (url) {
-      alert(`${url} 페이지로 이동`);
-      // 실제 페이지 이동은 라우터 등으로 처리 예정
-    }
+  const toggleSection = (classRoomId: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [classRoomId]: !prev[classRoomId],
+    }));
   };
 
   return (
     <Body>
-      {sections.map(section => (
-        <LessonSection key={section.id}>
-          <SectionHeader onClick={() => toggleSection(section.id)}>
+      {sections.map((section) => (
+        <LessonSection key={section.classRoomId}>
+          <SectionHeader onClick={() => toggleSection(section.classRoomId)}>
             <SectionTitleWrapper>
-              {section.isExpanded ? <FaChevronUp /> : <FaChevronDown />}
               <SectionTitle>{section.title}</SectionTitle>
             </SectionTitleWrapper>
+            {/* 토글 표시 */}
+            <div>{expandedSections[section.classRoomId] ? "▲" : "▼"}</div>
           </SectionHeader>
 
-          {section.isExpanded && (
+          {expandedSections[section.classRoomId] && (
             <SectionItems>
-              {section.items.map(item => (
-                <LessonItem key={item.id}>
-                  <StatusIndicator isRead={item.isRead}>
-                    {item.isRead && <CheckIcon />}
-                  </StatusIndicator>
-                  <LessonButton
-                    onClick={() => handleLessonClick(section.id, item.id, item.url)}
-                  >
-                    {item.title}
-                  </LessonButton>
-                </LessonItem>
-              ))}
+              {section.items
+                .sort((a, b) => a.directoryOrder - b.directoryOrder)
+                .map((item) => (
+                  <LessonItem key={item.id}>
+                    <StatusIndicator isRead={!!item.url}>
+                      <CheckIcon />
+                    </StatusIndicator>
+                    {/* url 있으면 버튼(클릭 시 링크 이동), 없으면 그냥 텍스트 */}
+                    {item.url ? (
+                      <LessonButton
+                        onClick={() => window.open(item.url, "_blank")}
+                      >
+                        {item.name}
+                      </LessonButton>
+                    ) : (
+                      <span>{item.name}</span>
+                    )}
+                  </LessonItem>
+                ))}
             </SectionItems>
           )}
         </LessonSection>
