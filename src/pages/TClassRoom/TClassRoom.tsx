@@ -13,16 +13,16 @@ export default function TClassRoom() {
     return <TCheckStudent />;
   }
 
-  const post = Posts.find(p => p.classId === classId);
+  const post = Posts.find(p => p.classRoomId === classId);
   if (!post) return <NotFound />;
 
   return (
     <S.Container>
       <ClassRoomInfo
-        classId={post.classId}
-        title={post.title}
+        classRoomId={post.classRoomId}
+        name={post.name}
         description={post.description}
-        teacherId={post.teacherId}
+        teacherName={post.teacherName}
         maxProgress={post.maxProgress}
         progress={post.progress}
       />
