@@ -6,9 +6,9 @@ import NotFound from '../NotFound/NotFound';
 import * as S from './styles';
 
 export default function ClassRoom() {
-  const { classId } = useParams<{ classId: string }>();
+  const { classRoomId } = useParams<{ classRoomId: string }>();
 
-  const post = Posts.find(p => p.classRoomId === classId);
+  const post = Posts.find(p => p.classRoomId === classRoomId);
   if (!post) return <NotFound />;
 
   return (

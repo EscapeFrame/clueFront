@@ -1,24 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { LuClock4 } from "react-icons/lu";
 import { FaRegFile, FaXmark } from "react-icons/fa6";
 import { MdOutlineFileDownload, MdUpload } from "react-icons/md";
-import cardThemeDummy from '../../../shared/theme/CardTheme';
-
-import {
-  Card, Header, Title,
-  StatusSubmitted, StatusNotSubmitted,
-  InfoSection, InfoItem, FileSection, FileItem,
-  FileInfo, FileName, FileSize, RemoveButton,
-  UploadButton, SubmitButton, ResubmitButton,
-  ModalOverlay, ModalContent, DisplayFlex
-} from '@/features/ClassComponent/Assignment/styles';
-
-// cardThemeDummy의 객체 타입 정의
-export type CardThemeType = typeof cardThemeDummy[number];
+import { AssignmentData } from "@/shared/theme/AssignmentTheme";
+import * as S from "./styles";
+import SlidePanel from "./SlidePanel/SlidePanel";
 
 interface AssignmentCardProps {
-  data: CardThemeType;
+  data: AssignmentData;
 }
 
 interface FileInfoType {
@@ -28,14 +18,21 @@ interface FileInfoType {
 }
 
 export function AssignmentCard({ data }: AssignmentCardProps) {
-  const initialFiles: FileInfoType[] = data.fileName
-    ? [{ id: String(data.fileId), name: data.fileName, size: data.fileSize }]
+  const initialFiles: FileInfoType[] = data.hasFile
+    ? [{ id: crypto.randomUUID(), name: data.fileName!, size: data.fileSize! }]
     : [];
 
-  // buttonType, hasFile 등은 내부 상태로 관리
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(data.buttonType === "resubmit");
   const [files, setFiles] = useState<FileInfoType[]>(initialFiles);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showSlidePanel, setShowSlidePanel] = useState(false);
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button")) {
+      return;
+    }
+    setShowSlidePanel(true);
+  };
 
   const handleSubmit = async () => {
     if (files.length === 0) {
@@ -43,8 +40,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       return;
     }
 
-    // fileId를 과제 식별자로 사용
-    const url = `/class/dummy/${data.fileId}/upload/`;
+    const url = `/class/${data.classId}/${data.homeworkId}/upload/`;
     try {
       await fetch(url);
       setSubmitted(true);
@@ -57,7 +53,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
   };
 
   const handleFileRemove = (id: string) => {
-    setFiles(files.filter(file => file.id !== id));
+    setFiles(files.filter((file) => file.id !== id));
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,8 +67,8 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       formData.append("file", f);
 
       try {
-        await fetch(`/class/dummy/${data.fileId}/upload`, {
-          method: 'POST',
+        await fetch(`/class/${data.classId}/${data.homeworkId}/upload`, {
+          method: "POST",
           body: formData,
         });
         uploadedFiles.push({
@@ -87,7 +83,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     }
 
     if (uploadedFiles.length > 0) {
-      setFiles(prev => [...prev, ...uploadedFiles]);
+      setFiles((prev) => [...prev, ...uploadedFiles]);
       alert("파일이 업로드 되었습니다.");
       setShowUploadModal(false);
     }
@@ -100,9 +96,12 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     setSubmitted(false);
   };
 
-  // status, deadline, timeLeft 등은 cardThemeDummy 구조에 맞게 매핑
-  // status: 제출됨/미제출 여부를 파일 업로드 상태로 대체
-  const statusClass = submitted ? <StatusSubmitted>제출됨</StatusSubmitted> : <StatusNotSubmitted>미제출</StatusNotSubmitted>;
+  const statusClass =
+    data.status === "제출됨" ? (
+      <S.StatusSubmitted>{data.status}</S.StatusSubmitted>
+    ) : (
+      <S.StatusNotSubmitted>{data.status}</S.StatusNotSubmitted>
+    );
 
   const onFileInfoClick = (file: FileInfoType) => {
     if (!submitted) {
@@ -111,87 +110,133 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
   };
 
   return (
-    <Card>
-      <Header>
-        <Title>{data.title}</Title>
-        {statusClass}
-      </Header>
+    <>
+      <S.ClickableCard onClick={handleCardClick}>
+        <S.Header>
+          <S.Title>{data.title}</S.Title>
+          {statusClass}
+        </S.Header>
 
-      <InfoSection>
-        <InfoItem>
-          <IoCalendarClearOutline />
-          마감일: {data.endDate}
-        </InfoItem>
-        <InfoItem>
-          <LuClock4 />
-          <span style={{ color: '#578FCA' }}>
-            {data.timeLeft}
-          </span>
-        </InfoItem>
-      </InfoSection>
+        <S.InfoSection>
+          <S.InfoItem>
+            <IoCalendarClearOutline />
+            마감일: {data.deadline}
+          </S.InfoItem>
+          <S.InfoItem>
+            <LuClock4 />
+            <span className={data.timeLeftColor}>{data.timeLeft}</span>
+          </S.InfoItem>
+        </S.InfoSection>
 
-      {files.length > 0 && (
-        <FileSection>
-          {files.map(file => (
-            <FileItem
-              key={file.id}
-              onClick={() => onFileInfoClick(file)}
-              style={{ cursor: submitted ? 'default' : 'pointer' }}
-            >
-              <FileInfo>
-                <FaRegFile />
-                <div>
-                  <FileName>{file.name}</FileName>
-                  <FileSize>{file.size}</FileSize>
-                </div>
-              </FileInfo>
-              {!submitted && (
-                <RemoveButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleFileRemove(file.id);
-                  }}
-                >
-                  <FaXmark />
-                </RemoveButton>
-              )}
-            </FileItem>
-          ))}
-        </FileSection>
-      )}
+        {files.length > 0 && (
+          <S.FileSection>
+            {files.map((file) => (
+              <S.FileItem
+                key={file.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFileInfoClick(file);
+                }}
+                style={{ cursor: submitted ? "default" : "pointer" }}
+              >
+                <S.FileInfo>
+                  <FaRegFile />
+                  <div>
+                    <S.FileName>{file.name}</S.FileName>
+                    <S.FileSize>{file.size}</S.FileSize>
+                  </div>
+                </S.FileInfo>
+                {!submitted && (
+                  <S.RemoveButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFileRemove(file.id);
+                    }}
+                  >
+                    <FaXmark />
+                  </S.RemoveButton>
+                )}
+              </S.FileItem>
+            ))}
+          </S.FileSection>
+        )}
 
-      {!submitted && (
-        <UploadButton onClick={openUploadModal}>
-          <MdUpload />
-          파일 업로드
-        </UploadButton>
-      )}
+        {!submitted && (
+          <S.UploadButton
+            onClick={(e) => {
+              e.stopPropagation();
+              openUploadModal();
+            }}
+          >
+            <MdUpload />
+            파일 업로드
+          </S.UploadButton>
+        )}
 
-      {submitted ? (
-        <ResubmitButton onClick={handleResubmitClick}>
-          <MdOutlineFileDownload />
-          다시 제출하기
-        </ResubmitButton>
-      ) : (
-        <SubmitButton onClick={handleSubmit}>
-          <MdOutlineFileDownload />
-          과제 제출하기
-        </SubmitButton>
-      )}
+        {submitted ? (
+          <S.ResubmitButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleResubmitClick();
+            }}
+          >
+            <MdOutlineFileDownload />
+            다시 제출하기
+          </S.ResubmitButton>
+        ) : (
+          <S.SubmitButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSubmit();
+            }}
+          >
+            <MdOutlineFileDownload />
+            과제 제출하기
+          </S.SubmitButton>
+        )}
 
-      {showUploadModal && (
-        <ModalOverlay onClick={closeUploadModal}>
-          <ModalContent onClick={e => e.stopPropagation()}>
-            <Title>파일 업로드</Title>
-            <input type="file" multiple onChange={handleFileUpload} style={{ marginTop: '1rem' }} />
-            <DisplayFlex style={{ justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-              <ResubmitButton onClick={closeUploadModal}>
-                취소
-              </ResubmitButton>
-            </DisplayFlex>
-          </ModalContent>
-        </ModalOverlay>
-      )}
-    </Card>
+        {showUploadModal && (
+          <S.ModalOverlay onClick={closeUploadModal}>
+            <S.ModalContent onClick={(e) => e.stopPropagation()}>
+              <S.Title>파일 업로드</S.Title>
+              <input
+                type="file"
+                multiple
+                onChange={handleFileUpload}
+                style={{ marginTop: "1rem" }}
+              />
+              <S.DisplayFlex
+                style={{ justifyContent: "flex-end", gap: "1rem", marginTop: "1rem" }}
+              >
+                <S.ResubmitButton onClick={closeUploadModal}>취소</S.ResubmitButton>
+              </S.DisplayFlex>
+            </S.ModalContent>
+          </S.ModalOverlay>
+        )}
+      </S.ClickableCard>
+
+      {/* 슬라이드 패널 */}
+      <SlidePanel
+        isOpen={showSlidePanel}
+        onClose={() => setShowSlidePanel(false)}
+        title={data.title}
+        status={data.status}
+        deadline={data.deadline}
+        timeLeft={data.timeLeft}
+        description={data.description}
+        teacherFiles={
+          data.hasFile
+            ? [{ id: crypto.randomUUID(), name: data.fileName!, size: data.fileSize! }]
+            : []
+        }
+        studentFiles={files}
+        submitted={submitted}
+        onSubmit={handleSubmit}
+        onResubmit={handleResubmitClick}
+        onFileRemove={handleFileRemove}
+        onFileUpload={handleFileUpload}
+        isTeacher={false}
+      />
+    </>
   );
 }

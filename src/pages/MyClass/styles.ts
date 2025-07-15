@@ -1,14 +1,16 @@
+import { fonts } from '@/shared/styles/font.styles';
+import { white } from '@/shared/styles/theme.styles';
 import styled from '@emotion/styled';
 import { blue } from '@/shared/styles/theme.styles';
 import { fonts } from '@/shared/styles/font.styles'; 
 
 export const Body = styled.div`
   padding: 40px 150px;
-  background-color: #fff;
+  background-color: ${white};
 `;
 
 export const TitleFont = styled.h1`
-  font-size: 32px;
+  ${fonts.P3}
   margin-bottom: 24px;
 `;
 
