@@ -1,13 +1,13 @@
-import { AssignmentGroup as AssignmentGroupType } from '@/shared/theme/AssignmentTheme';
+import cardThemeDummy from '@/shared/theme/CardTheme';
 import { AssignmentCard } from './AssignmentCard';
 import { GroupSection, CardGrid } from '@/features/ClassComponent/Assignment/styles';
 
-export function AssignmentGroup({ cards }: AssignmentGroupType) {
+export function AssignmentGroup({ cards }: { cards: typeof cardThemeDummy }) {
   return (
     <GroupSection>
       <CardGrid>
         {cards.map(card => (
-          <AssignmentCard key={card.id} data={card} />
+          <AssignmentCard key={card.fileId} data={card} />
         ))}
       </CardGrid>
     </GroupSection>

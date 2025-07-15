@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { LuClock4 } from "react-icons/lu";
-import { FaRegFile, FaXmark } from "react-icons/fa6";
+import { FaRegFile } from "react-icons/fa6";
 import { MdOutlineFileDownload, MdUpload } from "react-icons/md";
-import { AssignmentData } from '@/shared/theme/AssignmentTheme';
+import cardThemeDummy from '../../../../shared/theme/CardTheme';
 import { useParams } from 'react-router-dom';
 import TCheckStudent from './TCheckStudent';
 
@@ -15,8 +15,11 @@ import {
   ModalOverlay, ModalContent
 } from '@/features/ClassComponent/Assignment/styles';
 
+// cardThemeDummy의 객체 타입 정의
+export type CardThemeType = typeof cardThemeDummy[number];
+
 interface AssignmentCardProps {
-  data: AssignmentData;
+  data: CardThemeType;
   onCheck?: () => void;
 }
 
@@ -28,17 +31,19 @@ interface FileInfo {
 
 export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
   const { classId } = useParams<{ classId: string }>();
-  const initialFiles: FileInfo[] = data.hasFile
-    ? [{ id: crypto.randomUUID(), name: data.fileName!, size: data.fileSize! }]
+  const initialFiles: FileInfo[] = data.fileName
+    ? [{ id: String(data.fileId), name: data.fileName, size: data.fileSize }]
     : [];
 
-  const [submitted, setSubmitted] = useState(data.buttonType === "resubmit");
+  // buttonType, hasFile 등은 내부 상태로 관리
+  const [submitted, setSubmitted] = useState(false);
   const [files, setFiles] = useState<FileInfo[]>(initialFiles);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
 
   const handleSubmit = async () => {
-    const url = `/class/${data.classId}/${data.homeworkId}/upload/`;
+    // classId, homeworkId가 없으므로 임시 URL 사용
+    const url = `/class/${classId ?? 'dummy'}/${data.fileId}/upload/`;
     try {
       await fetch(url);
       setSubmitted(true);
@@ -65,7 +70,7 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
       formData.append("file", f);
 
       try {
-        await fetch(`/class/${data.classId}/${data.homeworkId}/upload`, {
+        await fetch(`/class/${classId ?? 'dummy'}/${data.fileId}/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -98,23 +103,24 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
   };
 
   const maxpeople = 16;
+  const people = undefined;
 
   return (
     <Card>
       <Header>
         <Title>{data.title}</Title>
-        {data.people === maxpeople && (
+        {people === maxpeople && (
           <StatusNotSubmitted>전원제출</StatusNotSubmitted>
         )}
       </Header>
 
       <InfoSection>
         <InfoItem>
-          <Icon><IoCalendarClearOutline /></Icon> 마감일: {data.deadline}
+          <Icon><IoCalendarClearOutline /></Icon> 마감일: {data.endDate}
         </InfoItem>
         <InfoItem>
           <Icon><LuClock4 /></Icon>
-          <span style={{ color: data.timeLeftColor === 'red' ? '#fa5252' : '#578FCA' }}>
+          <span style={{ color: '#578FCA' }}>
             {data.timeLeft}
           </span>
         </InfoItem>
@@ -169,7 +175,8 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
 
       {showCheck && (
         <div style={{ marginTop: 24, background: '#f8f9fa', borderRadius: 8, padding: 16 }}>
-          <TCheckStudent classId={classId} lessonId={data.id} />
+          {/* fileId를 lessonId로 넘김 */}
+          <TCheckStudent classId={classId} lessonId={data.fileId} />
         </div>
       )}
 
