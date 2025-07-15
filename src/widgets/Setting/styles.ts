@@ -8,7 +8,7 @@ export const SettingButton = styled.button`
   background-color: ${gray[100]};
   border-radius: 8px;
   padding: 0.6rem 1rem;
-  ${fonts.P2}
+  ${fonts.P2};
   cursor: pointer;
   border: none;
   outline: none;

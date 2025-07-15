@@ -3,8 +3,8 @@ import { RecoilRoot } from 'recoil';
 import Login from '../pages/login'
 import { UserContext } from '@/entities/Context/LoginContext';
 import { useState, useEffect } from 'react';
-import NotFound from '@/pages/NotFound';
-import Home from '../pages/home';
+import NotFound from '@/pages/NotFound/NotFound';
+import Home from '../pages/Home/home';
 import MyClass from '@/pages/MyClass/MyClass';
 import ClassRoom from '@/pages/ClassRoom/ClassRoom';
 import TMyclass from '@/pages/TMyClass/TMyclass';
@@ -78,7 +78,7 @@ function App() {
         </UserContext.Provider>
       </Router>
     </RecoilRoot>
-  );
+  ); 
 }
 
 export default App;

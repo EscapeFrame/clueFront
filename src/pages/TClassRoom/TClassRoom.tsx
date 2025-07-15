@@ -4,7 +4,7 @@ import TLessonGroup from '@/features/ClassComponent/Teacher/ClassRoomInfo/TLesso
 import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
 import TCheckStudent from '@/features/ClassComponent/Teacher/Assignment/TCheckStudent';
 import * as S from './styles';
-import NotFound from '../NotFound';
+import NotFound from '../NotFound/NotFound';
 
 export default function TClassRoom() {
   const { classId, lessonId } = useParams<{ classId: string; lessonId?: string }>();

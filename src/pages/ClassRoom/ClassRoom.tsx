@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import ClassRoomInfo from '@/shared/classInfo/ClassRoomInfo/ClassRoomInfo';
 import LessonGroup from '@/features/ClassComponent/ClassRoomInfo/LessonGroup/LessonGroup';
 import { Posts } from '@/shared/theme/ClassRoomInfoTheme';
-import NotFound from '../NotFound';
+import NotFound from '../NotFound/NotFound';
 import * as S from './styles';
 
 export default function ClassRoom() {
