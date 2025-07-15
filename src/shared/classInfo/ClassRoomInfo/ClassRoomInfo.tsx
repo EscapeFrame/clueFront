@@ -4,24 +4,24 @@ import { FaUser } from "react-icons/fa6";
 import * as S from './styles';
 
 type ClassHeaderProps = {
-  classId: string;
-  title: string;
+  classRoomId: string;
+  name: string;
   description: string;
-  teacherId: string;
+  teacherName: string;
   maxProgress: number;
   progress: number;
 };
 
 export default function ClassRoomInfo({
-  classId,
-  title,
+  classRoomId,
+  name,
   description,
-  teacherId,
+  teacherName,
   maxProgress,
   progress,
 }: ClassHeaderProps) {
 
-  const post = Posts.find(p => p.classId === classId);
+  const post = Posts.find(p => p.classRoomId === classRoomId);
 
   const usedMaxProgress = post?.maxProgress ?? maxProgress;
   const usedProgress = post?.progress ?? progress;
@@ -29,9 +29,9 @@ export default function ClassRoomInfo({
   return (
     <S.ClassHeader>
       <S.ClassInfo>
-        <S.TitleFont>{title}</S.TitleFont>
+        <S.TitleFont>{name}</S.TitleFont>
         <S.BodyFont>{description}</S.BodyFont>
-        <S.BodyFont><FaUser />&nbsp;{teacherId}</S.BodyFont>
+        <S.BodyFont><FaUser />&nbsp;{teacherName}</S.BodyFont>
         <S.ProgressFont>진행률: {usedProgress}강 / {usedMaxProgress}강</S.ProgressFont>
         <ProgressBar 
           maxProgress={usedMaxProgress}
