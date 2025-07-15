@@ -305,3 +305,21 @@ export const CancelButton = styled.button`
     background-color: ${gray[250]};
   }
 `
+export const EditButton = styled.button`
+  margin-left: 8px;
+  font-size: 0.875rem;
+  color: #007bff;
+  background: none;
+  border: none;
+  cursor: pointer;
+`
+
+export const TextArea = styled.textarea`
+  width: 100%;
+  min-height: 100px;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+`

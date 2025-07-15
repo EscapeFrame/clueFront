@@ -235,6 +235,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
         onResubmit={handleResubmitClick}
         onFileRemove={handleFileRemove}
         onFileUpload={handleFileUpload}
+        isTeacher={false}
       />
     </>
   );

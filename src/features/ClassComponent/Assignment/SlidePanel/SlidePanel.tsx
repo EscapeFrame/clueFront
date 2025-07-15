@@ -1,4 +1,3 @@
-
 import type React from "react"
 import { useState } from "react"
 import { IoCalendarClearOutline, IoClose } from "react-icons/io5"
@@ -21,43 +20,73 @@ interface SlidePanelProps {
   deadline: string
   timeLeft: string
   description?: string
-  teacherFiles: FileInfoType[] // 선생님이 할당한 파일
-  studentFiles: FileInfoType[] // 학생이 업로드한 파일
+  teacherFiles: FileInfoType[]
+  studentFiles: FileInfoType[]
   submitted: boolean
+  isTeacher: boolean
   onSubmit: () => void
   onResubmit: () => void
   onFileRemove: (id: string) => void
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onDescriptionUpdate?: (newDesc: string) => void
 }
 
 const SlidePanel: React.FC<SlidePanelProps> = ({
-  isOpen, onClose,title,status, deadline, timeLeft,
-  description,teacherFiles,studentFiles,submitted,
-  onSubmit, onResubmit, onFileRemove, onFileUpload,
+  isOpen,
+  onClose,
+  title,
+  status,
+  deadline,
+  timeLeft,
+  description,
+  teacherFiles,
+  studentFiles,
+  submitted,
+  isTeacher,
+  onSubmit,
+  onResubmit,
+  onFileRemove,
+  onFileUpload,
+  onDescriptionUpdate,
 }) => {
   const [showUploadModal, setShowUploadModal] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedDescription, setEditedDescription] = useState(description || "")
 
-  const handleFileUploadClick = () => {
-    setShowUploadModal(true)
-  }
-
-  const closeUploadModal = () => {
-    setShowUploadModal(false)
-  }
+  const handleFileUploadClick = () => setShowUploadModal(true)
+  const closeUploadModal = () => setShowUploadModal(false)
 
   const handleFileUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onFileUpload(e)
     setShowUploadModal(false)
   }
 
+  const handleEditClick = () => {
+    setIsEditing(true)
+  }
+
+  const handleCancelEdit = () => {
+    setEditedDescription(description || "")
+    setIsEditing(false)
+  }
+
+  const handleSaveEdit = () => {
+    onDescriptionUpdate?.(editedDescription)
+    setIsEditing(false)
+  }
+
   if (!isOpen) return null
+
+  const canEditFiles = isTeacher || !submitted
 
   return (
     <>
       <S.Overlay onClick={onClose} />
       <S.Panel isOpen={isOpen}>
         <S.Header>
-        <S.StatusBadge submitted={submitted}>{submitted ? "제출됨" : "미제출"}</S.StatusBadge>
+          <S.StatusBadge submitted={submitted}>
+            {submitted ? "제출됨" : "미제출"}
+          </S.StatusBadge>
           <S.CloseButton onClick={onClose}>
             <IoClose />
           </S.CloseButton>
@@ -77,13 +106,32 @@ const SlidePanel: React.FC<SlidePanelProps> = ({
             </S.InfoItem>
           </S.InfoSection>
 
+          {/* 상세설명 */}
           <S.Section>
-            <S.SectionTitle>상세설명</S.SectionTitle>
-            <S.Description>
-              {description}
-            </S.Description>
+            <S.SectionTitle>
+              상세설명
+              {isTeacher && !isEditing && (
+                <S.EditButton onClick={handleEditClick}>수정</S.EditButton>
+              )}
+            </S.SectionTitle>
+
+            {isEditing ? (
+              <>
+                <S.TextArea
+                  value={editedDescription}
+                  onChange={(e) => setEditedDescription(e.target.value)}
+                />
+                <S.ModalActions>
+                  <S.SubmitButton onClick={handleSaveEdit}>저장</S.SubmitButton>
+                  <S.CancelButton onClick={handleCancelEdit}>취소</S.CancelButton>
+                </S.ModalActions>
+              </>
+            ) : (
+              <S.Description>{description || "설명이 없습니다."}</S.Description>
+            )}
           </S.Section>
-          
+
+          {/* 선생님이 할당한 학습파일 */}
           <S.Section>
             <S.SectionTitle>학습파일</S.SectionTitle>
             {teacherFiles.length > 0 ? (
@@ -105,7 +153,7 @@ const SlidePanel: React.FC<SlidePanelProps> = ({
             )}
           </S.Section>
 
-          {/* 학생이 업로드한 파일 섹션 */}
+          {/* 학생이 제출한 파일 */}
           <S.Section>
             <S.SectionTitle>제출한 파일</S.SectionTitle>
             {studentFiles.length > 0 ? (
@@ -119,7 +167,7 @@ const SlidePanel: React.FC<SlidePanelProps> = ({
                         <S.FileSize>{file.size}</S.FileSize>
                       </div>
                     </S.FileInfo>
-                    {!submitted && (
+                    {(isTeacher || !submitted) && (
                       <S.RemoveButton onClick={() => onFileRemove(file.id)}>
                         <FaXmark />
                       </S.RemoveButton>
@@ -134,17 +182,22 @@ const SlidePanel: React.FC<SlidePanelProps> = ({
         </S.Content>
 
         <S.Footer>
-          {!submitted && (
+          {(isTeacher || !submitted) && (
             <S.UploadButton onClick={handleFileUploadClick}>
               <MdUpload />
-              파일업로드
+              파일 업로드
             </S.UploadButton>
           )}
 
-          {submitted ? (
+          {isTeacher ? (
+            <S.SubmitButton onClick={onSubmit}>
+              <MdOutlineFileDownload />
+              파일 등록
+            </S.SubmitButton>
+          ) : submitted ? (
             <S.ResubmitButton onClick={onResubmit}>
               <MdOutlineFileDownload />
-              다시제출하기
+              다시 제출하기
             </S.ResubmitButton>
           ) : (
             <S.SubmitButton onClick={onSubmit}>
