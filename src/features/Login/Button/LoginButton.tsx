@@ -15,15 +15,15 @@ function LoginButton() {
 
   const onGoogleLogin = () => {
     const redirectUri = encodeURIComponent(
-      "http://localhost:3000/login/oauth2/code/google"
+      "http://10.129.57.64:8080/login/oauth2/code/google"
     );
-    window.location.href = `http://localhost:10.150.3.224/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
+    window.location.href = `http://10.129.57.64:8080/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
   };
 
   const onLogout = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8080/logout",
+        "http://10.129.57.64:8080/logout",
         {},
         {
           withCredentials: true,
