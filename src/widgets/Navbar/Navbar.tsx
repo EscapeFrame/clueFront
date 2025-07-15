@@ -9,6 +9,7 @@ import {
 
 import { AiFillSetting, AiFillQuestionCircle } from "react-icons/ai";
 import { MdOutlineLogout } from "react-icons/md";
+import { IoPerson } from "react-icons/io5";
 
 export default function Navbar() {
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
@@ -27,12 +28,11 @@ export default function Navbar() {
         <NavbarNav>
           <NavLinks>
             <li><NavItem href="/class">학습실로 가기</NavItem></li>
-            <li><NavItem href="#action2">학습실 추가</NavItem></li>
-            <li><NavItem href="#action3">수강신청</NavItem></li>
-            <li><NavItem href="#action4">서비스 소개</NavItem></li>
+            <li><NavItem href="#action1">수강신청</NavItem></li>
+            <li><NavItem href="#action2">서비스 소개</NavItem></li>
           </NavLinks>
           <DropdownContainer>
-            <DropdownButton onClick={toggleDropdown}>사람모양</DropdownButton>
+            <DropdownButton onClick={toggleDropdown}><IoPerson /></DropdownButton>
             {dropdownVisible && (
               <DropdownMenu>
                     <ProfileInfoBox>
