@@ -78,7 +78,7 @@ function App() {
         </UserContext.Provider>
       </Router>
     </RecoilRoot>
-  );
+  ); 
 }
 
 export default App;
