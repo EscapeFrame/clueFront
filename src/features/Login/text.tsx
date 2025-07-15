@@ -18,7 +18,7 @@ function Oauth2Test() {
     if (!accessToken) {
       (async () => {
         try {
-          const res = await fetch("http://10.150.3.224:8080/refresh-token", {
+          const res = await fetch("http://10.129.57.64:8080/refresh-token", {
             method: "POST",
             credentials: "include",
           });
@@ -39,7 +39,7 @@ function Oauth2Test() {
   // 2️⃣ 세션 기반 첫 사용자 정보 요청
   useEffect(() => {
     if (window.location.pathname === "/register") {
-      fetch("http://10.150.3.224:8080/first-register", {
+      fetch("http://10.129.57.64:8080/first-register", {
         method: "POST",
         credentials: "include",
       })
@@ -73,7 +73,7 @@ function Oauth2Test() {
         ...registerData,
         studentId: Number(registerData.studentId),
       };
-      const res = await fetch("http://10.150.3.224:8080/register", {
+      const res = await fetch("http://10.129.57.64:8080/register", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -90,16 +90,16 @@ function Oauth2Test() {
 
   // 4️⃣ 소셜 로그인 핸들러
   const onNaverLogin = () => {
-    window.location.href = "http://10.150.3.224:8080/oauth2/authorization/naver";
+    window.location.href = "http://10.129.57.64:8080/oauth2/authorization/naver";
   };
   const onGoogleLogin = () => {
-    window.location.href = "http://10.150.3.224:8080/oauth2/authorization/google?prompt=login";
+    window.location.href = "http://10.129.57.64:8080/oauth2/authorization/google?prompt=login";
   };
 
   // 5️⃣ 보호된 리소스 호출
   const getData = async () => {
     try {
-      const res = await fetch("http://10.150.3.224:8080/my", {
+      const res = await fetch("http://10.129.57.64:8080/my", {
         method: "GET",
         credentials: "include",
         headers: {
@@ -117,7 +117,7 @@ function Oauth2Test() {
   // 6️⃣ 로그아웃
   const onLogout = async () => {
     try {
-      const res = await fetch("http://10.150.3.224:8080/logout", {
+      const res = await fetch("http://10.129.57.64:8080/logout", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -143,7 +143,7 @@ function Oauth2Test() {
   // 7️⃣ 수동 토큰 리프레시
   const callRefreshToken = async () => {
     try {
-      const res = await fetch("http://10.150.3.224:8080/refresh-token", {
+      const res = await fetch("http://10.129.57.64:8080/refresh-token", {
         method: "POST",
         credentials: "include",
       });
