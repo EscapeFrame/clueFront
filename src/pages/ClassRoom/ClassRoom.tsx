@@ -8,16 +8,16 @@ import * as S from './styles';
 export default function ClassRoom() {
   const { classId } = useParams<{ classId: string }>();
 
-  const post = Posts.find(p => p.classId === classId);
+  const post = Posts.find(p => p.classRoomId === classId);
   if (!post) return <NotFound />;
 
   return (
     <S.Container>
       <ClassRoomInfo
-        classId={post.classId}
-        title={post.title}
+        classId={post.classRoomId}
+        title={post.name}
         description={post.description}
-        teacherId={post.teacherId}
+        teacherId={post.teacherName}
         maxProgress={post.maxProgress}
         progress={post.progress}
       />
