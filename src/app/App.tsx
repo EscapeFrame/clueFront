@@ -68,7 +68,7 @@ function App() {
             <Route path="/Login/test" element={<Oauth2Test />} />
             {/* <Route path="/auth/callback/google" element={<Google />} /> */}
             <Route path="/class" element={<MyClass />} />
-            <Route path="/class/:classId" element={<ClassRoom />} />
+            <Route path="/class/:classRoomId" element={<ClassRoom />} />
             <Route path="/tclass" element={<TMyclass />} />
             <Route path="/tclass/:classId" element={<TClassRoom />} />
             <Route path="/tclass/:classId/homework/:lessonId" element={<TCheckStudent />} />

@@ -19,10 +19,10 @@ export default function TClassRoom() {
   return (
     <S.Container>
       <ClassRoomInfo
-        classId={post.classRoomId}
-        title={post.name}
+        classRoomId={post.classRoomId}
+        name={post.name}
         description={post.description}
-        teacherId={post.teacherName}
+        teacherName={post.teacherName}
         maxProgress={post.maxProgress}
         progress={post.progress}
       />
