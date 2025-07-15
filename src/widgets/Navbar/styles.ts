@@ -63,7 +63,7 @@ export const DropdownButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  ${fonts.P2}
+  ${fonts.P3}
   color: black;
 `;
 

@@ -7,13 +7,16 @@ import * as S from './styles';
 
 type CategoryKey = '전체' | '인문과목' | '전공과목' | '방과후';
 
-interface Post {
-  classId: string;
-  title: string;
-  subject: string;
-  classRoom: string;
-  people: number;
-  category: number;
+export interface Post {
+  classRoomId: string;
+  name: string;
+  description: string;
+  sort: string;
+  target: string;
+  studentCount: number;
+  isActivation: boolean;
+  createdAt: Date;
+  category: number; 
 }
 
 const categoryMap: Record<CategoryKey, number> = {
@@ -30,12 +33,12 @@ export const ClassList: React.FC = () => {
   const navigate = useNavigate();
 
   const filteredByCategory: Post[] =
-    selectCategory === '전체'
-      ? Posts
-      : Posts.filter((post: Post) => post.category === categoryMap[selectCategory]);
+  selectCategory === '전체'
+    ? Posts
+    : Posts.filter((post) => post.category === categoryMap[selectCategory]);
 
   const filteredPosts: Post[] = filteredByCategory.filter((post: Post) =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+    post.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleCardClick = (classId: string | number): void => {
@@ -53,18 +56,21 @@ export const ClassList: React.FC = () => {
       <S.CardContainer>
         {filteredPosts.map((post: Post) => (
           <div
-            key={post.classId}
-            onClick={() => handleCardClick(post.classId)}
+            key={post.classRoomId}
+            onClick={() => handleCardClick(post.classRoomId)}
             style={{ cursor: 'pointer' }}
           >
             <ClassCard
-              classId={post.classId}
-              title={post.title}
-              subject={post.subject}
-              classRoom={post.classRoom}
-              people={post.people}
+              classRoomId={post.classRoomId}
+              name={post.name}
+              description={post.description}
+              sort={post.sort}
+              target={post.target}
+              studentCount={post.studentCount}
+              isActivation={post.isActivation}
+              createdAt={post.createdAt}
               category={post.category}
-            />
+            /> 
           </div>
         ))}
       </S.CardContainer>

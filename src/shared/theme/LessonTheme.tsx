@@ -1,33 +1,36 @@
-export interface LessonItem {
+// 디렉토리 항목
+export interface DirectoryItem {
   id: number;
-  title: string;
-  isRead: boolean;
-  url?: string;
+  name: string;             // 디렉토리 이름
+  directoryOrder: number;   // 디렉토리 순서
+  url?: string;             // 해당 디렉토리 링크
+  isRead: boolean;          // 읽음 여부
 }
 
-export interface LessonSection {
-  id: string;
-  title: string;
-  items: LessonItem[];
-  isExpanded?: boolean; // UI 상태라면 컴포넌트에서 관리해도 됨
+// 디렉토리 묶음
+export interface DirectorySection {
+  classRoomId: string;         // 교실 ID
+  title: string;               // 교실 이름 또는 그룹명
+  items: DirectoryItem[];      // 디렉토리 리스트
+  isExpanded?: boolean;        // UI 제어용
 }
 
-// 데이터 정의 (초기값)
-export const Lessons: LessonSection[] = [
+// 예시 데이터
+export const Directories: DirectorySection[] = [
   {
-    id: 'first',
-    title: '1차시 오리엔테이션',
+    classRoomId: "1",
+    title: "자바를 자바라!",
     items: [
-      { id: 1, title: '자바란 무엇인가?', isRead: true, url: '/lesson/java-intro' }
+      { id: 1, name: "1차시 오리엔테이션", directoryOrder: 1, url: "/lesson/java-intro", isRead: true },
+      { id: 2, name: "2차시 변수와 자료형", directoryOrder: 2, url: "/lesson/java-variables", isRead: false }
     ],
   },
   {
-    id: 'second',
-    title: '2차시',
+    classRoomId: "2",
+    title: "스프링 부트 캠프",
     items: [
-      { id: 2, title: '아야아', isRead: false, url: '/lesson/aya1' },
-      { id: 3, title: '아야아아', isRead: false, url: '/lesson/aya2' },
-      { id: 4, title: '아야아아아', isRead: false, url: '/lesson/aya3' },
+      { id: 3, name: "1차시 스프링 시작", directoryOrder: 1, url: "/lesson/spring-intro", isRead: false },
+      { id: 4, name: "2차시 컨트롤러", directoryOrder: 2, url: "/lesson/spring-controller", isRead: false }
     ],
-  },
+  }
 ];

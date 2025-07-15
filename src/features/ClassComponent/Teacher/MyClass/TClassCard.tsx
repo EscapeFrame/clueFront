@@ -4,22 +4,22 @@ import * as S from './styles';
 
 interface TClassCardProps extends TPost {}
 
-export function TClassCard({ classId, title, subject, classRoom, people, status }: TClassCardProps) {
+export function TClassCard({ classRoomId, name, sort, target, studentCount, isActivation }: TClassCardProps) {
   const navigate = useNavigate();
 
   return (
-    <S.CardContainer onClick={() => navigate(`/tclass/${classId}`)}>
+    <S.CardContainer onClick={() => navigate(`/tclass/${classRoomId}`)}>
       <S.CardHeader>
-        <S.Status active={status === 1}>{status === 1 ? '활성화' : '비활성화'}</S.Status>
+        <S.Status active={isActivation === 1}>{isActivation === 1 ? '활성화' : '비활성화'}</S.Status>
       </S.CardHeader>
-      <S.CardTitle>{title}</S.CardTitle>
-      <S.CardInfo>{subject} | {classRoom}</S.CardInfo>
-      <S.CardInfo>학생 {people}명</S.CardInfo>
+      <S.CardTitle>{name}</S.CardTitle>
+      <S.CardInfo>{sort} | {target}</S.CardInfo>
+      <S.CardInfo>학생 {studentCount}명</S.CardInfo>
       <S.ViewContainer>
         <S.ManageButton
           onClick={e => {
             e.stopPropagation();
-            navigate(`/tclass/${classId}/manage`);
+            navigate(`/tclass/${classRoomId}/manage`);
           }}
         >
           관리
@@ -27,7 +27,7 @@ export function TClassCard({ classId, title, subject, classRoom, people, status 
         <S.ViewButton
           onClick={e => {
             e.stopPropagation();
-            navigate(`/tclass/${classId}`);
+            navigate(`/tclass/${classRoomId}`);
           }}
         >
           학습실 보기

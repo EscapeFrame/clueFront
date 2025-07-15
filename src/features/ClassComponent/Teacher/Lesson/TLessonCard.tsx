@@ -11,51 +11,66 @@ import { FaCheck } from 'react-icons/fa6';
 import { FaPencilAlt } from 'react-icons/fa';
 import TAddContent from '../Lesson/AddContent/TAddContent';
 
-export interface OrientationItem {
+// DirectoryItem 타입
+export interface DirectoryItem {
   id: number;
-  title: string;
-  isRead: boolean;
+  name: string;
+  directoryOrder: number;
   url?: string;
+  isRead: boolean;
 }
 
-export interface OrientationSection {
-  id: string;
+// DirectorySection 타입
+export interface DirectorySection {
+  classRoomId: string;
   title: string;
-  items: OrientationItem[];
+  items: DirectoryItem[];
+}
+
+// 내부 상태 타입: DirectorySection에 isExpanded 추가
+export interface LessonSectionType extends DirectorySection {
+  isExpanded: boolean;
 }
 
 interface LessonCardProps {
-  sections: OrientationSection[];
+  sections: DirectorySection[];
 }
 
-const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) => {
-  // 내부에서 펼침 상태와 읽음 상태 관리 위해 복사본 상태 생성해야됨!
-  const [sections, setSections] = useState(
-    initialSections.map(section => ({ ...section, isExpanded: false }))
+const LessonCard: React.FC<LessonCardProps> = ({ sections: rawSections }) => {
+  // 초기 상태: 기존 sections에 isExpanded 필드만 추가
+  const [sections, setSections] = useState<LessonSectionType[]>(
+    rawSections.map(section => ({
+      ...section,
+      isExpanded: false,
+    }))
   );
+
   const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
 
+  // 섹션 토글 (열고 닫기)
   const toggleSection = (sectionId: string) => {
     setSections(prev =>
       prev.map(section =>
-        section.id === sectionId
+        section.classRoomId === sectionId
           ? { ...section, isExpanded: !section.isExpanded }
           : section
       )
     );
   };
 
+  // 제목 편집 시작
   const startEditing = (sectionId: string, currentTitle: string) => {
     setEditingSectionId(sectionId);
     setEditingTitle(currentTitle);
   };
 
+  // 제목 수정 완료
   const handleTitleEdit = (sectionId: string) => {
     if (editingTitle.trim()) {
       setSections(prev =>
         prev.map(section =>
-          section.id === sectionId
+          section.classRoomId === sectionId
             ? { ...section, title: editingTitle.trim() }
             : section
         )
@@ -64,6 +79,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
     }
   };
 
+  // 키보드 이벤트 처리 (Enter, Escape)
   const handleKeyPress = (e: React.KeyboardEvent, sectionId: string) => {
     if (e.key === 'Enter') {
       handleTitleEdit(sectionId);
@@ -72,10 +88,11 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
     }
   };
 
+  // 강의 아이템 클릭 시 isRead true로 변경 + 페이지 이동(임시 alert)
   const handleLessonClick = (sectionId: string, itemId: number, url?: string) => {
     setSections(prev =>
       prev.map(section =>
-        section.id === sectionId
+        section.classRoomId === sectionId
           ? {
               ...section,
               items: section.items.map(item =>
@@ -88,24 +105,24 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
 
     if (url) {
       alert(`${url} 페이지로 이동`);
-      /* 나중에 url 연결...! */
+      // 추후 라우터로 실제 페이지 이동 처리 예정
     }
   };
 
   return (
     <Body>
       {sections.map(section => (
-        <LessonSection key={section.id}>
-          <SectionHeader onClick={() => toggleSection(section.id)}>
+        <LessonSection key={section.classRoomId}>
+          <SectionHeader onClick={() => toggleSection(section.classRoomId)}>
             <SectionTitleWrapper>
               {section.isExpanded ? <FaChevronUp /> : <FaChevronDown />}
-              {editingSectionId === section.id ? (
+              {editingSectionId === section.classRoomId ? (
                 <TitleInput
                   type="text"
                   value={editingTitle}
                   onChange={(e) => setEditingTitle(e.target.value)}
-                  onKeyDown={(e) => handleKeyPress(e, section.id)}
-                  onBlur={() => handleTitleEdit(section.id)}
+                  onKeyDown={(e) => handleKeyPress(e, section.classRoomId)}
+                  onBlur={() => handleTitleEdit(section.classRoomId)}
                   onClick={(e) => e.stopPropagation()}
                   autoFocus
                 />
@@ -115,7 +132,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
                   <EditButton
                     onClick={(e) => {
                       e.stopPropagation();
-                      startEditing(section.id, section.title);
+                      startEditing(section.classRoomId, section.title);
                     }}
                   >
                     <FaPencilAlt />
@@ -132,8 +149,8 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections: initialSections }) =>
                   <StatusIndicator read={item.isRead}>
                     {item.isRead && <CheckIcon as={FaCheck} />}
                   </StatusIndicator>
-                  <LessonButton onClick={() => handleLessonClick(section.id, item.id, item.url)}>
-                    {item.title}
+                  <LessonButton onClick={() => handleLessonClick(section.classRoomId, item.id, item.url)}>
+                    {item.name}
                   </LessonButton>
                 </LessonItem>
               ))}
