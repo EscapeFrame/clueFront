@@ -36,8 +36,21 @@ export const ClassList: React.FC = () => {
   useEffect(() => {
     Customapi.get('/api/class')
       .then(res => {
-        console.log('백엔드에서 받아온 데이터:', res.data);
-        setPosts(res.data)
+        console.log("API 응답:", res.data); // 이걸 꼭 확인하세요
+  
+        if (!Array.isArray(res.data)) {
+          console.error("API 응답이 배열이 아님:", res.data);
+          return;
+        }
+  
+        const formattedPosts = res.data.map((post: any) => ({
+          ...post,
+          classRoomId: String(post.classRoomId),
+          createdAt: new Date(post.createdAt),
+          category: Number(post.category),
+        }));
+  
+        setPosts(formattedPosts);
       })
       .catch(err => {
         console.error('클래스 목록 불러오기 실패:', err);
