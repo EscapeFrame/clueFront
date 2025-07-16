@@ -3,6 +3,7 @@ import { IoCalendarClearOutline } from "react-icons/io5";
 import { LuClock4 } from "react-icons/lu";
 import { FaRegFile, FaXmark } from "react-icons/fa6";
 import { MdOutlineFileDownload, MdUpload } from "react-icons/md";
+import { AssignmentType } from '@/shared/types/Assignment';
 import {
   Card, Header, Title,
   StatusSubmitted, StatusNotSubmitted,
@@ -12,23 +13,8 @@ import {
   ModalOverlay, ModalContent, DisplayFlex
 } from '@/features/ClassComponent/Assignment/styles';
 
-// Assignment 타입 import 또는 정의
-export interface AssignmentFile {
-  fileId: number;
-  fileName: string;
-  fileSize: number;
-}
-export interface Assignment {
-  assignmentId: number;
-  title: string;
-  startDate: string;
-  endDate: string;
-  duringDate: string;
-  files: AssignmentFile[];
-}
-
 interface AssignmentCardProps {
-  data: Assignment;
+  data: AssignmentType;
 }
 
 interface FileInfoType {
