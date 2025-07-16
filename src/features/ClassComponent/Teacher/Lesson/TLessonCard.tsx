@@ -10,38 +10,25 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FaCheck } from 'react-icons/fa6';
 import { FaPencilAlt } from 'react-icons/fa';
 import TAddContent from '../Lesson/AddContent/TAddContent';
+import { DirectorySection } from '@/features/ClassComponent/Lesson/Lesson';
 
-// DirectoryItem 타입
-export interface DirectoryItem {
-  id: number;
-  name: string;
-  directoryOrder: number;
-  url?: string;
-  isRead: boolean;
+interface LessonCardProps {
+  sections?: DirectorySection[];
+  classId?: string;
 }
 
-// DirectorySection 타입
-export interface DirectorySection {
-  classRoomId: string;
-  title: string;
-  items: DirectoryItem[];
-}
-
-// 내부 상태 타입: DirectorySection에 isExpanded 추가
-export interface LessonSectionType extends DirectorySection {
+interface LessonSectionType extends DirectorySection {
   isExpanded: boolean;
 }
 
-interface LessonCardProps {
-  sections: DirectorySection[];
-}
-
 const LessonCard: React.FC<LessonCardProps> = ({ sections: rawSections }) => {
+  // sections가 undefined/null일 때도 빈 배열로 처리
+  const safeSections = Array.isArray(rawSections) ? rawSections : [];
   // 초기 상태: 기존 sections에 isExpanded 필드만 추가
   const [sections, setSections] = useState<LessonSectionType[]>(
-    rawSections.map(section => ({
+    safeSections.map(section => ({
       ...section,
-      isExpanded: false,
+      isExpanded: section.isExpanded ?? false,
     }))
   );
 

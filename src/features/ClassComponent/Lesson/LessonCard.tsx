@@ -11,13 +11,17 @@ import {
   LessonButton,
 } from "./styles";
 
-import { DirectorySection } from "@/shared/theme/LessonTheme";
+
+import { useNavigate } from 'react-router-dom';
+import { DirectorySection } from '@/features/ClassComponent/Lesson/Lesson';
 
 interface LessonCardProps {
   sections: DirectorySection[];
+  classId?: string;
 }
 
-const LessonCard: React.FC<LessonCardProps> = ({ sections }) => {
+const LessonCard: React.FC<LessonCardProps> = ({ sections, classId }) => {
+  const navigate = useNavigate();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(
     () =>
       sections.reduce((acc, section) => {
@@ -47,17 +51,22 @@ const LessonCard: React.FC<LessonCardProps> = ({ sections }) => {
 
           {expandedSections[section.classRoomId] && (
             <SectionItems>
-              {section.items
+              {(section.items ?? [])
                 .sort((a, b) => a.directoryOrder - b.directoryOrder)
                 .map((item) => (
-                  <LessonItem key={item.id}>
+                  <LessonItem key={item.id}
+                    onClick={() => navigate(`/class/${section.classRoomId}`)}
+                  >
                     <StatusIndicator isRead={!!item.url}>
                       <CheckIcon />
                     </StatusIndicator>
                     {/* url 있으면 버튼(클릭 시 링크 이동), 없으면 그냥 텍스트 */}
                     {item.url ? (
                       <LessonButton
-                        onClick={() => window.open(item.url, "_blank")}
+                        onClick={e => {
+                          e.stopPropagation();
+                          window.open(item.url, "_blank");
+                        }}
                       >
                         {item.name}
                       </LessonButton>
