@@ -2,12 +2,14 @@ import axios from 'axios';
 
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const accesToken = 'example';
+const accesToken = localStorage.getItem('accessToken');
 
 const Customapi = axios.create({
   baseURL: baseUrl,
   timeout: 10000,
-  headers: {'Bearer':accesToken}
+  headers: {
+    Authorization: `${accesToken}`
+  }
 });
 
 export default Customapi;
