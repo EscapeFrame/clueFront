@@ -26,9 +26,9 @@ function App() {
       try {
         const response = await axios.post('http://10.129.57.64:8080/test', {
           params: {
-            userId: 2,
-            username: 'admin',
-            role: 'TEACHER',
+            userId: 1,
+            username: '김한결',
+            role: 'STUDENT',
           },
         });
         const token = response.headers.authorization;
