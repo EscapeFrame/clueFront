@@ -1,5 +1,5 @@
 import { Table, TdSmaller } from './TimeTable.styles';
-import axios, { AxiosResponse } from 'axios';
+import Customapi from '@/shared/api/axios';
 import { useRecoilState } from 'recoil';
 import { scheduleState } from '@/shared/recoil/atoms';
 import { useEffect, useState } from 'react';
@@ -44,25 +44,19 @@ const TimeTable = () => {
 
   useEffect(() => {
     const fetchSchedule = async () => {
-      try {
-        // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6'; //임시로 아무거나 넣어놈
-        const response: AxiosResponse<Subjects> = await axios.get('http://10.129.57.64:8080/api/schedules', {
-          //로컬스토리지 저장하기
+        Customapi.get('/api/schedules', {
           params: {
             grade,
             classNumber
-          },
-          // headers: {
-          //   Authorization:`Bearer ${token}`, // Oauth 토큰받아오기
-          // },
-        });
-        setSchedule(response.data)
-        setLoading(false); // 로딩 완료
-        console.log('서버 응답 확인', response.data)
-      } catch (error) {
+          }
+        }).then(res => {
+          setSchedule(res.data);
+          setLoading(false); // 로딩 완료
+          console.log('서버 응답 확인', res.data);
+        }).catch (error => {
         console.error('시간표 불러오기 실패', error);
         setLoading(false); // 로딩 완료
-      }
+      })
     };
     fetchSchedule();
   }, [])
