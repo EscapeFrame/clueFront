@@ -15,6 +15,7 @@ import axios from 'axios';
 import Navbar from '@/widgets/Navbar/Navbar';
 import MakeClass from '@/pages/MakeClass/MakeClass';
 import Customapi from '@/shared/api/axios';
+import QuizPage from '@/pages/Quiz/Quiz';
 
 function App() {
   const [accessToken, setAccessToken] = useState<string | null>(() => {
@@ -114,6 +115,9 @@ function App() {
             <Route path="/tclass/:classId" element={<TClassRoom />} />
             <Route path="/tclass/:classId/homework/:lessonId" element={<TCheckStudent />} />
             <Route path="/tclass/make" element={<MakeClass />} />
+
+            <Route path="/class/test" element={<QuizPage />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </UserContext.Provider>

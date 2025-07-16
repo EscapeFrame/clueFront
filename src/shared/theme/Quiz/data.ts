@@ -1,0 +1,103 @@
+import type { QuizType } from "@/shared/types/quiz"
+
+export const quizData: QuizType[] = [
+  {
+    quizId: "c-1",
+    title: "C언어 기초 퀴즈",
+    description: "C언어의 기본 문법을 테스트합니다.",
+    difficulty: "easy",
+    timeLimit: 5,
+    isCompleted: false,
+    createdAt: "2025-07-16T00:00:00Z",
+    totalQuestions: 3,
+    questions: [
+      {
+        questionId: "c-1-q1",
+        question: "C언어에서 'main' 함수의 반환형은?",
+        options: ["void", "int", "char", "float"],
+        correctAnswer: 1,
+        explanation: "'main' 함수는 일반적으로 int형을 반환하며, 종료 상태를 운영체제에 전달합니다.",
+      },
+      {
+        questionId: "c-1-q2",
+        question: "C언어에서 주석을 다는 방법은?",
+        options: ["# 주석", "// 주석 또는 /* 주석 */", "-- 주석", "' 주석"],
+        correctAnswer: 1,
+        explanation: "C언어에서는 // 단일 주석과 /* */ 블록 주석을 사용합니다.",
+      },
+      {
+        questionId: "c-1-q3",
+        question: "다음 중 C언어의 반복문이 아닌 것은?",
+        options: ["for", "while", "loop", "do-while"],
+        correctAnswer: 2,
+        explanation: "'loop'는 C언어의 반복문 키워드가 아닙니다.",
+      },
+    ],
+  },
+  {
+    quizId: "math-1",
+    title: "중등 수학 퀴즈",
+    description: "중학교 수준의 수학 문제입니다.",
+    difficulty: "medium",
+    timeLimit: 7,
+    isCompleted: false,
+    createdAt: "2025-07-16T00:00:00Z",
+    totalQuestions: 3,
+    questions: [
+      {
+        questionId: "math-1-q1",
+        question: "x + 3 = 7 일 때, x의 값은?",
+        options: ["3", "4", "5", "6"],
+        correctAnswer: 1,
+        explanation: "양변에서 3을 빼면 x = 4입니다.",
+      },
+      {
+        questionId: "math-1-q2",
+        question: "피타고라스의 정리에 해당하지 않는 것은?",
+        options: ["3, 4, 5", "5, 12, 13", "6, 8, 10", "2, 3, 5"],
+        correctAnswer: 3,
+        explanation: "2² + 3² = 13 ≠ 5² 이므로 성립하지 않습니다.",
+      },
+      {
+        questionId: "math-1-q3",
+        question: "y = 2x 직선의 기울기는?",
+        options: ["0", "1", "2", "3"],
+        correctAnswer: 2,
+        explanation: "기울기는 x의 계수인 2입니다.",
+      },
+    ],
+  },
+  {
+    quizId: "eng-1",
+    title: "기초 영어 퀴즈",
+    description: "기초적인 영어 단어와 문법을 다룹니다.",
+    difficulty: "easy",
+    timeLimit: 5,
+    isCompleted: false,
+    createdAt: "2025-07-16T00:00:00Z",
+    totalQuestions: 3,
+    questions: [
+      {
+        questionId: "eng-1-q1",
+        question: "다음 중 동사는?",
+        options: ["apple", "run", "blue", "happy"],
+        correctAnswer: 1,
+        explanation: "'run'은 동사이고 나머지는 명사 또는 형용사입니다.",
+      },
+      {
+        questionId: "eng-1-q2",
+        question: "'He ___ to school every day.' 빈칸에 알맞은 것은?",
+        options: ["go", "goes", "gone", "going"],
+        correctAnswer: 1,
+        explanation: "주어가 3인칭 단수이므로 'goes'가 정답입니다.",
+      },
+      {
+        questionId: "eng-1-q3",
+        question: "'book'의 복수형은?",
+        options: ["books", "bookes", "bookz", "bookies"],
+        correctAnswer: 0,
+        explanation: "단수 명사 'book'의 복수형은 'books'입니다.",
+      },
+    ],
+  },
+]

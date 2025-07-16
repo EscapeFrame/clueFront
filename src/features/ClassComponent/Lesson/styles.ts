@@ -4,11 +4,10 @@ import { fonts } from "@/shared/styles/font.styles";
 
 export const LessonPageContainer = styled.div``;
 export const ContentContainer = styled.div`
-  margin: 0;
   padding: 0 10rem;
   display: flex;
   gap: 2rem;
-  background-color:${gray[100]};
+  background-color:${white};
   height: fit-content;
   min-height: 100%;
 `;

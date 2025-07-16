@@ -1,9 +1,10 @@
 import { Container } from '@/features/ClassComponent/Assignment/styles';
+import ExamCard from './ExamCard';
 
 export default function Exam() {
     return (
          <Container>
-            <p>현재 존재하는 시험이 없습니다.</p>
+            <ExamCard examName="기초 테스트" examDate="2025-07-17" linkUrl="/class/test" />
          </Container>
     );
 }

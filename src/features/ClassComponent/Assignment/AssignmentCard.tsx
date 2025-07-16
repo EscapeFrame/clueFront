@@ -136,7 +136,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
               </FileInfo>
               {!submitted && (
                 <RemoveButton
-                  onClick={e => {
+                  onClick={(e: { stopPropagation: () => void; }) => {
                     e.stopPropagation();
                     handleFileRemove(file.id);
                   }}
@@ -167,7 +167,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       )}
       {showUploadModal && (
         <ModalOverlay onClick={closeUploadModal}>
-          <ModalContent onClick={e => e.stopPropagation()}>
+          <ModalContent onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()}>
             <Title>파일 업로드</Title>
             <input type="file" multiple onChange={handleFileUpload} style={{ marginTop: '1rem' }} />
             <DisplayFlex style={{ justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>

@@ -13,3 +13,15 @@ export interface AssignmentFileType {
     duringDate: string;         // 남은 기간 (DDHH)
     files: AssignmentFileType[];    // 첨부 파일 리스트
   }
+
+export interface AssignmentFile {
+  fileId: number
+  fileName: string
+  fileSize: number
+}
+
+export interface FileInfoType {
+  id: string
+  name: string
+  size: string
+}

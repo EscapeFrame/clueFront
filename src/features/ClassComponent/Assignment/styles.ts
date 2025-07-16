@@ -4,8 +4,6 @@ import { fonts } from '@/shared/styles/font.styles';
 
 export const Container = styled.div`
   padding: 20px 10rem;
-  background-color: ${gray[100]};
-  margin: 0 auto;
 `;
 
 export const CardGrid = styled.div`
