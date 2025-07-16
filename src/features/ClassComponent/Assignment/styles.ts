@@ -4,8 +4,6 @@ import { fonts } from '@/shared/styles/font.styles';
 
 export const Container = styled.div`
   padding: 20px 10rem;
-  background-color: ${gray[100]};
-  margin: 0 auto;
 `;
 
 export const CardGrid = styled.div`
@@ -19,6 +17,7 @@ export const GroupSection = styled.section`
   margin-bottom: 2rem;
 `;
 
+// Card를 flex column으로 설정, 버튼을 아래 고정
 export const Card = styled.div`
   background-color: ${white};
   border-radius: 0.5rem;
@@ -27,13 +26,18 @@ export const Card = styled.div`
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   transition: box-shadow 0.2s ease-in-out;
   min-height: 270px;
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 
   &:hover {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
+`;
+
+// 카드 본문 영역 (내용)
+export const CardContent = styled.div`
+  flex-grow: 1;  // 버튼을 아래로 밀기 위해 공간 차지
 `;
 
 export const Header = styled.div`
@@ -66,13 +70,13 @@ export const Status = styled.span`
 
 export const StatusNotSubmitted = styled(Status)`
   background-color: ${blue[500]};
-  color: ${black};
+  color: ${white};
   border: none;
 `;
 
 export const StatusSubmitted = styled(Status)`
   background-color: ${white};
-  color: ${black};
+  color: ${blue[400]};
   border: 2px solid ${blue[400]};
 `;
 
@@ -138,7 +142,7 @@ export const FileName = styled.div`
 `;
 
 export const FileSize = styled.div`
-${fonts.P1}
+  ${fonts.P1}
   color: ${gray[400]};
 `;
 
@@ -176,6 +180,13 @@ export const UploadButton = styled.button`
   }
 `;
 
+// 버튼 래퍼, 항상 카드 아래쪽에 위치하도록 마진 탑 auto로 밀기
+export const ButtonWrapper = styled.div`
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+`;
+
 export const Button = styled.button`
   width: 100%;
   padding: 0.75rem 0;
@@ -191,7 +202,7 @@ export const Button = styled.button`
 
 export const SubmitButton = styled(Button)`
   background-color: ${blue[500]};
-  color: ${black};
+  color: ${white};
 
   &:hover {
     background-color: ${blue[600]};
@@ -231,4 +242,34 @@ export const DisplayFlex = styled.div`
   display: flex;
   gap: 1rem;
   align-items: center;
+`;
+
+export const PreviewCard = styled.div`
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    background: #f0f0f0;
+  }
+`;
+
+export const PreviewTitle = styled.h3`
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+`;
+
+export const PreviewStatus = styled.span`
+  font-size: 0.9rem;
+  color: gray;
+`;
+
+export const ClickableCard = styled.div`
+  cursor: pointer;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
 `;

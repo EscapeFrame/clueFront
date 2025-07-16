@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { LuClock4 } from "react-icons/lu";
 import { FaRegFile, FaXmark } from "react-icons/fa6";
@@ -31,10 +31,17 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     size: `${f.fileSize} MB`
   })) ?? [];
 
-  // buttonType, hasFile 등은 내부 상태로 관리
   const [submitted, setSubmitted] = useState(false);
   const [files, setFiles] = useState<FileInfoType[]>(initialFiles);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showSlidePanel, setShowSlidePanel] = useState(false);
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button")) {
+      return;
+    }
+    setShowSlidePanel(true);
+  };
 
   const handleSubmit = async () => {
     if (files.length === 0) {
@@ -55,7 +62,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
   };
 
   const handleFileRemove = (id: string) => {
-    setFiles(files.filter(file => file.id !== id));
+    setFiles(files.filter((file) => file.id !== id));
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +90,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       }
     }
     if (uploadedFiles.length > 0) {
-      setFiles(prev => [...prev, ...uploadedFiles]);
+      setFiles((prev) => [...prev, ...uploadedFiles]);
       alert("파일이 업로드 되었습니다.");
       setShowUploadModal(false);
     }

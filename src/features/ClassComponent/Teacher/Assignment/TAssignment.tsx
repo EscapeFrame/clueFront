@@ -1,28 +1,38 @@
-import Customapi from '@/shared/api/axios';
-import { TAssignmentGroup } from './TAssignmentGroup';
-import * as S from '@/features/ClassComponent/Assignment/styles';
-import { AssignmentType } from '@/shared/types/Assignment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { dummyDataGroups } from '@/shared/theme/AssignmentTheme';
+import { TAssignmentCard } from './TAssignmentCard';
+import TCheckStudent from './TCheckStudent';
+import * as S from '@/features/ClassComponent/Assignment/styles';
 
 export function TAssignment() {
-  const [assignments, setAssignments] = useState<AssignmentType[]>([]);
+    const { classId } = useParams<{ classId: string }>();
+    const [selectedLessonId, setSelectedLessonId] = useState<string | number | null>(null);
 
-  const { classId } = useParams<{ classId: string }>();
-
-  useEffect(() => {
-    if (classId) {
-      Customapi.get(`/api/assignments/${classId}`)
-        .then(res => { 
-          console.log(res.data);
-          setAssignments(res.data);
-        })
-        .catch(err => console.error(err));
+    if (selectedLessonId) {
+        return (
+            <S.Container>
+                <S.Button onClick={() => setSelectedLessonId(null)}>← 뒤로가기</S.Button>
+                <TCheckStudent classId={classId} lessonId={selectedLessonId} />
+            </S.Container>
+        );
     }
-  }, [classId]);
-  return (
-    <S.Container>
-      <TAssignmentGroup cards={assignments} />
-    </S.Container>
-  );
+
+    return (
+        <S.Container>
+            {dummyDataGroups.map((group, index) => (
+                <S.GroupSection key={index}>
+                    <S.CardGrid>
+                        {group.cards.map(card => (
+                            <TAssignmentCard
+                                key={card.id}
+                                data={card}
+                                onCheck={() => setSelectedLessonId(card.id)}
+                            />
+                        ))}
+                    </S.CardGrid>
+                </S.GroupSection>
+            ))}
+        </S.Container>
+    );
 }

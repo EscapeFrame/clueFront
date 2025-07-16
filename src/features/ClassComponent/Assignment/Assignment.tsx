@@ -1,4 +1,3 @@
-import cardThemeDummy from '@/shared/theme/CardTheme';
 import { AssignmentGroup } from './AssignmentGroup';
 import { Container } from '@/features/ClassComponent/Assignment/styles';
 import Customapi from '@/shared/api/axios';
