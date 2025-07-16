@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TCategoryTabs } from './TCategoryTabs';
 import { TClassCard } from './TClassCard';
-import { TPosts } from '@/shared/theme/Teacher/MyClassTheme';
+import TCustomapi from '@/shared/api/Taxios';
 import { CardGrid } from './styles';
 
 type TCategoryKey = '전체' | '활성화' | '비활성화';
@@ -25,13 +25,23 @@ const TcategoryMap: Record<TCategoryKey, number> = {
 export const TClassList: React.FC = () => {
   const [selectCategory, setSelectedCategory] = useState<TCategoryKey>('전체');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [posts, setPosts] = useState<TPost[]>([]);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    TCustomapi.get('/api/class')
+      .then(res => {
+        setPosts(res.data);
+        console.log(res.data);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
   const filteredByCategory: TPost[] =
     selectCategory === '전체'
-      ? TPosts
-      : TPosts.filter((post: TPost) => post.isActivation === TcategoryMap[selectCategory]);
+      ? posts
+      : posts.filter((post: TPost) => post.isActivation === TcategoryMap[selectCategory]);
 
   const filteredPosts: TPost[] = filteredByCategory.filter((post: TPost) =>
     post.name.toLowerCase().includes(searchQuery.toLowerCase())

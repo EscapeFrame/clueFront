@@ -15,10 +15,10 @@ export function Assignment() {
     if (classId) {
       Customapi.get(`/api/assignments/${classId}`)
         .then(res => { 
-          console.log(res.data);
+          console.log("데이터",res.data);
           setAssignments(res.data);
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error("오류코등",err));
     }
   }, [classId]);
 

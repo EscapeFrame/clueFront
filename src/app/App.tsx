@@ -24,12 +24,12 @@ function App() {
   useEffect(() => {
     const getJwtToken = async () => {
       try {
-        const response = await axios.post('http://10.129.57.64:8080/test', {
-          params: {
-            userId: 1,
-            username: '김한결',
-            role: 'STUDENT',
-          },
+        const response = await axios.post('http://10.129.57.64:8080/test?userId=1&username=김우성&role=STUDENT', {
+          // params: {
+          //   userId: 1,
+          //   username: '김한결',
+          //   role: 'STUDENT',
+          // },
         });
         const token = response.headers.authorization;
         console.log('JWT Token:', token);
@@ -44,6 +44,27 @@ function App() {
     } else {
       getJwtToken();
       localStorage.removeItem('accessToken');
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    const getJwtToken = async () => {
+      try {
+        const response = await axios.post('http://10.129.57.64:8080/test?userId=6&username=김기태&role=TEACHER', {
+        });
+        const token = response.headers.authorization;
+        console.log('JWT Token:', token);
+        setAccessToken(token);
+      } catch (error: any) {
+        console.error('JWT 발급 실패:', error.response?.data || error.message);
+      }
+    };
+
+    if (accessToken) {
+      localStorage.setItem('TaccessToken', accessToken);
+    } else {
+      getJwtToken();
+      localStorage.removeItem('TaccessToken');
     }
   }, [accessToken]);
 

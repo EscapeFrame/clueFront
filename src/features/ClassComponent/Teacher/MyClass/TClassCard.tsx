@@ -1,14 +1,20 @@
 import { useNavigate } from 'react-router-dom';
-import { type TPost } from '@/shared/theme/Teacher/MyClassTheme';
 import * as S from './styles';
 
-interface TClassCardProps extends TPost {}
+interface TClassCardProps {
+  classRoomId: string;
+  name: string;
+  sort: string;
+  target: string;
+  studentCount: number;
+  isActivation: number;
+}
 
 export function TClassCard({ classRoomId, name, sort, target, studentCount, isActivation }: TClassCardProps) {
   const navigate = useNavigate();
 
   return (
-    <S.CardContainer onClick={() => navigate(`/tclass/${classRoomId}`)}>
+    <S.CardContainer onClick={() => navigate(`/tclass/${classRoomId}/all`)}>
       <S.CardHeader>
         <S.Status active={isActivation === 1}>{isActivation === 1 ? '활성화' : '비활성화'}</S.Status>
       </S.CardHeader>

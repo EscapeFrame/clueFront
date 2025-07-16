@@ -7,6 +7,7 @@ import Customapi from "@/shared/api/axios";
 import LessonCard from "./LessonCard";
 import InfoBoard from "./InfoBoard/InfoBoard";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 // 디렉토리 항목
 export interface DirectoryItem {
@@ -26,17 +27,39 @@ export interface DirectorySection {
 }
 
 export default function Lesson() {
-  // const [directories,setDirectories] = useState<DirectorySection>()
-  
-  // useEffect(() => {
-  //   Customapi
-  // })
+  const { classId } = useParams<{ classId: string }>();
+  const [directories,setDirectories] = useState<DirectorySection[]>([])
+
+  useEffect(() => {
+    if (classId) {
+      Customapi.get(`/api/class/${classId}/all`)
+        .then(res => { 
+          console.log(res.data);
+          const data = res.data;
+          // directoryList를 DirectorySection[] 형태로 변환
+          const sections = (data.directoryList ?? []).map((dir: any) => ({
+            classRoomId: String(data.classRoomId),
+            title: dir.directoryName,
+            items: (dir.documentList ?? []).map((doc: any) => ({
+              id: doc.documentId,
+              name: doc.title,
+              directoryOrder: dir.directoryOrder,
+              url: undefined, // 필요시 doc에 url 필드 추가
+              isRead: false,  // 필요시 읽음 여부 계산
+            })),
+            isExpanded: false,
+          }));
+          setDirectories(sections);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [classId]);
 
   return (
     <LessonPageContainer>
       <ContentContainer>
         <LessonCardWrapper>
-          <LessonCard sections={Directories} />
+          <LessonCard sections={directories} classId={classId} />
         </LessonCardWrapper>
         <InfoBoardWrapper>
           <InfoBoard />

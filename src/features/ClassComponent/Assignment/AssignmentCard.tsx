@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Customapi from '@/shared/api/axios';
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { LuClock4 } from "react-icons/lu";
 import { FaRegFile, FaXmark } from "react-icons/fa6";
@@ -30,6 +31,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     name: f.fileName,
     size: `${f.fileSize} MB`
   })) ?? [];
+  const assignmentId = data.assignmentId;
 
   // buttonType, hasFile 등은 내부 상태로 관리
   const [submitted, setSubmitted] = useState(false);
@@ -41,10 +43,15 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       alert("파일을 먼저 업로드 해주세요.");
       return;
     }
-    // assignmentId를 과제 식별자로 사용
-    const url = `/class/dummy/${data.assignmentId}/upload/`;
+    const assignmentId = data.assignmentId;
+    const url = `/api/assignments/submit/${assignmentId}`;
+    // 첫 번째 파일만 전송 (여러 파일 지원 필요시 반복문 사용)
+    const formData = new FormData();
+    formData.append("file", files[0] && files[0].name ? files[0].name : "");
     try {
-      await fetch(url);
+      await Customapi.post(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
       setSubmitted(true);
       alert("과제가 제출되었습니다.");
       setShowUploadModal(false);
@@ -68,9 +75,8 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       const formData = new FormData();
       formData.append("file", f);
       try {
-        await fetch(`/class/dummy/${data.assignmentId}/upload`, {
-          method: 'POST',
-          body: formData,
+        await Customapi.post(`/api/assignments/submit/${assignmentId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" }
         });
         uploadedFiles.push({
           id: crypto.randomUUID(),
@@ -93,6 +99,9 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
   const closeUploadModal = () => setShowUploadModal(false);
   const handleResubmitClick = () => {
     setSubmitted(false);
+    Customapi.delete(`/api/assignments/submit/${assignmentId}`)
+    .then(res => { console.log("제출취소") })
+    .catch(err => console.error(err));
   };
   const statusClass = submitted ? <StatusSubmitted>제출됨</StatusSubmitted> : <StatusNotSubmitted>미제출</StatusNotSubmitted>;
   const onFileInfoClick = (file: FileInfoType) => {
