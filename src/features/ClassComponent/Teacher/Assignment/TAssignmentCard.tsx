@@ -60,6 +60,7 @@ export function TAssignmentCard({ data, onCheck }: AssignmentCardProps) {
     }
   };
 
+  
   const handleFileRemove = (id: string) => {
     setFiles(files.filter(file => file.id !== id));
   };
