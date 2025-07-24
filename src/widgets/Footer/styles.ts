@@ -1,0 +1,41 @@
+import styled from '@emotion/styled';
+import { theme } from '@/shared/theme/theme.styles';
+import { fonts } from '@/shared/theme/font.styles';
+
+export const Container = styled.div`
+  width: 100vw;
+  max-width: 100vw;
+  background: ${theme.colors.gray[200]};
+  height: auto;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 1000; // 필요하면 올려주세요
+`;
+
+export const LogoImg = styled.div`
+  width: 120px;
+  height: 60px;
+  background-image: url('/paletto.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
+export const Content = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  gap: 2rem;
+`;
+
+export const ItemList = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  gap: 36px;
+  color: ${theme.colors.gray[500]}
+`;
+
+export const Item = styled.p`
+  ${fonts.P2}
+  font-weight: 600;
+`;

@@ -1,0 +1,82 @@
+import { ScheduleItem } from '@/shared/types/schedule';
+
+export const STUSchedule: ScheduleItem[] = [
+  { day: 'MON', period: 1, subject: '국어', description: '시 읽기 및 감상' },
+  { day: 'MON', period: 2, subject: '수학', description: '도형의 성질 학습' },
+  { day: 'MON', period: 3, subject: '영어' },
+  { day: 'MON', period: 4, subject: '과학', description: '식물의 구조 실험' },
+  { day: 'MON', period: 5, subject: '음악' },
+  { day: 'MON', period: 6, subject: '역사', description: '조선시대 탐구' },
+  { day: 'MON', period: 7, subject: '체육', description: '배드민턴 기초' },
+
+  { day: 'TUE', period: 1, subject: '영어', description: '회화 표현 연습' },
+  { day: 'TUE', period: 2, subject: '사회' },
+  { day: 'TUE', period: 3, subject: '수학', description: '분수의 덧셈' },
+  { day: 'TUE', period: 4, subject: '음악', description: '리코더 연습' },
+  { day: 'TUE', period: 5, subject: '음악' },
+  { day: 'TUE', period: 6, subject: '국어', description: '독서 토론' },
+  { day: 'TUE', period: 7, subject: '미술', description: '수채화 표현기법' },
+
+  { day: 'WED', period: 1, subject: '국어' },
+  { day: 'WED', period: 2, subject: '수학', description: '곱셈과 나눗셈 복습' },
+  { day: 'WED', period: 3, subject: '영어' },
+  { day: 'WED', period: 4, subject: '사회', description: '지방자치의 이해' },
+  { day: 'WED', period: 5, subject: '과학' },
+  { day: 'WED', period: 6, subject: '체육', description: '농구 경기 연습' },
+  { day: 'WED', period: 7, subject: '미술' },
+
+  { day: 'THU', period: 1, subject: '미술', description: '콜라주 만들기' },
+  { day: 'THU', period: 2, subject: '영어' },
+  { day: 'THU', period: 3, subject: '과학', description: '마찰력 실험' },
+  { day: 'THU', period: 4, subject: '수학' },
+  { day: 'THU', period: 5, subject: '국어' },
+  { day: 'THU', period: 6, subject: '음악', description: '합창 연습' },
+  { day: 'THU', period: 7, subject: '미술' },
+
+  { day: 'FRI', period: 1, subject: '사회', description: '세계 여러 나라' },
+  { day: 'FRI', period: 2, subject: '국어', description: '문법 기초 정리' },
+  { day: 'FRI', period: 3, subject: '수학' },
+  { day: 'FRI', period: 4, subject: '체육' },
+  { day: 'FRI', period: 5, subject: '과학', description: '기체의 성질 실험' },
+];
+
+export const TCHSchedule: (ScheduleItem | null)[] = [
+  { day: 'MON', period: 1, subject: '국어', description: '시 감상' },
+  null,
+  { day: 'MON', period: 3, subject: '국어' },
+  null,
+  null,
+  { day: 'MON', period: 6, subject: '국어', description: '문법 연습' },
+  null,
+
+  null,
+  { day: 'TUE', period: 2, subject: '국어', description: '독서 활동' },
+  null,
+  null,
+  { day: 'TUE', period: 5, subject: '국어' },
+  null,
+  null,
+
+  { day: 'WED', period: 1, subject: '국어' },
+  null,
+  null,
+  { day: 'WED', period: 4, subject: '국어', description: '글쓰기' },
+  null,
+  null,
+  null,
+
+  null,
+  null,
+  { day: 'THU', period: 3, subject: '국어' },
+  null,
+  null,
+  { day: 'THU', period: 6, subject: '국어' },
+  null,
+
+  { day: 'FRI', period: 1, subject: '국어' },
+  null,
+  { day: 'FRI', period: 3, subject: '국어', description: '작문 피드백' },
+  null,
+  null,
+  null,
+];

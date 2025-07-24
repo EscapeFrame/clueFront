@@ -1,0 +1,94 @@
+import styled from '@emotion/styled';
+import { theme } from '@/shared/theme/theme.styles';
+import { fonts } from '@/shared/theme/font.styles';
+
+export const Container = styled.div`
+  display: flex;
+  padding: 2rem 8rem;
+  gap: 2rem;
+`;
+
+export const LeftPanel = styled.div`
+  width: 70%;
+`;
+
+export const RightPanel = styled.div`
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+export const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+export const DirectoryWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Item = styled.div<{ $isRead: boolean }>`
+  background-color: ${theme.colors.white};
+  border: 1px solid ${theme.colors.gray[300]};
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+`;
+
+export const SubItem = styled.div<{ $isRead: boolean }>`
+  background-color: ${theme.colors.gray[200]};
+  border: 1px solid ${theme.colors.gray[300]};
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+`;
+
+export const Check = styled.span`
+  width: 1rem;
+  text-align: center;
+  color: ${theme.colors.blue[500]};
+`;
+
+export const Name = styled.span`
+  flex-grow: 1;
+`;
+
+export const Icon = styled.span`
+  margin-left: auto;
+`;
+
+// 모달 내 텍스트 스타일 통일
+export const ModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+export const ModalTitle = styled.h3`
+  ${fonts.P2}
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+`;
+
+export const ModalText = styled.p`
+  ${fonts.P2}
+  color: ${theme.colors.black};
+  margin: 0;
+  padding: 0;
+`;
+
+export const ModalMeta = styled.p`
+  ${fonts.P1}
+  color: ${theme.colors.gray[600]};
+  margin: 0;
+  padding: 0;
+`;
