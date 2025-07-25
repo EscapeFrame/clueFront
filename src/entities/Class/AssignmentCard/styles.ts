@@ -128,3 +128,27 @@ export const ButtonSection = styled.div`
   gap: 0.5rem;
   margin-top: auto;
 `;
+
+export const DelChose = styled.input`
+  display: none;
+`;
+
+export const ChoseFile = styled.label`
+  display: inline-block;
+  ${fonts.P2}
+  margin-top: 0.5rem;
+  background-color: ${theme.colors.gray[300]};
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  color: ${theme.colors.black};
+  cursor: pointer;
+  &:hover {
+    color: ${theme.colors.blue[600]};
+  }
+`;
+
+export const FileList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
