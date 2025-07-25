@@ -152,3 +152,15 @@ export const FileList = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 `;
+
+export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
+  border: ${({ isDragOver }) => isDragOver ? '2px solid #1976d2' : '2px dashed #ccc'};
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 12px;
+  text-align: center;
+  background: ${({ isDragOver }) => isDragOver ? '#e3f2fd' : '#fafafa'};
+  transition: background 0.2s, border 0.2s;
+  cursor: pointer;
+  user-select: none;
+`;

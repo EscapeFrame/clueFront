@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Customapi from '@/shared/config/api';
 import * as s from './styles';
 import { Modal } from '@/entities/UI/Modal';
@@ -9,8 +9,10 @@ import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import Button from '@/entities/UI/Button';
 import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/classroom';
 import { differenceInDays, parseISO } from 'date-fns';
+import { MdOutlineFileUpload } from "react-icons/md";
 
-interface UploadedFile { id: string; name: string; size: string; file?: File}
+
+interface UploadedFile { id: string; name: string; size: string; file?: File }
 
 function isAssignmentFileType(f: any): f is AssignmentFileType {
   return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
@@ -26,6 +28,8 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const [tempFiles, setTempFiles] = useState<UploadedFile[]>([]); // 업로드 중인 파일(파일 선택 후 업로드 전)
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -55,6 +59,24 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
   const handleUploadModalComplete = () => {
     setUploadedFiles(tempFiles);
     setShowUploadModal(false);
+  };
+
+  // 드래그 앤 드롭 핸들러
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      handleFileUpload({ target: { files } } as React.ChangeEvent<HTMLInputElement>);
+    }
   };
 
   const handleSubmit = async () => {
@@ -147,8 +169,26 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
           ]}
         >
           <div>
-            <s.ChoseFile htmlFor="fileUpload">파일선택</s.ChoseFile>
-            <s.DelChose id="fileUpload" type="file" multiple onChange={handleFileUpload} accept="*" />
+            {/* 드래그 앤 드롭 영역 */}
+            <s.FileUploadArea
+              isDragOver={isDragOver}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+                <MdOutlineFileUpload size={60} /> <br />
+                {isDragOver ? '여기에 파일을 놓으세요!' : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}
+            </s.FileUploadArea>
+            <input
+              ref={fileInputRef}
+              id="fileUpload"
+              type="file"
+              multiple
+              onChange={handleFileUpload}
+              accept="*"
+              style={{ display: 'none' }}
+            />
             <s.FileList>
               {tempFiles.length === 0 ? (
                 <p>파일이 없습니다</p>
