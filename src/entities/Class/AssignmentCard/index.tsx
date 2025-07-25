@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Customapi from '@/shared/config/api';
 import * as s from './styles';
 import { Modal } from '@/entities/UI/Modal';
@@ -9,8 +9,10 @@ import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import Button from '@/entities/UI/Button';
 import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/classroom';
 import { differenceInDays, parseISO } from 'date-fns';
+import { MdOutlineFileUpload } from "react-icons/md";
 
-interface UploadedFile { id: string; name: string; size: string; }
+
+interface UploadedFile { id: string; name: string; size: string; file?: File }
 
 function isAssignmentFileType(f: any): f is AssignmentFileType {
   return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
@@ -25,34 +27,67 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
   );
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
+  const [tempFiles, setTempFiles] = useState<UploadedFile[]>([]); // 업로드 중인 파일(파일 선택 후 업로드 전)
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files?.length) return;
-
     const newFiles: UploadedFile[] = [];
     for (const file of Array.from(files)) {
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-        await Customapi.post(`/api/assignments/submit/${data.id}`, formData);
-        newFiles.push({ id: crypto.randomUUID(), name: file.name, size: `${(file.size / 1024).toFixed(1)} KB` });
-      } catch {
-        alert(`${file.name} 업로드 실패`);
-      }
+      newFiles.push({
+        id: crypto.randomUUID(),
+        name: file.name,
+        size: `${(file.size / 1024).toFixed(1)} KB`,
+        file,
+      });
     }
     if (newFiles.length) {
-      setUploadedFiles(prev => [...prev, ...newFiles]);
-      alert('업로드 완료');
-      setShowUploadModal(false);
+      setTempFiles(prev => [...prev, ...newFiles]);
+      alert('파일이 추가되었습니다.');
+    }
+  };
+
+  // 파일 업로드 모달 닫기
+  const handleUploadModalClose = () => {
+    setTempFiles([]);
+    setShowUploadModal(false);
+  };
+
+  // 파일 업로드 모달 완료
+  const handleUploadModalComplete = () => {
+    setUploadedFiles(tempFiles);
+    setShowUploadModal(false);
+  };
+
+  // 드래그 앤 드롭 핸들러
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      handleFileUpload({ target: { files } } as React.ChangeEvent<HTMLInputElement>);
     }
   };
 
   const handleSubmit = async () => {
     if (!uploadedFiles.length) return alert('파일을 먼저 업로드 해주세요.');
+
+    const fileToSubmit = uploadedFiles[0].file;
+    if (!fileToSubmit) return alert('파일 데이터가 없습니다.');
+
     try {
       const formData = new FormData();
-      formData.append('file', uploadedFiles[0].name);
+      formData.append('file', fileToSubmit);
       await Customapi.post(`/api/assignments/submit/${data.id}`, formData);
       setIsSubmitted(true);
       alert('과제 제출 완료');
@@ -116,9 +151,9 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
             {isSubmitted
               ? <Button type={1} text="다시 제출하기" onClick={handleResubmit} />
               : <>
-                  <Button type={0} text="파일 업로드" onClick={() => setShowUploadModal(true)} />
-                  <Button type={1} text="과제 제출하기" onClick={handleSubmit} />
-                </>
+                <Button type={0} text="파일 업로드" onClick={() => setShowUploadModal(true)} />
+                <Button type={1} text="과제 제출하기" onClick={handleSubmit} />
+              </>
             }
           </s.ButtonSection>
         </s.InfoSection>
@@ -127,10 +162,45 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
       {showUploadModal && (
         <Modal
           title="파일 업로드"
-          onClose={() => setShowUploadModal(false)}
-          buttons={[{ text: '닫기', type: 0, onClick: () => setShowUploadModal(false) }]}
+          onClose={handleUploadModalClose}
+          buttons={[
+            { text: '닫기', type: 0, onClick: handleUploadModalClose },
+            { text: '완료', type: 1, onClick: handleUploadModalComplete },
+          ]}
         >
-          <input type="file" multiple onChange={handleFileUpload} accept="*" />
+          <div>
+            {/* 드래그 앤 드롭 영역 */}
+            <s.FileUploadArea
+              isDragOver={isDragOver}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+                <MdOutlineFileUpload size={60} /> <br />
+                {isDragOver ? '여기에 파일을 놓으세요!' : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}
+            </s.FileUploadArea>
+            <input
+              ref={fileInputRef}
+              id="fileUpload"
+              type="file"
+              multiple
+              onChange={handleFileUpload}
+              accept="*"
+              style={{ display: 'none' }}
+            />
+            <s.FileList>
+              {tempFiles.length === 0 ? (
+                <p>파일이 없습니다</p>
+              ) : (
+                <ul>
+                  {tempFiles.map((file) => (
+                    <li key={file.id}>{file.name}</li>
+                  ))}
+                </ul>
+              )}
+            </s.FileList>
+          </div>
         </Modal>
       )}
 
