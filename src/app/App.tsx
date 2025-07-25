@@ -1,146 +1,30 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider, Global } from '@emotion/react';
+import { theme } from '@/shared/theme/theme.styles';
+import { globalStyles } from '@/shared/theme/global';
 import { RecoilRoot } from 'recoil';
-import Login from '../pages/login'
+import { BrowserRouter as Router } from 'react-router-dom';
 import { UserContext } from '@/entities/Context/LoginContext';
-import { useState, useEffect } from 'react';
-import NotFound from '@/pages/NotFound/NotFound';
-import Home from '../pages/Home/home';
-import MyClass from '@/pages/MyClass/MyClass';
-import ClassRoom from '@/pages/ClassRoom/ClassRoom';
-import TMyclass from '@/pages/TMyClass/TMyclass';
-import TClassRoom from '@/pages/TClassRoom/TClassRoom';
-import Oauth2Test from '@/features/Login/text';
-import TCheckStudent from '@/features/ClassComponent/Teacher/Assignment/TCheckStudent';
-import axios from 'axios';
-import Navbar from '@/widgets/Navbar/Navbar';
-import MakeClass from '@/pages/MakeClass/MakeClass';
-import Customapi from '@/shared/api/axios';
+import { AppRoutes } from '@/app/router/AppRoutes';
+import { useAccessToken } from './hooks/useAccessToken';
+import {STUNumber, Name, MyImg} from '@/shared/types/user'; // 이 부분 어떻게 해야하지..
+import Navbar from '@/widgets/Navbar/index';
 
-function App() {
-  const [accessToken, setAccessToken] = useState<string | null>(() => {
-    return localStorage.getItem('accessToken');
-  });
-
-  useEffect(() => {
-    const getJwtToken = async () => {
-      try {
-        const response = await axios.post('http://10.129.57.64:8080/test?userId=1&username=김우성&role=STUDENT', {
-          // params: {
-          //   userId: 1,
-          //   username: '김한결',
-          //   role: 'STUDENT',
-          // },
-        });
-        const token = response.headers.authorization;
-        console.log('JWT Token:', token);
-        setAccessToken(token);
-      } catch (error: any) {
-        console.error('JWT 발급 실패:', error.response?.data || error.message);
-      }
-    };
-
-    if (accessToken) {
-      localStorage.setItem('accessToken', accessToken);
-    } else {
-      getJwtToken();
-      localStorage.removeItem('accessToken');
-    }
-  }, [accessToken]);
-
-  useEffect(() => {
-    const getJwtToken = async () => {
-      try {
-        const response = await axios.post('http://10.129.57.64:8080/test?userId=6&username=김기태&role=TEACHER', {
-        });
-        const token = response.headers.authorization;
-        console.log('JWT Token:', token);
-        setAccessToken(token);
-      } catch (error: any) {
-        console.error('JWT 발급 실패:', error.response?.data || error.message);
-      }
-    };
-
-    if (accessToken) {
-      localStorage.setItem('TaccessToken', accessToken);
-    } else {
-      getJwtToken();
-      localStorage.removeItem('TaccessToken');
-    }
-  }, [accessToken]);
-
-  // useEffect(() => {
-  //   const getJwtToken = async () => {
-  //     try {
-  //       const response = await axios.post('http://10.129.57.64:8080/test?userId=2&username=admin&role=TEACHER'
-  //       );
-  //       console.log(response.headers.authorization)
-  //       const token = response.headers.authorization
-  //       console.log('JWT Token:', token);
-  //       setAccessToken(token);
-  //     } catch (error: any) {
-  //       console.error('JWT 발급 실패:', error.response?.data || error.message);
-  //     }
-  //   };
-
-  //   if (accessToken) {
-  //     localStorage.setItem('accessToken', accessToken);
-  //   } else {
-  //     getJwtToken();
-  //     localStorage.removeItem('accessToken');
-  //   }
-  // }, [accessToken]);
-
-  useEffect(() => {
-    if (!accessToken) {
-      (async () => {
-        try {
-          const res = await axios.post(
-            "http://localhost:8080/refresh-token",
-            {},
-            {
-              withCredentials: true,
-            }
-          );
-          const authHeader = res.headers["authorization"];
-          if (authHeader) {
-            const token = authHeader.split(" ")[1];
-            localStorage.setItem("accessToken", token);
-            setAccessToken(token);
-          }
-        } catch (err) {
-          console.warn("자동 리프레시 실패:", err);
-        }
-      })();
-    }
-  }, [accessToken]);
-
-  console.log("액세스토큰 : ", accessToken);
+export default function App() {
+  const { accessToken, setAccessToken } = useAccessToken();
+  const role1 = 'STU'; // 프론트 값 확인용(삭제해야댐)
+  const role2 = 'TCH';
 
   return (
     <RecoilRoot>
-      <Router>
-        <UserContext.Provider
-          value={{ accessToken, setAccessToken }}
-        >
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            {/* <Route path="/class" element={<Class />} /> */}
-            <Route path="/Login" element={<Login />} />
-            <Route path="/Login/test" element={<Oauth2Test />} />
-            {/* <Route path="/auth/callback/google" element={<Google />} /> */}
-            <Route path="/class" element={<MyClass />} />
-            <Route path="/class/:classId" element={<ClassRoom />} />
-            <Route path="/tclass" element={<TMyclass />} />
-            <Route path="/tclass/:classId" element={<TClassRoom />} />
-            <Route path="/tclass/:classId/homework/:lessonId" element={<TCheckStudent />} />
-            <Route path="/tclass/make" element={<MakeClass />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </UserContext.Provider>
-      </Router>
+      <ThemeProvider theme={theme}>
+        <Global styles={globalStyles} />
+        <Router>
+          <UserContext.Provider value={{ accessToken, setAccessToken }}>
+            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} />
+            <AppRoutes role={role1} />
+          </UserContext.Provider>
+        </Router>
+      </ThemeProvider>
     </RecoilRoot>
   );
 }
-
-export default App;
