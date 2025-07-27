@@ -92,3 +92,11 @@ export const ModalMeta = styled.p`
   margin: 0;
   padding: 0;
 `;
+
+export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
+  overflow: auto;
+  max-height: ${({ $isExpanded }) => ($isExpanded ? '2000px' : '0')};
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+`;

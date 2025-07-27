@@ -104,20 +104,21 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           {directories.map(dir => {
             const isExpanded = expandedIds.has(dir.id);
             return (
-              <s.DirectoryWrapper key={dir.id}>
+              <s.DirectoryWrapper key={dir.id}> 
                 <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
                   <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
                   <s.Name>{dir.name}</s.Name>
                   <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
                 </s.Item>
-
-                {isExpanded &&
-                  dir.subDirectories?.map(sub => (
+                {/* 서브디렉토리 */}
+                <s.SubDirectoryList $isExpanded={isExpanded}>
+                  {dir.subDirectories?.map(sub => (
                     <s.SubItem key={sub.id} $isRead={sub.isRead} onClick={() => handleDirectoryClick(sub, true)}>
                       <s.Check>{sub.isRead && <FaCircleCheck />}</s.Check>
                       <s.Name>{sub.name}</s.Name>
                     </s.SubItem>
                   ))}
+                </s.SubDirectoryList>
               </s.DirectoryWrapper>
             );
           })}
