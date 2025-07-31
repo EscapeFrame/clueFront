@@ -1,9 +1,13 @@
 import { ScheduleItem } from '@/shared/types/schedule';
 import * as s from './styles';
+import React, { useState } from 'react';
 
 interface Props {
   data: (ScheduleItem | null)[];
   maxPeriod?: number;
+  editable?: boolean;
+  onChangeSchedule?: (updated: ScheduleItem) => void;
+  onCellClick?: (day: ScheduleItem['day'], period: number) => void;
 }
 
 const DAYS = [
@@ -14,11 +18,59 @@ const DAYS = [
   { key: 'FRI' },
 ];
 
-export const ScheduleTable: React.FC<Props> = ({ data, maxPeriod = 7 }) => {
+export const ScheduleTable: React.FC<Props> = ({ data, maxPeriod = 7, editable = false, onChangeSchedule, onCellClick }) => {
+  const [editCell, setEditCell] = useState<{ day: ScheduleItem['day']; period: number } | null>(null);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleCellClick = (day: ScheduleItem['day'], period: number) => {
+    if (onCellClick) {
+      onCellClick(day, period);
+      return;
+    }
+    
+    if (!editable) return;
+    const item = data.find(d => d?.day === day && d?.period === period);
+    setEditCell({ day, period });
+    setInputValue(item ? item.subject : '');
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = () => {
+    if (editCell && onChangeSchedule) {
+      onChangeSchedule({ day: editCell.day, period: editCell.period, subject: inputValue });
+    }
+    setEditCell(null);
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleInputBlur();
+    }
+  };
+
   const renderCell = (day: ScheduleItem['day'], period: number) => {
     const item = data.find(d => d?.day === day && d?.period === period);
     const subject = item ? item.subject : '-';
-    return <s.Cell key={`${day}-${period}`}>{subject}</s.Cell>;
+    const isEditing = editable && editCell && editCell.day === day && editCell.period === period;
+    return (
+      <s.Cell key={`${day}-${period}`} onClick={() => handleCellClick(day, period)} style={editable ? { cursor: 'pointer' } : {}}>
+        {isEditing ? (
+          <input
+            autoFocus
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onKeyDown={handleInputKeyDown}
+            style={{ width: '90%', fontSize: '1rem' }}
+          />
+        ) : (
+          subject
+        )}
+      </s.Cell>
+    );
   };
 
   return (

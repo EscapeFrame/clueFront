@@ -37,4 +37,5 @@ export const Cell = styled.td<{ isLunch?: boolean }>`
   border: 1px solid ${theme.colors.gray[300]};
   background: ${({ isLunch }) => (isLunch ? '${theme.colors.gray[200]}' : '${theme.colors.white}')};
   text-align: center;
+  white-space: pre-line;
 `;
