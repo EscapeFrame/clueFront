@@ -14,4 +14,6 @@ export interface ModalProps {
   buttons: ButtonData[];
   onFileUpload?: (files: FileList | null) => void;
   placeholder?: string;
+  inputValue?: string;
+  onInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
