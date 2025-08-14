@@ -60,3 +60,15 @@ export const ErrorText = styled.p`
   ${fonts.P1}
   margin-top: 4px;
 `;
+
+export const InputWrapper = styled.div`
+  position: relative;
+`;
+
+export const Icon = styled.div`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${theme.colors.gray[600]};
+`;

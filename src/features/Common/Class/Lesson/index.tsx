@@ -76,7 +76,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     return (
       <Modal
         title={type === 'news' ? '새소식' : '질문'}
-        notes="기본"
+        notes="default"
         onClose={() => setSelectedModal(null)}
         isWarning={false}
         buttons={[{ text: '닫기', type: 1, onClick: () => setSelectedModal(null) }]}

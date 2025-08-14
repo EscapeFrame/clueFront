@@ -10,6 +10,8 @@ import TCHHome from '@/pages/Teacher/Main/index';
 import TCHMyClass from '@/pages/Teacher/MyClass';
 import TCHMakeClass from '@/pages/Teacher/MakeClass';
 import AddTimeLine from '@/pages/Teacher/AddTimeLine';
+import TCHMakeTask from '@/pages/Teacher/MakeTask';
+import TCHMakeScorecard from '@/pages/Teacher/MakeScorecard';
 
 
 interface AppRoutesProps {
@@ -25,6 +27,8 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/class" element={<TCHMyClass />} />
           <Route path='/class/make' element={<TCHMakeClass />} />
           <Route path='/timeline' element={<AddTimeLine />} />
+          <Route path='/class/maketask' element={<TCHMakeTask />} />
+          <Route path='/class/makescore' element={<TCHMakeScorecard />} />
         </>
       )}
       {role === 'STU' && (
