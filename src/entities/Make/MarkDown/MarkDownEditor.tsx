@@ -3,7 +3,7 @@ import MDEditor from '@uiw/react-md-editor';
 import * as s from './styles';
 import { useNavigate } from 'react-router-dom';
 
-export default function MarkDwonEditior() {
+export default function MarkDwonEditor() {
     const [mdContent, setMdContent] = useState('# 마크다운을 작성해보세요\n\n## 제목\n- 목록 1\n- 목록 2\n\n**굵은 글씨**와 *기울임체*도 사용할 수 있습니다.');
     const navigate = useNavigate();
 
