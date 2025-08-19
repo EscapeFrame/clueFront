@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { blue } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
   display: flex;
@@ -38,6 +39,32 @@ export const SectionTitle = styled.h3`
   color: #495057;
 `;
 
+export const previousButton = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  color : ${blue[500]};
+  cursor: pointer;
+`;
+
+export const cancelButton = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  color : ${blue[500]};
+  cursor: pointer;
+`;
+
+export const endButton = styled.div`
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  color : black;
+  background-color : ${blue[500]};
+  border-radius: 5px;
+  cursor: pointer;
+  padding-left: 30px;
+  padding-right: 30px;
+`;
+
 export const EditorWrapper = styled.div`
   flex: 1;
   overflow: hidden;
@@ -50,6 +77,17 @@ export const EditorWrapper = styled.div`
   .w-md-editor-content {
     border-radius: 0;
   }
+`;
+
+export const saveWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-right: 10px;
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const ViewerWrapper = styled.div`
