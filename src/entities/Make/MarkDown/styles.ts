@@ -4,7 +4,7 @@ import { blue } from '@/shared/theme/theme.styles';
 export const Container = styled.div`
   display: flex;
   gap: 20px;
-  height: 100%;
+  height: 100vh;
   padding: 20px;
   background-color: #f8f9fa;
 `;
@@ -17,6 +17,7 @@ export const EditorSection = styled.div`
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  height: 95%;
 `;
 
 export const ViewerSection = styled.div`
@@ -27,6 +28,7 @@ export const ViewerSection = styled.div`
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  height: 95%;
 `;
 
 export const SectionTitle = styled.h3`
@@ -68,6 +70,8 @@ export const endButton = styled.div`
 export const EditorWrapper = styled.div`
   flex: 1;
   overflow: hidden;
+
+  height: 100%;
   
   .w-md-editor {
     border: none;
