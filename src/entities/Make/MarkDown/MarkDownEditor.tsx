@@ -37,7 +37,7 @@ export default function MarkDwonEditor() {
                 <s.SectionTitle>마크다운 에디터</s.SectionTitle>
                 <s.EditorWrapper data-color-mode="light">
                     <MDEditor
-                        height={800}
+                        height="100%"
                         value={mdContent}
                         autoFocus={true}
                         style={{ whiteSpace: 'pre-wrap' }}
