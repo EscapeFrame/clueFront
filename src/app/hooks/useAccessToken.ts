@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import CustomApi from '@/shared/config/api';
 
 export const useAccessToken = () => {
   const [accessToken, setAccessToken] = useState<string | null>(() => {
@@ -10,8 +10,8 @@ export const useAccessToken = () => {
   useEffect(() => {
     const getJwtToken = async () => {
       try {
-        const response = await axios.post(
-          'http://10.129.57.64:8080/test?userId=1&username=김우성&role=STUDENT'
+        const response = await CustomApi.post(
+          '/test?userId'
         );
         const token = response.headers.authorization;
         setAccessToken(token);
@@ -32,8 +32,8 @@ export const useAccessToken = () => {
   useEffect(() => {
     const getJwtToken = async () => {
       try {
-        const response = await axios.post(
-          'http://10.129.57.64:8080/test?userId=6&username=김기태&role=TEACHER'
+        const response = await CustomApi.post(
+          '/test?userId'
         );
         const token = response.headers.authorization;
         localStorage.setItem('TaccessToken', token);
@@ -52,8 +52,8 @@ export const useAccessToken = () => {
     if (!accessToken) {
       (async () => {
         try {
-          const res = await axios.post(
-            "http://localhost:8080/refresh-token",
+          const res = await CustomApi.post(
+            "/refresh-token",  
             {},
             { withCredentials: true }
           );
