@@ -11,7 +11,7 @@ export const useAccessToken = () => {
     const getJwtToken = async () => {
       try {
         const response = await CustomApi.post(
-          '/test?userId=1&username=김우성&role=STUDENT'
+          '/test?userId'
         );
         const token = response.headers.authorization;
         setAccessToken(token);
@@ -33,7 +33,7 @@ export const useAccessToken = () => {
     const getJwtToken = async () => {
       try {
         const response = await CustomApi.post(
-          '/test?userId=6&username=김기태&role=TEACHER'
+          '/test?userId'
         );
         const token = response.headers.authorization;
         localStorage.setItem('TaccessToken', token);
