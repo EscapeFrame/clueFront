@@ -25,7 +25,7 @@ const Classroom: React.FC = () => {
     }
   }, []);
 
-  // ✅lassRoomId가 있을 때 API 호출
+  // classRoomId가 있을 때 API 호출
   useEffect(() => {
     if (!classRoomId) return;
 

@@ -38,3 +38,7 @@ export const ModalInput = styled.input`
   border: 1px solid ${theme.colors.gray[300]};
   outline: none;
 `
+
+export const ErrorMessage  = styled.input`
+  color: ${theme.colors.red};
+`;
