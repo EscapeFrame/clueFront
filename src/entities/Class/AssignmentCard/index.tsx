@@ -9,7 +9,7 @@ import Button from '@/entities/UI/Button';
 import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/classroom';
 import { differenceInDays, parseISO } from 'date-fns';
 import { MdOutlineFileUpload } from "react-icons/md";
-import { submitAssignment, DeleteAssignment } from '../api';
+import { SubmitAssignment, DeleteAssignment } from '../api';
 
 
 interface UploadedFile { id: string; name: string; size: string; file?: File }  
@@ -86,7 +86,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     if (!fileToSubmit) return alert('파일 데이터가 없습니다.');
 
     try {
-      await submitAssignment(data.id, fileToSubmit);
+      await SubmitAssignment(data.id, fileToSubmit);
       setIsSubmitted(true);
       alert('과제 제출 완료');
       setShowUploadModal(false);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as S from "./styles";
 
 import { Modal } from "@/entities/UI/Modal";
@@ -7,6 +7,7 @@ import Button from "@/entities/UI/Button";
 import DateInput from "@/entities/UI/InputBox/DateInput";
 import InputBox from "@/entities/UI/InputBox/Input";
 import AttachmentBox from "@/entities/UI/Attachment";
+import { SendMakeTask, attachFile } from "./api";
 
 interface Attachment {
   type: "file" | "link";
@@ -16,6 +17,8 @@ interface Attachment {
 }
 
 const MakeTask = () => {
+  const { classId } = useParams<{ classId: string | '' }>();
+
   const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
 
@@ -61,6 +64,25 @@ const MakeTask = () => {
     setLinkPlatform(null);
     setIsLinkModalOpen(false);
   };
+
+  const MakeTask = async () => {
+    if (classId) {
+      const taskData = {
+        classId: Number(classId),
+        title: subject,
+        content: description,
+        start_date: startDate,
+        end_date: dueDate
+      };
+      try {
+        const assignmentId = await SendMakeTask(taskData);
+        await attachFile(assignmentId, attachments);
+        console.log("과제 생성완료");
+      } catch(error) {
+        console.error('과제 생성 실패:',error)
+      }
+    }
+  }
 
   return (
     <S.Container>
@@ -112,7 +134,7 @@ const MakeTask = () => {
       <Button
         text="완료"
         disabled={!isFormValid}
-        onClick={() => alert("제출 완료")}
+        onClick={() => MakeTask()}
       />
 
       {/* 파일 업로드 모달 */}
