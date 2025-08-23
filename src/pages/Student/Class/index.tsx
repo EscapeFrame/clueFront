@@ -7,12 +7,16 @@ import TabSelector from '@/entities/UI/TabSelect';
 import LessonComponent from '@/features/Common/Class/Lesson';
 import { AssignmentComponent } from '@/features/Common/Class/Assignment';
 import { ExamComponent } from '@/features/Common/Class/Exam';
-import { classData, tabs } from './data';
+import { classData as fetchClassData, tabs } from './data';
+import { ClassInfoProps } from '@/shared/types/classroom';
 import NotFound from '@/pages/NotFound';
 
 const Classroom: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId: string }>();
   const [activeTab, setActiveTab] = useState('lesson');
+
+  // API로 가져온 클래스 정보를 담을 state
+  const [classInfo, setClassInfo] = useState<ClassInfoProps | null>(null);
 
   useEffect(() => {
     const savedTab = localStorage.getItem('classroom-tab');
@@ -20,6 +24,22 @@ const Classroom: React.FC = () => {
       setActiveTab(savedTab);
     }
   }, []);
+
+  // classRoomId가 있을 때 API 호출
+  useEffect(() => {
+    if (!classRoomId) return;
+
+    fetchClassData(classRoomId)
+      .then((data) => {
+        if (typeof data === 'number') {
+          console.error('클래스룸 조회 실패, 상태 코드:', data);
+          return;
+        }
+        setClassInfo(data); // 이제 안전하게 상태에 넣음
+      })
+      .catch((err) => console.error('클래스룸 정보 로딩 실패: ', err));
+  }, [classRoomId]);
+
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -43,7 +63,7 @@ const Classroom: React.FC = () => {
 
   return (
     <s.Container>
-      <ClassInfo {...classData} />
+      {classInfo ? <ClassInfo {...classInfo} /> : <p>로딩중...</p>}
       <TabSelector
         tabs={tabs}
         activeTab={activeTab}

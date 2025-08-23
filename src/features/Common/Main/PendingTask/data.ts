@@ -1,12 +1,6 @@
-export interface Post {
-    title: string;      // 과목/과제 이름
-    dueDate: string;    // 마감일 (YYYY-MM-DD)
-    body: string;       // 본문
-    link: string;       // 제출 링크
-    available: boolean; // 링크 연결 여부
-}
+import { PendingTaskItem } from '@/shared/types/task';
 
-export const Posts: Post[] = [
+export const Posts: PendingTaskItem[] = [
   {
     title: "국어 수행평가",
     dueDate: "2025-07-21",

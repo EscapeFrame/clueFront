@@ -2,10 +2,11 @@ import { useState } from 'react';
 import NoticeCard from '@/entities/Main/NoticeCard/index';
 import { Modal } from '@/entities/UI/Modal/index';
 import * as s from './styles';
-import { NoticeListItem, serviceNotices, schoolNotices, scheduleNotices } from '@/entities/Main/NoticeCard/Notice.hooks';
+import { NoticeItem } from '@/shared/types/notice';
+import { serviceNotices, schoolNotices, scheduleNotices } from '@/entities/Main/NoticeCard/Notice.hooks';
 
 export default function Notice() {
-  const [selectedNotice, setSelectedNotice] = useState<NoticeListItem | null>(null);
+  const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
 
   return (
     <s.TopContainer>
