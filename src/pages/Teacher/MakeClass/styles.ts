@@ -16,3 +16,7 @@ export const PostButton = styled.div`
   border-radius: 8px;
   text-align: center;
 `;
+
+export const ErrorMessage  = styled.input`
+  color: ${theme.colors.red};
+`;
