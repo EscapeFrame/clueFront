@@ -29,7 +29,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/class/:classRoomId" element={<TCHClass />} />
           <Route path='/class/make' element={<TCHMakeClass />} />
           <Route path='/timeline' element={<AddTimeLine />} />
-          <Route path='/class/:class/maketask' element={<TCHMakeTask />} />
+          <Route path='/class/:classRoomId/maketask' element={<TCHMakeTask />} />
           <Route path='/class/makescore' element={<TCHMakeScorecard />} />
           <Route path='/class/make/markdown' element={<TCHMarkDown />} />
         </>
