@@ -7,7 +7,7 @@ export default function DDayCard({ dDay, content, url, title }: DDayCardProps) {
 
   return (
     <Card href={url || undefined} isUrgent={isUrgent} target="_blank" rel="noopener noreferrer">
-      <DDayText isUrgent={isUrgent}>D-{dDay}</DDayText>
+      <DDayText isUrgent={isUrgent}>D{dDay}</DDayText>
       <Title>{title}</Title>
       <Content>{trimmedContent}</Content>
       {url && <Submit>제출 &gt;</Submit>}

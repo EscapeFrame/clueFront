@@ -1,5 +1,6 @@
 import * as s from './styles';
 import { NoticeListItem } from './Notice.hooks';
+
 interface NoticeCardProps {
   cardTitle: string;
   notices: NoticeListItem[];

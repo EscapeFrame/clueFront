@@ -3,6 +3,7 @@ import MDEditor from '@uiw/react-md-editor';
 import * as s from './styles';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
+import { submitMarkDown } from '../api';
 // 언젠가는 Modal 컴포넌트 다시 손봐야 할듯
 
 export default function MarkDwonEditor() {
@@ -14,6 +15,10 @@ export default function MarkDwonEditor() {
     const [isCancelOpen, setIsCancelOpen] = useState(false);
     const [isPreviousOpen, setIsPreviousOpen] = useState(false);
     const [isEndOpen, setIsEndOpen] = useState(false);
+
+    const endModal = () => {
+        setIsEndOpen(true);
+    }
 
     // 취소
     const cancel = () => {
@@ -27,8 +32,11 @@ export default function MarkDwonEditor() {
 
     // 완료
     const end = () => {
-        setIsEndOpen(true);
-        console.log(mdContent);
+        const file = new File([mdContent], 'markdown.md', { type: 'text/markdown' }); // text -> file
+        submitMarkDown(file);
+        console.log(file);
+        setIsEndOpen(false);
+        // 이동경로 추후 생각해보기
     }
 
     return (
@@ -53,7 +61,7 @@ export default function MarkDwonEditor() {
                         <s.cancelButton onClick={cancel}>
                             취소
                         </s.cancelButton>
-                        <s.endButton onClick={end}>
+                        <s.endButton onClick={endModal}>
                             완료
                         </s.endButton>
                     </s.saveWrapper>
@@ -115,9 +123,7 @@ export default function MarkDwonEditor() {
                         {
                             text: '완료',
                             type: 0,
-                            onClick: () => {
-                                setIsEndOpen(false);
-                            },
+                            onClick: end,
                         },
                         { text: '닫기', type: 1, onClick: () => setIsEndOpen(false) },
                     ]}
