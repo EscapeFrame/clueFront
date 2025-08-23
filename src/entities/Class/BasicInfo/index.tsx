@@ -3,8 +3,10 @@ import SelectInputBox from '@/entities/UI/InputBox/SelectInput';
 import { subjectCategoryOptions, periodOptions, gradeOptions, classOptions} from './data';
 import { BasicInfoProps } from '@/shared/types/classroom';
 import * as S from './styles';
+import { useState } from 'react';
 
 export default function BasicInfo({ data, setData }: BasicInfoProps) {
+
   return (
     <S.Container>
       <S.Title>기본정보</S.Title>
@@ -17,15 +19,6 @@ export default function BasicInfo({ data, setData }: BasicInfoProps) {
         required
         value={data.subjectCategory}
         onChange={e => setData(prev => ({ ...prev, subjectCategory: e.target.value }))}
-      />
-
-      <SelectInputBox
-        label="교시"
-        id="periodSelect"
-        options={periodOptions}
-        required
-        value={data.period}
-        onChange={e => setData(prev => ({ ...prev, period: e.target.value }))}
       />
 
       <S.GradeClassWrapper>

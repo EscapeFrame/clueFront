@@ -1,4 +1,5 @@
 export interface ClassInfoProps {
+  classroomId: string;  // 강의실 ID 추가
   name: string;
   sort: string;
   description: string;
@@ -85,6 +86,7 @@ export interface AssignmentFileType {
 
 
 export interface BasicInfoData {
+  id?: string;
   subjectCategory: string;
   period: string;
   grade: string;

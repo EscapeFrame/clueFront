@@ -10,11 +10,9 @@ export const BasicInfoDatas: BasicInfoData = {
 };
 
 export const subjectCategoryOptions = [
-  { value: 'korean', label: '국어' },
-  { value: 'math', label: '수학' },
-  { value: 'english', label: '영어' },
-  { value: 'science', label: '과학' },
-  { value: 'social', label: '사회' },
+  { value: 'sort', label: '일반교과' },
+  { value: 'professional', label: '전공교과' },
+  { value: 'afterSchool', label: '방과후교과' },
 ];
 
 export const periodOptions = [

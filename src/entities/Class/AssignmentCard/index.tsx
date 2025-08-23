@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Customapi from '@/shared/config/api';
 import * as s from './styles';
 import { Modal } from '@/entities/UI/Modal';
 import { SlidePanel } from '@/entities/UI/SlidePanel';
@@ -10,9 +9,10 @@ import Button from '@/entities/UI/Button';
 import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/classroom';
 import { differenceInDays, parseISO } from 'date-fns';
 import { MdOutlineFileUpload } from "react-icons/md";
+import { submitAssignment, DeleteAssignment } from '../api';
 
 
-interface UploadedFile { id: string; name: string; size: string; file?: File }
+interface UploadedFile { id: string; name: string; size: string; file?: File }  
 
 function isAssignmentFileType(f: any): f is AssignmentFileType {
   return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
@@ -86,9 +86,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     if (!fileToSubmit) return alert('파일 데이터가 없습니다.');
 
     try {
-      const formData = new FormData();
-      formData.append('file', fileToSubmit);
-      await Customapi.post(`/api/assignments/submit/${data.id}`, formData);
+      await submitAssignment(data.id, fileToSubmit);
       setIsSubmitted(true);
       alert('과제 제출 완료');
       setShowUploadModal(false);
@@ -99,7 +97,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
 
   const handleResubmit = () => {
     setIsSubmitted(false);
-    Customapi.delete(`/api/assignments/submit/${data.id}`).catch(console.error);
+    DeleteAssignment(data.id).catch(console.error)
   };
 
   const renderDeadlineOrSubmission = () => {

@@ -26,6 +26,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
         <>
           <Route path="/" element={<TCHHome />} />
           <Route path="/class" element={<TCHMyClass />} />
+          <Route path="/class/:classRoomId" element={<STUClass />} />
           <Route path='/class/make' element={<TCHMakeClass />} />
           <Route path='/timeline' element={<AddTimeLine />} />
           <Route path='/class/maketask' element={<TCHMakeTask />} />
