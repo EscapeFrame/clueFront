@@ -30,9 +30,16 @@ const Classroom: React.FC = () => {
     if (!classRoomId) return;
 
     fetchClassData(classRoomId)
-      .then((data) => setClassInfo(data)) // state에 저장
+      .then((data) => {
+        if (typeof data === 'number') {
+          console.error('클래스룸 조회 실패, 상태 코드:', data);
+          return;
+        }
+        setClassInfo(data); // 이제 안전하게 상태에 넣음
+      })
       .catch((err) => console.error('클래스룸 정보 로딩 실패: ', err));
   }, [classRoomId]);
+
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);

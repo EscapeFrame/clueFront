@@ -8,10 +8,10 @@ export const tabs = [
 ] as const;
 
 // 클래스룸 정보를 API에서 불러오는 함수
-export const classData = async (classId: string): Promise<ClassInfoProps> => {
+export const classData = async (classId: string): Promise<ClassInfoProps | number> => {
   try {
     const res = await Customapi.get(`/api/class/${classId}`);
-    // imageUrl을 고정
+    if (res.status !== 200) return res.status;  // 상태 코드 체크
     return {
       ...res.data,
       imageUrl: '/Paletto/Haeyul.png',

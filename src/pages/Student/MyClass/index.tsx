@@ -17,11 +17,9 @@ export default function MyClass() {
     setError('');
     try {
       const response = await Customapi.get(`/api/class/${code}/members`);
-      console.log('참여 가능한 학습실 정보: ', response.data);
+      if (response.status !== 200) return response.status;  // 상태 코드 체크
 
-      // 참여 성공 시 내 학습실 목록에 추가
       setMyClasses(prev => [...prev, response.data]);
-
       setIsModalOpen(false);
       setClassCode('');
     } catch (err: any) {
@@ -31,6 +29,7 @@ export default function MyClass() {
       setLoading(false);
     }
   };
+
 
   return (
     <s.Container>
