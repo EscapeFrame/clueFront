@@ -18,3 +18,9 @@ export const ScheduleTime: { [period: number]: { start: string; end: string } } 
   6: { start: '14:20', end: '15:10' },
   7: { start: '15:20', end: '16:10' },
 };
+
+export interface WeeklyTimetableItem {
+  PERIO: string;        // 교시
+  LOAD_DTM: string;     // 요일 (예: MON, TUE, WED)
+  ITRT_CTNT: string[];  // 과목 이름 리스트
+}

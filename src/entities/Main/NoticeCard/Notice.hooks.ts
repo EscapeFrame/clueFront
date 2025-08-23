@@ -1,12 +1,6 @@
-export interface NoticeListItem {
-  notes?: 'registration' | 'codeInput' | 'fileUpload' | 'warning' | string; // 모달 타입
-  id: string;
-  title: string;        // 공지 제목
-  content: string;      // 공지 내용
-  date: string;         // 공지 날짜 (YYYY-MM-DD)
-}
+import { NoticeItem } from '@/shared/types/notice';
 
-export const serviceNotices: NoticeListItem[] = [
+export const serviceNotices: NoticeItem[] = [
   { 
     id: '1', 
     title: '서비스 점검 안내', 
@@ -23,7 +17,7 @@ export const serviceNotices: NoticeListItem[] = [
   },
 ];
 
-export const schoolNotices: NoticeListItem[] = [
+export const schoolNotices: NoticeItem[] = [
   { 
     id: '1', 
     title: '여름방학 일정', 
@@ -40,7 +34,7 @@ export const schoolNotices: NoticeListItem[] = [
   },
 ];
 
-export const scheduleNotices: NoticeListItem[] = [
+export const scheduleNotices: NoticeItem[] = [
   { 
     id: '1', 
     title: '중간고사 일정', 

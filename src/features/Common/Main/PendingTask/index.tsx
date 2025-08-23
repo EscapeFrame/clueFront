@@ -1,7 +1,8 @@
 import * as s from './styles';
 import DdayCard from '@/entities/Main/DdayCard/index';
 import dayjs from 'dayjs';
-import { Posts, Post } from './data';
+import { PendingTaskItem } from '@/shared/types/task';
+import { Posts} from './data';
 
 export default function PendingTask(): React.ReactNode {
   const today = dayjs();
@@ -19,7 +20,7 @@ export default function PendingTask(): React.ReactNode {
         <s.Title>미제출 과제</s.Title>
         <s.Explain>기간 안에 과제를 제출하세요!</s.Explain>
         <s.CardContainer>
-          {sortedPosts.map((post: Post, index: number) => {
+          {sortedPosts.map((post: PendingTaskItem, index: number) => {
             const due = dayjs(post.dueDate);
             const remainingDays = due.diff(today, 'day');
 
