@@ -2,7 +2,7 @@ import Customapi from "@/shared/config/api";
 
 // <--Class-->
 // 과제 제출 API
-export async function submitAssignment(assignmentId: string, file: File) {
+export async function SubmitAssignment(assignmentId: string, file: File) {
     try {
         const formData = new FormData();
         formData.append('file', file);
