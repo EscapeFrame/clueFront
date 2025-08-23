@@ -1,5 +1,5 @@
 import * as s from './styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '@/entities/UI/Modal/index';
 import Customapi from '@/shared/config/api';
 
@@ -9,6 +9,21 @@ export default function MyClass() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(''); // 오류 메시지
   const [myClasses, setMyClasses] = useState<any[]>([]); // 내 학습실 목록
+
+  // 전체 학습실 조회
+  const MyClass = async () => {
+    try {
+      const res = await Customapi.get('/api/class');
+      if (res.status !== 200) {
+        setError(`학습실 조회 실패: 상태 코드 ${res.status}`);
+        return;
+      }
+      setMyClasses(res.data);
+    } catch (err: any) {
+      console.error('학습실 전체 조회 실패: ', err);
+      setError(err.response?.data?.message || '전체 학습실 불러오기 실패');
+    }
+  };
 
   // 학습실 코드로 참여
   const joinClassroom = async (code: string) => {
@@ -30,6 +45,9 @@ export default function MyClass() {
     }
   };
 
+  useEffect(() => {
+    MyClass();
+  }, []);
 
   return (
     <s.Container>
@@ -62,11 +80,10 @@ export default function MyClass() {
               text: loading ? '조회 중...' : '완료',
               type: 0,
               width: '50%',
-              onClick: () => joinClassroom(classCode) // 외부 state 사용해 값 그대로 가져오기
+              onClick: () => joinClassroom(classCode)
             },
           ]}
         />
-
       )}
     </s.Container>
   );

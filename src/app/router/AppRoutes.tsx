@@ -13,7 +13,7 @@ import AddTimeLine from '@/pages/Teacher/AddTimeLine';
 import TCHMakeTask from '@/pages/Teacher/MakeTask';
 import TCHMakeScorecard from '@/pages/Teacher/MakeScorecard';
 import TCHMarkDown from '@/pages/Teacher/MarkDownEditor';
-
+import TCHClass from '@/pages/Teacher/Class';
 
 interface AppRoutesProps {
   role: string | null;
@@ -26,7 +26,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
         <>
           <Route path="/" element={<TCHHome />} />
           <Route path="/class" element={<TCHMyClass />} />
-          <Route path="/class/:classRoomId" element={<STUClass />} />
+          <Route path="/class/:classRoomId" element={<TCHClass />} />
           <Route path='/class/make' element={<TCHMakeClass />} />
           <Route path='/timeline' element={<AddTimeLine />} />
           <Route path='/class/maketask' element={<TCHMakeTask />} />
