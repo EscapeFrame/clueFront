@@ -1,10 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as s from './styles';
+
 import Button from '@/entities/UI/Button';
 import BasicInfo from '@/entities/Class/BasicInfo/index';
 import ClassroomSetup from '@/entities/Class/ClassroomSetup/index';
+import Customapi from '@/shared/config/api';
 
 export default function MakeClass() {
+  const navigate = useNavigate();
+
   // 기본정보 상태
   const [basicInfo, setBasicInfo] = useState({
     subjectCategory: '',
@@ -21,27 +26,28 @@ export default function MakeClass() {
     isChatEnabled: true,
   });
 
+  // 상태 메시지
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async () => {
-    const dataToSend = {
-      ...basicInfo,
-      ...classroomSetup,
-    };
+    const dataToSend = { ...basicInfo, ...classroomSetup };
+    setLoading(true);
+    setError('');
 
     try {
-      const res = await fetch('/api/class', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataToSend),
-      });
-
-      if (!res.ok) throw new Error('서버 에러');
-      alert('저장 성공!');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert('저장 실패: ' + error.message);
-      } else {
-        alert('저장 실패: 알 수 없는 에러');
+      const res = await Customapi.post('/api/class', dataToSend);
+      if (res.status !== 200) {
+        setError(`서버 에러: 상태 코드 ${res.status}`);
+        return;
       }
+
+      navigate('/class'); // 성공 시 MyClass 페이지로 이동
+    } catch (err: any) {
+      console.error('학습실 생성 실패:', err);
+      setError(err.response?.data?.message || '학습실 생성 실패');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,7 +56,13 @@ export default function MakeClass() {
       <BasicInfo data={basicInfo} setData={setBasicInfo} />
       <hr />
       <ClassroomSetup data={classroomSetup} setData={setClassroomSetup} />
-      <Button text="수업 만들기" width={"100%"} type={0} onClick={handleSubmit} />
+      {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
+      <Button
+        text={loading ? '생성 중...' : '수업 만들기'}
+        width="100%"
+        type={0}
+        onClick={handleSubmit}
+      />
     </s.Container>
   );
 }
