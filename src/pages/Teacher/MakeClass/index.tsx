@@ -27,25 +27,23 @@ export default function MakeClass() {
   });
 
   // 상태 메시지
-  const [error, setError] = useState('');
+  const [error] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     const dataToSend = { ...basicInfo, ...classroomSetup };
     setLoading(true);
-    setError('');
 
     try {
       const res = await Customapi.post('/api/class', dataToSend);
       if (res.status !== 200) {
-        setError(`서버 에러: 상태 코드 ${res.status}`);
+        console.error(`서버 에러: 상태 코드 ${res.status}`);
         return;
       }
 
       navigate('/class'); // 성공 시 MyClass 페이지로 이동
     } catch (err: any) {
       console.error('학습실 생성 실패:', err);
-      setError(err.response?.data?.message || '학습실 생성 실패');
     } finally {
       setLoading(false);
     }
