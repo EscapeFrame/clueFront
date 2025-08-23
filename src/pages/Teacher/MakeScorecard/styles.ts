@@ -165,3 +165,7 @@ export const AddColumnButton = styled.button`
     color: ${theme.colors.black};
   }
 `;
+
+export const ErrorMessage  = styled.input`
+  color: ${theme.colors.red};
+`;
