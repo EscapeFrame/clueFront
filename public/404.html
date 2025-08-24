@@ -3,11 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>Redirecting...</title>
-</head>
-<body>
     <script>
         // 404 페이지에서 index.html로 리다이렉트
-        window.location.href = '/';
+        const path = window.location.pathname;
+        const search = window.location.search;
+        const hash = window.location.hash;
+        const url = '/' + search + hash;
+        window.location.replace(url);
     </script>
+</head>
+<body>
+    <p>페이지를 찾을 수 없습니다. 리다이렉트 중...</p>
 </body>
 </html> 
