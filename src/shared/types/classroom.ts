@@ -44,7 +44,7 @@ export interface QuestionItem {
 }
 
 export interface LessonProps {
-  classRoomId: string;
+  classId: string;
 }
 
 // Assignment
@@ -84,6 +84,12 @@ export interface AssignmentFileType {
   files: AssignmentFileType[];    // 첨부 파일 리스트
 }
 
+// Exam
+export interface Exam {
+  id: string;
+  title: string;
+  date: string;
+}
 
 export interface BasicInfoData {
   id?: string;
