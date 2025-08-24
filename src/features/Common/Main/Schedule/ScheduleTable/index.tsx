@@ -1,6 +1,7 @@
 import { ScheduleItem } from '@/shared/types/schedule';
 import * as s from './styles';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getScheduleTimeTable } from '@/features/Common/api';
 
 interface Props {
   data: (ScheduleItem | null)[];
@@ -18,9 +19,17 @@ const DAYS = [
   { key: 'FRI' },
 ];
 
+const grade = '1';
+const classNumber = '1';
+
 export const ScheduleTable: React.FC<Props> = ({ data, maxPeriod = 7, editable = false, onChangeSchedule, onCellClick }) => {
   const [editCell, setEditCell] = useState<{ day: ScheduleItem['day']; period: number } | null>(null);
   const [inputValue, setInputValue] = useState('');
+  const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
+
+  useEffect(() => {
+    getScheduleTimeTable(grade, classNumber);
+  }, []);
 
   const handleCellClick = (day: ScheduleItem['day'], period: number) => {
     if (onCellClick) {
