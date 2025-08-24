@@ -21,10 +21,10 @@ const WeeklyTimetable = async (): Promise<ScheduleItem[] | number> => {
     }
 };
 
-const test = async () => {
-    const res = await ('/test/duck', { name: 'duck' });
-    console.log(res);
-}
+// const test = async () => {
+//     const res = await ('/test/duck', { name: 'duck' });
+//     console.log(res);
+// }
 
 export default function Home() {
     const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
