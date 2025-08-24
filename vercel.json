@@ -1,12 +1,5 @@
 {
-    "routes": [
-      { "src": "/", "dest": "/" },
-      { "src": "/class", "dest": "/" },
-      { "src": "/class/:classRoomId", "dest": "/" },
-      { "src": "/class/make", "dest": "/" },
-      { "src": "/timeline", "dest": "/" },
-      { "src": "/class/:classRoomId/maketask", "dest": "/" },
-      { "src": "/class/makescore", "dest": "/" },
-      { "src": "/class/make/markdown", "dest": "/" }
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/index.html" }
     ]
   }
