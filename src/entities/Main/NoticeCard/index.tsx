@@ -1,10 +1,10 @@
 import * as s from './styles';
-import { NoticeListItem } from './Notice.hooks';
+import { NoticeItem } from '@/shared/types/notice';
 
 interface NoticeCardProps {
   cardTitle: string;
-  notices: NoticeListItem[];
-  onSelect: (notice: NoticeListItem) => void;
+  notices: NoticeItem[];
+  onSelect: (notice: NoticeItem) => void;
 }
 
 export default function NoticeCard({ cardTitle, notices, onSelect }: NoticeCardProps) {
