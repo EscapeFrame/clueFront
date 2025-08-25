@@ -18,10 +18,12 @@ export default function MyClass() {
         setError(`학습실 조회 실패: 상태 코드 ${res.status}`);
         return;
       }
-      setMyClasses(res.data);
+      // API 응답이 배열인지 확인
+      setMyClasses(Array.isArray(res.data) ? res.data : []);
     } catch (err: any) {
       console.error('학습실 전체 조회 실패: ', err);
       setError(err.response?.data?.message || '전체 학습실 불러오기 실패');
+      setMyClasses([]);
     }
   };
 
@@ -59,7 +61,7 @@ export default function MyClass() {
       {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
 
       {/* 학습실 목록 출력 */}
-      {myClasses.map((cls, idx) => (
+      {myClasses.length > 0 && myClasses.map((cls, idx) => (
         <div key={idx}>{cls.name || '알 수 없는 학습실'}</div>
       ))}
 
