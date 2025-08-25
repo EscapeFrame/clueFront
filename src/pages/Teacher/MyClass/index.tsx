@@ -17,7 +17,8 @@ export default function MyClass() {
         return;
       }
 
-      setMyClasses(res.data); // 그대로 state에 저장
+      // API 응답이 배열인지 확인
+      setMyClasses(Array.isArray(res.data) ? res.data : []);
     } catch (err: any) {
       console.error('학습실 조회 실패: ', err);
       setError(err.response?.data?.message || '내 학습실 불러오기 실패');
@@ -36,7 +37,7 @@ export default function MyClass() {
         {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
       </s.Flexible>
 
-      {myClasses.length === 0 ? (
+      {!Array.isArray(myClasses) || myClasses.length === 0 ? (
         <p>만든 학습실이 없습니다.</p>
       ) : (
         myClasses.map((cls, idx) => (
