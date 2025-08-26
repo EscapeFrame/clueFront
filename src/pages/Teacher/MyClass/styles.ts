@@ -39,7 +39,60 @@ export const ModalInput = styled.input`
   outline: none;
 `
 
-export const ErrorMessage  = styled.div`
-  color: ${theme.colors.blue[500]};
+export const EmptyMessage = styled.p`
+color:${theme.colors.gray[600]};
+`;
+
+export const Grid = styled.div`
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 16px;
+`;
+
+export const Card = styled.div`
+  background-color: ${theme.colors.white};
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid ${theme.colors.gray[400]};
+  transition: box-shadow 0.3s;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  
+  height: 10em;
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+`;
+
+export const CardTitle = styled.h2`
+${fonts.P4}
+font-weight: 500;
+margin: 0;
+`;
+
+export const CardDescription = styled.p`
+color: ${theme.colors.gray[600]};
+margin: 0;
+`;
+
+export const InfoBlock = styled.div`
+margin: 0;
+`;
+
+export const ErrorMessage = styled.p`
+color: ${theme.colors.red};
+margin-bottom: 16px;
+`;
+
+export const InfoContent = styled.p`
+  color: ${theme.colors.gray[600]};
   ${fonts.P2}
+  margin: 0;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
 `;
