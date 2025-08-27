@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import NoticeCard from '@/entities/Main/NoticeCard/index';
-import { Modal } from '@/entities/UI/Modal/index';
+import NoticeCard from '@/entities/Main/NoticeCard';
+import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
-import { serviceNotices, schoolNotices, scheduleNotices } from '@/entities/Main/NoticeCard/Notice.hooks';
+import { useNotices } from '../hooks/useNotice';
 
 export default function Notice() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
+  const { serviceNotices, schoolNotices, scheduleNotices, loading, error } = useNotices();
+
+  if (loading) return <s.TopContainer>로딩중...</s.TopContainer>;
+  if (error) return <s.TopContainer>{error}</s.TopContainer>;
 
   return (
     <s.TopContainer>

@@ -1,4 +1,4 @@
-import { ScheduleItem, ScheduleTime } from '@/shared/types/schedule';
+import { ScheduleItem, ScheduleTime } from '@/shared/types/timetable';
 import { PiBowlFoodDuotone } from "react-icons/pi";
 import * as s from './styles';
 

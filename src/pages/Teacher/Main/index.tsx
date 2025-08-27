@@ -12,8 +12,6 @@ import { MySchedule } from '@/features/Common/Main/Schedule';
 // }
 
 export default function Home() {
-
-
     return (
         <s.Container>
             <MySchedule />

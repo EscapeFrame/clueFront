@@ -6,7 +6,7 @@ import { MdOutlineLogout } from "react-icons/md";
 import { IoPerson } from "react-icons/io5";
 
 interface DropdownProps {
-  studentNumber: number;
+  studentNumber: string;
   name: string;
   myImage: string;
 }

@@ -1,4 +1,4 @@
-import { ClassInfoProps } from '@/shared/types/classroom';
+import { ClassInfoProps } from '@/shared/types/class/class';
 import Customapi from '@/shared/config/api';
 
 export const tabs = [

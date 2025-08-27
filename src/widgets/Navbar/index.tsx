@@ -3,7 +3,7 @@ import * as s from './styles';
 import Dropdown from '@/widgets/UserMenu/index';
 
 interface NavbarProps {
-  studentNumber: number;
+  studentNumber: string;
   name: string;
   myImage: string;
 }

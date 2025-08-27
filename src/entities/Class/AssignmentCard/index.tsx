@@ -6,7 +6,7 @@ import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
 import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import Button from '@/entities/UI/Button';
-import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/classroom';
+import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/class/classroom';
 import { differenceInDays, parseISO } from 'date-fns';
 import { MdOutlineFileUpload } from "react-icons/md";
 import { SubmitAssignment, DeleteAssignment } from '../api';

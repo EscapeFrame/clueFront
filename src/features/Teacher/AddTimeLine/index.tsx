@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ScheduleTable } from '@/features/Common/Main/Schedule/ScheduleTable';
-import { ScheduleItem, DayOfWeek } from '@/shared/types/schedule';
+import { ScheduleItem, DayOfWeek } from '@/shared/types/timetable';
 import AddModal from '@/entities/UI/AddModal';
 
 const DAYS: DayOfWeek[] = ['MON', 'TUE', 'WED', 'THU', 'FRI'];

@@ -1,26 +1,25 @@
-import { useState } from 'react';
-import { AssignmentCard } from '@/entities/Class/AssignmentCard';
-import { assignments as initialAssignments } from './data';
-import { Assignment, AssignmentProps } from '@/shared/types/classroom';
 import * as s from './styles';
+import { AssignmentCard } from '@/entities/Class/AssignmentCard';
+import { useAssignments } from '../hooks/useAssignment';
+import { AssignmentResponse } from '@/shared/types/class/assignment/assignment';
 
-export const AssignmentComponent: React.FC<AssignmentProps> = () => {
-  const [assignmentList, setAssignmentList] = useState<Assignment[]>(initialAssignments);
+interface AssignmentComponentProps {
+  classRoomId: string;
+}
 
-  const updateAssignment = (id: string, changes: Partial<Assignment>) => {
-    setAssignmentList(prev =>
-      prev.map(a => (a.id === id ? { ...a, ...changes } : a))
-    );
-  };
+export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ classRoomId }) => {
+  const { assignments, error, modifyAssignment } = useAssignments(classRoomId);
+
+  if (error) return <p>{error}</p>;
 
   return (
     <s.Container>
       <s.Grid>
-        {assignmentList.map(a => (
+        {assignments.map((a: AssignmentResponse) => (
           <AssignmentCard
-            key={a.id}
+            key={a.assignmentId}
             data={a}
-            updateAssignment={updateAssignment}
+            updateAssignment={(changes: Partial<AssignmentResponse>) => modifyAssignment(a.assignmentId, changes)}
           />
         ))}
       </s.Grid>

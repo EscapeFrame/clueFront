@@ -1,9 +1,11 @@
 import CustomApi from "@/shared/config/api";
+import { ScheduleItem } from "@/shared/types/timetable";
 
 // <-- timeline api -->
-export const getScheduleTimeTable = async (grade: string, classNumber: string) => {
+export const getScheduleTimeTable = async (grade: string, classNumber: string): Promise<ScheduleItem[] | number> => {
     try {
-        const res = await CustomApi.get(`/api/timetable/weekly?${grade}&${classNumber}`);
+        const res = await CustomApi.get(`/api/timetable/weekly?grade=${grade}&class=${classNumber}`);
+
         if (res.status !== 200) {
             return res.status;
         }

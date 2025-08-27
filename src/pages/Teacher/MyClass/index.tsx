@@ -1,33 +1,23 @@
 import * as s from './styles';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import Customapi from '@/shared/config/api';
+import { useState } from 'react';
+import { useMyClass } from '@/features/Common/Class/hooks/useMyClass';
+import TabSelector, { CategoryKey } from '@/features/Common/Class/TabSelector';
+import { ClassResponse } from '@/shared/types/class/class';
+import { ClassCard } from '@/entities/Class/ClassCard';
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const [error, setError] = useState('');
-  const [myClasses, setMyClasses] = useState<any[]>([]);
+  const { classes: myClasses, error } = useMyClass();
 
-  // 내 전체 학습실 조회
-  const MyClass = async () => {
-    try {
-      const res = await Customapi.get('/api/class'); 
-      if (res.status !== 200) {
-        setError(`학습실 조회 실패: 상태 코드 ${res.status}`);
-        return;
-      }
+  const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
+  const [searchValue, setSearchValue] = useState('');
 
-      // API 응답이 배열인지 확인
-      setMyClasses(Array.isArray(res.data) ? res.data : []);
-    } catch (err: any) {
-      console.error('학습실 조회 실패: ', err);
-      setError(err.response?.data?.message || '내 학습실 불러오기 실패');
-    }
-  };
-
-  useEffect(() => {
-    MyClass();
-  }, []);
+  const filteredClasses = myClasses.filter((cls: ClassResponse) => {
+    const tabMatch = selectedTab === '전체' || cls.sort?.includes(selectedTab);
+    const searchMatch = cls.classRoomName.toLowerCase().includes(searchValue.toLowerCase());
+    return tabMatch && searchMatch;
+  });
 
   return (
     <s.Container>
@@ -37,12 +27,26 @@ export default function MyClass() {
         {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
       </s.Flexible>
 
-      {!Array.isArray(myClasses) || myClasses.length === 0 ? (
-        <p>만든 학습실이 없습니다.</p>
+      <TabSelector
+        selectedTab={selectedTab}
+        onSelectTab={(tab) => setSelectedTab(tab as CategoryKey)}
+        onSearch={setSearchValue}
+      />
+
+      {!filteredClasses.length ? (
+        <s.EmptyMessage>만든 학습실이 없습니다.</s.EmptyMessage>
       ) : (
-        myClasses.map((cls, idx) => (
-          <div key={idx}>{cls.name || '알 수 없는 학습실'}</div>
-        ))
+        <s.Grid>
+          {filteredClasses.map((cls: ClassResponse) => (
+            <ClassCard
+              key={cls.classRoomId}
+              classRoomId={cls.classRoomId}
+              name={cls.classRoomName}
+              sort={cls.sort || '미정'}
+              target={cls.teacherNames?.join(', ') || '미정'}
+            />
+          ))}
+        </s.Grid>
       )}
     </s.Container>
   );

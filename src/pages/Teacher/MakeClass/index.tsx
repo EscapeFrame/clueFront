@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import * as s from './styles';
 
 import Button from '@/entities/UI/Button';
-import BasicInfo from '@/entities/Class/BasicInfo/index';
-import ClassroomSetup from '@/entities/Class/ClassroomSetup/index';
-import Customapi from '@/shared/config/api';
+import BasicInfo from '@/entities/Class/BasicInfo';
+import ClassroomSetup from '@/entities/Class/ClassroomSetup';
+import { BasicInfoData, ClassroomSetupData } from '@/shared/types/class/classroom';
+import { createClass } from '@/features/Teacher/MakeClass/api';
 
 export default function MakeClass() {
   const navigate = useNavigate();
 
-  // 기본정보 상태
-  const [basicInfo, setBasicInfo] = useState({
+  const [basicInfo, setBasicInfo] = useState<BasicInfoData>({
     subjectCategory: '',
     period: '',
     grade: '',
@@ -20,30 +20,31 @@ export default function MakeClass() {
     description: '',
   });
 
-  // 학습실 설정 상태
-  const [classroomSetup, setClassroomSetup] = useState({
+  const [classroomSetup, setClassroomSetup] = useState<ClassroomSetupData>({
     isActivated: true,
     isChatEnabled: true,
   });
 
-  // 상태 메시지
-  const [error] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async () => {
-    const dataToSend = { ...basicInfo, ...classroomSetup };
     setLoading(true);
 
     try {
-      const res = await Customapi.post('/api/class', dataToSend);
-      if (res.status !== 200) {
-        console.error(`서버 에러: 상태 코드 ${res.status}`);
-        return;
-      }
+      const payload = {
+        description: basicInfo.description,
+        isActivation: classroomSetup.isActivated,
+        name: basicInfo.roomName,
+        sort: basicInfo.subjectCategory,
+        target: `${basicInfo.grade}-${basicInfo.classNum}`,
+      };
 
-      navigate('/class'); // 성공 시 MyClass 페이지로 이동
+      await createClass(payload);
+      navigate('/class');
     } catch (err: any) {
-      console.error('학습실 생성 실패:', err);
+      setError('학습실 생성 실패');
+      console.error(err);
     } finally {
       setLoading(false);
     }

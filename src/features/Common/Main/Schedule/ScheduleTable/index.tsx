@@ -1,7 +1,7 @@
-import { ScheduleItem } from '@/shared/types/schedule';
+import { ScheduleItem } from '@/shared/types/timetable';
 import * as s from './styles';
 import React, { useState, useEffect } from 'react';
-import { getScheduleTimeTable } from '@/features/Common/api';
+import { getScheduleTimeTable } from '@/features/Common/Main/api/userTimeLine';
 
 interface Props {
   data: (ScheduleItem | null)[];

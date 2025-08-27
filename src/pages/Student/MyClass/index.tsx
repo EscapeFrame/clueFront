@@ -1,69 +1,36 @@
 import * as s from './styles';
-import { useState, useEffect } from 'react';
-import { Modal } from '@/entities/UI/Modal/index';
-import Customapi from '@/shared/config/api';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function MyClass() {
+import { useMyClass } from '@/features/Common/Class/hooks/useMyClass';
+import { ClassCard } from '@/entities/Class/ClassCard';
+import { Modal } from '@/entities/UI/Modal';
+
+export default function MyClassPage() {
+  const { myClasses, loading, error, joinClass } = useMyClass();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [classCode, setClassCode] = useState(''); // input 값 상태
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(''); // 오류 메시지
-  const [myClasses, setMyClasses] = useState<any[]>([]); // 내 학습실 목록
-
-  // 전체 학습실 조회
-  const MyClass = async () => {
-    try {
-      const res = await Customapi.get('/api/class');
-      if (res.status !== 200) {
-        setError(`학습실 조회 실패: 상태 코드 ${res.status}`);
-        return;
-      }
-      // API 응답이 배열인지 확인
-      setMyClasses(Array.isArray(res.data) ? res.data : []);
-    } catch (err: any) {
-      console.error('학습실 전체 조회 실패: ', err);
-      setError(err.response?.data?.message || '전체 학습실 불러오기 실패');
-      setMyClasses([]);
-    }
-  };
-
-  // 학습실 코드로 참여
-  const joinClassroom = async (code: string) => {
-    if (!code.trim()) return;
-    setLoading(true);
-    setError('');
-    try {
-      const response = await Customapi.get(`/api/class/${code}/members`);
-      if (response.status !== 200) return response.status;  // 상태 코드 체크
-
-      setMyClasses(prev => [...prev, response.data]);
-      setIsModalOpen(false);
-      setClassCode('');
-    } catch (err: any) {
-      console.error('학습실 조회 실패: ', err);
-      setError(err.response?.data?.message || '학습실 참여 실패');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    MyClass();
-  }, []);
+  const [classCode, setClassCode] = useState('');
 
   return (
     <s.Container>
       <s.Flexible>
         <s.TitleFont>나의 학습실</s.TitleFont>
         <s.AddButton onClick={() => setIsModalOpen(true)}>학습실 추가</s.AddButton>
+        {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
       </s.Flexible>
 
-      {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
-
-      {/* 학습실 목록 출력 */}
-      {myClasses.length > 0 && myClasses.map((cls, idx) => (
-        <div key={idx}>{cls.name || '알 수 없는 학습실'}</div>
-      ))}
+      <s.Grid>
+        {myClasses.map(cls => (
+          <ClassCard
+            key={cls.classRoomId}
+            classRoomId={cls.classRoomId}
+            name={cls.classRoomName}
+            sort={cls.sort || '미정'}
+            target={cls.teacherNames?.join(', ') || '미정'}
+          />
+        ))}
+        {myClasses.length === 0 && <s.EmptyMessage>생성/참여한 학습실이 없습니다.</s.EmptyMessage>}
+      </s.Grid>
 
       {isModalOpen && (
         <Modal
@@ -71,6 +38,8 @@ export default function MyClass() {
           notes="input"
           placeholder="학습실 코드를 입력해주세요"
           onClose={() => setIsModalOpen(false)}
+          inputValue={classCode}
+          onInputChange={e => setClassCode(e.target.value)}
           buttons={[
             {
               text: '취소',
@@ -82,7 +51,7 @@ export default function MyClass() {
               text: loading ? '조회 중...' : '완료',
               type: 0,
               width: '50%',
-              onClick: () => joinClassroom(classCode)
+              onClick: () => joinClass(classCode),
             },
           ]}
         />

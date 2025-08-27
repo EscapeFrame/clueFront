@@ -24,3 +24,18 @@ export interface WeeklyTimetableItem {
   LOAD_DTM: string;     // 요일 (예: MON, TUE, WED)
   ITRT_CTNT: string[];  // 과목 이름 리스트
 }
+
+
+export interface Request {
+  classNumber: number; // 반
+  grade: number; // 학년
+  [property: string]: any;
+}
+
+// 일•주 단위 시간표 조회
+export interface Response {
+  dayOfWeek: string; // 요일
+  period: string; // 교시
+  subject: string; // 과목명
+  [property: string]: any;
+}

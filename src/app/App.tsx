@@ -6,13 +6,29 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { AppRoutes } from '@/app/router/AppRoutes';
 import { useAccessToken } from './hooks/useAccessToken';
-import {STUNumber, Name, MyImg} from '@/shared/types/user'; // 이 부분 어떻게 해야하지..
 import Navbar from '@/widgets/Navbar/index';
+import { STUJwtRequest, TCHJwtRequest } from '@/shared/types/user';
+
+// 학생/선생 정보 예시
+const STUInfo: STUJwtRequest = {
+  role: 'STU',
+  userId: '2102',
+  username: '공덕',
+  myImage: '/sample.jpg'
+};
+
+const TCHInfo: TCHJwtRequest = {
+  role: 'TCH',
+  userId: 'teacher01',
+  username: '유근찬',
+  myImage: '/sample.jpg'
+};
 
 export default function App() {
   const { accessToken, setAccessToken } = useAccessToken();
-  const role1 = 'STU'; // 프론트 값 확인용(삭제해야댐)
-  const role2 = 'TCH';
+
+  // 테스트용으로 학생/선생 중 하나 선택
+  const currentUser = STUInfo;
 
   return (
     <RecoilRoot>
@@ -20,8 +36,12 @@ export default function App() {
         <Global styles={globalStyles} />
         <Router>
           <UserContext.Provider value={{ accessToken, setAccessToken }}>
-            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} />
-            <AppRoutes role={role2} />
+            <Navbar
+              studentNumber={currentUser.userId}
+              name={currentUser.username}
+              myImage={currentUser.myImage}
+            />
+            <AppRoutes role={currentUser.role} />
           </UserContext.Provider>
         </Router>
       </ThemeProvider>

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import * as s from '../styles';
+import { useState } from "react";
+import * as s from "../styles";
 
 interface EditableCellProps {
   value: string;
@@ -19,7 +19,7 @@ export function EditableCell({ value, onChange }: EditableCellProps) {
           autoFocus
         />
       ) : (
-        <s.TextBlock>{value || ' '}</s.TextBlock>
+        <s.TextBlock>{value || " "}</s.TextBlock>
       )}
     </s.CellBox>
   );

@@ -1,7 +1,7 @@
 import InputBox from '@/entities/UI/InputBox/Input';
 import SelectInputBox from '@/entities/UI/InputBox/SelectInput';
 import { subjectCategoryOptions, periodOptions, gradeOptions, classOptions} from './data';
-import { BasicInfoProps } from '@/shared/types/classroom';
+import { BasicInfoProps } from '@/shared/types/class/classroom';
 import * as S from './styles';
 import { useState } from 'react';
 
