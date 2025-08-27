@@ -6,7 +6,7 @@ import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
 import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import Button from '@/entities/UI/Button';
-import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/class/classroom';
+import { AssignmentResponse, AssignmentFileType } from '@/shared/types/class/assignment/assignment';
 import { differenceInDays, parseISO } from 'date-fns';
 import { MdOutlineFileUpload } from "react-icons/md";
 import { SubmitAssignment, DeleteAssignment } from '../api';
@@ -18,10 +18,15 @@ function isAssignmentFileType(f: any): f is AssignmentFileType {
   return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
 }
 
+interface AssignmentCardProps {
+  data: AssignmentResponse;
+  updateAssignment: (changes: Partial<AssignmentResponse>) => Promise<void>;
+}
+
 export function AssignmentCard({ data }: AssignmentCardProps) {
   const [isSubmitted, setIsSubmitted] = useState(data.isSubmitted);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>(
-    (data.files ?? []).map(f => isAssignmentFileType(f)
+    (data.files ?? []).map((f:AssignmentFileType|string) => isAssignmentFileType(f)
       ? { id: String(f.fileId), name: f.fileName, size: `${f.fileSize} MB` }
       : { id: crypto.randomUUID(), name: String(f), size: '' })
   );

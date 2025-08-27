@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ClassInfoProps } from '@/shared/types/class/classroom';
+import { ClassInfoProps } from '@/shared/types/class/class';
 import ProgressBar from '@/entities/UI/ProgressBar';
 import { FaUserAlt } from "react-icons/fa";
 import { getClassInfo } from '../api';

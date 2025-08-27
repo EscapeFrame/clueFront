@@ -44,3 +44,9 @@ export interface AssignmentDeleteResponse {
     message: string;
     [property: string]: any;
 }
+
+export interface AssignmentFileType {
+    fileId: number | string;
+    fileName: string;
+    fileSize: number;
+  }
