@@ -1,29 +1,59 @@
-import * as s from './styles'; import { useEffect, useState } from 'react';
-import { QuickLink } from '@/features/Common/Main/QuickLink';
-import PendingTask from '@/features/Common/Main/PendingTask';
-import TaskGuide from '@/features/Common/Main/TaskGuide';
-import Notice from '@/features/Common/Main/Notice';
-import Footer from '@/widgets/Footer';
-import { MySchedule } from '@/features/Common/Main/Schedule';
+import { createContext, useContext, ReactNode, Dispatch, SetStateAction, useState, useMemo } from 'react';
+import { USERJwtRequest } from '@/entities/User/model/user.atom';
 
-// const test = async () => {
-//     const res = await ('/test/duck', { name: 'duck' });
-//     console.log(res);
-// }
-
-export default function Home() {
-    const user = useAuthUser(); // 로그인한 유저
-    const teacherId = user.id;
-
-    return (
-        <s.Container>
-            <MySchedule role="TCH" teacherId={teacherId} />
-            <TaskGuide />       {/* 수행평가 안내*/}
-            <PendingTask />     {/* 미제출과제*/}
-            <Notice />          {/* 공지/안내 */}
-            {/* 성취도 분석(추후 추가예정) */}
-            <QuickLink />       {/* 학교서비스바로가기 */}
-            <Footer />
-        </s.Container>
-    );
+// Context 타입 정의
+export interface UserContextType {
+  grade: string;
+  user: USERJwtRequest | null;
+  setUser: Dispatch<SetStateAction<USERJwtRequest | null>>;
+  accessToken: string | null;
+  setAccessToken: Dispatch<SetStateAction<string | null>>;
 }
+
+// Context 생성
+export const UserContext = createContext<UserContextType | undefined>(undefined);
+
+// JWT 토큰에서 grade 파싱하는 함수
+const parseGradeFromToken = (token: string | null): string => {
+  if (!token) return 'guest';
+  
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1])); // JWT 디코딩
+    return payload.grade || payload.role || 'user';
+  } catch {
+    return 'guest';
+  }
+};
+
+// Provider 컴포넌트
+export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<USERJwtRequest | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  const grade = useMemo(() => {
+    return parseGradeFromToken(accessToken);
+  }, [accessToken]);
+
+  return (
+    <UserContext.Provider 
+      value={{ 
+        grade,
+        user, 
+        setUser, 
+        accessToken, 
+        setAccessToken 
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+// Context 사용 훅
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser must be used within UserProvider');
+  }
+  return context;
+};

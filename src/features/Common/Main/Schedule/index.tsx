@@ -4,13 +4,17 @@ import { ScheduleItem } from '@/shared/types/timetable';
 import * as s from './styles';
 import { useTimeline } from '../hooks/useSchedule';
 
-interface MyScheduleProps {
-  grade: string;
-  classNumber: string;
+export interface MyScheduleProps {
+  grade?: string;
+  classNumber?: string;
+  teacherId?: string;
+  role: 'STU' | 'TCH';
 }
 
-export const MySchedule: React.FC<MyScheduleProps> = ({ grade, classNumber }) => {
-  const { schedule, loading, error } = useTimeline({ grade, classNumber });
+export const MySchedule: React.FC<MyScheduleProps> = ({ role, grade, classNumber, teacherId }) => {
+  const { schedule, error } = useTimeline(
+    role === 'STU' ? { grade, classNumber } : { teacherId }
+  );
 
   const filteredData = schedule.filter((item): item is ScheduleItem => item !== null);
 
@@ -22,7 +26,6 @@ export const MySchedule: React.FC<MyScheduleProps> = ({ grade, classNumber }) =>
     alert(`이동할 과목: ${subject}`);
   };
 
-  if (loading) return <s.Container>로딩중...</s.Container>;
   if (error) return <s.Container>{error}</s.Container>;
 
   return (
