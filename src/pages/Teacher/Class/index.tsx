@@ -7,7 +7,7 @@ import TabSelector from '@/entities/UI/TabSelect';
 import LessonComponent from '@/features/Common/Class/Lesson';
 import { AssignmentComponent } from '@/features/Common/Class/Assignment';
 import { ExamComponent } from '@/features/Common/Class/Exam';
-import { ClassData, tabs } from './data';
+import { ClassData, tabs } from './api';
 import { ClassInfoProps } from '@/shared/types/class/class';
 import NotFound from '@/pages/NotFound';
 

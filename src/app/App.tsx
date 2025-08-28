@@ -7,7 +7,8 @@ import { UserContext } from '@/entities/Context/LoginContext';
 import { AppRoutes } from '@/app/router/AppRoutes';
 import { useAccessToken } from './hooks/useAccessToken';
 import Navbar from '@/widgets/Navbar/index';
-import { USERJwtRequest } from '@/shared/types/user';
+import { USERJwtRequest } from '@/entities/User/model/user.atom';
+import { useState } from 'react';
 
 // 학생/선생 정보 예시
 const STUInfo: USERJwtRequest = {
@@ -26,22 +27,22 @@ const TCHInfo: USERJwtRequest = {
 
 export default function App() {
   const { accessToken, setAccessToken } = useAccessToken();
-
-  // 테스트용으로 학생/선생 중 하나 선택
-  const currentUser = STUInfo;
+  
+  // 현재 로그인한 유저 (테스트용)
+  const [user, setUser] = useState<USERJwtRequest | null>(STUInfo);
 
   return (
     <RecoilRoot>
       <ThemeProvider theme={theme}>
         <Global styles={globalStyles} />
         <Router>
-          <UserContext.Provider value={{ accessToken, setAccessToken }}>
+          <UserContext.Provider value={{ user, setUser, accessToken, setAccessToken }}>
             <Navbar
-              userId={currentUser.userId}
-              name={currentUser.username}
-              myImage={currentUser.myImage}
+              userId={user?.userId || ''}
+              name={user?.username || ''}
+              myImage={user?.myImage || ''}
             />
-            <AppRoutes role={currentUser.role} />
+            <AppRoutes role={user?.role || 'STU'} />
           </UserContext.Provider>
         </Router>
       </ThemeProvider>

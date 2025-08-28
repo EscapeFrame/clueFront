@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   display: flex;
@@ -17,12 +16,6 @@ export const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-`;
-
-export const Section = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 `;
 
 export const DirectoryWrapper = styled.div`
@@ -65,38 +58,21 @@ export const Icon = styled.span`
   margin-left: auto;
 `;
 
-// 모달 내 텍스트 스타일 통일
 export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 `;
 
 export const ModalTitle = styled.h3`
-  ${fonts.P2}
-  font-weight: 600;
   margin: 0;
-  padding: 0;
 `;
 
 export const ModalText = styled.p`
-  ${fonts.P2}
-  color: ${theme.colors.black};
   margin: 0;
-  padding: 0;
 `;
 
-export const ModalMeta = styled.p`
-  ${fonts.P1}
+export const ModalMeta = styled.div`
+  font-size: 0.875rem;
   color: ${theme.colors.gray[600]};
-  margin: 0;
-  padding: 0;
-`;
-
-export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
-  overflow: auto;
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '2000px' : '0')};
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
 `;

@@ -49,4 +49,4 @@ export interface AssignmentFileType {
     fileId: number | string;
     fileName: string;
     fileSize: number;
-  }
+}
