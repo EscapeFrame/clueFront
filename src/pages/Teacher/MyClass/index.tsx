@@ -34,7 +34,7 @@ export default function MyClass() {
       />
 
       {!filteredClasses.length ? (
-        <s.EmptyMessage>만든 학습실이 없습니다.</s.EmptyMessage>
+        <s.EmptyMessage>만든 학습실이 존재하지 않습니다.</s.EmptyMessage>
       ) : (
         <s.Grid>
           {filteredClasses.map((cls: ClassResponse) => (
