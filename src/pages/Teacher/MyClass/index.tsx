@@ -8,7 +8,7 @@ import { ClassCard } from '@/entities/Class/ClassCard';
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { classes: myClasses, error } = useMyClass();
+  const { myClasses, error } = useMyClass();
 
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');

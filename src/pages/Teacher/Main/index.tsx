@@ -1,4 +1,4 @@
-import * as s from './styles';import { useEffect, useState } from 'react';
+import * as s from './styles'; import { useEffect, useState } from 'react';
 import { QuickLink } from '@/features/Common/Main/QuickLink';
 import PendingTask from '@/features/Common/Main/PendingTask';
 import TaskGuide from '@/features/Common/Main/TaskGuide';
@@ -12,9 +12,12 @@ import { MySchedule } from '@/features/Common/Main/Schedule';
 // }
 
 export default function Home() {
+    const user = useAuthUser(); // 로그인한 유저
+    const teacherId = user.id;
+
     return (
         <s.Container>
-            <MySchedule />
+            <MySchedule role="TCH" teacherId={teacherId} />
             <TaskGuide />       {/* 수행평가 안내*/}
             <PendingTask />     {/* 미제출과제*/}
             <Notice />          {/* 공지/안내 */}
