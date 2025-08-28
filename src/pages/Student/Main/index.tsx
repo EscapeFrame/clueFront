@@ -39,7 +39,7 @@ export default function Home() {
 
     return (
         <s.Container>
-            <MySchedule data={schedule} />
+            <MySchedule />
             <TaskGuide />       {/* 수행평가 안내*/}
             <PendingTask />     {/* 미제출과제*/}
             <Notice />          {/* 공지/안내 */}
