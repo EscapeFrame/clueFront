@@ -23,4 +23,4 @@ export default function StudentHome() {
       <Footer />
     </s.Container>
   );
-}
+} 
