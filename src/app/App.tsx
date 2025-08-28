@@ -7,17 +7,17 @@ import { UserContext } from '@/entities/Context/LoginContext';
 import { AppRoutes } from '@/app/router/AppRoutes';
 import { useAccessToken } from './hooks/useAccessToken';
 import Navbar from '@/widgets/Navbar/index';
-import { STUJwtRequest, TCHJwtRequest } from '@/shared/types/user';
+import { USERJwtRequest } from '@/shared/types/user';
 
 // 학생/선생 정보 예시
-const STUInfo: STUJwtRequest = {
+const STUInfo: USERJwtRequest = {
   role: 'STU',
   userId: '2102',
   username: '공덕',
   myImage: '/sample.jpg'
 };
 
-const TCHInfo: TCHJwtRequest = {
+const TCHInfo: USERJwtRequest = {
   role: 'TCH',
   userId: 'teacher01',
   username: '유근찬',
@@ -37,7 +37,7 @@ export default function App() {
         <Router>
           <UserContext.Provider value={{ accessToken, setAccessToken }}>
             <Navbar
-              studentNumber={currentUser.userId}
+              userId={currentUser.userId}
               name={currentUser.username}
               myImage={currentUser.myImage}
             />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ClassResponse } from '@/shared/types/class/class';
-import * as api from '@/features/Common/Class/api/MyClass';
+import * as api from '@/features/Common/Class/api/useMyClass';
 
 export const useMyClass = () => {
   const [myClasses, setMyClasses] = useState<ClassResponse[]>([]);

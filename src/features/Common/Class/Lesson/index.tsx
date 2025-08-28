@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCircleCheck } from 'react-icons/fa6';
-<<<<<<< HEAD
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 import * as s from './styles';
@@ -10,6 +9,7 @@ import { useLesson } from '../hooks/useLesson';
 import NoticeCard from '@/entities/Main/NoticeCard';
 
 export const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
+<<<<<<< HEAD
 =======
 import * as s from './styles';
 
@@ -19,12 +19,14 @@ import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api'
 
 const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
 >>>>>>> 1793421 (feat(#93): features/Common/Class  axios 연결)
+=======
+>>>>>>> 956c12b (fix(#111): 머지 충돌 해결)
   const navigate = useNavigate();
   const { directories, news, questions, loading, error, updateDirectory } = useLesson({ classRoomId });
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
 
-<<<<<<< HEAD
   const toggleDirectory = (id: number) => {
+<<<<<<< HEAD
 =======
   // 상태 관리
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -63,6 +65,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
 
   const toggleDirectory = (id: string) => {
 >>>>>>> 1793421 (feat(#93): features/Common/Class  axios 연결)
+=======
+>>>>>>> 956c12b (fix(#111): 머지 충돌 해결)
     setExpandedIds(prev => {
       const newSet = new Set(prev);
       newSet.has(id) ? newSet.delete(id) : newSet.add(id);
@@ -70,7 +74,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
     });
   };
 
-<<<<<<< HEAD
   const handleDirectoryClick = (dir: Directory) => {
     // 디렉토리 클릭 시 읽음 처리 및 서브디렉토리 관리
     updateDirectory(dir.directoryOrder, { /* 필요한 수정 필드 */ });
@@ -81,6 +84,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
   if (loading) return <p>로딩중...</p>;
   if (error) return <p>{error}</p>;
 
+<<<<<<< HEAD
 =======
   const handleDirectoryClick = (dir: Directory, isSubDirectory: boolean = false) => {
     if (isSubDirectory) {
@@ -103,11 +107,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
   };
 
 >>>>>>> 1793421 (feat(#93): features/Common/Class  axios 연결)
+=======
+>>>>>>> 956c12b (fix(#111): 머지 충돌 해결)
   return (
     <s.Container>
       {/* 왼쪽: 강의 디렉토리 */}
       <s.LeftPanel>
-<<<<<<< HEAD
         {directories.map(dir => {
           const isExpanded = expandedIds.has(dir.directoryOrder);
           return (
@@ -120,6 +125,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
             </s.DirectoryWrapper>
           );
         })}
+<<<<<<< HEAD
 =======
         <s.Section>
           {directories.map(dir => {
@@ -148,6 +154,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
           })}
         </s.Section>
 >>>>>>> 1793421 (feat(#93): features/Common/Class  axios 연결)
+=======
+>>>>>>> 956c12b (fix(#111): 머지 충돌 해결)
       </s.LeftPanel>
 
       {/* 오른쪽: 새소식 + 질문 */}
@@ -155,6 +163,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
         <NoticeCard cardTitle="새소식" notices={news} onSelect={() => {}} />
         <NoticeCard cardTitle="최근 질문" notices={questions} onSelect={() => {}} />
       </s.RightPanel>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -182,6 +191,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
         </Modal>
       )}
 >>>>>>> 1793421 (feat(#93): features/Common/Class  axios 연결)
+=======
+>>>>>>> 956c12b (fix(#111): 머지 충돌 해결)
     </s.Container>
   );
 };
