@@ -39,9 +39,9 @@ export const ModalInput = styled.input`
   outline: none;
 `
 
-export const ErrorMessage  = styled.div`
-  color: ${theme.colors.blue[500]};
-  ${fonts.P2}
+export const ErrorMessage = styled.p`
+color: ${theme.colors.red};
+margin-bottom: 16px;
 `;
 
 export const Grid = styled.div`

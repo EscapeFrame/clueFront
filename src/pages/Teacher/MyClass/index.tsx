@@ -13,11 +13,24 @@ export default function MyClass() {
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
 
-  const filteredClasses = myClasses.filter((cls: ClassResponse) => {
-    const tabMatch = selectedTab === '전체' || cls.sort?.includes(selectedTab);
-    const searchMatch = cls.classRoomName.toLowerCase().includes(searchValue.toLowerCase());
+  const filteredClasses = myClasses.filter((cls) => {
+    const tabMatch =
+      selectedTab === '전체' ? true : cls.subject?.includes(selectedTab);
+    const searchMatch = cls.classRoomName
+      .toLowerCase()
+      .includes(searchValue.toLowerCase());
     return tabMatch && searchMatch;
   });
+
+  // 학습실 관리 페이지로 이동
+  const handleManageClass = (classId: number) => {
+    navigate(`/class/setting/${classId}`);
+  };
+
+  // 학습실 상세보기 페이지로 이동  
+  const handleViewClass = (classId: number) => {
+    navigate(`/class/${classId}`);
+  };
 
   return (
     <s.Container>
