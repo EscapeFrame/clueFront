@@ -1,5 +1,6 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
+import Login from '@/pages/Login';
 import NotFound from '@/pages/NotFound';
 import Setting from '@/pages/Common/Setting';
 
@@ -21,8 +22,19 @@ interface AppRoutesProps {
 }
 
 export const AppRoutes = ({ role }: AppRoutesProps) => {
+
+  const isAuthenticated = role !== null;
+
   return (
     <Routes>
+
+      <Route path='/login' element={Login} />
+
+      {!isAuthenticated && (
+        <>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </>
+      )}
       {role === 'TCH' && (
         <>
           <Route path="/" element={<TCHHome />} />
@@ -42,8 +54,15 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/class/:classRoomId" element={<STUClass />} />
         </>
       )}
-      <Route path='/setting' element={<Setting />} />
-      <Route path='setting/user' element= {<p>정보 수정 페이지</p>} />
+
+      {isAuthenticated && (
+        <>
+          <Route path='/login' element={Login} />
+          <Route path='/setting' element={<Setting />} />
+          <Route path='setting/user' element={<p>정보 수정 페이지</p>} />
+        </>
+      )}
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
