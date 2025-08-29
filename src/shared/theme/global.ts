@@ -16,5 +16,7 @@ export const globalStyles = css`
     color: ${theme.colors.black};
     height: 100%;
     width:100%;
+    min-width: '320px';
+    max-width: '1440px';
   }
 `;

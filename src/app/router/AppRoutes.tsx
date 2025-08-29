@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 
 import NotFound from '@/pages/NotFound';
+import Setting from '@/pages/Common/Setting';
 
 import STUHome from '@/pages/Student/Main/index';
 import STUMyClass from '@/pages/Student/MyClass';
@@ -41,6 +42,8 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/class/:classRoomId" element={<STUClass />} />
         </>
       )}
+      <Route path='/setting' element={<Setting />} />
+      <Route path='setting/user' element= {<p>정보 수정 페이지</p>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
