@@ -15,14 +15,16 @@ export default function App() {
   const role2 = 'TCH';
   const role3 = null;
 
+  const role = role3;
+
   return (
     <RecoilRoot>
       <ThemeProvider theme={theme}>
         <Global styles={globalStyles} />
         <Router>
           <UserContext.Provider value={{ accessToken, setAccessToken }}>
-            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} role={role3}/>
-            <AppRoutes role={role3} />
+            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} role={role}/>
+            <AppRoutes role={role} />
           </UserContext.Provider>
         </Router>
       </ThemeProvider>
