@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import Login from '@/pages/Login';
+import RegisterPage from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
 import Setting from '@/pages/Common/Setting';
 
@@ -29,6 +30,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
     <Routes>
 
       <Route path='/login' element={Login} />
+      <Route path='/register' element = {<RegisterPage />} />
 
       {!isAuthenticated && (
         <>
