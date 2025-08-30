@@ -31,7 +31,6 @@ export const useAuth = () => {
       // 토큰 없을 시 로그인으로
       if (!accessToken) {
         console.log('accessToken 없음');
-        window.location.href = '/login';
         return;
       }
 
