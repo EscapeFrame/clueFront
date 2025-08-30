@@ -13,6 +13,9 @@ export default function App() {
   const { accessToken, setAccessToken } = useAccessToken();
   const role1 = 'STU'; // 프론트 값 확인용(삭제해야댐)
   const role2 = 'TCH';
+  const role3 = null;
+
+  const role = role3;
 
   return (
     <RecoilRoot>
@@ -20,8 +23,8 @@ export default function App() {
         <Global styles={globalStyles} />
         <Router>
           <UserContext.Provider value={{ accessToken, setAccessToken }}>
-            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} />
-            <AppRoutes role={role2} />
+            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} role={role}/>
+            <AppRoutes role={role} />
           </UserContext.Provider>
         </Router>
       </ThemeProvider>

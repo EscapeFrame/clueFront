@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as s from './styles';
 import { AiFillSetting, AiFillQuestionCircle } from "react-icons/ai";
 import { MdOutlineLogout } from "react-icons/md";
@@ -9,11 +10,23 @@ interface DropdownProps {
   studentNumber: number;
   name: string;
   myImage: string;
+  role: string | null;
 }
 
-export default function Dropdown({ studentNumber, name, myImage }: DropdownProps) {
+
+export default function Dropdown({ studentNumber, name, myImage, role }: DropdownProps) {
+  const navigate = useNavigate()
+
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
+
+  if (role === null) {
+    return (
+      <s.DropdownContainer>
+        <s.DropdownButton onClick={() => {navigate("/login")}}>로그인하기</s.DropdownButton>
+      </s.DropdownContainer>
+    );
+  }
 
   return (
     <s.DropdownContainer>
