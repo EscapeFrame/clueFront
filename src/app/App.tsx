@@ -36,6 +36,7 @@ export default function App() {
         <Router>
           <UserContext.Provider value={{ accessToken, setAccessToken }}>
             <Navbar
+              role={role.role}
               userId={role.userId}
               name={role.username}
               myImage={role.profileImg}

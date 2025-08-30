@@ -6,9 +6,10 @@ interface NavbarProps {
   userId: string;
   name: string;
   myImage: string;
+  role: string | null;
 }
 
-export default function Navbar({ userId, name, myImage }: NavbarProps) {
+export default function Navbar({ role, userId, name, myImage }: NavbarProps) {
   return (
     <s.NavbarWrapper>
       <s.Container>
@@ -21,7 +22,7 @@ export default function Navbar({ userId, name, myImage }: NavbarProps) {
             <li><s.NavItem href="#action1">수강신청</s.NavItem></li>
             <li><s.NavItem href="#action2">서비스 소개</s.NavItem></li>
           </s.NavLinks>
-          <Dropdown userId={userId} name={name} myImage={myImage} />
+          <Dropdown role={role} userId={userId} name={name} myImage={myImage} />
         </s.NavbarNav>
       </s.Container>
     </s.NavbarWrapper>
