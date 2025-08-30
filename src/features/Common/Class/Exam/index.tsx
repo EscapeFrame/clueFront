@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as s from './styles';
 import { ExamApi } from '../api';
-import { Exam } from '@/shared/types/Class/classroom';
+import { Exam } from '@/shared/types/Class/Exam';
 
 export const ExamComponent: React.FC = () => {
   const { classId } = useParams<{ classId: string }>();
