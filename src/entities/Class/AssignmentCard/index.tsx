@@ -18,7 +18,7 @@ function isAssignmentFileType(f: any): f is AssignmentFileType {
   return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
 }
 
-export function AssignmentCard({ data }: AssignmentCardProps) {
+export function AssignmentCard({ data, updateAssignment  }: AssignmentCardProps) {
   const [isSubmitted, setIsSubmitted] = useState(data.isSubmitted);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>(
     (data.files ?? []).map(f => isAssignmentFileType(f)
@@ -88,6 +88,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     try {
       await SubmitAssignment(String(data.id), fileToSubmit);
       setIsSubmitted(true);
+      updateAssignment(data.id,{ isSubmitted: true });
       alert('과제 제출 완료');
       setShowUploadModal(false);
     } catch {
@@ -97,6 +98,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
 
   const handleResubmit = () => {
     setIsSubmitted(false);
+    updateAssignment(data.id,{ isSubmitted: true });
     DeleteAssignment(String(data.id)).catch(console.error)
   };
 

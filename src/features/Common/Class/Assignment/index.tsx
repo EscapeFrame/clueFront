@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AssignmentCard } from '@/entities/Class/AssignmentCard';
-import { Assignment, AssignmentProps } from '@/shared/types/Class/classroom';
+import { Assignment } from '@/shared/types/Class/Assignment/assignmentAttachment';
 import * as s from './styles';
 import { AssignmentsApi } from '../api';
 
-export const AssignmentComponent: React.FC<AssignmentProps> = () => {
+export const AssignmentComponent: React.FC = () => {
   const { classId } = useParams<{ classId: string }>(); 
   const [assignmentList, setAssignmentList] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,11 +27,13 @@ export const AssignmentComponent: React.FC<AssignmentProps> = () => {
   }, [classId]);
 
   // 특정 과제 수정 함수
-  const updateAssignment = (id: string, changes: Partial<Assignment>) => {
+  const updateAssignment = (id: string|number, changes: Partial<Assignment>) => {
     setAssignmentList(prev =>
       prev.map(a => (a.id === id ? { ...a, ...changes } : a))
     );
   };
+
+  if (loading) return <div>로딩 중...</div>;
 
   return (
     <s.Container>

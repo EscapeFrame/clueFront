@@ -1,3 +1,5 @@
+// types.ts
+
 // 과제 첨부
 export interface AssignmentAttachment {
   contentType?: string;
@@ -15,9 +17,9 @@ export interface AssignmentFileType {
 }
 
 // 특정 학생 과제보기 - 파일
-export interface AssignemtnFile {
+export interface AssignmentFile {
   fileId?: number | null;
-  fileName?: null | string;
+  fileName?: string | null;
   fileSize?: number | null;
 }
 
@@ -60,17 +62,28 @@ export interface StudentAssignmentResponse {
   userName: string;
 }
 
+// 과제 타입 (AssignmentCard에서 사용하는 타입)
+export interface Assignment {
+  id: string | number;
+  title: string;
+  description: string;
+  deadline: string;
+  duringDate?: string;
+  endDate?: string;
+  remainingTime?: string;
+  isSubmitted: boolean;
+  submissionDate?: string | null;
+  files?: AssignmentFileType[] | (string | null)[];
+}
+
+// AssignmentCard Props
 export interface AssignmentCardProps {
-  data: {
-    id: string | number;
-    title: string;
-    description: string;
-    deadline: string;
-    duringDate?: string;
-    endDate?: string;
-    remainingTime?: string;
-    isSubmitted: boolean;
-    submissionDate?: string | null;
-    files?: AssignmentFileType[] | (string | null)[];
-  };
+  data: Assignment;
+  updateAssignment: (id: string | number, changes: Partial<Assignment>) => void;
+}
+
+// AssignmentComponent Props (필요하면)
+export interface AssignmentComponentProps {
+  // 예시로 id 하나만 넣음, 필요에 따라 확장하세요
+  classId: string;
 }
