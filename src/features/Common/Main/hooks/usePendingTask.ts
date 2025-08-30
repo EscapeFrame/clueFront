@@ -43,7 +43,7 @@ export const usePendingTasks = (): UsePendingTasksReturn => {
 
   const submitTask = useCallback(async (taskIndex: number) => {
     try {
-      const result = await pendingTasksApi.submitTask(taskIndex);
+      const result = await pendingTasksApi.submitTask(String(taskIndex));
       
       if (typeof result === 'number') {
         throw new Error(`과제 제출에 실패했습니다. (상태코드: ${result})`);
