@@ -6,7 +6,7 @@ import { FaCircleCheck } from 'react-icons/fa6';
 import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
-import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/classroom';
+import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
 
 const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
