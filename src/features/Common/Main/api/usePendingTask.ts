@@ -1,35 +1,53 @@
 import CustomApi from "@/shared/config/api";
 import { PendingTaskItem } from '@/shared/types/task';
 
+const normalizeDate = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) {
+    console.warn('date:', dateStr);
+    return dateStr;
+  }
+  return date.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 정규화
+};
+
 export const pendingTasksApi = {
-  // 미제출 과제 목록 조회
   getPendingTasks: async (): Promise<PendingTaskItem[] | number> => {
     try {
-      const res = await CustomApi.get('/api/tasks/pending');
+      const res = await CustomApi.get(`/api/assignments/me`);
       if (res.status !== 200) return res.status;
-      return res.data;
+
+      const normalizedData = res.data.map((task: PendingTaskItem) => ({
+        ...task,
+        dueDate: normalizeDate(task.dueDate),
+      }));
+
+      return normalizedData;
     } catch (error) {
       console.error('미제출 과제 조회 실패:', error);
       throw error;
     }
   },
 
-  // 모든 과제 목록 조회
-  getAllTasks: async (): Promise<PendingTaskItem[] | number> => {
+  getAllTasks: async (classId: string): Promise<PendingTaskItem[] | number> => {
     try {
-      const res = await CustomApi.get('/api/tasks');
+      const res = await CustomApi.get(`/api/assignments/${classId}/all`);
       if (res.status !== 200) return res.status;
-      return res.data;
+
+      const normalizedData = res.data.map((task: PendingTaskItem) => ({
+        ...task,
+        dueDate: normalizeDate(task.dueDate),
+      }));
+
+      return normalizedData;
     } catch (error) {
       console.error('전체 과제 조회 실패:', error);
       throw error;
     }
   },
 
-  // 새로운 과제 생성
   createTask: async (task: PendingTaskItem): Promise<any | number> => {
     try {
-      const res = await CustomApi.post('/tasks', task);
+      const res = await CustomApi.post(`/api/assignments`, task);
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (error) {
@@ -38,10 +56,9 @@ export const pendingTasksApi = {
     }
   },
 
-  // 과제 제출 완료 처리
-  submitTask: async (taskIndex: number): Promise<any | number> => {
+  submitTask: async (submissionId: string): Promise<any | number> => {
     try {
-      const res = await CustomApi.patch(`/api/tasks/${taskIndex}/submit`);
+      const res = await CustomApi.patch(`/api/submissions/${submissionId}/submit`);
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (error) {

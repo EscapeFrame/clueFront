@@ -1,6 +1,7 @@
 import CustomApi from "@/shared/config/api";
 import { NoticeItem } from '@/shared/types/notice';
 
+// 아직 적힌거 없음
 export const noticeApi = {
   // 서비스 공지 목록 조회
   getServiceNotices: async (): Promise<NoticeItem[] | number> => {
