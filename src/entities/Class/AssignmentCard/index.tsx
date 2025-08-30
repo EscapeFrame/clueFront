@@ -6,7 +6,7 @@ import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
 import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import Button from '@/entities/UI/Button';
-import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/classroom';
+import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/Assignment/assignmentAttachment';
 import { differenceInDays, parseISO } from 'date-fns';
 import { MdOutlineFileUpload } from "react-icons/md";
 import { SubmitAssignment, DeleteAssignment } from '../api';
@@ -86,7 +86,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
     if (!fileToSubmit) return alert('파일 데이터가 없습니다.');
 
     try {
-      await SubmitAssignment(data.id, fileToSubmit);
+      await SubmitAssignment(String(data.id), fileToSubmit);
       setIsSubmitted(true);
       alert('과제 제출 완료');
       setShowUploadModal(false);
@@ -97,7 +97,7 @@ export function AssignmentCard({ data }: AssignmentCardProps) {
 
   const handleResubmit = () => {
     setIsSubmitted(false);
-    DeleteAssignment(data.id).catch(console.error)
+    DeleteAssignment(String(data.id)).catch(console.error)
   };
 
   const renderDeadlineOrSubmission = () => {

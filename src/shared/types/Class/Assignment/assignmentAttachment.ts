@@ -59,3 +59,18 @@ export interface StudentAssignmentResponse {
   submittedAt: null | string;
   userName: string;
 }
+
+export interface AssignmentCardProps {
+  data: {
+    id: string | number;
+    title: string;
+    description: string;
+    deadline: string;
+    duringDate?: string;
+    endDate?: string;
+    remainingTime?: string;
+    isSubmitted: boolean;
+    submissionDate?: string | null;
+    files?: AssignmentFileType[] | (string | null)[];
+  };
+}
