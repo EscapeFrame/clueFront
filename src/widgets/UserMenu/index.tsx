@@ -13,17 +13,16 @@ interface DropdownProps {
   role: string | null;
 }
 
-
-export default function Dropdown({ studentNumber, name, myImage, role }: DropdownProps) {
-  const navigate = useNavigate()
-
+export default function Dropdown({ role, studentNumber, name, myImage }: DropdownProps) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
+
+  const navigate = useNavigate();
 
   if (role === null) {
     return (
       <s.DropdownContainer>
-        <s.DropdownButton onClick={() => {navigate("/login")}}>로그인하기</s.DropdownButton>
+        <s.DropdownButton onClick={() => { navigate("/login") }}>로그인하기</s.DropdownButton>
       </s.DropdownContainer>
     );
   }

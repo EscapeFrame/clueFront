@@ -8,7 +8,7 @@ import LessonComponent from '@/features/Common/Class/Lesson';
 import { AssignmentComponent } from '@/features/Common/Class/Assignment';
 import { ExamComponent } from '@/features/Common/Class/Exam';
 import { ClassData, tabs } from './data';
-import { ClassInfoProps } from '@/shared/types/classroom';
+import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import NotFound from '@/pages/NotFound';
 
 const Classroom: React.FC = () => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AssignmentCard } from '@/entities/Class/AssignmentCard';
-import { Assignment, AssignmentProps } from '@/shared/types/classroom';
+import { Assignment, AssignmentProps } from '@/shared/types/Class/classroom';
 import * as s from './styles';
 import { AssignmentsApi } from '../api';
 

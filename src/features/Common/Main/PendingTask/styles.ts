@@ -31,3 +31,48 @@ export const Explain = styled.div`
     margin: 0;
     padding: 0;
 `;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 200px;
+`;
+
+export const LoadingText = styled.p`
+  ${fonts.P1}
+  color: ${theme.colors.gray[500]};
+  margin: 0;
+`;
+
+export const ErrorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 200px;
+  gap: 16px;
+`;
+
+export const ErrorText = styled.p`
+  ${fonts.P1}
+  color: ${theme.colors.red}
+  margin: 0;
+  text-align: center;
+`;
+
+export const EmptyContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 200px;
+`;
+
+export const EmptyText = styled.p`
+  ${fonts.P1}
+  color: ${theme.colors.blue[500]};
+  margin: 0;
+  font-weight: 500;
+`;
