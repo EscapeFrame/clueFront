@@ -12,7 +12,7 @@ function LoginButton() {
   if (!context) {
     throw new Error("LoginButton은 UserContext.Provider 안에서 사용되어야 합니다.");
   }
-  const { setAccessToken, accessToken } = context;
+  const { setAuthInfo, removeAuthInfo, accessToken, user } = context;
 
   const onGoogleLogin = () => {
     const redirectUri = encodeURIComponent(
@@ -26,7 +26,7 @@ function LoginButton() {
       const res = await Customapi.post("/logout");
       if (res.status === 200) {
         localStorage.removeItem("accessToken");
-        setAccessToken(null);
+        removeAuthInfo();
         setUser({
           name: '',
           email: '',

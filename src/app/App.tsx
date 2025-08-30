@@ -5,25 +5,30 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { AppRoutes } from '@/app/router/AppRoutes';
-import { useAccessToken } from './hooks/useAccessToken';
-import {STUNumber, Name, MyImg} from '@/shared/types/user'; // 이 부분 어떻게 해야하지..
+import { useAuth } from './hooks/useAccessToken';
 import Navbar from '@/widgets/Navbar/index';
 
 export default function App() {
-  const { accessToken, setAccessToken } = useAccessToken();
-  const role1 = 'STU'; // 프론트 값 확인용(삭제해야댐)
-  const role2 = 'TCH';
-  const role3 = null;
+  const { accessToken, user, setAuthInfo, removeAuthInfo } = useAuth();
+  // const role1 = 'STU'; // 프론트 값 확인용(삭제해야댐)
+  // const role2 = 'TCH';
+  // const role3 = null;
 
-  const role = role3;
+  // const role = role2;
+
+  let role = user?.role || null
+
+  if (role === 'STUDENT') role = 'STU';
+  else if (role === "TEACHER") role = 'TCH';
+  else role = null;
 
   return (
     <RecoilRoot>
       <ThemeProvider theme={theme}>
         <Global styles={globalStyles} />
         <Router>
-          <UserContext.Provider value={{ accessToken, setAccessToken }}>
-            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} role={role}/>
+          <UserContext.Provider value={{ accessToken, user, setAuthInfo, removeAuthInfo }}>
+            <Navbar studentNumber={Number(user?.userId) || 0} name={user?.username || ''} myImage={user?.myImage || ''} role={role} />
             <AppRoutes role={role} />
           </UserContext.Provider>
         </Router>
