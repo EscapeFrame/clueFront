@@ -5,43 +5,31 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { AppRoutes } from '@/app/router/AppRoutes';
-import { useAccessToken } from './hooks/useAccessToken';
+import { useAuth } from './hooks/useAccessToken';
 import Navbar from '@/widgets/Navbar/index';
-import { USERJwtRequest } from '@/entities/User/model/user.atom';
 
-export default function App() { 
-  const { accessToken, setAccessToken } = useAccessToken();
+export default function App() {
+  const { accessToken, user, setAuthInfo, removeAuthInfo } = useAuth();
+  // const role1 = 'STU'; // 프론트 값 확인용(삭제해야댐)
+  // const role2 = 'TCH';
+  // const role3 = null;
 
-  // 하드코딩된 예시 데이터
-  const role1: USERJwtRequest = {
-    role: 'STU',
-    userId: '20250001',
-    username: '공덕현',
-    profileImg: 'sample.png',
-  };
+  // const role = role2;
 
-  const role2: USERJwtRequest = {
-    role: 'TCH',
-    userId: 'TCH001',
-    username: '유근찬',
-    profileImg: 'sample.png',
-  };
+  let role = user?.role || null
 
-  const role = role1;
+  if (role === 'STUDENT') role = 'STU';
+  else if (role === "TEACHER") role = 'TCH';
+  else role = null;
 
   return (
     <RecoilRoot>
       <ThemeProvider theme={theme}>
         <Global styles={globalStyles} />
         <Router>
-          <UserContext.Provider value={{ accessToken, setAccessToken }}>
-            <Navbar
-              role={role.role}
-              userId={role.userId}
-              name={role.username}
-              myImage={role.profileImg}
-            />
-            <AppRoutes role={role.role} />
+          <UserContext.Provider value={{ accessToken, user, setAuthInfo, removeAuthInfo }}>
+            <Navbar studentNumber={Number(user?.userId) || 0} name={user?.username || ''} myImage={user?.myImage || ''} role={role} />
+            <AppRoutes role={role} />
           </UserContext.Provider>
         </Router>
       </ThemeProvider>

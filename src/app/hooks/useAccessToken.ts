@@ -1,74 +1,61 @@
 import { useEffect, useState } from 'react';
 import CustomApi from '@/shared/config/api';
+import { User } from '@/entities/Context/LoginContext';
+import { AiTwotoneAudio } from 'react-icons/ai';
+import { Await } from 'react-router-dom';
 
-export const useAccessToken = () => {
+export const useAuth = () => {
   const [accessToken, setAccessToken] = useState<string | null>(() => {
     return localStorage.getItem('accessToken');
   });
 
-  // STUDENT JWT 발급
+  const [user, setUser] = useState<User | null>(null);
+
+  // 로그인시 사용자 정보 및 토큰 세팅
+  const setAuthInfo = (token: string, userInfo: User) => {
+    localStorage.setItem('accessToken', token);
+    setAccessToken(token);
+    setUser(userInfo);
+  };
+
+  // 로그아웃
+  const removeAuthInfo = () => {
+    localStorage.removeItem('accessToken');
+    setAccessToken(null);
+    setUser(null);
+  };
+
+  // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
-    const getJwtToken = async () => {
+    const fetchUserInfo = async () => {
+      // 토큰 없을 시 로그인으로
+      if (!accessToken) {
+        console.log('accessToken 없음');
+        window.location.href = '/login';
+        return;
+      }
+
+      if (user) return;
+
       try {
-        const response = await CustomApi.post(
-          '/test?userId'
-        );
-        const token = response.headers.authorization;
-        setAccessToken(token);
-      } catch (error: any) {
-        console.error('STUDENT JWT 발급 실패:', error.response?.data || error.message);
+        const res = await CustomApi.get('유저 정보');
+        const userData = res.data;
+        setUser({
+          userId: userData.userId,
+          username: userData.username,
+          role: userData.role,
+          myImage: userData.myImage || 'sample.jpg',
+        });
+      } catch (error) {
+        console.error('유저 정보 조회 실패: ', error);
+        removeAuthInfo();
       }
     };
 
-    if (accessToken) {
-      localStorage.setItem('accessToken', accessToken);
-    } else {
-      getJwtToken();
-      localStorage.removeItem('accessToken');
-    }
-  }, []);
+    fetchUserInfo();
+  }, [accessToken, user]);
 
-  // TEACHER JWT 발급
-  useEffect(() => {
-    const getJwtToken = async () => {
-      try {
-        const response = await CustomApi.post(
-          '/test?userId'
-        );
-        const token = response.headers.authorization;
-        localStorage.setItem('TaccessToken', token);
-      } catch (error: any) {
-        console.error('TEACHER JWT 발급 실패:', error.response?.data || error.message);
-      }
-    };
+  return { accessToken, user, setAuthInfo, removeAuthInfo };
 
-    if (!localStorage.getItem('TaccessToken')) {
-      getJwtToken();
-    }
-  }, []);
 
-  // Refresh Token 처리
-  useEffect(() => {
-    if (!accessToken) {
-      (async () => {
-        try {
-          const res = await CustomApi.post(
-            "/refresh-token",  
-            {},
-            { withCredentials: true }
-          );
-          const authHeader = res.headers["authorization"];
-          if (authHeader) {
-            const token = authHeader.split(" ")[1];
-            localStorage.setItem("accessToken", token);
-            setAccessToken(token);
-          }
-        } catch (err) {
-          console.warn("자동 리프레시 실패:", err);
-        }
-      })();
-    }
-  }, [accessToken]);
-
-  return { accessToken, setAccessToken };
 };

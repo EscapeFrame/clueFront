@@ -7,13 +7,13 @@ import { MdOutlineLogout } from "react-icons/md";
 import { IoPerson } from "react-icons/io5";
 
 interface DropdownProps {
-  userId: string;
+  studentNumber: number;
   name: string;
   myImage: string;
   role: string | null;
 }
 
-export default function Dropdown({ role, userId, name, myImage }: DropdownProps) {
+export default function Dropdown({ role, studentNumber, name, myImage }: DropdownProps) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
 
@@ -35,7 +35,7 @@ export default function Dropdown({ role, userId, name, myImage }: DropdownProps)
           <s.ProfileInfoBox>
             <s.ProfileImage src={myImage} alt="프로필" />
             <s.ProfileName>{name}</s.ProfileName>
-            <s.ProfileStudentNumber>{userId}</s.ProfileStudentNumber>
+            <s.ProfileStudentNumber>{studentNumber}</s.ProfileStudentNumber>
           </s.ProfileInfoBox>
 
           <s.DropdownItem href="#setting"><AiFillSetting />&nbsp;설정</s.DropdownItem>
