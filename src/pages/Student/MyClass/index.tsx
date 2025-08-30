@@ -1,91 +1,58 @@
 import * as s from './styles';
-import { useState, useEffect } from 'react';
-import { Modal } from '@/entities/UI/Modal/index';
-import Customapi from '@/shared/config/api';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import TabSelector, { CategoryKey } from '@/features/Common/Class/TabSelector';
+import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
 
 export default function MyClass() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [classCode, setClassCode] = useState(''); // input 값 상태
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(''); // 오류 메시지
-  const [myClasses, setMyClasses] = useState<any[]>([]); // 내 학습실 목록
+  const navigate = useNavigate();
+  const { myClasses, error } = useMyClass();
+  const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
+  const [searchValue, setSearchValue] = useState('');
 
-  // 전체 학습실 조회
-  const MyClass = async () => {
-    try {
-      const res = await Customapi.get('/api/class');
-      if (res.status !== 200) {
-        setError(`학습실 조회 실패: 상태 코드 ${res.status}`);
-        return;
-      }
-      // API 응답이 배열인지 확인
-      setMyClasses(Array.isArray(res.data) ? res.data : []);
-    } catch (err: any) {
-      console.error('학습실 전체 조회 실패: ', err);
-      setError(err.response?.data?.message || '전체 학습실 불러오기 실패');
-      setMyClasses([]);
-    }
-  };
+  // 탭 + 검색 필터링
+  const filteredClasses = myClasses.filter((cls) => {
+    const tabMatch = selectedTab === '전체' ? true : cls.subject?.includes(selectedTab);
+    const searchMatch = cls.name.toLowerCase().includes(searchValue.toLowerCase());
+    return tabMatch && searchMatch;
+  });
 
-  // 학습실 코드로 참여
-  const joinClassroom = async (code: string) => {
-    if (!code.trim()) return;
-    setLoading(true);
-    setError('');
-    try {
-      const response = await Customapi.get(`/api/class/${code}/members`);
-      if (response.status !== 200) return response.status;  // 상태 코드 체크
-
-      setMyClasses(prev => [...prev, response.data]);
-      setIsModalOpen(false);
-      setClassCode('');
-    } catch (err: any) {
-      console.error('학습실 조회 실패: ', err);
-      setError(err.response?.data?.message || '학습실 참여 실패');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    MyClass();
-  }, []);
+  const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
   return (
     <s.Container>
       <s.Flexible>
         <s.TitleFont>나의 학습실</s.TitleFont>
-        <s.AddButton onClick={() => setIsModalOpen(true)}>학습실 추가</s.AddButton>
+        <s.AddButton onClick={() => navigate('/class/make')}>학습실 추가</s.AddButton>
+        {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
       </s.Flexible>
 
-      {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
+      <TabSelector
+        selectedTab={selectedTab}
+        onSelectTab={(tab) => setSelectedTab(tab as CategoryKey)}
+        onSearch={(query) => setSearchValue(query)}
+      />
 
-      {/* 학습실 목록 출력 */}
-      {myClasses.length > 0 && myClasses.map((cls, idx) => (
-        <div key={idx}>{cls.name || '알 수 없는 학습실'}</div>
-      ))}
-
-      {isModalOpen && (
-        <Modal
-          title="학습실 추가"
-          notes="input"
-          placeholder="학습실 코드를 입력해주세요"
-          onClose={() => setIsModalOpen(false)}
-          buttons={[
-            {
-              text: '취소',
-              type: 1,
-              width: '50%',
-              onClick: () => setIsModalOpen(false),
-            },
-            {
-              text: loading ? '조회 중...' : '완료',
-              type: 0,
-              width: '50%',
-              onClick: () => joinClassroom(classCode)
-            },
-          ]}
-        />
+      {!filteredClasses.length ? (
+        <s.EmptyMessage>참여한 학습실이 없습니다.</s.EmptyMessage>
+      ) : (
+        <s.Grid>
+          {filteredClasses.map((cls, idx) => (
+            <s.Card
+              key={cls.id || `myclass-${idx}`}
+              onClick={() => handleViewClass(cls.id)}
+              style={{ cursor: 'pointer' }}
+            >
+              <s.CardTitle>{cls.name}</s.CardTitle>
+              <s.CardDescription>{cls.description || '설명이 없습니다.'}</s.CardDescription>
+              <s.InfoBlock>
+                <s.InfoContent>
+                  {cls.subject || '미정'} | {cls.assignedClass || '미정'}
+                </s.InfoContent>
+              </s.InfoBlock>
+            </s.Card>
+          ))}
+        </s.Grid>
       )}
     </s.Container>
   );

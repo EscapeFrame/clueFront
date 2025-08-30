@@ -1,4 +1,4 @@
-import { BasicInfoData } from '@/shared/types/classroom';
+import { BasicInfoData } from '@/shared/types/Class/classroom';
 
 export const BasicInfoDatas: BasicInfoData = {
   subjectCategory: '수학',

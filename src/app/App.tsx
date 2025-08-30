@@ -6,13 +6,28 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { AppRoutes } from '@/app/router/AppRoutes';
 import { useAccessToken } from './hooks/useAccessToken';
-import {STUNumber, Name, MyImg} from '@/shared/types/user'; // 이 부분 어떻게 해야하지..
 import Navbar from '@/widgets/Navbar/index';
+import { USERJwtRequest } from '@/entities/User/model/user.atom';
 
 export default function App() {
   const { accessToken, setAccessToken } = useAccessToken();
-  const role1 = 'STU'; // 프론트 값 확인용(삭제해야댐)
-  const role2 = 'TCH';
+
+  // 하드코딩된 예시 데이터
+  const role1: USERJwtRequest = {
+    role: 'STU',
+    userId: '20250001',
+    username: '공덕현',
+    profileImg: 'sample.png',
+  };
+
+  const role2: USERJwtRequest = {
+    role: 'TCH',
+    userId: 'TCH001',
+    username: '유근찬',
+    profileImg: 'sample.png',
+  };
+
+  const role = role1;
 
   return (
     <RecoilRoot>
@@ -20,8 +35,12 @@ export default function App() {
         <Global styles={globalStyles} />
         <Router>
           <UserContext.Provider value={{ accessToken, setAccessToken }}>
-            <Navbar studentNumber={STUNumber} name={Name} myImage={MyImg} />
-            <AppRoutes role={role2} />
+            <Navbar
+              userId={role.userId}
+              name={role.username}
+              myImage={role.profileImg}
+            />
+            <AppRoutes role={role.role} />
           </UserContext.Provider>
         </Router>
       </ThemeProvider>
