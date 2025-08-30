@@ -15,7 +15,7 @@ export interface AssignmentFileType {
 }
 
 // 특정 학생 과제보기 - 파일
-export interface File {
+export interface AssignemtnFile {
   fileId?: number | null;
   fileName?: null | string;
   fileSize?: number | null;
