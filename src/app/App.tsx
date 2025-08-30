@@ -9,7 +9,7 @@ import { useAccessToken } from './hooks/useAccessToken';
 import Navbar from '@/widgets/Navbar/index';
 import { USERJwtRequest } from '@/entities/User/model/user.atom';
 
-export default function App() {
+export default function App() { 
   const { accessToken, setAccessToken } = useAccessToken();
 
   // 하드코딩된 예시 데이터
