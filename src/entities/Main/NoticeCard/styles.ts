@@ -72,3 +72,23 @@ export const Row = styled.div`
     grid-template-columns: 1fr;
   }
 `;
+
+export const EmptyText = styled.p`
+  ${fonts.P1}
+  color: ${theme.colors.blue[500]};
+  margin: 0;
+  font-weight: 500;
+`;
+
+export const ErrorText = styled.p`
+  ${fonts.P1}
+  color: ${theme.colors.red}
+  margin: 0;
+  text-align: center;
+`;
+
+export const LoadingText = styled.p`
+  ${fonts.P1}
+  color: ${theme.colors.gray[500]};
+  margin: 0;
+`;

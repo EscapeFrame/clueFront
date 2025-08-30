@@ -1,6 +1,6 @@
 import Customapi from '@/shared/config/api';
 import { Assignment, Exam, Directory,
-        NewsItem, QuestionItem } from '@/shared/types/classroom';
+        NewsItem, QuestionItem } from '@/shared/types/Class/classroom';
 
 // 과제 목록 조회
 export const AssignmentsApi = async (classId: string): Promise<Assignment[]> => {

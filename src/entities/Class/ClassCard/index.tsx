@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ClassPost } from '@/shared/types/classroom';
+import { ClassPost } from '@/shared/types/Class/classroom';
 import * as s from './styles';
 
 interface ClassCardProps extends ClassPost {}

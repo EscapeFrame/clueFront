@@ -1,5 +1,5 @@
 import Customapi from '@/shared/config/api';
-import { ClassInfoProps } from '@/shared/types/classroom';
+import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import { ScheduleItem } from '@/shared/types/schedule';
 import { PendingTaskItem } from '@/shared/types/task';
 import { NoticeItem } from '@/shared/types/notice';

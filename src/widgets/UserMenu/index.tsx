@@ -7,23 +7,22 @@ import { MdOutlineLogout } from "react-icons/md";
 import { IoPerson } from "react-icons/io5";
 
 interface DropdownProps {
-  studentNumber: number;
+  userId: string;
   name: string;
   myImage: string;
   role: string | null;
 }
 
-
-export default function Dropdown({ studentNumber, name, myImage, role }: DropdownProps) {
-  const navigate = useNavigate()
-
+export default function Dropdown({ role, userId, name, myImage }: DropdownProps) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
+
+  const navigate = useNavigate();
 
   if (role === null) {
     return (
       <s.DropdownContainer>
-        <s.DropdownButton onClick={() => {navigate("/login")}}>로그인하기</s.DropdownButton>
+        <s.DropdownButton onClick={() => { navigate("/login") }}>로그인하기</s.DropdownButton>
       </s.DropdownContainer>
     );
   }
@@ -36,7 +35,7 @@ export default function Dropdown({ studentNumber, name, myImage, role }: Dropdow
           <s.ProfileInfoBox>
             <s.ProfileImage src={myImage} alt="프로필" />
             <s.ProfileName>{name}</s.ProfileName>
-            <s.ProfileStudentNumber>{studentNumber}</s.ProfileStudentNumber>
+            <s.ProfileStudentNumber>{userId}</s.ProfileStudentNumber>
           </s.ProfileInfoBox>
 
           <s.DropdownItem href="#setting"><AiFillSetting />&nbsp;설정</s.DropdownItem>
