@@ -3,6 +3,9 @@ import * as S from './styles'
 
 export function Login() {
 
+    console.log("로그인 페이지");
+    const token =  localStorage.getItem('accessToken');
+    if(!token) console.log("토큰이 없음");
     return (
         <S.Container>
             <S.LogoBox>
