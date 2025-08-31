@@ -28,7 +28,7 @@ export default function App() {
         <Global styles={globalStyles} />
         <Router>
           <UserContext.Provider value={{ accessToken, user, setAuthInfo, removeAuthInfo }}>
-            <Navbar studentNumber={Number(user?.userId) || 0} name={user?.username || ''} myImage={user?.myImage || ''} role={role} />
+            <Navbar userId={Number(user?.userId) || 0} username={user?.username || ''} role={role} />
             <AppRoutes role={role} />
           </UserContext.Provider>
         </Router>
