@@ -7,7 +7,7 @@ export interface UserState {
 }
 
 export const userState = atom<UserState>({
-  key: 'userState',
+  key: 'userInfo',
   default: {
     name: '',
     email: '',

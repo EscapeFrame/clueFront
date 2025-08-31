@@ -28,9 +28,9 @@ function LoginButton() {
         localStorage.removeItem("accessToken");
         removeAuthInfo();
         setUser({
-          name: '',
-          email: '',
-          picture: '',
+          username: '',
+          userId: '',
+          role: '',
         });
         window.location.href = "/";
       }
