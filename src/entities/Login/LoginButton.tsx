@@ -18,7 +18,8 @@ function LoginButton() {
     const redirectUri = encodeURIComponent(
       `${window.location.origin}/login/oauth2/code/google`
     );
-    window.location.href = `${Customapi.defaults.baseURL}/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
+    window.location.href = `${API_URL}/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
   };
 
   const onLogout = async () => {
