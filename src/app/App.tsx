@@ -22,8 +22,16 @@ export default function App() {
 }
 
 function AuthWrapper() {
-  const { accessToken, user, setAuthInfo, removeAuthInfo } = useAuth();
-
+  const {  setAuthInfo, removeAuthInfo } = useAuth();
+  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzU2NjU2MDY1LCJleHAiOjE3NTcwMTYwNjV9.1tiEURPjqgtl3JLnrOzV321h8tP96MWMLCdHEg7An7o";
+  localStorage.setItem('accessToken', accessToken);
+  
+  const user = {
+    userId: '1',
+    username: 'admin',
+    role: 'TEACHER',
+  };
+  
   let role = user?.role || null;
   if (role === 'STUDENT') role = 'STU';
   else if (role === 'TEACHER') role = 'TCH';
