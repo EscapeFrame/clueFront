@@ -16,6 +16,11 @@ export const pendingTasksApi = {
       const res = await CustomApi.get(`/api/assignments/me`);
       if (res.status !== 200) return res.status;
 
+      if (!Array.isArray(res.data)) {
+        console.error('API 응답이 배열이 아님:', res.data);
+        return [];
+      }
+
       const normalizedData = res.data.map((task: PendingTaskItem) => ({
         ...task,
         dueDate: normalizeDate(task.dueDate),
