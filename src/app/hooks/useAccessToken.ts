@@ -11,11 +11,19 @@ export const useAuth = () => {
 
   const [user, setUser] = useRecoilState(userState);
 
+  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzU2NjU2MDY1LCJleHAiOjE3NTcwMTYwNjV9.1tiEURPjqgtl3JLnrOzV321h8tP96MWMLCdHEg7An7o';
+  const TEST_USER: User = {
+    userId: '1',
+    username: 'admin',
+    role: 'TEACHER',
+  };
+
   // 로그인시 사용자 정보 및 토큰 세팅
-  const setAuthInfo = (token: string, userInfo: User) => {
-    localStorage.setItem('accessToken', token);
-    setAccessToken(token);
-    setUser(userInfo);
+  // const setAuthInfo = (token: string, userInfo: User) => {
+    const setAuthInfo = () => {
+    localStorage.setItem('accessToken', TEST_TOKEN);
+    setAccessToken(TEST_TOKEN);
+    setUser(TEST_USER);
   };
 
   // 로그아웃
