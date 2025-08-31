@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AssignmentCard } from '@/entities/Class/AssignmentCard';
-import { Assignment, AssignmentProps } from '@/shared/types/Class/classroom';
+import { Assignment } from '@/shared/types/Class/Assignment/assignmentAttachment';
 import * as s from './styles';
 import { AssignmentsApi } from '../api';
 
-export const AssignmentComponent: React.FC<AssignmentProps> = () => {
-  const { classId } = useParams<{ classId: string }>(); 
+export const AssignmentComponent: React.FC = () => {
+  const { classId, classRoomId } = useParams<{ classId?: string; classRoomId?: string }>();
+  const effectiveId = classId ?? classRoomId;
   const [assignmentList, setAssignmentList] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadAssignments = async () => {
       try {
-        if (!classId) throw new Error('classId가 없습니다.');
-        const data = await AssignmentsApi(classId);
+        if (!effectiveId) throw new Error('classId가 없습니다.');
+        const data = await AssignmentsApi(effectiveId);
         setAssignmentList(data);
       } catch (err: any) {
         console.error('과제 불러오기 실패:', err);
@@ -27,11 +28,13 @@ export const AssignmentComponent: React.FC<AssignmentProps> = () => {
   }, [classId]);
 
   // 특정 과제 수정 함수
-  const updateAssignment = (id: string, changes: Partial<Assignment>) => {
+  const updateAssignment = (id: string|number, changes: Partial<Assignment>) => {
     setAssignmentList(prev =>
       prev.map(a => (a.id === id ? { ...a, ...changes } : a))
     );
   };
+
+  if (loading) return <div>로딩 중...</div>;
 
   return (
     <s.Container>
