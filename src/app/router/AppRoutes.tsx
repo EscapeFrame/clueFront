@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import Login from '@/pages/Login';
+import {Login} from '@/pages/Login/index';
 import RegisterPage from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
 import Setting from '@/pages/Common/Setting';
@@ -29,7 +29,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
   return (
     <Routes>
 
-      <Route path='/login' element={Login} />
+      <Route path='/login' element={<Login />} />
       <Route path='/register' element = {<RegisterPage />} />
 
       {!isAuthenticated && (
@@ -59,7 +59,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
 
       {isAuthenticated && (
         <>
-          <Route path='/login' element={Login} />
+          <Route path='/login' element={<Login />} />
           <Route path='/setting' element={<Setting />} />
           <Route path='setting/user' element={<p>정보 수정 페이지</p>} />
         </>

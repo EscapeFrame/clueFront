@@ -8,12 +8,17 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        alert('로그인이 필요합니다.');
+        navigate('/login', { replace: true });
+        return;
+      }
       await Customapi.post('/register', {
         grade,
         classNum,
@@ -37,19 +42,17 @@ function RegisterPage() {
     // 디자인 나오기 전 임시 
     <div>
       <h2>추가 정보 입력</h2>
-        <label>
-          학년:
-          <input value={grade} onChange={(e) => setGrade(e.target.value)} required />
-        </label>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="grade">학년:</label>
+        <input id="grade" value={grade} onChange={(e) => setGrade(e.target.value)} required />
         <br />
-        <label>
-          반:
-          <input value={classNum} onChange={(e) => setClassNum(e.target.value)} required />
-        </label>
+        <label htmlFor="classNum">반:</label>
+        <input id="classNum" value={classNum} onChange={(e) => setClassNum(e.target.value)} required />
         <br />
-        <button onClick={handleSubmit} disabled={loading}>
+        <button type="submit" disabled={loading}>
           {loading ? '처리 중...' : '회원가입 완료'}
         </button>
+      </form>
     </div>
   );
 }
