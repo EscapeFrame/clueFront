@@ -13,19 +13,9 @@ function RegisterPage() {
     setLoading(true);
 
     try {
-      const accessToken = localStorage.getItem('accessToken');
-      if (!accessToken) {
-        alert('로그인이 필요합니다.');
-        navigate('/login', { replace: true });
-        return;
-      }
       await Customapi.post('/register', {
         grade,
         classNum,
-      }, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
       });
 
       // 회원가입 성공 후 메인 페이지로 이동

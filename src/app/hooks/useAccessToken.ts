@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import CustomApi from '@/shared/config/api';
 import { User } from '@/entities/Context/LoginContext';
-import { AiTwotoneAudio } from 'react-icons/ai';
-import { Await } from 'react-router-dom';
+import { userState } from '@/shared/types/login';
+import { useRecoilState } from 'recoil';
 
 export const useAuth = () => {
   const [accessToken, setAccessToken] = useState<string | null>(() => {
     return localStorage.getItem('accessToken');
   });
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useRecoilState(userState);
 
   // 로그인시 사용자 정보 및 토큰 세팅
   const setAuthInfo = (token: string, userInfo: User) => {
@@ -22,7 +22,7 @@ export const useAuth = () => {
   const removeAuthInfo = () => {
     localStorage.removeItem('accessToken');
     setAccessToken(null);
-    setUser(null);
+    setUser({ username: "", userId: "", role: ""});
   };
 
   // 토큰은 있으나 유저 정보가 없을 경우
@@ -43,7 +43,6 @@ export const useAuth = () => {
           userId: userData.userId,
           username: userData.username,
           role: userData.role,
-          myImage: userData.myImage || 'sample.jpg',
         });
       } catch (error) {
         console.error('유저 정보 조회 실패: ', error);
