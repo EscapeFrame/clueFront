@@ -12,13 +12,13 @@ import { MdOutlineFileUpload } from "react-icons/md";
 import { SubmitAssignment, DeleteAssignment } from '../api';
 
 
-interface UploadedFile { id: string; name: string; size: string; file?: File }  
+interface UploadedFile { id: string; name: string; size: string; file?: File }
 
 function isAssignmentFileType(f: any): f is AssignmentFileType {
   return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
 }
 
-export function AssignmentCard({ data, updateAssignment  }: AssignmentCardProps) {
+export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) {
   const [isSubmitted, setIsSubmitted] = useState(data.isSubmitted);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>(
     (data.files ?? []).map(f => isAssignmentFileType(f)
@@ -88,7 +88,7 @@ export function AssignmentCard({ data, updateAssignment  }: AssignmentCardProps)
     try {
       await SubmitAssignment(String(data.id), fileToSubmit);
       setIsSubmitted(true);
-      updateAssignment(data.id,{ isSubmitted: true });
+      updateAssignment(data.id, { isSubmitted: true });
       alert('과제 제출 완료');
       setShowUploadModal(false);
     } catch {
@@ -96,10 +96,21 @@ export function AssignmentCard({ data, updateAssignment  }: AssignmentCardProps)
     }
   };
 
-  const handleResubmit = () => {
-    setIsSubmitted(false);
-    updateAssignment(data.id,{ isSubmitted: true });
-    DeleteAssignment(String(data.id)).catch(console.error)
+  const handleResubmit = async() => {
+    // setIsSubmitted(false);
+    // updateAssignment(data.id,{ isSubmitted: true });
+    // DeleteAssignment(String(data.id)).catch(console.error)
+    try {
+      await DeleteAssignment(String(data.id));
+      setIsSubmitted(false);
+      updateAssignment(data.id, { isSubmitted: false });
+      alert('제출 취소 완료');
+    } catch (e) {
+      // setIsSubmitted(prev);
+      alert('제출 취소 실패');
+      console.error(e);
+    }
+
   };
 
   const renderDeadlineOrSubmission = () => {
@@ -177,8 +188,8 @@ export function AssignmentCard({ data, updateAssignment  }: AssignmentCardProps)
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
             >
-                <MdOutlineFileUpload size={60} /> <br />
-                {isDragOver ? '여기에 파일을 놓으세요!' : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}
+              <MdOutlineFileUpload size={60} /> <br />
+              {isDragOver ? '여기에 파일을 놓으세요!' : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}
             </s.FileUploadArea>
             <input
               ref={fileInputRef}

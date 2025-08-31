@@ -7,7 +7,7 @@ interface UsePendingTasksReturn {
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
-  submitTask: (taskIndex: number) => Promise<void>;
+  submitTask: (submissionId: string | number) => Promise<void>;
   createTask: (task: PendingTaskItem) => Promise<void>;
 }
 
@@ -41,9 +41,9 @@ export const usePendingTasks = (): UsePendingTasksReturn => {
     }
   }, []);
 
-  const submitTask = useCallback(async (taskIndex: number) => {
+  const submitTask = useCallback(async (submissionId: string | number) => {
     try {
-      const result = await pendingTasksApi.submitTask(String(taskIndex));
+      const result = await pendingTasksApi.submitTask(String(submissionId));
       
       if (typeof result === 'number') {
         throw new Error(`과제 제출에 실패했습니다. (상태코드: ${result})`);

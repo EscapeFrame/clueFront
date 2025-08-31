@@ -53,7 +53,7 @@ const Classroom: React.FC = () => {
       case 'lesson':
         return <LessonComponent classId={classRoomId} />;
       case 'assignment':
-        return <AssignmentComponent classRoomId={classRoomId} />;
+        return <AssignmentComponent />;
       case 'exam':
         return <ExamComponent />;
       default:
