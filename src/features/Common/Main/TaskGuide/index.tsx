@@ -13,11 +13,19 @@ export default function TaskGuide(): React.ReactNode {
     const getPosts = async () => {
       try {
         const data = await fetchPosts();
+
+        if (!Array.isArray(data)) {
+          console.error('fetchPosts() 결과가 배열이 아님:', data);
+          setPosts([]);
+          return;
+        }
+        
         setPosts(
           data.sort((a, b) => dayjs(a.dueDate).diff(today, 'day') - dayjs(b.dueDate).diff(today, 'day'))
         );
       } catch (error) {
-        console.error('실패: ', error);
+        console.error('수행평가 조회실패: ', error);
+        setPosts([]);
       }
     };
 
