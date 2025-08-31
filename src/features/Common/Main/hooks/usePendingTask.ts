@@ -33,6 +33,7 @@ export const usePendingTasks = (): UsePendingTasksReturn => {
       // 성공적으로 데이터를 받은 경우
       setTasks(result);
     } catch (err) {
+      console.log (err);
       console.error('미제출 과제 조회 중 오류 발생:', err);
       setError('과제를 불러오는 중 오류가 발생했습니다.');
       setTasks([]);

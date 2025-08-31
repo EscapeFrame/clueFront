@@ -22,8 +22,6 @@ export default function App() {
   else if (role === "TEACHER") role = 'TCH';
   else role = null;
 
-  role = 'TCH';
-
   return (
     <RecoilRoot>
       <ThemeProvider theme={theme}>
