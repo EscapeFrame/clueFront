@@ -7,7 +7,8 @@ import TabSelector from '@/entities/UI/TabSelect';
 import LessonComponent from '@/features/Common/Class/Lesson';
 import { AssignmentComponent } from '@/features/Common/Class/Assignment';
 import { ExamComponent } from '@/features/Common/Class/Exam';
-import { classData as fetchClassData, tabs } from './data';
+import { tabs } from './data';
+import { ClassData as fetchClassData } from '@/features/Common/Main/hooks/useClass';
 import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import NotFound from '@/pages/NotFound';
 
@@ -51,7 +52,7 @@ const Classroom: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'lesson':
-        return <LessonComponent classId={classRoomId} />;
+        return <LessonComponent classRoomId={classRoomId} />;
       case 'assignment':
         return <AssignmentComponent />;
       case 'exam':

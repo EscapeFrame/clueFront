@@ -5,7 +5,7 @@ import { PendingTaskItem } from '@/shared/types/task';
 import { NoticeItem } from '@/shared/types/notice';
 
 export const ClassData = async (classRoomId: string): Promise<ClassInfoProps> => {
-  const res = await Customapi.get(`/api/classroom/${classRoomId}`);
+  const res = await Customapi.get(`/api/class/${classRoomId}`);
   return res.data;
 };
 
