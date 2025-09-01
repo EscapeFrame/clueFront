@@ -12,7 +12,7 @@ export const Card = styled.div`
   transition: box-shadow 0.2s ease;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);]
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     background-color: ${theme.colors.blue[400]}
   }
 `;
