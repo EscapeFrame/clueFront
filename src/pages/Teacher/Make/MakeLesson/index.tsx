@@ -3,14 +3,15 @@ import * as s from "./styles";
 import DirectorySelect from "@/entities/Make/Lesson/directory/DirectorySelect";
 import LessonCard from "@/entities/Make/Lesson/Card";
 import { lessonCards } from "@/entities/Make/Lesson/Card/data";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const LessonCreator: React.FC = () => {
+  const navigate = useNavigate();
   const { classRoomId } = useParams<{ classRoomId: string }>();
   const id = classRoomId && !Number.isNaN(Number(classRoomId)) ? Number(classRoomId) : null;
 
   const handleCardClick = (url: string) => {
-    window.location.href = url;
+    navigate(url);
   };
 
   return (
