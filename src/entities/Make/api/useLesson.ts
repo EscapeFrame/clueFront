@@ -10,7 +10,7 @@ export interface Directory {
 
 // 디렉토리 목록 조회
 export const fetchDirectories = async (classRoomId: number): Promise<Directory[]> => {
-  const res = await Customapi.get(`/api/class/${classRoomId}`);
+  const res = await Customapi.get(`/api/class/${classRoomId}/all`);
   return res.data;
 };
 

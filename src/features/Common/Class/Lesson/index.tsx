@@ -9,7 +9,8 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
 
-const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
+
+const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
 
   // 상태 관리
@@ -26,26 +27,28 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // 데이터 불러오기
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [dirs, n, q] = await Promise.all([
-          getLessonDirectories(classId),
-          getLessonNews(classId),
-          getLessonQuestions(classId),
-        ]);
-        setDirectories(dirs);
-        setNews(n);
-        setQuestions(q);
-      } catch (err) {
-        console.error('강의 데이터 불러오기 실패:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const classInfo = await getLessonDirectories(classRoomId);
+      const dirs: Directory[] = classInfo.directoryList.map((dir:any) => ({
+        id: dir.directoryId.toString(),
+        name: dir.directoryName,
+        isRead: false,
+        subDirectories: [], // 필요시 documentList로 변환 가능
+      }));
+      setDirectories(dirs);
+      setNews(await getLessonNews(classRoomId));
+      setQuestions(await getLessonQuestions(classRoomId));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (classId) fetchData();
-  }, [classId]);
+  if (classRoomId) fetchData();
+}, [classRoomId]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -69,7 +72,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
           return d;
         })
       );
-      navigate(`/class/${classId}/${dir.id}`); // 미확정
+      navigate(`/class/${classRoomId}/${dir.id}`); // 미확정
     } else {
       toggleDirectory(dir.id);
     }

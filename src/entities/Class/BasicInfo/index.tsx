@@ -1,9 +1,8 @@
 import InputBox from '@/entities/UI/InputBox/Input';
 import SelectInputBox from '@/entities/UI/InputBox/SelectInput';
-import { subjectCategoryOptions, periodOptions, gradeOptions, classOptions} from './data';
+import { subjectCategoryOptions, gradeOptions, classOptions} from './data';
 import { BasicInfoProps } from '@/shared/types/Class/classroom';
 import * as S from './styles';
-import { useState } from 'react';
 
 export default function BasicInfo({ data, setData }: BasicInfoProps) {
 

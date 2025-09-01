@@ -1,4 +1,4 @@
-import * as s from './styles';import { useEffect, useState } from 'react';
+import * as s from './styles';
 import { QuickLink } from '@/features/Common/Main/QuickLink';
 import PendingTask from '@/features/Common/Main/PendingTask';
 import TaskGuide from '@/features/Common/Main/TaskGuide';

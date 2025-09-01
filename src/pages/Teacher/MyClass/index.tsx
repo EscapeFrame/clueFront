@@ -7,7 +7,7 @@ import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { myClasses, loading, error } = useMyClass();
+  const { myClasses, error } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
 
@@ -39,7 +39,7 @@ export default function MyClass() {
       ) : (
         <s.Grid>
           {filteredClasses.map((cls, idx) => (
-            <s.Card key={cls.id || `myclass-${idx}`}>
+            <s.Card key={cls.classRoomId || `myclass-${idx}`}>
               <s.CardTitle>{cls.name}</s.CardTitle>
               <s.CardDescription>{cls.description || '설명이 없습니다.'}</s.CardDescription>
               <s.InfoBlock>
@@ -48,8 +48,8 @@ export default function MyClass() {
                 </s.InfoContent>
               </s.InfoBlock>
               <s.ButtonGroup>
-                <Button text="관리" width="50%" type={1} onClick={() => handleManageClass(cls.id)} />
-                <Button text="학습실 보기" width="50%" type={0} onClick={() => handleViewClass(cls.id)} />
+                <Button text="관리" width="50%" type={1} onClick={() => handleManageClass(cls.classRoomId)} />
+                <Button text="학습실 보기" width="50%" type={0} onClick={() => handleViewClass(cls.classRoomId)} />
               </s.ButtonGroup>
             </s.Card>
           ))}

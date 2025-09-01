@@ -21,5 +21,5 @@ export interface QuestionItem {
 }
 
 export interface LessonProps {
-  classId: string;
+  classRoomId: string;
 }
