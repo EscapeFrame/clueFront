@@ -23,7 +23,7 @@ export default function App() {
 
 function AuthWrapper() {
   const {  setAuthInfo, removeAuthInfo } = useAuth();
-  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzU2NzMzNzEwLCJleHAiOjE3NTcwOTM3MTB9.y2ue1GYX1rv6p_okct9SNjHkDLZBqFMHT9HX4GgAVv4";
+  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6MiwidXNlcm5hbWUiOiLsnKDqt7zssKwiLCJyb2xlIjoiVEVBQ0hFUiIsImlhdCI6MTc1Njg3MDczNSwiZXhwIjoxNzU3MjMwNzM1fQ.VS2xQOtu9_0Lry36PtfVIGeWZPmwuUcPkOnxTCPugRQ";
   localStorage.setItem('accessToken', accessToken);
   
   const user = {
