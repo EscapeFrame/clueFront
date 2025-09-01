@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react";
-import { Directory, fetchDirectories, createDirectory} from "@/entities/Make/api/useLesson";
+import { useEffect, useState, useRef } from "react";
+import {
+  Directory,
+  fetchDirectories,
+  createDirectory,
+} from "@/entities/Make/api/useLesson";
 import { DirectoryCreateRequest } from "@/shared/types/Class/directory";
 
 export const useDirectories = (classRoomId: number) => {
@@ -8,17 +12,28 @@ export const useDirectories = (classRoomId: number) => {
   const [isAdding, setIsAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const loadSeq = useRef(0);
 
   const loadDirectories = async () => {
+    const seq = ++loadSeq.current;
     try {
       setIsLoading(true);
+      setError(null);
       const data = await fetchDirectories(classRoomId);
-      setDirectories(data);
-      if (data.length > 0) setSelectedDir(data[0].id);
+      if (seq !== loadSeq.current) return;
+      const sorted = [...data].sort(
+        (a, b) => (a.directoryOrder ?? 0) - (b.directoryOrder ?? 0),
+      );
+      setDirectories(sorted);
+      setSelectedDir((prev) =>
+        prev != null && sorted.some((d) => d.id === prev)
+          ? prev
+          : sorted[0]?.id ?? null,
+      );
     } catch {
-      setError("디렉토리 목록을 불러오는 중 오류가 발생했습니다.");
+      if (seq === loadSeq.current) setError("디렉토리 목록을 불러오는 중 오류가 발생했습니다.");
     } finally {
-      setIsLoading(false);
+      if (seq === loadSeq.current) setIsLoading(false);
     }
   };
 
