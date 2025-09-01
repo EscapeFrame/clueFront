@@ -8,7 +8,7 @@ import LessonComponent from '@/features/Common/Class/Lesson';
 import { AssignmentComponent } from '@/features/Common/Class/Assignment';
 import { ExamComponent } from '@/features/Common/Class/Exam';
 import { tabs } from './data';
-import { getClassInfo as fetchClassData } from '@/entities/Class/api';
+import { ClassData as fetchClassData } from '@/features/Common/Main/hooks/useClass';
 import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import NotFound from '@/pages/NotFound';
 

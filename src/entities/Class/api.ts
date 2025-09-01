@@ -40,7 +40,7 @@ export async function getClassInfo(classroomId: string) {
         if (response.status !== 200) {
             return response.status;
         }
-        console.log("넘어온 값들",response.data)
+        console.log("넘어온 값",response.data)
         return response.data;
     } catch (error) {
         console.error('클래스 정보 조회 실패:', error);
