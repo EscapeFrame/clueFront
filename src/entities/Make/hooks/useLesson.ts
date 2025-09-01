@@ -31,33 +31,45 @@ export const useDirectories = (classRoomId: number) => {
           : sorted[0]?.id ?? null,
       );
     } catch {
-      if (seq === loadSeq.current) setError("디렉토리 목록을 불러오는 중 오류가 발생했습니다.");
+      if (seq === loadSeq.current)
+        setError("디렉토리 목록을 불러오는 중 오류가 발생했습니다.");
     } finally {
       if (seq === loadSeq.current) setIsLoading(false);
     }
-  },[classRoomId]);
+  }, [classRoomId]);
 
   useEffect(() => {
     loadDirectories();
-    const currentSeq = loadSeq.current
+    const currentSeq = loadSeq.current;
     return () => {
       loadSeq.current = currentSeq + 1;
-    }
+    };
   }, [loadDirectories]);
 
   const addDirectory = async (name: string) => {
+    const trimName = name.trim();
+    if (!trimName) {
+      setError("디렉토리 이름을 입력해주세요.");
+      return;
+    }
+    setIsAdding(true);
+    setError(null);
     try {
+      const nextDirectory = directories.length
+        ? Math.max(...directories.map((d) => d.directoryOrder)) + 1
+        : 1;
       const request: DirectoryCreateRequest = {
         classRoomId,
-        directoryOrder: directories.length + 1,
-        name,
+        directoryOrder: nextDirectory,
+        name: trimName,
       };
       const newDir = await createDirectory(request);
-      setDirectories((prev) => [...prev, newDir]);
+      await loadDirectories(); // 서버를 기준으로 동기화
       setSelectedDir(newDir.id);
-      setIsAdding(false);
     } catch {
       setError("새 디렉토리를 추가하는 중 오류가 발생했습니다.");
+    } finally {
+      setIsAdding(false);
     }
   };
 
