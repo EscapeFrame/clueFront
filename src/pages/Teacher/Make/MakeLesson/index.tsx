@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 const LessonCreator: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId: string }>();
-  const id = classRoomId ? Number(classRoomId) : null;
+  const id = classRoomId && !Number.isNaN(Number(classRoomId)) ? Number(classRoomId) : null;
 
   const handleCardClick = (url: string) => {
     window.location.href = url;
