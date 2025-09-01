@@ -33,9 +33,8 @@ export const ClassInfo: React.FC<ClassInfoProps> = ({
       setIsLoading(true);
 
       const response = await getClassInfo(classId);
-      console.log("API response:", response);
       console.log("넘어온 값",response)
-
+      
       if (response && typeof response === 'object') {
         setClassData({
           name: response.name || "",
