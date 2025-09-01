@@ -5,7 +5,7 @@ import { NoticeItem } from '@/shared/types/notice';
 import { ClassInfoProps } from '@/shared/types/Class/classroom';
 
 export const ClassData = async (classRoomId: string): Promise<ClassInfoProps> => {
-  const res = await Customapi.get(`/api/classroom/${classRoomId}`);
+  const res = await Customapi.get(`/api/class/${classRoomId}`);
   return res.data;
 };
 

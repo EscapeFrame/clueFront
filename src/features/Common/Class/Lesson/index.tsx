@@ -9,7 +9,10 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api/useLesson';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7945509 (Refactor(#151): class Info 받는 중복 코드 수정)
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
 
@@ -27,6 +30,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // 데이터 불러오기
+<<<<<<< HEAD
 useEffect(() => {
   const fetchData = async () => {
     try {
@@ -49,6 +53,28 @@ useEffect(() => {
 
   if (classRoomId) fetchData();
 }, [classRoomId]);
+=======
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [dirs, n, q] = await Promise.all([
+          getLessonDirectories(classRoomId),
+          getLessonNews(classRoomId),
+          getLessonQuestions(classRoomId),
+        ]);
+        setDirectories(dirs);
+        setNews(n);
+        setQuestions(q);
+      } catch (err) {
+        console.error('강의 데이터 불러오기 실패:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (classRoomId) fetchData();
+  }, [classRoomId]);
+>>>>>>> 7945509 (Refactor(#151): class Info 받는 중복 코드 수정)
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
