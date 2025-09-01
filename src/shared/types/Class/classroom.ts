@@ -17,7 +17,6 @@ export interface ClassResponse {
     description: string; // 수업 설명
     directoryList: string[]; // 디렉토리 리스트
     teacherNames: string[]; // 선생님 리스트
-    [property: string]: any;
 }
 
 // 교실생성(선생님)
@@ -27,7 +26,6 @@ export interface ClassCreateRequest {
     name: string;
     sort: string;
     target: string;
-    [property: string]: any;
 }
 
 // 교실 정보 수정(선생님)
@@ -37,7 +35,6 @@ export interface ClassUpdateRequest {
     name: string;
     sort: string;
     target: string;
-    [property: string]: any;
 }
 
 // ClassCard

@@ -56,6 +56,7 @@ export const Card = styled.div`
   border: 1px solid ${theme.colors.gray[400]};
   transition: box-shadow 0.3s;
 
+  max-width: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;  
