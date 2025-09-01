@@ -4,7 +4,7 @@ interface ButtonProps {
   text: string;
   width?: string | number;
   type?: 0 | 1; // 0: 기본, 1: 취소
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean; // 활성화: false, 비활성화: true
 }
 
