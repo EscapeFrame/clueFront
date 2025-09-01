@@ -13,7 +13,7 @@ export const ClassInfo: React.FC<ClassInfoProps> = ({
   const { classId } = useParams<{ classId: string }>();
   const [classData, setClassData] = useState({
     name: name || '',
-    teacherName: teacherName || "유근찬",
+    teacherName: teacherName || "선생님",
     description: description || '',
     progress: progress || 0,
     maxProgress: maxProgress || 100,
