@@ -2,14 +2,15 @@ import { ScheduleTable } from './ScheduleTable';
 import { ScheduleTimeline } from './ScheduleTimeline';
 import * as s from './styles';
 import { useSchedule } from '../hooks/useSchedule';
-import { ScheduleItem } from '@/shared/types/schedule';
+import { ScheduleItem, Response, convertToScheduleItem } from '@/shared/types/schedule';
 
 export const MySchedule = () => {
   const grade = 1;
   const classNumber = 1;
 
-  const { schedule, loading, error } = useSchedule(grade, classNumber);
+  const { schedule: rawSchedule, loading, error } = useSchedule(grade, classNumber);
 
+  const schedule: ScheduleItem[] = convertToScheduleItem((rawSchedule ?? []) as unknown as Response[]);
   const dayKeys = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'] as const;
   const todayKey = dayKeys[new Date().getDay()] as ScheduleItem['day'];
 

@@ -11,7 +11,7 @@ export const useAuth = () => {
 
   const [user, setUser] = useRecoilState(userState);
 
-  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzU2NjU2MDY1LCJleHAiOjE3NTcwMTYwNjV9.1tiEURPjqgtl3JLnrOzV321h8tP96MWMLCdHEg7An7o';
+  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJURUFDSEVSIiwiaWF0IjoxNzU2NzE1NTUxLCJleHAiOjE3NTcwNzU1NTF9.0YlviOVkxSzuTQP0GS-T-OHyeLtlX0u2F7X-4uY-EW8';
   const TEST_USER: User = {
     userId: '1',
     username: 'admin',

@@ -1,10 +1,34 @@
 export type DayOfWeek = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI';
 
+const dayMap: Record<string, DayOfWeek> = {
+  '월': 'MON',
+  '화': 'TUE',
+  '수': 'WED',
+  '목': 'THU',
+  '금': 'FRI',
+}
+
 export interface ScheduleItem {
   day: DayOfWeek;     // 요일 (월~금)
   period: number;     // 0 = 점심시간, 1~7 = 수업교시
   subject: string;    // 과목명 또는 "점심시간"
   description?: string; // 추가 설명 (선택사항)
+}
+
+export function convertToScheduleItem(responses: Response[]): ScheduleItem[] {
+  return responses
+    .map(item => {
+      const mappedDay = dayMap[item.dayOfWeek];
+      if (!mappedDay) return null; // 매핑 안 되면 버림
+
+      const periodNum = Number(item.period);
+      return {
+        day: mappedDay,
+        period: periodNum,
+        subject: periodNum === 0 ? '점심시간' : item.subject, // 0교시 = 점심시간
+      };
+    })
+    .filter((item): item is ScheduleItem => item !== null); // null 제거
 }
 
 // 시간표 정보
