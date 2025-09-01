@@ -50,7 +50,9 @@ const DirectorySelect: React.FC<Props> = ({ classRoomId }) => {
           onChange={(e) => setNewDirName(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              addDirectory(newDirName);
+              const name = newDirName.trim();
+              if(!name) return
+              addDirectory(name);
               setNewDirName("");
             }
           }}
