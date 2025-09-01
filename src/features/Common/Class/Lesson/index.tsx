@@ -9,7 +9,7 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
 
-const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
+const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
 
   // 상태 관리
@@ -30,9 +30,9 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
     const fetchData = async () => {
       try {
         const [dirs, n, q] = await Promise.all([
-          getLessonDirectories(classId),
-          getLessonNews(classId),
-          getLessonQuestions(classId),
+          getLessonDirectories(classRoomId),
+          getLessonNews(classRoomId),
+          getLessonQuestions(classRoomId),
         ]);
         setDirectories(dirs);
         setNews(n);
@@ -44,8 +44,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
       }
     };
 
-    if (classId) fetchData();
-  }, [classId]);
+    if (classRoomId) fetchData();
+  }, [classRoomId]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -69,7 +69,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classId }) => {
           return d;
         })
       );
-      navigate(`/class/${classId}/${dir.id}`); // 미확정
+      navigate(`/class/${classRoomId}/${dir.id}`); // 미확정
     } else {
       toggleDirectory(dir.id);
     }

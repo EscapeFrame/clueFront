@@ -36,10 +36,11 @@ export async function DeleteAssignment(assignmentId: string) {
 // 클래스 정보 조회 API
 export async function getClassInfo(classroomId: string) {
     try {
-        const response = await Customapi.get(`/api/classroom/${classroomId}/info`);
+        const response = await Customapi.get(`/api/class/${classroomId}`);
         if (response.status !== 200) {
             return response.status;
         }
+        console.log("넘어온 값",response.data)
         return response.data;
     } catch (error) {
         console.error('클래스 정보 조회 실패:', error);

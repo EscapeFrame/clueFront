@@ -4,6 +4,8 @@ export interface ClassInfoProps {
   sort: string;
   description: string;
   target: string;
+  isActivation: boolean;
+  createdAt: string
   teacherName: string;
   progress: number;
   maxProgress: number;
