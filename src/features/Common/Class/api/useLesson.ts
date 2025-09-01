@@ -1,29 +1,5 @@
 import Customapi from '@/shared/config/api';
-import { Assignment } from '@/shared/types/Class/Assignment/assignmentAttachment';
-import { Exam } from '@/shared/types/Class/Exam';
 import { NewsItem, QuestionItem, Directory } from '@/shared/types/Class/Lesson';
-
-// 과제 목록 조회
-export const AssignmentsApi = async (classId: string): Promise<Assignment[]> => {
-  const response = await Customapi.get(`/api/assignments/${classId}/all`);
-  
-  if (response.status !== 200) {
-    throw new Error(`서버 에러: ${response.status}`);
-  }
-
-  return response.data;
-};
-
-// 시험 목록 가져오기
-export const ExamApi = async (examNumber: string): Promise<Exam[]> => {
-  const res = await Customapi.get(`/api/exam/${examNumber}`); // API 경로는 필요시 수정
-
-  if (res.status !== 200) {
-    throw new Error(`서버 에러: ${res.status}`);
-  }
-
-  return res.data;
-};
 
 // 수업 디렉토리 조회(없음)
 export const getLessonDirectories = async (classId: string): Promise<Directory[]> => {

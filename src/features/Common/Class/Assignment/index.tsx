@@ -1,52 +1,38 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { AssignmentCard } from '@/entities/Class/AssignmentCard';
-import { Assignment } from '@/shared/types/Class/Assignment/assignmentAttachment';
+import { useAssignments } from '@/features/Common/Class/hooks/useAssignment';
 import * as s from './styles';
-import { AssignmentsApi } from '../api';
 
 export const AssignmentComponent: React.FC = () => {
+  // URL에서 classId나 classRoomId 가져오기
   const { classId, classRoomId } = useParams<{ classId?: string; classRoomId?: string }>();
   const effectiveId = classId ?? classRoomId;
-  const [assignmentList, setAssignmentList] = useState<Assignment[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadAssignments = async () => {
-      try {
-        if (!effectiveId) throw new Error('classId가 없습니다.');
-        const data = await AssignmentsApi(effectiveId);
-        setAssignmentList(data);
-      } catch (err: any) {
-        console.error('과제 불러오기 실패:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAssignments();
-  }, [classId]);
-
-  // 특정 과제 수정 함수
-  const updateAssignment = (id: string|number, changes: Partial<Assignment>) => {
-    setAssignmentList(prev =>
-      prev.map(a => (a.id === id ? { ...a, ...changes } : a))
-    );
-  };
+  // useAssignments 훅 사용
+  const { assignments, loading, error } = useAssignments(effectiveId);
 
   if (loading) return <div>로딩 중...</div>;
 
   return (
     <s.Container>
-      <s.Grid>
-        {assignmentList.map(a => (
-          <AssignmentCard
-            key={a.id}
-            data={a}
-            updateAssignment={updateAssignment}
-          />
-        ))}
-      </s.Grid>
+      {error ? (
+        <div style={{ color: 'red', margin: '1rem 0' }}>{error}</div>
+      ) : (
+        <s.Grid>
+          {assignments.map(a => (
+            <AssignmentCard
+              key={a.id}
+              data={a}
+              updateAssignment={(id, changes) => {
+                // 로컬 상태 업데이트 (예: 제출 여부 변경)
+                const idx = assignments.findIndex(x => x.id === id);
+                if (idx >= 0) assignments[idx] = { ...assignments[idx], ...changes };
+              }}
+            />
+          ))}
+        </s.Grid>
+      )}
     </s.Container>
   );
 };

@@ -1,5 +1,3 @@
-// types.ts
-
 // 과제 첨부
 export interface AssignmentAttachment {
   contentType?: string;

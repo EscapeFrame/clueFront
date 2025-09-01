@@ -1,4 +1,4 @@
-import {AssignmentAttachment } from '../Assignment/assignmentAttachment';
+import {AssignmentAttachment } from './Attachment';
 
 // 과제 전체•단일 조회
 export interface AssignmentResponse {
