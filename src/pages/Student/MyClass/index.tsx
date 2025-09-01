@@ -39,8 +39,8 @@ export default function MyClass() {
         <s.Grid>
           {filteredClasses.map((cls, idx) => (
             <s.Card
-              key={cls.id || `myclass-${idx}`}
-              onClick={() => handleViewClass(cls.id)}
+              key={cls.classRoomId || `myclass-${idx}`}
+              onClick={() => handleViewClass(cls.classRoomId)}
             >
               <s.CardTitle>{cls.name}</s.CardTitle>
               <s.CardDescription>{cls.description || '설명이 없습니다.'}</s.CardDescription>

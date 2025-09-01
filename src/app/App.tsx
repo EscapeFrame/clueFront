@@ -29,7 +29,7 @@ function AuthWrapper() {
   const user = {
     userId: '1',
     username: 'admin',
-    role: 'TEACHER',
+    role: 'STUDENT',
   };
   
   let role = user?.role || null;
