@@ -1,13 +1,7 @@
 import Customapi from '@/shared/config/api';
-import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import { ScheduleItem } from '@/shared/types/schedule';
 import { PendingTaskItem } from '@/shared/types/task';
 import { NoticeItem } from '@/shared/types/notice';
-
-export const ClassData = async (classRoomId: string): Promise<ClassInfoProps> => {
-  const res = await Customapi.get(`/api/class/${classRoomId}`);
-  return res.data;
-};
 
 export const PendingTasks = async (): Promise<PendingTaskItem[]> => {
   const res = await Customapi.get(`/api/tasks/pending`);
