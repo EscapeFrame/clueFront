@@ -8,7 +8,7 @@ import LessonComponent from '@/features/Common/Class/Lesson';
 import { AssignmentComponent } from '@/features/Common/Class/Assignment';
 import { ExamComponent } from '@/features/Common/Class/Exam';
 import { tabs } from './data';
-import { ClassData as fetchClassData } from '@/features/Common/Main/hooks/useClass';
+import { getClassInfo as fetchClassData } from '@/entities/Class/api';
 import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import NotFound from '@/pages/NotFound';
 
@@ -18,6 +18,7 @@ const Classroom: React.FC = () => {
 
   // API로 가져온 클래스 정보를 담을 state
   const [classInfo, setClassInfo] = useState<ClassInfoProps | null>(null);
+  console.log("값",classInfo);
 
   useEffect(() => {
     const savedTab = localStorage.getItem('classroom-tab');
