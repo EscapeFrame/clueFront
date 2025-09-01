@@ -18,7 +18,7 @@ export const Card = styled.div`
 `;
 
 export const CardTitle = styled.h3`
-  ${fonts.P4}
+  ${fonts.P4} 
   font-weight: 600;
   margin: 0;
   padding: 0;
