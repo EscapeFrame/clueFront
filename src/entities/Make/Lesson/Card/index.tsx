@@ -21,7 +21,7 @@ const LessonCard: React.FC<LessonCardProps> = ({ title, desc, url, onSelect }) =
                 text="선택하기"
                 width="100%"
                 type={0}
-                onClick={() => onSelect(url)}
+                onClick={(e) => { e.stopPropagation(); onSelect(url); }}
             />
         </s.Card>
     );
