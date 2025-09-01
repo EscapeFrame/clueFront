@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import {Login} from '@/pages/Login/index';
 import RegisterPage from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
-import Setting from '@/pages/Common/Setting';
+import Setting from '@/pages/Common/Setting/Setting';
 
 import STUHome from '@/pages/Student/Main/index';
 import STUMyClass from '@/pages/Student/MyClass';
@@ -11,12 +11,13 @@ import STUClass from '@/pages/Student/Class';
 
 import TCHHome from '@/pages/Teacher/Main/index';
 import TCHMyClass from '@/pages/Teacher/MyClass';
-import TCHMakeClass from '@/pages/Teacher/MakeClass';
+import TCHMakeClass from '@/pages/Teacher/Make/MakeClass';
 import AddTimeLine from '@/pages/Teacher/AddTimeLine';
-import TCHMakeTask from '@/pages/Teacher/MakeTask';
-import TCHMakeScorecard from '@/pages/Teacher/MakeScorecard';
-import TCHMarkDown from '@/pages/Teacher/MarkDownEditor';
+import TCHMakeTask from '@/pages/Teacher/Make/MakeTask';
+import TCHMakeScorecard from '@/pages/Teacher/Make/MakeScorecard';
+import TCHMarkDown from '@/pages/Teacher/Make/MarkDownEditor';
 import TCHClass from '@/pages/Teacher/Class';
+import TCHMakeLesson from '@/pages/Teacher/Make/MakeLesson';
 
 interface AppRoutesProps {
   role: string | null;
@@ -44,9 +45,10 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/class/:classRoomId" element={<TCHClass />} />
           <Route path='/class/make' element={<TCHMakeClass />} />
           <Route path='/timeline' element={<AddTimeLine />} />
-          <Route path='/class/:classRoomId/maketask' element={<TCHMakeTask />} />
-          <Route path='/class/makescore' element={<TCHMakeScorecard />} />
+          <Route path='/class/:classRoomId/make/task' element={<TCHMakeTask />} />
+          <Route path='/class/make/score' element={<TCHMakeScorecard />} />
           <Route path='/class/make/markdown' element={<TCHMarkDown />} />
+          <Route path='/class/:classRoomId/make/lesson' element={<TCHMakeLesson />} />
         </>
       )}
       {role === 'STU' && (

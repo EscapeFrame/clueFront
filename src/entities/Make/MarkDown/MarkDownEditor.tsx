@@ -3,7 +3,7 @@ import MDEditor from '@uiw/react-md-editor';
 import * as s from './styles';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
-import { submitMarkDown } from '../api';
+import { submitMarkDown } from '../api/useMarkDown';
 // 언젠가는 Modal 컴포넌트 다시 손봐야 할듯
 
 export default function MarkDwonEditor() {
