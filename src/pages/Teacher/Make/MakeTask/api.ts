@@ -1,5 +1,4 @@
 import Customapi from "@/shared/config/api";
-import { Integer } from "@stylexjs/stylex/lib/VarTypes";
 
 // <--MakeTask-->
 // MakeTask 만들기 api

@@ -88,7 +88,7 @@ const MakeTask = () => {
     <S.Container>
       <S.HeaderRow>
         <S.Title>과제 만들기</S.Title>
-        <Button text="채점표 생성" width="200px" onClick={() => navigate("/class/makescore")} />
+        <Button text="채점표 생성" width="200px" onClick={() => navigate("/class/make/score")} />
       </S.HeaderRow>
 
       <InputBox
