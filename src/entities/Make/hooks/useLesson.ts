@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import {
   Directory,
   fetchDirectories,
@@ -14,7 +14,7 @@ export const useDirectories = (classRoomId: number) => {
   const [error, setError] = useState<string | null>(null);
   const loadSeq = useRef(0);
 
-  const loadDirectories = async () => {
+  const loadDirectories = useCallback(async () => {
     const seq = ++loadSeq.current;
     try {
       setIsLoading(true);
@@ -35,11 +35,15 @@ export const useDirectories = (classRoomId: number) => {
     } finally {
       if (seq === loadSeq.current) setIsLoading(false);
     }
-  };
+  },[classRoomId]);
 
   useEffect(() => {
     loadDirectories();
-  }, [classRoomId]);
+    const currentSeq = loadSeq.current
+    return () => {
+      loadSeq.current = currentSeq + 1;
+    }
+  }, [loadDirectories]);
 
   const addDirectory = async (name: string) => {
     try {
