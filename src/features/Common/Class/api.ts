@@ -3,6 +3,14 @@ import { Assignment } from '@/shared/types/Class/Assignment/assignmentAttachment
 import { Exam } from '@/shared/types/Class/Exam';
 import { NewsItem, QuestionItem, Directory } from '@/shared/types/Class/Lesson';
 
+// API 응답 타입 정의
+interface DirectoryApiResponse {
+  directoryList: Array<{
+    directoryId: number;
+    directoryName: string;
+  }>;
+}
+
 // 과제 목록 조회
 export const AssignmentsApi = async (classId: string): Promise<Assignment[]> => {
   const response = await Customapi.get(`/api/assignments/${classId}/all`);
@@ -26,11 +34,11 @@ export const ExamApi = async (examNumber: string): Promise<Exam[]> => {
 };
 
 // 수업 디렉토리 조회(없음)
-export const getLessonDirectories = async (classRoomId: string): Promise<Directory[]> => {
+export const getLessonDirectories = async (classRoomId: string): Promise<DirectoryApiResponse> => {
   const res = await Customapi.get(`/api/class/${classRoomId}/all`);
   if (res.status !== 200) {
     console.error(`수업 디렉토리 조회 실패: ${res.status}`);
-    return [];
+    return { directoryList: [] };
   }
   console.log(res.data);
   return res.data;

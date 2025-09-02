@@ -27,28 +27,28 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // 데이터 불러오기
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const classInfo = await getLessonDirectories(classRoomId);
-      const dirs: Directory[] = classInfo.directoryList.map((dir:any) => ({
-        id: dir.directoryId.toString(),
-        name: dir.directoryName,
-        isRead: false,
-        subDirectories: [], // 필요시 documentList로 변환 가능
-      }));
-      setDirectories(dirs);
-      setNews(await getLessonNews(classRoomId));
-      setQuestions(await getLessonQuestions(classRoomId));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const classInfo = await getLessonDirectories(classRoomId);
+        const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
+          id: dir.directoryId.toString(),
+          name: dir.directoryName,
+          isRead: false,
+          directoryList: [], // 필요시 documentList로 변환 가능
+        }));
+        setDirectories(dirs);
+        setNews(await getLessonNews(classRoomId));
+        setQuestions(await getLessonQuestions(classRoomId));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (classRoomId) fetchData();
-}, [classRoomId]);
+    if (classRoomId) fetchData();
+  }, [classRoomId]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -62,12 +62,12 @@ useEffect(() => {
     if (isSubDirectory) {
       setDirectories(prev =>
         prev.map(d => {
-          if (d.subDirectories) {
-            const newSubDirs = d.subDirectories.map(sd =>
+          if (d.directoryList) {
+            const newSubDirs = d.directoryList.map(sd =>
               sd.id === dir.id ? { ...sd, isRead: true } : sd
             );
             const allSubRead = newSubDirs.every(sd => sd.isRead);
-            return { ...d, subDirectories: newSubDirs, isRead: allSubRead };
+            return { ...d, directoryList: newSubDirs, isRead: allSubRead };
           }
           return d;
         })
@@ -93,7 +93,7 @@ useEffect(() => {
                   <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
                 </s.Item>
                 <s.SubDirectoryList $isExpanded={isExpanded}>
-                  {dir.subDirectories?.map(sub => (
+                  {dir.directoryList?.map(sub => (
                     <s.SubItem
                       key={sub.id}
                       $isRead={sub.isRead}

@@ -2,7 +2,7 @@ export interface Directory {
   id: string;
   name: string;
   isRead: boolean;
-  subDirectories?: Directory[];
+  directoryList?: Directory[];
 }
 
 export interface NewsItem {
