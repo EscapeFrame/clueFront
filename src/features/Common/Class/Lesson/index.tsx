@@ -9,7 +9,6 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '@/features/Common/Class/api/useLesson';
 
-
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
 
