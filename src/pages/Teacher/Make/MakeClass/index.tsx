@@ -31,7 +31,7 @@ export default function MakeClass() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    const dataToSend = { ...basicInfo, ...classroomSetup };
+    const dataToSend = { ...basicInfo, isActivated: classroomSetup.isActivated };
     setLoading(true);
 
     try {
@@ -42,7 +42,7 @@ export default function MakeClass() {
       }
 
       navigate('/class'); // 성공 시 MyClass 페이지로 이동
-    } catch (err: any) {
+    } catch (err) {
       console.error('학습실 생성 실패:', err);
     } finally {
       setLoading(false);
