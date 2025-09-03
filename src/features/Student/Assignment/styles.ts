@@ -15,6 +15,13 @@ export const Grid = styled.div`
   gap: 1.5rem;
 `;
 
+
+export const AddButton = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
 export const Card = styled.div`
   background: #fff;
   border-radius: 8px;

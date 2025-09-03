@@ -1,0 +1,10 @@
+import styled from 'styled-components';
+
+export const Container = styled.div`
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+`;

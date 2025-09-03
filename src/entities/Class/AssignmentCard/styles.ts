@@ -21,7 +21,7 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
 export const CardContainer = styled.div`
   background-color: ${theme.colors.white};
   border-radius: 0.5rem;
-  border: 1px solid ${theme.colors.gray[200]};
+  border: 1px solid ${theme.colors.gray[300]};
   padding: 1rem;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   transition: box-shadow 0.2s ease-in-out;
@@ -163,4 +163,16 @@ export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
   transition: background 0.2s, border 0.2s;
   cursor: pointer;
   user-select: none;
+`;
+
+export const AddButton = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
 `;
