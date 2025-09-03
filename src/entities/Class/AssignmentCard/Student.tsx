@@ -7,7 +7,9 @@ import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/As
 import { differenceInDays, parseISO } from 'date-fns';
 import Button from '@/entities/UI/Button';
 import { Modal } from '@/entities/UI/Modal';
+import { SubmitAssignment, DeleteAssignment } from '../api';
 import { SlidePanel } from '@/entities/UI/SlidePanel';
+import { MdOutlineFileUpload } from 'react-icons/md';
 
 interface UploadedFile { id: string; name: string; size: string; file?: File }
 
@@ -29,6 +31,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResubmitting, setIsResubmitting] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   // 파일 업로드
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,9 +57,6 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
       setShowUploadModal(false);
     } catch (err) {
       console.error('과제 제출 실패:', err);
-      alert('제출 실패: 서버 오류 또는 네트워크 문제');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -77,6 +77,36 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     if (isSubmitted) return <s.InfoItem><LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}</s.InfoItem>;
     const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
     return <s.InfoItem><LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일</s.InfoItem>;
+  };
+
+  // 파일 업로드 모달 닫기
+  const handleUploadModalClose = () => {
+    setTempFiles([]);
+    setShowUploadModal(false);
+  };
+
+  // 파일 업로드 모달 완료
+  const handleUploadModalComplete = () => {
+    setUploadedFiles(tempFiles);
+    setShowUploadModal(false);
+  };
+
+  // 드래그 앤 드롭 핸들러
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      handleFileUpload({ target: { files } } as React.ChangeEvent<HTMLInputElement>);
+    }
   };
 
   return (
@@ -114,9 +144,9 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
             {isSubmitted
               ? <Button type={1} text="다시 제출하기" onClick={handleResubmit} disabled={isResubmitting} />
               : <>
-                  <Button type={0} text="파일 업로드" onClick={() => setShowUploadModal(true)} />
-                  <Button type={1} text="과제 제출하기" onClick={handleSubmit} disabled={isSubmitting} />
-                </>
+                <Button type={0} text="파일 업로드" onClick={() => setShowUploadModal(true)} />
+                <Button type={1} text="과제 제출하기" onClick={handleSubmit} disabled={isSubmitting} />
+              </>
             }
           </s.ButtonSection>
         </s.InfoSection>
@@ -125,22 +155,70 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
       {showUploadModal && (
         <Modal
           title="파일 업로드"
-          onClose={() => setShowUploadModal(false)}
+          onClose={handleUploadModalClose}
           buttons={[
-            { text: '닫기', type: 0, onClick: () => setShowUploadModal(false) },
-            { text: '완료', type: 1, onClick: () => { setUploadedFiles(tempFiles); setShowUploadModal(false); } },
+            { text: '닫기', type: 0, onClick: handleUploadModalClose },
+            { text: '완료', type: 1, onClick: handleUploadModalComplete },
           ]}
         >
-          <input ref={fileInputRef} type="file" multiple onChange={handleFileUpload} style={{ display: 'none' }} />
+          <div>
+            {/* 드래그 앤 드롭 영역 */}
+            <s.FileUploadArea
+              isDragOver={isDragOver}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <MdOutlineFileUpload size={60} /> <br />
+              {isDragOver ? '여기에 파일을 놓으세요!' : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}
+            </s.FileUploadArea>
+            <input
+              ref={fileInputRef}
+              id="fileUpload"
+              type="file"
+              multiple
+              onChange={handleFileUpload}
+              accept="*"
+              style={{ display: 'none' }}
+            />
+            <s.FileList>
+              {tempFiles.length === 0 ? (
+                <p>파일이 없습니다</p>
+              ) : (
+                <ul>
+                  {tempFiles.map((file) => (
+                    <li key={file.id}>{file.name}</li>
+                  ))}
+                </ul>
+              )}
+            </s.FileList>
+          </div>
         </Modal>
       )}
 
       {showDetailsPanel && (
-        <SlidePanel isOpen={showDetailsPanel} onClose={() => setShowDetailsPanel(false)} title={data.title} userRole="Student">
-          <div>
+        <SlidePanel
+          isOpen={showDetailsPanel}
+          onClose={() => setShowDetailsPanel(false)}
+          title={data.title}
+        >
+          <div style={{ lineHeight: 1.6 }}>
             <p><strong>설명:</strong> {data.description}</p>
             <p><strong>마감일:</strong> {data.deadline}</p>
-            <p><strong>제출 여부:</strong> {isSubmitted ? `제출함` : '미제출'}</p>
+            <p><strong>진행 기간:</strong> {data.duringDate} ~ {data.endDate}</p>
+            <p><strong>남은 시간:</strong> {data.remainingTime}</p>
+            <p><strong>제출 여부:</strong> {isSubmitted ? `제출함 (제출일: ${data.submissionDate ?? '없음'})` : '미제출'}</p>
+            {uploadedFiles.length > 0 && (
+              <>
+                <strong>업로드한 파일 목록:</strong>
+                <ul>
+                  {uploadedFiles.map(f => (
+                    <li key={f.id}>{f.name} {f.size && `(${f.size})`}</li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </SlidePanel>
       )}

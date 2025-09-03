@@ -21,11 +21,10 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
 export const CardContainer = styled.div`
   background-color: ${theme.colors.white};
   border-radius: 0.5rem;
-  border: 1px solid ${theme.colors.gray[200]};
+  border: 1px solid ${theme.colors.gray[300]};
   padding: 1rem;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   transition: box-shadow 0.2s ease-in-out;
-  min-height: 270px;
   display: flex;
   flex-direction: column;
 
@@ -64,7 +63,9 @@ export const InfoItem = styled.div`
   gap: 0.5rem;
   ${fonts.P1}
   color: ${theme.colors.gray[500]};
-
+  margin: 0;
+  padding: 0;
+  
   svg {
     width: 1rem;
     height: 1rem;

@@ -1,5 +1,6 @@
 import CustomApi from '@/shared/config/api';
-import { AssignmentResponse, AssignmentCreateRequest, AssignmentUpdateRequest, AssignmentDeleteResponse } from '@/shared/types/Class/Assignment/Assignment';
+import { AssignmentResponse, AssignmentCreateRequest, 
+        AssignmentUpdateRequest, AssignmentDeleteResponse } from '@/shared/types/Class/Assignment/Assignment';
 
 const API_BASE_URL = '/api/assignments';
 
@@ -56,6 +57,23 @@ export const AssignmentsApi = {
       return res.data;
     } catch (error: any) {
       console.error('과제 삭제 실패:', error);
+      return null;
+    }
+  },
+
+  // 과제 제출 여부 조회
+  checkSubmission: async (
+    assignmentId: string | number
+  ): Promise<{ submitted: boolean } | null> => {
+    try {
+      const res = await CustomApi.get<{ submitted: boolean }>(`${API_BASE_URL}/${assignmentId}/check`);
+      if (res.status !== 200) {
+        console.error(`과제 제출 여부 조회 실패: status ${res.status}`);
+        return null;
+      }
+      return res.data;
+    } catch (error: any) {
+      console.error('과제 제출 여부 조회 실패:', error);
       return null;
     }
   },

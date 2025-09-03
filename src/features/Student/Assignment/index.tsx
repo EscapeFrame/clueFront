@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { AssignmentCard } from '@/entities/Class/AssignmentCard';
+import { AssignmentCard } from '@/entities/Class/AssignmentCard/Student';
 import { useAssignments } from '@/features/Common/Class/hooks/useAssignment';
 import * as s from './styles';
 
