@@ -8,7 +8,6 @@ interface SlidePanelProps {
   children?: ReactNode;             // 패널 내부 내용
   width?: string;                  // 패널 너비
   title?: string;                  // 패널 제목
-  userRole?: 'Teacher' | 'Student' | string;  // 권한 구분
   onSave?: (updatedContent: any) => void;     // 저장 콜백 (편집 시)
 }
 
@@ -41,12 +40,9 @@ export class SlidePanel extends Component<SlidePanelProps, SlidePanelState> {
       onClose,
       width = '400px',
       title = '상세 내용',
-      userRole,
       children,
     } = this.props;
     const { editableContent } = this.state;
-
-    const isTeacher = userRole === 'Teacher';
 
     return (
       <>
@@ -64,22 +60,7 @@ export class SlidePanel extends Component<SlidePanelProps, SlidePanelState> {
               &times;
             </s.CloseButton>
           </s.Header>
-          <s.Content>
-            {isTeacher ? (
-              <>
-                <textarea
-                  value={editableContent}
-                  onChange={this.handleChange}
-                  style={{ width: '100%', height: '200px', fontSize: '1rem' }}
-                />
-                <button onClick={this.handleSave}>저장</button>
-              </>
-            ) : (
-              <>
-                {children}
-              </>
-            )}
-          </s.Content>
+          <s.Content>{children}</s.Content>
         </s.Panel>
       </>
     );
