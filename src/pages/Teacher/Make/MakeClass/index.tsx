@@ -27,7 +27,7 @@ export default function MakeClass() {
   });
 
   // 상태 메시지
-  const [error] = useState('');
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -38,6 +38,7 @@ export default function MakeClass() {
       const res = await Customapi.post('/api/class', dataToSend);
       if (res.status !== 200) {
         console.error(`서버 에러: 상태 코드 ${res.status}`);
+        setError(true);
         return;
       }
 
