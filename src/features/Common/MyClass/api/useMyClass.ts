@@ -18,7 +18,7 @@ export const classApi = {
   // 학습실 참여
   joinClass: async (code: string) => {
     try {
-      const res = await CustomApi.post('/api/class/join', { classCode: code });
+      const res = await CustomApi.post(`/api/class/${code}/members`);
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (err) {

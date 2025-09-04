@@ -3,12 +3,17 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TabSelector, { CategoryKey } from '@/features/Common/Class/TabSelector';
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
+import { useModal } from '@/entities/UI/Modal/modal.hooks';
+import { Modal } from '@/entities/UI/Modal';
+import { classApi } from '@/features/Common/MyClass/api/useMyClass';
 
 export default function MyClass() {
   const navigate = useNavigate();
   const { myClasses, error } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
+  const { isOpen, openModal, closeModal } = useModal();
+  const [code, setCode] = useState('');
 
   // 탭 + 검색 필터링
   const filteredClasses = myClasses.filter((cls) => {
@@ -19,11 +24,17 @@ export default function MyClass() {
 
   const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
+  const handleJoinClass = () => {
+    classApi.joinClass(code);
+    console.log(code);
+    closeModal();
+  };
+
   return (
     <s.Container>
       <s.Flexible>
         <s.TitleFont>나의 학습실</s.TitleFont>
-        <s.AddButton onClick={() => navigate('/class/make')}>학습실 추가</s.AddButton>
+        <s.AddButton onClick={openModal}>학습실 추가</s.AddButton>
         {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
       </s.Flexible>
 
@@ -52,6 +63,24 @@ export default function MyClass() {
             </s.Card>
           ))}
         </s.Grid>
+      )}
+
+      {isOpen && (
+        <Modal
+          title="학습실 추가"
+          onClose={closeModal}
+          buttons={[
+            { text: '취소', onClick: closeModal },
+            { text: '확인', onClick: () => { handleJoinClass(); } },
+          ]}
+        >
+          <s.AddModalInput
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="학습실 코드를 입력하세요"
+          />
+        </Modal>
       )}
     </s.Container>
   );

@@ -93,3 +93,12 @@ export const ErrorMessage = styled.p`
   color: ${theme.colors.red};
   margin-bottom: 16px;
 `;
+
+export const AddModalInput = styled.input`
+  width: 100%;
+  ${fonts.P2}
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  border: 1px solid ${theme.colors.gray[300]};
+  outline: none;
+`;
