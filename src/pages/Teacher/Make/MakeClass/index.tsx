@@ -25,7 +25,7 @@ export default function MakeClass() {
   const [isChatEnabled, setIsChatEnabled] = useState(true);
 
   // 상태 메시지
-  const [error] = useState('');
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleToggle = (name: string, checked: boolean) => {
@@ -50,6 +50,7 @@ export default function MakeClass() {
       const res = await classApi.createClass('/api/class', dataToSend);
       if (300 <= res.status || res.status < 200) {
         console.error(`서버 에러: 상태 코드 ${res.status}`);
+        setError(true);
         return;
       }
 
