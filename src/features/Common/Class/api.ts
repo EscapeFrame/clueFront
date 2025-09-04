@@ -1,7 +1,7 @@
 import Customapi from '@/shared/config/api';
 import { Assignment } from '@/shared/types/Class/Assignment/assignmentAttachment';
 import { Exam } from '@/shared/types/Class/Exam';
-import { NewsItem, QuestionItem, Directory } from '@/shared/types/Class/Lesson';
+import { NewsItem, QuestionItem } from '@/shared/types/Class/Lesson';
 
 // API 응답 타입 정의
 interface DirectoryApiResponse {
