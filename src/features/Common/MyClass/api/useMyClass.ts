@@ -1,4 +1,5 @@
 import CustomApi from '@/shared/config/api';
+import { ClassCreateRequest } from '@/shared/types/Class/classroom';
 
 export const classApi = {
   // 전체 학습실 조회 (검색어 지원)
@@ -18,7 +19,7 @@ export const classApi = {
   // 학습실 참여
   joinClass: async (code: string) => {
     try {
-      const res = await CustomApi.post('/api/class/join', { classCode: code });
+      const res = await CustomApi.post(`/api/class/${code}/members`);
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (err) {
@@ -28,11 +29,10 @@ export const classApi = {
   },
 
   // 학습실 생성
-  createClass: async (name: string, description?: string) => {
+  createClass: async (path: string, payload: ClassCreateRequest) => {
     try {
-      const res = await CustomApi.post('/api/class', { name, description });
-      if (res.status !== 200) return res.status;
-      return res.data;
+      const res = await CustomApi.post(path, payload);
+      return res;
     } catch (err) {
       console.error('학습실 생성 실패:', err);
       throw err;

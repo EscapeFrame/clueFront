@@ -11,7 +11,6 @@ export interface MyClassReturn {
   error: string | null;
   joinClassroom: (code: string) => Promise<boolean>;
   searchClasses: (query: string) => Promise<void>;
-  createClassroom: (name: string, description?: string) => Promise<boolean>;
   deleteClassroom: (classId: string | number) => Promise<boolean>;
   refetch: () => Promise<void>;
 }
