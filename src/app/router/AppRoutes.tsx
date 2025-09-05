@@ -18,7 +18,7 @@ import TCHMakeScorecard from '@/pages/Teacher/Make/MakeScorecard';
 import TCHMarkDown from '@/pages/Teacher/Make/MarkDownEditor';
 import TCHClass from '@/pages/Teacher/Class';
 import TCHMakeLesson from '@/pages/Teacher/Make/MakeLesson';
-import DetailAssignment from '@/entities/Class/DetailAssignment';
+import DetailAssignment from '@/entities/Class/DetailAssignment/index';
 
 interface AppRoutesProps {
   role: string | null;

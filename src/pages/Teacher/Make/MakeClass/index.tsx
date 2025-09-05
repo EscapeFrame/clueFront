@@ -36,8 +36,8 @@ export default function MakeClass() {
 
     try {
       const res = await Customapi.post('/api/class', dataToSend);
-      if (res.status !== 200) {
-        console.error(`서버 에러: 상태 코드 ${res.status}`);
+      if (300 <= res.status || res.status < 200) {
+        console.error(`에러 상태 코드 ${res.status}`);
         return;
       }
 
