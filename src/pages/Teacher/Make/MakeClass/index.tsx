@@ -27,24 +27,30 @@ export default function MakeClass() {
   });
 
   // 상태 메시지
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     const dataToSend = { ...basicInfo, isActivated: classroomSetup.isActivated };
     setLoading(true);
+    setError(null);
 
     try {
       const res = await Customapi.post('/api/class', dataToSend);
       if (res.status !== 200) {
         console.error(`서버 에러: 상태 코드 ${res.status}`);
-        setError(true);
+        setError('학습실 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.');
         return;
       }
 
       navigate('/class'); // 성공 시 MyClass 페이지로 이동
     } catch (err) {
       console.error('학습실 생성 실패:', err);
+      const message =
+        (err as any)?.response?.data?.message ??
+        (err as any)?.message ??
+        '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+      setError(message);
     } finally {
       setLoading(false);
     }
