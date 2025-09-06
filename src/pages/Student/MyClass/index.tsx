@@ -5,11 +5,10 @@ import TabSelector, { CategoryKey } from '@/features/Common/Class/TabSelector';
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
 import { useModal } from '@/entities/UI/Modal/modal.hooks';
 import { Modal } from '@/entities/UI/Modal';
-import { classApi } from '@/features/Common/MyClass/api/useMyClass';
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { myClasses, error } = useMyClass();
+  const { myClasses, error, joinClassroom } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
   const { isOpen, openModal, closeModal } = useModal();
@@ -24,10 +23,12 @@ export default function MyClass() {
 
   const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
-  const handleJoinClass = () => {
-    classApi.joinClass(code);
-    console.log(code);
-    closeModal();
+  const handleJoinClass = async () => {
+    const success = await joinClassroom(code);
+    if (success) {
+      setCode(''); // 성공 시 코드 입력 필드 초기화
+      closeModal();
+    }
   };
 
   return (
