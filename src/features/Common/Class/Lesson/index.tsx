@@ -16,14 +16,12 @@ import { userState } from '@/shared/model/userState';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useRecoilState(userState);
 
   // 상태 관리
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshTrigger, setRefreshTrigger] = useState(0); // 리로드 트리거
 
   const [selectedModal, setSelectedModal] = useState<
     | { type: 'news'; item: NewsItem }
@@ -32,35 +30,29 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   >(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
-  // 선생님인지 확인
-  const isTeacher = user?.role === 'TEACHER';
-  console.log('Current user:', user);
-  console.log('User role:', user?.role);
-  console.log('Is teacher:', isTeacher);
-
   // 데이터 불러오기
-  const fetchData = async () => {
-    try {
-      const classInfo = await getLessonDirectories(classRoomId);
-      const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
-        id: dir.directoryId.toString(),
-        name: dir.directoryName,
-        isRead: false,
-        directoryList: [], // 필요시 documentList로 변환 가능
-      }));
-      setDirectories(dirs);
-      setNews(await getLessonNews(classRoomId));
-      setQuestions(await getLessonQuestions(classRoomId));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const classInfo = await getLessonDirectories(classRoomId);
+        const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
+          id: dir.directoryId.toString(),
+          name: dir.directoryName,
+          isRead: false,
+          directoryList: [], // 필요시 documentList로 변환 가능
+        }));
+        setDirectories(dirs);
+        setNews(await getLessonNews(classRoomId));
+        setQuestions(await getLessonQuestions(classRoomId));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (classRoomId) fetchData();
-  }, [classRoomId, refreshTrigger]); // refreshTrigger 추가
+  }, [classRoomId]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -154,10 +146,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
               </s.DirectoryWrapper>
             );
           })}
-          {/* 선생님일 때만 디렉토리 추가 기능 표시 */}
-          {isTeacher && (
-            <DirectorySelect classRoomId={classRoomId} onDirectoryAdded={handleDirectoryAdded} />
-          )}
         </s.Section>
       </s.LeftPanel>
 
