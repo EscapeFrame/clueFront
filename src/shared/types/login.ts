@@ -4,7 +4,7 @@ export interface UserState {
     username: string;
     userId: string;
     role: string;
-  }
+}
 
 export const userState = atom({
     key: 'userState',
