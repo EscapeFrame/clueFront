@@ -3,7 +3,7 @@ import { atom } from 'recoil';
 export interface UserState {
     username: string;
     userId: string;
-    role: string;
+    role: 'STUDENT' | 'TEACHER';
 }
 
 export const userState = atom({
