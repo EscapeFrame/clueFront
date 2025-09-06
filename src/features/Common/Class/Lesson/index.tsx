@@ -8,6 +8,7 @@ import * as s from './styles';
 import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
+import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
@@ -107,6 +108,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
               </s.DirectoryWrapper>
             );
           })}
+          <DirectorySelect classRoomId={classRoomId} />
         </s.Section>
       </s.LeftPanel>
 

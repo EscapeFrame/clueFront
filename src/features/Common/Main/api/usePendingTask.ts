@@ -50,17 +50,6 @@ export const pendingTasksApi = {
     }
   },
 
-  createTask: async (task: PendingTaskItem): Promise<any | number> => {
-    try {
-      const res = await CustomApi.post(`/api/assignments`, task);
-      if (res.status !== 200) return res.status;
-      return res.data;
-    } catch (error) {
-      console.error('과제 생성 실패:', error);
-      throw error;
-    }
-  },
-
   submitTask: async (submissionId: string): Promise<any | number> => {
     try {
       const res = await CustomApi.patch(`/api/submissions/${submissionId}/submit`);

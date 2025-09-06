@@ -25,42 +25,48 @@ const DirectorySelect: React.FC<Props> = ({ classRoomId }) => {
 
   return (
     <s.SelectBox>
-      <select
-        value={selectedDir ?? ""}
-        onChange={(e) => {
-          if (e.target.value === "__add__") {
-            setIsAdding(true);
-          } else {
-            setSelectedDir(Number(e.target.value));
-          }
+  <div>
+    {directories.map((dir) => (
+      <div
+        key={dir.id}
+        onClick={() => setSelectedDir(dir.id)}
+        style={{
+          padding: "0.5rem 1rem",
+          border: "1px solid #ddd",
+          marginBottom: "0.25rem",
+          cursor: "pointer",
+          background: selectedDir === dir.id ? "#eef" : "#fff"
         }}
       >
-        {directories.map((dir) => (
-          <option key={dir.id} value={dir.id}>
-            {dir.name}
-          </option>
-        ))}
-        <option value="__add__">+ 새 디렉토리 추가</option>
-      </select>
+        {dir.name}
+      </div>
+    ))}
+    <div
+      onClick={() => setIsAdding(true)}
+      style={{ color: "blue", cursor: "pointer" }}
+    >
+      + 새 디렉토리 추가
+    </div>
+  </div>
 
-      {isAdding && (
-        <input
-          type="text"
-          value={newDirName}
-          onChange={(e) => setNewDirName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              const name = newDirName.trim();
-              if(!name) return
-              addDirectory(name);
-              setNewDirName("");
-            }
-          }}
-          placeholder="디렉토리 이름 입력"
-          autoFocus
-        />
-      )}
-    </s.SelectBox>
+  {isAdding && (
+    <input
+      type="text"
+      value={newDirName}
+      onChange={(e) => setNewDirName(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          const name = newDirName.trim();
+          if (!name) return;
+          addDirectory(name);
+          setNewDirName("");
+        }
+      }}
+      placeholder="디렉토리 이름 입력"
+      autoFocus
+    />
+  )}
+</s.SelectBox>
   );
 };
 
