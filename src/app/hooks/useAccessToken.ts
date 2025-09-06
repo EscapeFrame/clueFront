@@ -42,7 +42,7 @@ export const useAuth = () => {
         return;
       }
 
-      if (user.userId) return;
+      if (user?.userId) return;
 
       try {
         const res = await CustomApi.get('/api/user/me');
@@ -59,7 +59,7 @@ export const useAuth = () => {
     };
 
     fetchUserInfo();
-  }, [accessToken, user]);
+  }, [accessToken, user?.userId]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo };
 
