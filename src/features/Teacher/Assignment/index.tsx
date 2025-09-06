@@ -53,6 +53,7 @@ export const AssignmentComponent: React.FC = () => {
                     <Button text="과제 추가하기" width="10rem" type={0} onClick={MakeTask} />
                 </s.AddButton>
             </s.Header>
+
             {loading && <div>로딩 중...</div>}
             {error && <div style={{ color: 'red', margin: '1rem 0' }}>{error}</div>}
 
