@@ -24,7 +24,7 @@ export default function MyClass() {
     <s.Container>
       <s.Flexible>
         <s.TitleFont>나의 학습실</s.TitleFont>
-        <s.AddButton onClick={() => navigate('/class/make')}>학습실 추가</s.AddButton>
+        <s.AddButton onClick={() => navigate('/class/make')}>학습실 생성</s.AddButton>
         {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
       </s.Flexible>
 
