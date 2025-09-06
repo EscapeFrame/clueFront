@@ -47,7 +47,11 @@ export const useAuth = () => {
         return;
       }
 
+<<<<<<< HEAD
       if (user?.userId) return;
+=======
+      if (user.userId) return;
+>>>>>>> c00613b (refactor(#163): 유저의 토큰과 정보를 정적으로 받지 않도록 변환)
 
       try {
         const res = await CustomApi.get('/api/user/me');
