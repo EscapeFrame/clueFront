@@ -15,8 +15,8 @@ export const AssignmentComponent: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-     // 컴포넌트 마운트 시(또는 effectiveId가 바뀔 때) 과제 목록 API 호출
-     useEffect(() => {
+    // 컴포넌트 마운트 시(또는 effectiveId가 바뀔 때) 과제 목록 API 호출
+    useEffect(() => {
         if (!effectiveId) {
             setLoading(false);
             setAssignments([]);
@@ -27,7 +27,8 @@ export const AssignmentComponent: React.FC = () => {
         AssignmentsApi.getAll(effectiveId)
             .then((data) => {
                 // API에서 받은 AssignmentResponse[]를 Assignment[]로 강제 변환
-                // 실제로는 매핑 로직을 넣는 게 안전하지만 지금은 타입 단언으로 처리..
+                console.log('API Response:', data); // 실제 데이터 구조 확인
+                console.log('Data length:', data?.length); // 데이터 개수 확인
                 setAssignments(data as unknown as Assignment[]);
                 setError(null);
             })
@@ -55,18 +56,28 @@ export const AssignmentComponent: React.FC = () => {
             {error && <div style={{ color: 'red', margin: '1rem 0' }}>{error}</div>}
             {!loading && !error && (
                 <s.Grid>
-                    {assignments.map((a: Assignment) => (
-                        <AssignmentCard
-                            key={a.id}
-                            data={a}
-                            classRoomId={String(effectiveId)}
-                            // 개별 과제 상태를 수정할 때 assignments 배열 갱신
-                            updateAssignment={(id: string | number, changes: Partial<Assignment>) => {
-                                const idx = assignments.findIndex((x: Assignment) => x.id === id);
-                                if (idx >= 0) assignments[idx] = { ...assignments[idx], ...changes };
-                            }}
-                        />
-                    ))}
+                    {assignments.length === 0 ? (
+                        <div>등록된 과제가 없습니다.</div>
+                    ) : (
+                        assignments.map((a: Assignment) => (
+                            <AssignmentCard
+                                key={a.id}
+                                data={a}
+                                classRoomId={String(effectiveId)}
+                                updateAssignment={(id, changes) => {
+                                    setAssignments(prev => {
+                                        const idx = prev.findIndex(x => x.id === id);
+                                        if (idx >= 0) {
+                                            const newAssignments = [...prev];
+                                            newAssignments[idx] = { ...newAssignments[idx], ...changes };
+                                            return newAssignments;
+                                        }
+                                        return prev;
+                                    });
+                                }}
+                            />
+                        ))
+                    )}
                 </s.Grid>
             )}
         </s.Container>

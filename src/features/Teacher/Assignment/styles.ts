@@ -108,6 +108,6 @@ export const DetailSection = styled.div`
 
 export const AddButton = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 22rem;
+  right: 8rem;
 `;
