@@ -3,7 +3,7 @@ import * as s from "./styles";
 import { useDirectories } from "@/entities/Make/hooks/useLesson";
 
 interface Props {
-  classRoomId: number;
+  classRoomId: string;
 }
 
 const DirectorySelect: React.FC<Props> = ({ classRoomId }) => {

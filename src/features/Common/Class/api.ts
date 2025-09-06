@@ -41,6 +41,16 @@ export const getLessonDirectories = async (classRoomId: string): Promise<Directo
     return { directoryList: [] };
   }
   console.log(res.data);
+  if(!res.data) {
+    return {
+      directoryList: [
+        {
+          directoryId: 0,
+          directoryName: '디렉토리가 비었습니다.',
+        },
+      ],
+    };;
+  }
   return res.data;
 };
 

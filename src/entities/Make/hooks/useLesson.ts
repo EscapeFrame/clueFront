@@ -6,7 +6,7 @@ import {
 } from "@/entities/Make/api/useLesson";
 import { DirectoryCreateRequest } from "@/shared/types/Class/directory";
 
-export const useDirectories = (classRoomId: number) => {
+export const useDirectories = (classRoomId: string) => {
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [selectedDir, setSelectedDir] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
@@ -19,7 +19,10 @@ export const useDirectories = (classRoomId: number) => {
     try {
       setIsLoading(true);
       setError(null);
-      const data = await fetchDirectories(classRoomId);
+
+      const rawData = await fetchDirectories(classRoomId);
+      const data = rawData;
+
       if (seq !== loadSeq.current) return;
       const sorted = [...data].sort(
         (a, b) => (a.directoryOrder ?? 0) - (b.directoryOrder ?? 0),
