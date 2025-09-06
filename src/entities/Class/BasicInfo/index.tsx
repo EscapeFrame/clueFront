@@ -6,6 +6,36 @@ import * as S from './styles';
 
 export default function BasicInfo({ data, setData }: BasicInfoProps) {
 
+  const validateForm = () => {
+    if (!data.subjectCategory) {
+      alert('과목분류를 선택해주세요.');
+      return false;
+    }
+    if (!data.grade) {
+      alert('학년을 선택해주세요.');
+      return false;
+    }
+    if (!data.classNum) {
+      alert('반을 선택해주세요.');
+      return false;
+    }
+    if (!data.roomName || data.roomName.trim() === '') {
+      alert('교실 이름을 작성해주세요.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validateForm()) {
+      // ✅ 제출 로직 호출 또는 상위 컴포넌트로 알림
+      console.log('제출 가능합니다!', data);
+      // 예: onSubmit(data);
+    }
+  };
+
+
   return (
     <S.Container>
       <S.Title>기본정보</S.Title>
