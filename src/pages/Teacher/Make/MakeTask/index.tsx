@@ -16,9 +16,16 @@ interface Attachment {
   file?: File;
 }
 
-const MakeTask = () => {
-  const { classId } = useParams<{ classId: string | '' }>();
+interface Task {
+  classId: string;
+  title: string;
+  content: string;
+  start_date: string;
+  end_date: string;
+}
 
+const MakeTask = () => {
+  const { classRoomId } = useParams<{ classRoomId?: string }>();
   const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
 
@@ -33,9 +40,9 @@ const MakeTask = () => {
   const [linkPlatform, setLinkPlatform] = useState<"drive" | "youtube" | "notion" | "link" | null>(null);
   const [linkInput, setLinkInput] = useState("");
 
-  const isFormValid = subject && dueDate;
+  const isFormValid = subject && dueDate && classRoomId;
 
-  // 파일 업로드
+  // 파일 선택
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files;
     if (selected) {
@@ -49,40 +56,51 @@ const MakeTask = () => {
     }
   };
 
-  // 링크 업로드
+  // 링크 등록
   const handleLinkSubmit = () => {
     if (!linkInput) return;
     setAttachments(prev => [
       ...prev,
-      {
-        type: "link",
-        name: linkInput,
-        url: linkInput,
-      },
+      { type: "link", name: linkInput, url: linkInput }
     ]);
     setLinkInput("");
     setLinkPlatform(null);
     setIsLinkModalOpen(false);
   };
 
-  const MakeTask = async () => {
-    if (classId) {
-      const taskData = {
-        classId: Number(classId),
-        title: subject,
-        content: description,
-        start_date: startDate,
-        end_date: dueDate
-      };
-      try {
-        const assignmentId = await SendMakeTask(taskData);
-        await attachFile(assignmentId, attachments);
-        console.log("과제 생성완료");
-      } catch(error) {
-        console.error('과제 생성 실패:',error)
-      }
+  // 과제 생성
+  const handleMakeTask = async () => {
+    if (!classRoomId) {
+      alert("classRoomId가 없습니다.");
+      return;
     }
-  }
+
+    const taskData: Task = {
+      classId: classRoomId, // UUID 그대로 전달
+      title: subject,
+      content: description,
+      start_date: startDate,
+      end_date: dueDate,
+    };
+
+    try {
+      console.log("과제 생성 API 호출 중...", taskData);
+      const assignmentId = await SendMakeTask(taskData);
+      console.log("과제 생성 성공, assignmentId:", assignmentId);
+
+      if (attachments.length > 0) {
+        console.log("첨부파일 업로드 중...", attachments);
+        await attachFile(assignmentId, attachments);
+      }
+
+      alert("과제 생성 완료!");
+      navigate(-1);
+    } catch (error: unknown) {
+      console.error("과제 생성 실패:", error);
+      const msg = error instanceof Error ? error.message : "알 수 없는 오류";
+      alert("과제 생성에 실패했습니다: " + msg);
+    }
+  };
 
   return (
     <S.Container>
@@ -92,7 +110,7 @@ const MakeTask = () => {
       </S.HeaderRow>
 
       <InputBox
-        label="과제이름"
+        label="과제 이름"
         id="subject"
         required
         value={subject}
@@ -101,8 +119,8 @@ const MakeTask = () => {
       <InputBox
         label="안내사항"
         id="description"
-        value={description}
         required={false}
+        value={description}
         onChange={e => setDescription(e.target.value)}
       />
 
@@ -134,32 +152,23 @@ const MakeTask = () => {
       <Button
         text="완료"
         disabled={!isFormValid}
-        onClick={() => MakeTask()}
+        onClick={handleMakeTask}
       />
 
-      {/* 파일 업로드 모달 */}
       {isFileModalOpen && (
         <Modal
           title="파일 첨부"
           notes="file"
           onClose={() => setIsFileModalOpen(false)}
-          buttons={[
-            { text: "닫기", type: 1, onClick: () => setIsFileModalOpen(false) }
-          ]}
+          buttons={[{ text: "닫기", type: 1, onClick: () => setIsFileModalOpen(false) }]}
         >
           <div>
-            <input
-              type="file"
-              multiple
-              onChange={handleFileSelect}
-              style={{ marginBottom: "1rem" }}
-            />
+            <input type="file" multiple onChange={handleFileSelect} style={{ marginBottom: "1rem" }} />
             <p>파일을 선택하면 자동으로 추가됩니다.</p>
           </div>
         </Modal>
       )}
 
-      {/* 링크 입력 모달 */}
       {isLinkModalOpen && (
         <Modal
           title={`${linkPlatform?.toUpperCase()} 링크 첨부`}
@@ -170,24 +179,17 @@ const MakeTask = () => {
             setLinkInput("");
           }}
           buttons={[
-            {
-              text: "등록",
-              type: 0,
-              onClick: handleLinkSubmit,
-            },
-            {
-              text: "닫기",
-              type: 1,
-              onClick: () => {
+            { text: "등록", type: 0, onClick: handleLinkSubmit },
+            { text: "닫기", type: 1, onClick: () => {
                 setIsLinkModalOpen(false);
                 setLinkPlatform(null);
                 setLinkInput("");
-              },
+              } 
             },
           ]}
           placeholder="링크를 입력하세요"
           inputValue={linkInput}
-          onInputChange={(e) => setLinkInput(e.target.value)}
+          onInputChange={e => setLinkInput(e.target.value)}
         />
       )}
     </S.Container>

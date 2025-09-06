@@ -11,10 +11,10 @@ interface Attachment {
 }
 
 interface Task {
-    classId: number;
+    classId: string;
     title: string;
-    content: string;
-    start_date: string;
+    content?: string;
+    start_date?: string;
     end_date: string;
   }
 
