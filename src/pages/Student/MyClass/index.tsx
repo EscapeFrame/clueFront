@@ -24,9 +24,11 @@ export default function MyClass() {
   const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
   const handleJoinClass = async () => {
-    const success = await joinClassroom(code);
-    if (success) {
-      setCode(''); // 성공 시 코드 입력 필드 초기화
+    const trimmed = code.trim();
+    if (!trimmed) return;
+    const ok = await joinClassroom(trimmed);
+    if (ok) {
+      setCode('');
       closeModal();
     }
   };
