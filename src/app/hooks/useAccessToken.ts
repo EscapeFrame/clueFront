@@ -17,6 +17,13 @@ export const useAuth = () => {
     role: 'TEACHER',
   };
 
+  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6ImE3MTdiZmU4LWE5MzYtNDZkZi05NGEwLWUyZjBmNDUyYzk3YiIsInVzZXJuYW1lIjoi7Jyg6re87LCsIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTcxNzI2NDYsImV4cCI6MTc1NzUzMjY0Nn0.tdUJj3fiHuYJ9QWJn2P8-E50EToySaU0ucgf4L_PMlE';
+  const TEST_USER: User = {
+    userId: '2',
+    username: '유근찬',
+    role: 'TEACHER',
+  };
+
   // 로그인시 사용자 정보 및 토큰 세팅
     const setAuthInfo = (token: string, userInfo: User) => {
       localStorage.setItem('accessToken', token);
