@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { IoIosArrowDown } from 'react-icons/io';
 import * as s from "./styles";
 import { useDirectories } from "@/entities/Make/hooks/useLesson";
-import { deleteDirectory } from "@/entities/Make/api/useLesson";
 import { IoClose } from "react-icons/io5";
 
 interface Props {
@@ -12,13 +10,12 @@ interface Props {
 
 const DirectorySelect: React.FC<Props> = ({ classRoomId, onDirectoryAdded }) => {
   const {
-    isAdding,
-    setIsAdding,
     addDirectory,
-    isLoading,
-    error,
+    isLoading = false,
+    error = null,
   } = useDirectories(classRoomId);
 
+  const [isAdding, setIsAdding] = useState(false); // 로컬 상태로 관리
   const [newDirName, setNewDirName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,9 +42,9 @@ const DirectorySelect: React.FC<Props> = ({ classRoomId, onDirectoryAdded }) => 
     setIsAdding(false);
   };
 
-  const handleDeleteDirectory = async (dirId: string, e: React.MouseEvent) => {
+  const handleDeleteDirectory = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsAdding(false);
+    handleCancelAdd();
   };
 
   return (
@@ -75,7 +72,7 @@ const DirectorySelect: React.FC<Props> = ({ classRoomId, onDirectoryAdded }) => 
             disabled={isSubmitting}
           />
           <s.flexer>
-            <s.DeleteIcon2 onClick={(e) => handleDeleteDirectory(newDirName, e)}>
+            <s.DeleteIcon2 onClick={handleDeleteDirectory}>
             <IoClose size={16} />
             </s.DeleteIcon2>
           </s.flexer>

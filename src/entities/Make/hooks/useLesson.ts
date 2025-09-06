@@ -58,7 +58,8 @@ export const useDirectories = (classRoomId: string) => {
       setError("디렉토리 이름을 입력해주세요.");
       return;
     }
-    setIsAdding(true);
+    
+    // setIsAdding(true) 제거 - DirectorySelect에서 관리
     setError(null);
     try {
       const nextDirectory = directories.length
@@ -76,9 +77,8 @@ export const useDirectories = (classRoomId: string) => {
       }
     } catch {
       setError("새 디렉토리를 추가하는 중 오류가 발생했습니다.");
-    } finally {
-      setIsAdding(false);
     }
+    // finally 블록에서 setIsAdding(false) 제거
   };
 
   const updateDirectoryName = async (dirId: number, newName: string) => {

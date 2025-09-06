@@ -32,16 +32,22 @@ export const useAuth = () => {
     setAccessToken(null);
     setUser({ username: "", userId: "", role: ""});
   };
-
-  // 사용자 정보 자동 초기화
-  useEffect(() => {
-    // user가 비어있으면 TEST_USER로 초기화
-    if (!user.role) {
-      setUser(TEST_USER);
-      setAccessToken(TEST_TOKEN);
-      localStorage.setItem('accessToken', TEST_TOKEN);
-    }
-  }, [user.role, setUser]);
+  // // 사용자 정보 자동 초기화
+  // useEffect(() => {
+  //   // user가 비어있으면 TEST_USER로 초기화
+  //   if (!user.role) {
+  //     setUser(TEST_USER);
+  //     setAccessToken(TEST_TOKEN);
+  //     localStorage.setItem('accessToken', TEST_TOKEN);
+  //   }
+  // }, []);
+  // // }, [user.role, setUser]);
+  // 사용자 정보가 비어있으면 즉시 초기화
+  if (!user.role) {
+    setUser(TEST_USER);
+    setAccessToken(TEST_TOKEN);
+    localStorage.setItem('accessToken', TEST_TOKEN);
+  }
 
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
