@@ -1,9 +1,9 @@
 import { atom } from 'recoil';
 
 export interface UserState {
-    name: string;
-    email: string;
-    picture: string;
+    username: string;
+    userId: string;
+    role: string;
   }
 
 export const userState = atom({
