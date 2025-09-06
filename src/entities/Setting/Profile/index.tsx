@@ -6,8 +6,8 @@ import * as S from './styles';
 export function Profile() {
   const user = useRecoilValue(userState);
 
-  const image: string = user?.picture || '';
-  const name: string = user?.name || '이름';
+  const image = ''; // 일단 빈 이미지로 받아오도록 저장 추후 수정
+  const name: string = user?.username || '이름';
   const school = '부산소프트웨어마이스터고등학교';
   const grade = 2;
   const classNumber = 2;
