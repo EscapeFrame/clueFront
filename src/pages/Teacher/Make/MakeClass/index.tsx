@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as s from './styles';
-
+import { BasicInfoData } from '@/shared/types/Class/classroom';
 import Button from '@/entities/UI/Button';
 import BasicInfo from '@/entities/Class/BasicInfo/index';
 import ClassroomSetup from '@/entities/Class/ClassroomSetup/index';
-import Customapi from '@/shared/config/api';
+import { classApi } from '@/features/Common/MyClass/api/useMyClass';
 
 export default function MakeClass() {
   const navigate = useNavigate();
 
   // 기본정보 상태
-  const [basicInfo, setBasicInfo] = useState({
+  const [basicInfo, setBasicInfo] = useState<BasicInfoData>({
     subjectCategory: '',
     period: '',
     grade: '',
@@ -20,24 +20,36 @@ export default function MakeClass() {
     description: '',
   });
 
-  // 학습실 설정 상태
-  const [classroomSetup, setClassroomSetup] = useState({
-    isActivated: true,
-    isChatEnabled: true,
-  });
+  // 토글 상태
+  const [isActivation, setIsActivation] = useState(true);
+  const [isChatEnabled, setIsChatEnabled] = useState(true);
 
   // 상태 메시지
   const [error] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const handleToggle = (name: string, checked: boolean) => {
+    if (name === 'isActivation') setIsActivation(checked);
+    if (name === 'isChatEnabled') setIsChatEnabled(checked);
+    console.log('토글 변경:', { name, checked, isActivation: name === 'isActivation' ? checked : isActivation, isChatEnabled: name === 'isChatEnabled' ? checked : isChatEnabled });
+  };
+
   const handleSubmit = async () => {
-    const dataToSend = { ...basicInfo, isActivated: classroomSetup.isActivated };
     setLoading(true);
+    const dataToSend = {
+      name: basicInfo.roomName,
+      description: basicInfo.description,
+      sort: basicInfo.subjectCategory,
+      target: `${basicInfo.grade}-${basicInfo.classNum}`,
+      isActivation: isActivation,
+    };
+
+    console.log('제출 값:', { basicInfo, isActivation, isChatEnabled, dataToSend });
 
     try {
-      const res = await Customapi.post('/api/class', dataToSend);
+      const res = await classApi.createClass('/api/class', dataToSend);
       if (300 <= res.status || res.status < 200) {
-        console.error(`에러 상태 코드 ${res.status}`);
+        console.error(`서버 에러: 상태 코드 ${res.status}`);
         return;
       }
 
@@ -51,9 +63,16 @@ export default function MakeClass() {
 
   return (
     <s.Container>
-      <BasicInfo data={basicInfo} setData={setBasicInfo} />
+      <BasicInfo
+        data={basicInfo}
+        setData={setBasicInfo}
+      />
       <hr />
-      <ClassroomSetup data={classroomSetup} setData={setClassroomSetup} />
+      <ClassroomSetup
+        isActivation={isActivation}
+        isChatEnabled={isChatEnabled}
+        handleToggle={handleToggle}
+      />
       {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
       <Button
         text={loading ? '생성 중...' : '수업 만들기'}
