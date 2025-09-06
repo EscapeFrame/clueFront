@@ -5,7 +5,7 @@ import * as s from './styles';
 import { ClassInfo } from '@/entities/Class/ClassInfo';
 import TabSelector from '@/entities/UI/TabSelect';
 import LessonComponent from '@/features/Common/Class/Lesson';
-import { AssignmentComponent } from '@/features/Common/Class/Assignment';
+import { AssignmentComponent } from '@/features/Teacher/Assignment/index';
 import { ExamComponent } from '@/features/Common/Class/Exam';
 import { tabs } from './data';
 import { getClassInfo as ClassData } from '@/entities/Class/api';
