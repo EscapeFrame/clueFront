@@ -56,7 +56,11 @@ export const updateDirectory = async ( request: DirectoryUpdateRequest): Promise
 };
 
 // 디렉토리 삭제
-export const deleteDirectory = async (directoryId: number): Promise<boolean> => {
-  const res = await Customapi.delete(`/api/directory/${directoryId}`); //이거 수정
+export const deleteDirectory = async (directoryId: string): Promise<boolean> => {
+  const res = await Customapi.delete(`/api/directory`, {
+    data: {
+      directoryId: directoryId,
+    },
+  });
   return res.status === 200;
 };

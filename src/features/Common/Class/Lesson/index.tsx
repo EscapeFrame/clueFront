@@ -85,9 +85,9 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     e.stopPropagation();
     if (window.confirm("정말로 이 디렉토리를 삭제하시겠습니까?")) {
       try {
-        const success = await deleteDirectory(Number(dirId));
+        const success = await deleteDirectory(dirId);
+        console.log(success);
         if (success) {
-          // 삭제 성공 시 리로드 트리거
           setRefreshTrigger(prev => prev + 1);
         }
       } catch (error) {

@@ -110,7 +110,7 @@ export const useDirectories = (classRoomId: string) => {
     }
   };
 
-  const removeDirectory = async (dirId: number) => {
+  const removeDirectory = async (dirId: string) => {
     setError(null);
     try {
       const success = await deleteDirectory(dirId);
@@ -121,7 +121,7 @@ export const useDirectories = (classRoomId: string) => {
     } catch {
       setError("디렉토리 삭제 중 오류가 발생했습니다.");
     }
-  };
+};
 
   return {
     directories,
