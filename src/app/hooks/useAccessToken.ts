@@ -11,19 +11,12 @@ export const useAuth = () => {
 
   const [user, setUser] = useRecoilState(userState);
 
-  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6MiwidXNlcm5hbWUiOiLsnKDqt7zssKwiLCJyb2xlIjoiVEVBQ0hFUiIsImlhdCI6MTc1NjkxMTE4MywiZXhwIjoxNzU3MjcxMTgzfQ.xeRvWFxfWVcyqoYZ5WEziv8RMtoBBr-5A8jORj29hXM';
-  const TEST_USER: User = {
-    userId: '2',
-    username: '유근찬',
-    role: 'TEACHER',
-  };
-
   // 로그인시 사용자 정보 및 토큰 세팅
   // const setAuthInfo = (token: string, userInfo: User) => {
-    const setAuthInfo = () => {
-    localStorage.setItem('accessToken', TEST_TOKEN);
-    setAccessToken(TEST_TOKEN);
-    setUser(TEST_USER);
+    const setAuthInfo = (token: string, userInfo: User) => {
+      localStorage.setItem('accessToken', token);
+      setAccessToken(token);
+      setUser(userInfo);
   };
 
   // 로그아웃
@@ -42,10 +35,10 @@ export const useAuth = () => {
         return;
       }
 
-      if (user) return;
+      if (user.userId) return;
 
       try {
-        const res = await CustomApi.get('유저 정보');
+        const res = await CustomApi.get('/api/user/me');
         const userData = res.data;
         setUser({
           userId: userData.userId,
