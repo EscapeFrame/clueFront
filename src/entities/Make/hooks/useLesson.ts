@@ -3,13 +3,16 @@ import {
   Directory,
   fetchDirectories,
   createDirectory,
+  updateDirectory,
+  deleteDirectory,
 } from "@/entities/Make/api/useLesson";
-import { DirectoryCreateRequest } from "@/shared/types/Class/directory";
+import { DirectoryCreateRequest, DirectoryUpdateRequest } from "@/shared/types/Class/directory";
 
 export const useDirectories = (classRoomId: string) => {
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [selectedDir, setSelectedDir] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [editingDir, setEditingDir] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const loadSeq = useRef(0);
@@ -66,13 +69,57 @@ export const useDirectories = (classRoomId: string) => {
         directoryOrder: nextDirectory,
         name: trimName,
       };
-      const newDir = await createDirectory(request);
-      await loadDirectories(); // 서버를 기준으로 동기화
-      setSelectedDir(newDir.id);
+      const response = await createDirectory(request);
+      if (response) {
+        // 200 응답이 오면 리로드
+        await loadDirectories();
+      }
     } catch {
       setError("새 디렉토리를 추가하는 중 오류가 발생했습니다.");
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const updateDirectoryName = async (dirId: number, newName: string) => {
+    const trimName = newName.trim();
+    if (!trimName) {
+      setError("디렉토리 이름을 입력해주세요.");
+      return;
+    }
+    
+    setError(null);
+    try {
+      const targetDir = directories.find(dir => dir.id === dirId);
+      if (!targetDir) return;
+      
+      const request: DirectoryUpdateRequest = {
+        classRoomId,
+        directoryId: dirId,
+        directoryOrder: targetDir.directoryOrder,
+        name: trimName,
+      };
+      
+      const response = await updateDirectory(request);
+      if (response) {
+        // 200 응답이 오면 리로드
+        await loadDirectories();
+      }
+    } catch {
+      setError("디렉토리 수정 중 오류가 발생했습니다.");
+    }
+  };
+
+  const removeDirectory = async (dirId: number) => {
+    setError(null);
+    try {
+      const success = await deleteDirectory(dirId);
+      if (success) {
+        // 200 응답이 오면 리로드
+        await loadDirectories();
+      }
+    } catch {
+      setError("디렉토리 삭제 중 오류가 발생했습니다.");
     }
   };
 
@@ -82,7 +129,11 @@ export const useDirectories = (classRoomId: string) => {
     setSelectedDir,
     isAdding,
     setIsAdding,
+    editingDir,
+    setEditingDir,
     addDirectory,
+    updateDirectoryName,
+    removeDirectory,
     isLoading,
     error,
     reload: loadDirectories,

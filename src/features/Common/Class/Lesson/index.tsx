@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { FaCircleCheck } from 'react-icons/fa6';
+import { IoClose } from 'react-icons/io5';
 import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
-
+import { deleteDirectory } from '@/entities/Make/api/useLesson';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // 리로드 트리거
 
   const [selectedModal, setSelectedModal] = useState<
     | { type: 'news'; item: NewsItem }
@@ -28,28 +30,28 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // 데이터 불러오기
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const classInfo = await getLessonDirectories(classRoomId);
-        const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
-          id: dir.directoryId.toString(),
-          name: dir.directoryName,
-          isRead: false,
-          directoryList: [], // 필요시 documentList로 변환 가능
-        }));
-        setDirectories(dirs);
-        setNews(await getLessonNews(classRoomId));
-        setQuestions(await getLessonQuestions(classRoomId));
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const classInfo = await getLessonDirectories(classRoomId);
+      const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
+        id: dir.directoryId.toString(),
+        name: dir.directoryName,
+        isRead: false,
+        directoryList: [], // 필요시 documentList로 변환 가능
+      }));
+      setDirectories(dirs);
+      setNews(await getLessonNews(classRoomId));
+      setQuestions(await getLessonQuestions(classRoomId));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (classRoomId) fetchData();
-  }, [classRoomId]);
+  }, [classRoomId, refreshTrigger]); // refreshTrigger 추가
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -79,6 +81,26 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  const handleDeleteDirectory = async (dirId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm("정말로 이 디렉토리를 삭제하시겠습니까?")) {
+      try {
+        const success = await deleteDirectory(Number(dirId));
+        if (success) {
+          // 삭제 성공 시 리로드 트리거
+          setRefreshTrigger(prev => prev + 1);
+        }
+      } catch (error) {
+        console.error("디렉토리 삭제 실패:", error);
+      }
+    }
+  };
+
+  // 디렉토리 추가 완료 시 리로드 트리거
+  const handleDirectoryAdded = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   return (
     <s.Container>
       {/* 왼쪽: 강의 디렉토리 */}
@@ -92,6 +114,9 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                   <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
                   <s.Name>{dir.name}</s.Name>
                   <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
+                  <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
+                    <IoClose size={16} />
+                  </s.DeleteIcon>
                 </s.Item>
                 <s.SubDirectoryList $isExpanded={isExpanded}>
                   {dir.directoryList?.map(sub => (
@@ -108,7 +133,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
               </s.DirectoryWrapper>
             );
           })}
-          <DirectorySelect classRoomId={classRoomId} />
+          <DirectorySelect classRoomId={classRoomId} onDirectoryAdded={handleDirectoryAdded} />
         </s.Section>
       </s.LeftPanel>
 

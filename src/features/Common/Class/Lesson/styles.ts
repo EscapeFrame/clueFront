@@ -39,6 +39,8 @@ export const Item = styled.div<{ $isRead: boolean }>`
   align-items: center;
   cursor: pointer;
   gap: 0.5rem;
+  position: relative;
+  padding-right: 3rem; // 삭제 아이콘을 위한 공간
 `;
 
 export const SubItem = styled.div<{ $isRead: boolean }>`
@@ -65,7 +67,27 @@ export const Icon = styled.span`
   margin-left: auto;
 `;
 
-// 모달 내 텍스트 스타일 통일
+export const DeleteIcon = styled.span`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(239, 68, 68, 0.1);
+  z-index: 1;
+  
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+  }
+`;
+
 export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
