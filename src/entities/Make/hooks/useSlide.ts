@@ -1,25 +1,30 @@
 import { useCallback } from "react";
 
-export const useGoogleSlides = (user: { role: "teacher" | "student"; email: string }) => {
+export const useGoogleSlides = (user: { role: "TEACHER" | "STUDENT"; email: string }) => {
   const handleLoginSuccess = useCallback(
     async (accessToken: string) => {
       try {
-        // 바로 구글 Slides API 호출 가능
+        // Drive API로 구글 슬라이드 프레젠테이션 목록 가져오기
         const res = await fetch(
-          "https://slides.googleapis.com/v1/presentations",
+          "https://www.googleapis.com/drive/v3/files?q=mimeType%3D'application%2Fvnd.google-apps.presentation'&fields=files(id,name,modifiedTime,webViewLink)",
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${accessToken}`, // Google OAuth 2.0 액세스 토큰 필요(Drive 메타데이터 읽기 스코프)
+              Accept: "application/json",
             },
           }
         );
+        if (!res.ok) {
+          const body = await res.text();
+          throw new Error(`Drive API ${res.status}: ${body}`);
+        }
         const data = await res.json();
-
         console.log("Google Slides Data:", data);
-
-        // data를 백엔드에 저장하거나 상태에 반영
-      } catch (err) {
-        console.error("구글 슬라이드 불러오기 실패", err);
+        
+        // TODO: 백엔드에 데이터 저장 또는 상태에 반영
+      } catch (error) {
+        console.error("구글 슬라이드 불러오기 실패: ", error);
+        throw error;
       }
     },
     [user]

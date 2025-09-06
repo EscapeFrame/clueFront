@@ -15,10 +15,14 @@ export const AssignmentComponent: React.FC = () => {
     const [assignments, setAssignments] = useState<Assignment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    
+
     // 컴포넌트 마운트 시(또는 effectiveId가 바뀔 때) 과제 목록 API 호출
     useEffect(() => {
-        if (!effectiveId) return;
+        if (!effectiveId) {
+            setLoading(false);
+            setAssignments([]);
+            return;
+        }
 
         setLoading(true);
         AssignmentsApi.getAll(effectiveId)

@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState} from "react";
 import { useGoogleSlides } from "@/entities/Make/hooks/useSlide";
 
 interface GoogleSlideProps {
-  user: { role: "teacher" | "student"; email: string };
+  user: { role: "TEACHER" | "STUDENT"; email: string };
   accessToken: string; // 백엔드에서 받은 토큰
 }
 
@@ -14,6 +14,26 @@ const GoogleSlide: React.FC<GoogleSlideProps> = ({ user, accessToken }) => {
       handleLoginSuccess(accessToken);
     }
   }, [accessToken, handleLoginSuccess]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        await handleLoginSuccess(accessToken);
+        if (!cancelled) {
+          console.log("구글 슬라이드 연결 성공");
+        }
+      } catch {
+        if (!cancelled) {
+          console.error("구글 슬라이드 연결 실패");
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [accessToken, handleLoginSuccess]);  
 
   return <div>구글 슬라이드 연결 완료</div>;
 };

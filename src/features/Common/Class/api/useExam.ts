@@ -5,8 +5,8 @@ import { Exam } from '@/shared/types/Class/Exam';
 export const ExamApi = async (examNumber: string): Promise<Exam[]> => {
   const res = await Customapi.get(`/api/exam/${examNumber}`); // API 경로는 필요시 수정
 
-  if (res.status !== 200) {
-    throw new Error(`서버 에러: ${res.status}`);
+  if (res.status < 200 || res.status >= 300) {
+    throw new Error(`에러: ${res.status}`);
   }
 
   return res.data;

@@ -62,6 +62,8 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
       setShowUploadModal(false);
     } catch (err) {
       console.error('과제 제출 실패:', err);
+    } finally {
+      setIsSubmitting(false); // 재제출(취소) 처리 후 버튼 비활성 복구
     }
   };
 
@@ -75,6 +77,8 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     } catch (e) {
       alert('제출 취소 실패');
       console.error(e);
+    } finally {
+      setIsResubmitting(false);
     }
   };
 
@@ -130,9 +134,10 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
           {uploadedFiles.map(file => (
             <s.FileItem
               key={file.id}
-              onClick={() =>
-                !isSubmitted && alert(`파일명: ${file.name}\n크기: ${file.size}`)
-              }
+              onClick={(e) => {
+                e.stopPropagation(); // 파일 클릭시 상세패널 막기
+                if (!isSubmitted) alert(`파일명: ${file.name}\n크기: ${file.size}`);
+              }}
             >
               <s.FileInfoContainer>
                 <FaRegFile />

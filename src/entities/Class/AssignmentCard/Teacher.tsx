@@ -12,7 +12,7 @@ export function AssignmentCard({ data, classRoomId }: AssignmentCardProps & { cl
 
   const navigate = useNavigate();
   const DetailAssignments = () => { // 제출현황 페이지로 이동
-    navigate(`/class/${classRoomId}/check`);
+    navigate(`/class/${classRoomId}/check/${data.id}`);
   };
 
   const renderDeadlineOrSubmission = () => {
