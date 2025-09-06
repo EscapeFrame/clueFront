@@ -11,9 +11,12 @@ import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/C
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory } from '@/entities/Make/api/useLesson';
+import { useRecoilState } from 'recoil';
+import { userState } from '@/shared/model/userState';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
+  const [user, setUser] = useRecoilState(userState);
 
   // 상태 관리
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -28,6 +31,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     | null
   >(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  // 선생님인지 확인
+  const isTeacher = user?.role === 'TEACHER';
+  console.log('Current user:', user);
+  console.log('User role:', user?.role);
+  console.log('Is teacher:', isTeacher);
 
   // 데이터 불러오기
   const fetchData = async () => {
@@ -83,6 +92,13 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   const handleDeleteDirectory = async (dirId: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // 선생님이 아니면 삭제 불가
+    if (!isTeacher) {
+      alert("선생님만 디렉토리를 삭제할 수 있습니다.");
+      return;
+    }
+    
     if (window.confirm("정말로 이 디렉토리를 삭제하시겠습니까?")) {
       try {
         const success = await deleteDirectory(dirId);
@@ -114,9 +130,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                   <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
                   <s.Name>{dir.name}</s.Name>
                   <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
-                  <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
-                    <IoClose size={16} />
-                  </s.DeleteIcon>
+                  {/* 선생님일 때만 삭제 아이콘 표시 */}
+                  {isTeacher && (
+                    <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
+                      <IoClose size={16} />
+                    </s.DeleteIcon>
+                  )}
                 </s.Item>
                 <s.SubDirectoryList $isExpanded={isExpanded}>
                   {dir.directoryList?.map(sub => (
@@ -133,7 +152,10 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
               </s.DirectoryWrapper>
             );
           })}
-          <DirectorySelect classRoomId={classRoomId} onDirectoryAdded={handleDirectoryAdded} />
+          {/* 선생님일 때만 디렉토리 추가 기능 표시 */}
+          {isTeacher && (
+            <DirectorySelect classRoomId={classRoomId} onDirectoryAdded={handleDirectoryAdded} />
+          )}
         </s.Section>
       </s.LeftPanel>
 

@@ -33,6 +33,16 @@ export const useAuth = () => {
     setUser({ username: "", userId: "", role: ""});
   };
 
+  // 사용자 정보 자동 초기화
+  useEffect(() => {
+    // user가 비어있으면 TEST_USER로 초기화
+    if (!user.role) {
+      setUser(TEST_USER);
+      setAccessToken(TEST_TOKEN);
+      localStorage.setItem('accessToken', TEST_TOKEN);
+    }
+  }, [user.role, setUser]);
+
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -42,7 +52,7 @@ export const useAuth = () => {
         return;
       }
 
-      if (user) return;
+      if (user.role) return; // role이 있으면 이미 설정됨
 
       try {
         const res = await CustomApi.get('유저 정보');
@@ -59,9 +69,7 @@ export const useAuth = () => {
     };
 
     fetchUserInfo();
-  }, [accessToken, user]);
+  }, [accessToken, user.role, setUser]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo };
-
-
 };
