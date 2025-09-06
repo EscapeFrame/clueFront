@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import CustomApi from '@/shared/config/api';
 import { User } from '@/entities/Context/LoginContext';
-import { userState } from '@/shared/types/login';
+import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
 
 export const useAuth = () => {

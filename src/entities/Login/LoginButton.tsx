@@ -1,5 +1,5 @@
 import { useSetRecoilState } from 'recoil';
-import { userState } from '@/shared/types/login';
+import { userState } from '@/shared/model/userState';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { Container, LoginButtonStyled, LogoutButtonStyled } from './Button.styles';
