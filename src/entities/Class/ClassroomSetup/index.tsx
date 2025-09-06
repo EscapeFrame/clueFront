@@ -2,19 +2,16 @@ import * as S from './styles';
 import ToggleSwitch from '@/entities/UI/ToggleSwitch/index';
 
 type ClassroomSetupProps = {
-  data: {
-    isActivated: boolean;
-    isChatEnabled: boolean;
-  };
-  setData: React.Dispatch<
-    React.SetStateAction<{
-      isActivated: boolean;
-      isChatEnabled: boolean;
-    }>
-  >;
+  isActivation: boolean;
+  isChatEnabled: boolean;
+  handleToggle: (name: string, checked: boolean) => void;
 };
 
-export default function ClassroomSetup({ data, setData }: ClassroomSetupProps) {
+export default function ClassroomSetup({
+  isActivation,
+  isChatEnabled,
+  handleToggle,
+}: ClassroomSetupProps) {
   return (
     <S.Container>
       <S.Title>학습실 설정</S.Title>
@@ -24,9 +21,9 @@ export default function ClassroomSetup({ data, setData }: ClassroomSetupProps) {
         <S.Row>
           <S.FunctionTitle>학습실 활성화</S.FunctionTitle>
           <ToggleSwitch
-            id="activation"
-            checked={data.isActivated}
-            onChange={checked => setData(prev => ({ ...prev, isActivated: checked }))}
+            id="isActivation"
+            checked={isActivation}
+            onChange={checked => handleToggle('isActivation', checked)}
           />
         </S.Row>
         <S.Description>학습실을 활성화하면 학생들이 접근할 수 있습니다.</S.Description>
@@ -36,9 +33,9 @@ export default function ClassroomSetup({ data, setData }: ClassroomSetupProps) {
         <S.Row>
           <S.FunctionTitle>채팅 허용</S.FunctionTitle>
           <ToggleSwitch
-            id="chat"
-            checked={data.isChatEnabled}
-            onChange={checked => setData(prev => ({ ...prev, isChatEnabled: checked }))}
+            id="isChatEnabled"
+            checked={isChatEnabled}
+            onChange={checked => handleToggle('isChatEnabled', checked)}
           />
         </S.Row>
         <S.Description>학생들이 학습실 내에서 채팅할 수 있도록 허용합니다.</S.Description>

@@ -57,31 +57,6 @@ export const useMyClass = (): MyClassReturn => {
     }
   }, []);
 
-  // 학습실 생성
-  const createClassroom = useCallback(
-    async (name: string, description?: string): Promise<boolean> => {
-      if (!name.trim()) return false;
-      setLoading(true);
-      setError(null);
-      try {
-        const result = await classApi.createClass(name, description);
-        if (typeof result === 'number') {
-          setError(`학습실 생성 실패 (상태 코드: ${result})`);
-          return false;
-        }
-        const normalized = normalizeClassData([result])[0];
-        setMyClasses(prev => [...prev, normalized]);
-        return true;
-      } catch (err: any) {
-        setError(err.response?.data?.message || '학습실 생성 실패');
-        return false;
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
-
   // 학습실 삭제
   const deleteClassroom = useCallback(async (classId: string | number): Promise<boolean> => {
     setLoading(true);
@@ -119,7 +94,6 @@ export const useMyClass = (): MyClassReturn => {
     loading, 
     error, 
     joinClassroom, 
-    createClassroom, 
     deleteClassroom, 
     searchClasses, 
     refetch: fetchMyClasses 
