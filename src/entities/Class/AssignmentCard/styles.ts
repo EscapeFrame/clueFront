@@ -42,12 +42,11 @@ export const CardHeader = styled.div`
   gap: 1rem;
 `;
 
-export const Title = styled.h3`
+export const Title = styled.div`
   color: ${theme.colors.black};
   ${fonts.P3}
   font-weight: 600;
   margin: 0;
-  flex-grow: 1;
   word-break: break-word;
 `;
 
@@ -60,6 +59,7 @@ export const InfoSection = styled.div`
 
 export const InfoItem = styled.div`
   display: flex;
+  margin-top: 0;
   align-items: center;
   gap: 0.5rem;
   ${fonts.P1}

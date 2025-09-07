@@ -66,6 +66,7 @@ export interface StudentAssignmentResponse {
 export interface Assignment {
   id: string | number;
   title: string;
+  content: string;
   description: string;
   deadline: string;
   duringDate?: string;
