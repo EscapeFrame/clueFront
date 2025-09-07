@@ -13,7 +13,7 @@ export interface AssignmentResponse {
 
 // 과제 만들기
 export interface AssignmentCreateRequest {
-  class_id: number;
+  class_id: string;
   content: string;
   end_date: string;
   start_date: string;

@@ -1,4 +1,5 @@
 import Customapi from "@/shared/config/api";
+import { AssignmentCreateRequest } from '@/shared/types/Class/Assignment/Assignment';
 
 // <--MakeTask-->
 // MakeTask 만들기 api

@@ -7,8 +7,11 @@ import Button from "@/entities/UI/Button";
 import DateInput from "@/entities/UI/InputBox/DateInput";
 import InputBox from "@/entities/UI/InputBox/Input";
 import AttachmentBox from "@/entities/UI/Attachment";
-import { SendMakeTask, attachFile, attachLink } from "./api";
+import { SendMakeTask, attachFile } from "./api";
+import { AssignmentAttachment } from "@/shared/types/Class/Assignment/Attachment";
+import { AssignmentCreateRequest } from '@/shared/types/Class/Assignment/Assignment';
 
+// API 첨부파일 인터페이스
 interface Attachment {
   type: "file" | "link";
   name: string;
@@ -16,15 +19,25 @@ interface Attachment {
   file?: File;
 }
 
-interface Task {
-  classId: string;
-  title: string;
-  content: string;
-  start_date: string;
-  end_date: string;
-}
+// 서버 -> UI 변환
+const mapToUIAttachment = (items: AssignmentAttachment[]): Attachment[] =>
+  items.map(item => ({
+    type: item.type as "file" | "link", // 타입 단언
+    name: item.originalFileName ?? "이름 없음",
+    url: item.type === "link" ? item.value : undefined,
+  }));
 
-const MakeTask = () => {
+// UI -> 서버 변환
+const mapToDomainAttachment = (items: Attachment[]): AssignmentAttachment[] =>
+  items.map(item => ({
+    type: item.type,
+    value: item.type === "link" ? item.url ?? "" : "",
+    originalFileName: item.name,
+    size: item.file?.size,
+    contentType: item.file?.type,
+  }));
+
+const MakeTask: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId?: string }>();
   const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
@@ -39,26 +52,55 @@ const MakeTask = () => {
   const [shouldNavigateAfterLinks, setShouldNavigateAfterLinks] = useState(false);
   const [totalLinksToSend, setTotalLinksToSend] = useState(0);
 
+  // 파일 업로드 모달
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
-  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-  const [linkPlatform, setLinkPlatform] = useState<"drive" | "youtube" | "notion" | "link" | null>(null);
-  const [linkInput, setLinkInput] = useState("");
+  const [tempFiles, setTempFiles] = useState<Attachment[]>([]);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const isFormValid = subject && dueDate && classRoomId;
+  // 링크 모달
+  const [linkInput, setLinkInput] = useState("");
+  const [linkPlatform, setLinkPlatform] = useState<"drive" | "youtube" | "notion" | "link" | null>(null);
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+
+  const isFormValid = !!subject && !!dueDate && !!classRoomId;
 
   // 파일 선택
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files;
-    if (selected) {
-      const newAttachments: Attachment[] = Array.from(selected).map(file => ({
-        type: "file",
-        name: file.name,
-        file,
-      }));
-      setAttachments(prev => [...prev, ...newAttachments]);
-      setIsFileModalOpen(false);
-    }
+    const files = e.target.files;
+    if (!files?.length) return;
+    const newFiles: Attachment[] = Array.from(files).map(f => ({
+      type: "file" as const,
+      name: f.name,
+      file: f,
+    }));
+    setTempFiles(prev => [...prev, ...newFiles]);
   };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDragOver(true); };
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => { e.preventDefault(); setIsDragOver(false); };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files?.length) handleFileSelect({ target: { files } } as React.ChangeEvent<HTMLInputElement>);
+  };
+
+  const handleUploadModalComplete = () => {
+    if (!tempFiles.length) return;
+    const newAttachments = tempFiles.map(f => ({
+      type: f.type,
+      value: f.file ? URL.createObjectURL(f.file) : f.url ?? "",
+      originalFileName: f.name,
+      size: f.file?.size,
+      contentType: f.file?.type,
+    }));
+    setAttachments(prev => [...prev, ...newAttachments]);
+    setTempFiles([]);
+    setIsFileModalOpen(false);
+  };
+
+  const handleUploadModalClose = () => { setTempFiles([]); setIsFileModalOpen(false); };
 
   // 링크 등록
   const handleLinkSubmit = async () => {
@@ -118,10 +160,7 @@ const MakeTask = () => {
 
   // 과제 생성
   const handleMakeTask = async () => {
-    if (!classRoomId) {
-      alert("classRoomId가 없습니다.");
-      return;
-    }
+    if (!classRoomId) return alert("classRoomId가 없습니다.");
 
     const taskData: Task = {
       classId: classRoomId!,
@@ -176,78 +215,62 @@ const MakeTask = () => {
     <S.Container>
       <S.HeaderRow>
         <S.Title>과제 만들기</S.Title>
-        <Button text="채점표 생성" width="200px" onClick={() => navigate("/class/make/score")} />
       </S.HeaderRow>
 
-      <InputBox
-        label="과제 이름"
-        id="subject"
-        required
-        value={subject}
-        onChange={e => setSubject(e.target.value)}
-      />
-      <InputBox
-        label="안내사항"
-        id="description"
-        required={false}
-        value={description}
-        onChange={e => setDescription(e.target.value)}
-      />
+      <InputBox label="과제 이름" id="subject" required value={subject} onChange={e => setSubject(e.target.value)} />
+      <InputBox label="안내사항" id="description" value={description} onChange={e => setDescription(e.target.value)} />
 
       <AttachmentBox
-        attachments={attachments}
-        setAttachments={setAttachments}
-        openUploadModal={() => setIsFileModalOpen(true)}
-        openLinkModal={(platform) => {
-          setLinkPlatform(platform);
-          setIsLinkModalOpen(true);
+        attachments={mapToUIAttachment(attachments)}
+        setAttachments={ui => {
+          const updated = typeof ui === "function" ? ui(mapToUIAttachment(attachments)) : ui;
+          setAttachments(mapToDomainAttachment(updated));
         }}
+        openUploadModal={() => setIsFileModalOpen(true)}
+        openLinkModal={platform => { setLinkPlatform(platform); setIsLinkModalOpen(true); }}
       />
 
-      <DateInput
-        label="시작일 입력"
-        id="start"
-        value={startDate}
-        required={false}
-        onChange={e => setStartDate(e.target.value)}
-      />
-      <DateInput
-        label="마감일 입력"
-        id="end"
-        value={dueDate}
-        required
-        onChange={e => setDueDate(e.target.value)}
-      />
+      <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
+      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} />
 
-      <Button
-        text="완료"
-        disabled={!isFormValid}
-        onClick={handleMakeTask}
-      />
+      <Button text="완료" disabled={!isFormValid} onClick={handleMakeTask} />
 
+      {/* 파일 업로드 모달 */}
       {isFileModalOpen && (
         <Modal
-          title="파일 첨부"
-          notes="file"
-          onClose={() => setIsFileModalOpen(false)}
-          buttons={[{ text: "닫기", type: 1, onClick: () => setIsFileModalOpen(false) }]}
+          title="파일 업로드"
+          onClose={handleUploadModalClose}
+          buttons={[
+            { text: "닫기", type: 1, onClick: handleUploadModalClose },
+            { text: "완료", type: 0, onClick: handleUploadModalComplete },
+          ]}
         >
-          <div>
-            <input type="file" multiple onChange={handleFileSelect} style={{ marginBottom: "1rem" }} />
-            <p>파일을 선택하면 자동으로 추가됩니다.</p>
-          </div>
+          <S.FileUploadArea
+            isDragOver={isDragOver}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {isDragOver ? "여기에 파일을 놓으세요!" : "파일을 끌어다 놓거나 클릭하여 업로드하세요."}
+          </S.FileUploadArea>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileSelect}
+            style={{ display: "none" }}
+          />
+          {tempFiles.length > 0 && <ul>{tempFiles.map(f => <li key={f.name}>{f.name}</li>)}</ul>}
         </Modal>
       )}
 
+      {/* 링크 등록 Modal */}
       {isLinkModalOpen && (
         <Modal
           title={`${linkPlatform?.toUpperCase()} 링크 첨부`}
           notes="input"
-          onClose={() => {
-            setIsLinkModalOpen(false);
-            setLinkPlatform(null);
-            setLinkInput("");
-          }}
+          onClose={() => { setIsLinkModalOpen(false); setLinkPlatform(null); setLinkInput(""); }}
           buttons={[
             { text: "등록", type: 0, onClick: handleLinkSubmit },
             {
