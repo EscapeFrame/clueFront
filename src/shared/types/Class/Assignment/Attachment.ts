@@ -1,5 +1,3 @@
-// types.ts
-
 // 과제 첨부
 export interface AssignmentAttachment {
   contentType?: string;
@@ -11,14 +9,14 @@ export interface AssignmentAttachment {
 
 // 과제 파일 타입 (다운로드 등 용도)
 export interface AssignmentFileType {
-  fileId: number | string;
+  fileId: string | string;
   fileName: string;
   fileSize: number;
 }
 
 // 특정 학생 과제보기 - 파일
 export interface AssignmentFile {
-  fileId?: number | null;
+  fileId?: string | null;
   fileName?: string | null;
   fileSize?: number | null;
 }
