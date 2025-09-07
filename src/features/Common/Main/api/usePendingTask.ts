@@ -24,9 +24,10 @@ export const pendingTasksApi = {
 
       const normalizedData = res.data.map((task: PendingTaskItem) => ({
         ...task,
-        dueDate: normalizeDate(task.dueDate),
+        dueDate: normalizeDate(task.endDate),
       }));
 
+      console.log('Normalized pending tasks:', normalizedData);
       return normalizedData;
     } catch (error) {
       console.error('미제출 과제 조회 실패:', error);
@@ -41,9 +42,9 @@ export const pendingTasksApi = {
 
       const normalizedData = res.data.map((task: PendingTaskItem) => ({
         ...task,
-        dueDate: normalizeDate(task.dueDate),
+        dueDate: normalizeDate(task.endDate),
       }));
-
+      console.log('Normalized all tasks:', normalizedData);
       return normalizedData;
     } catch (error) {
       console.error('전체 과제 조회 실패:', error);
@@ -51,7 +52,7 @@ export const pendingTasksApi = {
     }
   },
 
-  createTask: async (task: PendingTaskItem): Promise<any | number> => {
+  createTask: async (task: PendingTaskItem): Promise<string | number> => {
     try {
       const res = await CustomApi.post(`/api/assignments`, task);
       if (res.status !== 200) return res.status;
@@ -62,7 +63,7 @@ export const pendingTasksApi = {
     }
   },
 
-  submitTask: async (submissionId: string): Promise<any | number> => {
+  submitTask: async (submissionId: string): Promise<string | number> => {
     try {
       const res = await CustomApi.patch(`/api/submissions/${submissionId}/submit`);
       if (res.status !== 200) return res.status;

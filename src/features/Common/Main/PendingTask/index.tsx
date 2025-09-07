@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { PendingTaskItem } from '@/shared/types/task';
 
 export default function PendingTask(): React.ReactNode {
-  const { tasks, loading, error, refetch } = usePendingTasks();
+  const { tasks, loading, error } = usePendingTasks();
   const today = dayjs();
 
   if (loading) {
@@ -47,15 +47,17 @@ export default function PendingTask(): React.ReactNode {
       <s.Explain>기간 안에 과제를 제출하세요!</s.Explain>
       <s.CardContainer>
         {tasks.map((post: PendingTaskItem, index: number) => {
-          if (!post.dueDate) return null;
-          const due = dayjs(post.dueDate);
-          const remainingDays = due.diff(today, 'day');
+          if (!post.endDate) return null;
+          const endDate = dayjs(post.endDate);
+          const daysLeft = endDate.diff(today, 'day'); // 남은 일수 계산
 
+          if (endDate.isBefore(today, 'day')) return null; // 마감일이 오늘 이전인 경우 제외
+
+          console.log('Rendering task:', post.title, 'End Date:', post.endDate, 'Days Left:', daysLeft);
           return (
             <DdayCard
-              key={post.id || index}
-              dDay={remainingDays}
-              content={post.body}
+              key={post.title || index}
+              dDay={daysLeft} // 예시: D-3
               url={post.available ? post.link : ''}
               title={post.title}
             />
