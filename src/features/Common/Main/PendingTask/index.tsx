@@ -47,12 +47,13 @@ export default function PendingTask(): React.ReactNode {
       <s.Explain>기간 안에 과제를 제출하세요!</s.Explain>
       <s.CardContainer>
         {tasks.map((post: PendingTaskItem, index: number) => {
+          if (!post.dueDate) return null;
           const due = dayjs(post.dueDate);
           const remainingDays = due.diff(today, 'day');
 
           return (
             <DdayCard
-              key={post.id || index} // id가 있으면 id 사용, 없으면 index
+              key={post.id || index}
               dDay={remainingDays}
               content={post.body}
               url={post.available ? post.link : ''}

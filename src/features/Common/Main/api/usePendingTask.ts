@@ -2,6 +2,7 @@ import CustomApi from "@/shared/config/api";
 import { PendingTaskItem } from '@/shared/types/task';
 
 const normalizeDate = (dateStr: string): string => {
+  if (!dateStr) return dateStr;
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) {
     console.warn('date:', dateStr);

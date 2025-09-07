@@ -73,6 +73,7 @@ const MakeTask = () => {
 
     // 과제가 이미 생성된 경우, 링크를 즉시 서버로 전송
     if (createdAssignmentId && !processedLinkUrlsRef.current.has(url)) {
+      const url = linkInput.trim();
       try {
         await attachLink(createdAssignmentId, url);
         processedLinkUrlsRef.current.add(url);

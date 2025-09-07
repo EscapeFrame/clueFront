@@ -83,19 +83,26 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
   };
 
   const renderDeadlineOrSubmission = () => {
-    if (isSubmitted)
-      return (
-        <s.InfoItem>
-          <LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}
-        </s.InfoItem>
-      );
-    const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
+      if (isSubmitted)
     return (
       <s.InfoItem>
-        <LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일
+        <LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}
       </s.InfoItem>
     );
-  };
+  if (!data.deadline) {
+    return (
+      <s.InfoItem>
+        <LuClock4 /> 마감일 정보 없음
+      </s.InfoItem>
+    );
+  }
+  const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
+  return (
+    <s.InfoItem>
+      <LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일
+    </s.InfoItem>
+  );
+  }
 
   // 파일 업로드 모달 닫기
   const handleUploadModalClose = () => {

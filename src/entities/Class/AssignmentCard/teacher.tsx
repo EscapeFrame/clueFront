@@ -16,9 +16,26 @@ export function AssignmentCard({ data, classRoomId }: AssignmentCardProps & { cl
   };
 
   const renderDeadlineOrSubmission = () => {
-    if (isSubmitted) return <s.InfoItem><LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}</s.InfoItem>;
-    const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
-    return <s.InfoItem><LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일</s.InfoItem>;
+    if (isSubmitted) {
+      return <s.InfoItem><LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}</s.InfoItem>;
+    }
+
+    if (!data.deadline || typeof data.deadline !== "string" || data.deadline.trim() === "") {
+      return <s.InfoItem><LuClock4 /> 마감일 정보 없음</s.InfoItem>;
+    }
+
+    try {
+      const parsed = parseISO(data.deadline);
+      if (isNaN(parsed.getTime())) {
+        return <s.InfoItem><LuClock4 /> 마감일 정보 오류</s.InfoItem>;
+      }
+
+      const daysLeft = differenceInDays(parsed, new Date());
+      return <s.InfoItem><LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일</s.InfoItem>;
+    } catch (e) {
+      console.error("Invalid deadline:", data.deadline, e);
+      return <s.InfoItem><LuClock4 /> 마감일 정보 오류</s.InfoItem>;
+    }
   };
 
   return (

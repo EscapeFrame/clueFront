@@ -72,8 +72,8 @@ export async function attachFile(assignmentId: string, attachments: Attachment[]
 }
 
 export const attachLink = async (assignmentId: string, link: string) => {
-    const body = { assignmentId, link };
-    await Customapi.post(`/api/assignments/${assignmentId}/link`, body, {
-        headers: { 'Content-Type': 'application/json' }
-    });
+
+    await Customapi.post(`/api/assignments/${assignmentId}/link`,{
+        url: link
+    })
 };
