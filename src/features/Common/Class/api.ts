@@ -32,6 +32,7 @@ export const ExamApi = async (examNumber: string): Promise<Exam[]> => {
 
   return res.data;
 };
+<<<<<<< HEAD
 
 // 수업 디렉토리 조회(없음)
 export const getLessonDirectories = async (classRoomId: string): Promise<DirectoryApiResponse> => {
@@ -73,3 +74,5 @@ export const getLessonQuestions = async (classRoomId: string): Promise<QuestionI
   }
   return res.data;
 };
+=======
+>>>>>>> 1d79c42 (fix(#166): FileModal 재연결)

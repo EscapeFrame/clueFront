@@ -7,7 +7,11 @@ import Button from "@/entities/UI/Button";
 import DateInput from "@/entities/UI/InputBox/DateInput";
 import InputBox from "@/entities/UI/InputBox/Input";
 import AttachmentBox from "@/entities/UI/Attachment";
+<<<<<<< HEAD
 import { SendMakeTask, attachFile, attachLink } from "./api";
+=======
+import { SendMakeTask, attachFile } from "./api";
+>>>>>>> 1d79c42 (fix(#166): FileModal 재연결)
 import { AssignmentAttachment } from "@/shared/types/Class/Assignment/Attachment";
 import { AssignmentCreateRequest } from '@/shared/types/Class/Assignment/Assignment';
 
@@ -70,6 +74,7 @@ const MakeTask: React.FC = () => {
 
   const handleUploadModalComplete = () => {
     if (!tempFiles.length) return;
+<<<<<<< HEAD
 
     const newAttachments: Attachment[] = tempFiles.map(f => ({
       type: f.type,
@@ -78,6 +83,15 @@ const MakeTask: React.FC = () => {
       file: f.file,
     }));
 
+=======
+    const newAttachments = tempFiles.map(f => ({
+      type: f.type,
+      value: f.file ? URL.createObjectURL(f.file) : f.url ?? "",
+      originalFileName: f.name,
+      size: f.file?.size,
+      contentType: f.file?.type,
+    }));
+>>>>>>> 1d79c42 (fix(#166): FileModal 재연결)
     setAttachments(prev => [...prev, ...newAttachments]);
     setTempFiles([]);
     setIsFileModalOpen(false);
@@ -205,8 +219,16 @@ const MakeTask: React.FC = () => {
 
       {/* UI 상태 업데이트 시에는 mapToDomainAttachment 사용X */}
       <AttachmentBox
+<<<<<<< HEAD
         attachments={attachments}
         setAttachments={setAttachments}
+=======
+        attachments={mapToUIAttachment(attachments)}
+        setAttachments={ui => {
+          const updated = typeof ui === "function" ? ui(mapToUIAttachment(attachments)) : ui;
+          setAttachments(mapToDomainAttachment(updated));
+        }}
+>>>>>>> 1d79c42 (fix(#166): FileModal 재연결)
         openUploadModal={() => setIsFileModalOpen(true)}
         openLinkModal={platform => { setLinkPlatform(platform); setIsLinkModalOpen(true); }}
       />
