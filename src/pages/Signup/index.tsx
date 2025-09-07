@@ -5,6 +5,7 @@ import Customapi from '@/shared/config/api';
 function RegisterPage() {
   const [grade, setGrade] = useState('');
   const [classNum, setClassNum] = useState('');
+  const [stuNumber, setStuNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -16,6 +17,7 @@ function RegisterPage() {
       await Customapi.post('/register', {
         grade,
         classNum,
+        stuNumber,
       });
 
       // 회원가입 성공 후 메인 페이지로 이동
@@ -38,6 +40,9 @@ function RegisterPage() {
         <br />
         <label htmlFor="classNum">반:</label>
         <input id="classNum" value={classNum} onChange={(e) => setClassNum(e.target.value)} required />
+        <br />
+        <label htmlFor='stuNumber'>번호:</label>
+        <input id='stuNumber' value={stuNumber} onChange={(e) => setStuNumber(e.target.value)} required/>
         <br />
         <button type="submit" disabled={loading}>
           {loading ? '처리 중...' : '회원가입 완료'}
