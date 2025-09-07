@@ -16,7 +16,7 @@ export const RightPanel = styled.div`
   width: 30%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.5rem;
 `;
 
 export const Section = styled.div`

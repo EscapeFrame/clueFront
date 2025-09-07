@@ -8,7 +8,7 @@ import * as s from './styles';
 import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
-
+import Button from '@/entities/UI/Button';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -118,6 +118,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         <s.Section>
           <NoticeCard cardTitle="최근 질문" notices={questions} onSelect={item => setSelectedModal({ type: 'question', item })} />
         </s.Section>
+        <Button text="정보수정하기" width = '100%' type={0} onClick={() => navigate('/class')}/> {/* (선생님)정보 수정 페이지로 이동 */}
       </s.RightPanel>
 
       {/* 모달 */}
