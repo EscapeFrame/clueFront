@@ -4,7 +4,6 @@ import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import ProgressBar from '@/entities/UI/ProgressBar';
 import { FaUserAlt } from "react-icons/fa";
 import { getClassInfo } from '../api';
-import HaeyulImg from '@/../public/Paletto/Haeyul.png';
 import * as s from './styles';
 
 export const ClassInfo: React.FC<ClassInfoProps> = ({
@@ -77,7 +76,7 @@ export const ClassInfo: React.FC<ClassInfoProps> = ({
 
         <ProgressBar progress={classData.progress} maxProgress={classData.maxProgress} />
       </s.LeftSection>
-      <s.Img imageUrl={HaeyulImg} />
+      <s.Img imageUrl="/Paletto/Haeyul.png" />
     </s.Container>
   );
 }; 
