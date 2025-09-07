@@ -130,14 +130,18 @@ const MakeTask = () => {
       end_date: dueDate,
     };
 
+    function formatDateTime(dateStr: string): string {
+      return `${dateStr} 00:00`;
+    }
+
     try {
       console.log("과제 생성 API 호출 중...", taskData);
       const assignmentId = await SendMakeTask({
         classId: classRoomId!,
         title: subject,
         content: description,
-        start_date: startDate,
-        end_date: dueDate,
+        start_date: formatDateTime(startDate),
+        end_date: formatDateTime(dueDate),
       });
       console.log("과제 생성 성공, assignmentId:", assignmentId);
       setCreatedAssignmentId(String(assignmentId));
@@ -245,11 +249,12 @@ const MakeTask = () => {
           }}
           buttons={[
             { text: "등록", type: 0, onClick: handleLinkSubmit },
-            { text: "닫기", type: 1, onClick: () => {
+            {
+              text: "닫기", type: 1, onClick: () => {
                 setIsLinkModalOpen(false);
                 setLinkPlatform(null);
                 setLinkInput("");
-              } 
+              }
             },
           ]}
           placeholder="링크를 입력하세요"

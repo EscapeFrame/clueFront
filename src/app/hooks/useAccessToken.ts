@@ -11,7 +11,7 @@ export const useAuth = () => {
 
   const [user, setUser] = useRecoilState(userState);
 
-  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6ImM2YWYyNWVlLTBkYWQtNDJlZS04NWYzLWQ3YjFhZDY4YzEwYyIsInVzZXJuYW1lIjoiYWRtaW4yIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTcyNTA4MDksImV4cCI6MTc1NzYxMDgwOX0.MEeuPYk7XkBQU9j2ydhvR3Ivc3iS-K9cc5Pc2ynEH74';
+  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6ImM2YWYyNWVlLTBkYWQtNDJlZS04NWYzLWQ3YjFhZDY4YzEwYyIsInVzZXJuYW1lIjoiYWRtaW4yIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTcyNTUzNjIsImV4cCI6MTc1NzYxNTM2Mn0.MY0lvMwY_MkIh-yEyqHqhnCQPWo5hoGlRYW2nT6dUjs';
   const TEST_USER: User = {
     userId: '2',
     username: '유근찬',
