@@ -10,34 +10,36 @@ interface Attachment {
     file?: File;
 }
 
-interface Task {
-    classId: string;
+export const SendMakeTask = async (p: {
+    classId: string | number;
     title: string;
-    content?: string;
-    start_date?: string;
-    end_date: string;
-  }
+    content: string;
+    start_date: string; // 'YYYY-MM-DD'
+    end_date: string;   // 'YYYY-MM-DD'
+}) => {
+    const payload = {
+        class_id: String(p.classId),
+        title: p.title,
+        content: p.content,
+        start_date: p.start_date,
+        end_date: p.end_date,
+    };
 
-export async function SendMakeTask({classId, title, content, start_date, end_date}:Task) {
-    try {
-        const response = await Customapi.post(`/api/assignments`, {
-            class_id: classId,
-            title: title,
-            content: content,
-            start_date: start_date,
-            end_date: end_date
-        });
-        if (response.status !== 200) {
-            return response.status;
+    const res = await Customapi.post('/api/assignments', payload, {
+        headers: {
+            'Content-Type': 'application/json',
         }
-
-        const assignmentId = response.data.assignment_id;
-        return assignmentId;
-    } catch (error) {
-        console.error('MakeTask 실패:', error);
-        throw error;
-    }
-}
+    });
+    // 서버 응답 전체 반환 (assignment_id 포함)
+    return res.data as {
+        assignment_id?: string;
+        class_id?: string;
+        title?: string;
+        content?: string;
+        start_date?: string;
+        end_date?: string;
+    };
+};
 
 export async function attachFile(assignmentId: string, attachments: Attachment[]) {
     try {
@@ -68,3 +70,10 @@ export async function attachFile(assignmentId: string, attachments: Attachment[]
         throw error;
     }
 }
+
+export const attachLink = async (assignmentId: string, link: string) => {
+    const body = { assignmentId, link };
+    await Customapi.post(`/api/assignments/${assignmentId}/link`, body, {
+        headers: { 'Content-Type': 'application/json' }
+    });
+};

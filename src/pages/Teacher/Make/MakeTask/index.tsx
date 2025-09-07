@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as S from "./styles";
 
@@ -7,7 +7,7 @@ import Button from "@/entities/UI/Button";
 import DateInput from "@/entities/UI/InputBox/DateInput";
 import InputBox from "@/entities/UI/InputBox/Input";
 import AttachmentBox from "@/entities/UI/Attachment";
-import { SendMakeTask, attachFile } from "./api";
+import { SendMakeTask, attachFile, attachLink } from "./api";
 
 interface Attachment {
   type: "file" | "link";
@@ -34,6 +34,10 @@ const MakeTask = () => {
   const [startDate, setStartDate] = useState(today);
   const [dueDate, setDueDate] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [createdAssignmentId, setCreatedAssignmentId] = useState<string | null>(null);
+  const processedLinkUrlsRef = useRef<Set<string>>(new Set());
+  const [shouldNavigateAfterLinks, setShouldNavigateAfterLinks] = useState(false);
+  const [totalLinksToSend, setTotalLinksToSend] = useState(0);
 
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
@@ -57,16 +61,59 @@ const MakeTask = () => {
   };
 
   // 링크 등록
-  const handleLinkSubmit = () => {
+  const handleLinkSubmit = async () => {
     if (!linkInput) return;
+    const url = linkInput.trim();
+    if (!url) return;
+
     setAttachments(prev => [
       ...prev,
-      { type: "link", name: linkInput, url: linkInput }
+      { type: "link", name: url, url }
     ]);
+
+    // 과제가 이미 생성된 경우, 링크를 즉시 서버로 전송
+    if (createdAssignmentId && !processedLinkUrlsRef.current.has(url)) {
+      try {
+        await attachLink(createdAssignmentId, url);
+        processedLinkUrlsRef.current.add(url);
+      } catch (e) {
+        console.error("링크 첨부 실패:", e);
+      }
+    }
+
     setLinkInput("");
     setLinkPlatform(null);
     setIsLinkModalOpen(false);
   };
+
+  // 링크 첨부 자동 전송 (assignment 생성 이후, 새로 추가된 링크만)
+  useEffect(() => {
+    const sendNewLinks = async () => {
+      if (!createdAssignmentId) return;
+      const newLinks = attachments.filter(
+        (a) => a.type === "link" && a.url && !processedLinkUrlsRef.current.has(a.url)
+      );
+      for (const link of newLinks) {
+        try {
+          await attachLink(createdAssignmentId, link.url as string);
+          processedLinkUrlsRef.current.add(link.url as string);
+        } catch (e) {
+          console.error("링크 첨부 실패:", e);
+        }
+      }
+    };
+    void sendNewLinks();
+  }, [attachments, createdAssignmentId]);
+
+  // 모든 링크 전송이 끝났으면 이동
+  useEffect(() => {
+    if (!shouldNavigateAfterLinks) return;
+    const sentCount = Array.from(processedLinkUrlsRef.current).length;
+    if (sentCount >= totalLinksToSend) {
+      setShouldNavigateAfterLinks(false);
+      navigate(-1);
+    }
+  }, [shouldNavigateAfterLinks, totalLinksToSend]);
 
   // 과제 생성
   const handleMakeTask = async () => {
@@ -76,7 +123,7 @@ const MakeTask = () => {
     }
 
     const taskData: Task = {
-      classId: classRoomId, // UUID 그대로 전달
+      classId: classRoomId!,
       title: subject,
       content: description,
       start_date: startDate,
@@ -85,16 +132,34 @@ const MakeTask = () => {
 
     try {
       console.log("과제 생성 API 호출 중...", taskData);
-      const assignmentId = await SendMakeTask(taskData);
+      const assignmentId = await SendMakeTask({
+        classId: classRoomId!,
+        title: subject,
+        content: description,
+        start_date: startDate,
+        end_date: dueDate,
+      });
       console.log("과제 생성 성공, assignmentId:", assignmentId);
+      setCreatedAssignmentId(String(assignmentId));
 
-      if (attachments.length > 0) {
-        console.log("첨부파일 업로드 중...", attachments);
-        await attachFile(assignmentId, attachments);
+      // 파일만 즉시 업로드 (링크는 useEffect에서 전송)
+      const fileOnly = attachments.filter((a) => a.type === "file");
+      if (fileOnly.length > 0) {
+        console.log("파일 업로드 중...", fileOnly);
+        await attachFile(String(assignmentId), fileOnly);
+      }
+
+      // 생성 시점의 링크 개수 파악 후, 링크 전송 완료되면 이동
+      const linkOnly = attachments.filter((a) => a.type === "link" && a.url);
+      setTotalLinksToSend(linkOnly.length);
+      // 링크가 하나도 없으면 즉시 이동
+      if (linkOnly.length === 0) {
+        navigate(-1);
+      } else {
+        setShouldNavigateAfterLinks(true);
       }
 
       alert("과제 생성 완료!");
-      navigate(-1);
     } catch (error: unknown) {
       console.error("과제 생성 실패:", error);
       const msg = error instanceof Error ? error.message : "알 수 없는 오류";
