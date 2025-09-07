@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 
 export interface DDayCardProps {
-  dDay: number;      // 남은 일수
-  content: string;   // 최대 30자 텍스트
+  dDay: number;      // 남은 일수  // 최대 30자 텍스트
   url: string;
   title: string;     // 제목 추가
 }
