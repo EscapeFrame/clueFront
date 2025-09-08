@@ -100,3 +100,22 @@ export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
 `;
+
+export const IconGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const PlusIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.gray[600]};
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.blue[600]};
+  }
+`;

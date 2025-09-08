@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { FaCircleCheck } from 'react-icons/fa6';
+import { FaCircleCheck, FaPlus } from 'react-icons/fa6';
 import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
@@ -78,6 +78,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  const handlePlusClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/class/${classRoomId}/make/lesson`);
+  };
+
   return (
     <s.Container>
       {/* 왼쪽: 강의 디렉토리 */}
@@ -90,7 +95,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                 <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
                   <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
                   <s.Name>{dir.name}</s.Name>
-                  <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
+                  <s.IconGroup>
+                    <s.PlusIcon onClick={handlePlusClick}>
+                      <FaPlus size={16} />
+                    </s.PlusIcon>
+                    <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
+                  </s.IconGroup>
                 </s.Item>
                 <s.SubDirectoryList $isExpanded={isExpanded}>
                   {dir.directoryList?.map(sub => (
