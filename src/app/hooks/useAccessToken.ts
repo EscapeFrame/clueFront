@@ -10,22 +10,27 @@ export const useAuth = () => {
   });
 
   const [user, setUser] = useRecoilState(userState);
+  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6IjE1YzJjNTBmLTZlZmQtNDI2Mi05YmYwLWQxZDgzMWFlMzE2ZiIsInVzZXJuYW1lIjoiYWRtaW4yIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTczMjQ1MjQsImV4cCI6MTc1NzY4NDUyNH0.oOSYM3eawdEHa2us6Hclmd0X-YuFdx6ucokS1gFlFI0';
+  const TEST_USER: User = {
+    userId: '2',
+    username: '유근찬',
+    role: 'TEACHER',
+  };
 
   // 로그인시 사용자 정보 및 토큰 세팅
   // const setAuthInfo = (token: string, userInfo: User) => {
-    const setAuthInfo = (token: string, userInfo: User) => {
-      localStorage.setItem('accessToken', token);
-      setAccessToken(token);
-      setUser(userInfo);
+  const setAuthInfo = () => {
+    localStorage.setItem('accessToken', TEST_TOKEN);
+    setAccessToken(TEST_TOKEN);
+    setUser(TEST_USER);
   };
 
   // 로그아웃
   const removeAuthInfo = () => {
     localStorage.removeItem('accessToken');
     setAccessToken(null);
-    setUser({ username: "", userId: "", role: ""});
+    setUser({ username: "", userId: "", role: "" });
   };
-
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -35,10 +40,10 @@ export const useAuth = () => {
         return;
       }
 
-      if (user?.userId) return;
+      if (user) return;
 
       try {
-        const res = await CustomApi.get('/api/user/me');
+        const res = await CustomApi.get('유저 정보');
         const userData = res.data;
         setUser({
           userId: userData.userId,
@@ -50,11 +55,7 @@ export const useAuth = () => {
         removeAuthInfo();
       }
     };
-
     fetchUserInfo();
-  }, [accessToken, user?.userId]);
-
+  }, [accessToken, user]);
   return { accessToken, user, setAuthInfo, removeAuthInfo };
-
-
 };
