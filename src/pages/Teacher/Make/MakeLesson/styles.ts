@@ -22,7 +22,7 @@ export const desc = styled.div`
   ${fonts.P2}
   text-align: center;
   color: ${theme.colors.gray[500]};
-  margin: 0;
+  margin-bottom: 1rem;
   padding: 0;
 `;
 
