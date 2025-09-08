@@ -51,7 +51,8 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     if (newFiles.length) setTempFiles(prev => [...prev, ...newFiles]);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // 버블링 방지
     if (!uploadedFiles.length || !uploadedFiles[0].file) return alert('업로드된 파일이 없습니다.');
     try {
       setIsSubmitting(true);
@@ -63,11 +64,12 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     } catch (err) {
       console.error('과제 제출 실패:', err);
     } finally {
-      setIsSubmitting(false); // 재제출(취소) 처리 후 버튼 비활성 복구
+      setIsSubmitting(false);
     }
   };
 
-  const handleResubmit = async () => {
+  const handleResubmit = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // 버블링 방지
     try {
       setIsResubmitting(true);
       await DeleteAssignment(String(data.id));
@@ -80,6 +82,11 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     } finally {
       setIsResubmitting(false);
     }
+  };
+
+  const handleFileUploadClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 버블링 방지
+    setShowUploadModal(true);
   };
 
   const renderDeadlineOrSubmission = () => {
@@ -135,7 +142,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
             <s.FileItem
               key={file.id}
               onClick={(e) => {
-                e.stopPropagation(); // 파일 클릭시 상세패널 막기
+                e.stopPropagation();
                 if (!isSubmitted) alert(`파일명: ${file.name}\n크기: ${file.size}`);
               }}
             >
@@ -170,7 +177,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
             />
           ) : (
             <>
-              <Button type={0} text="파일 업로드" onClick={() => setShowUploadModal(true)} />
+              <Button type={0} text="파일 업로드" onClick={handleFileUploadClick} />
               <Button type={1} text="과제 제출하기" onClick={handleSubmit} disabled={isSubmitting} />
             </>
           )}
@@ -187,7 +194,6 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
           ]}
         >
           <div>
-            {/* 드래그 앤 드롭 영역 */}
             <s.FileUploadArea
               isDragOver={isDragOver}
               onDragOver={handleDragOver}
@@ -209,7 +215,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
             />
             <s.FileList>
               {tempFiles.length === 0 ? (
-                <p>파일이 없습니다</p>
+                <p>업로드할 파일을 선택해주세요</p>
               ) : (
                 <ul>
                   {tempFiles.map(file => (
@@ -247,7 +253,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
                 ? `제출함 (제출일: ${data.submissionDate ?? '없음'})`
                 : '미제출'}
             </p>
-            {uploadedFiles.length > 0 && (
+            {uploadedFiles.length > 0 ? (
               <>
                 <strong>업로드한 파일 목록:</strong>
                 <ul>
@@ -258,6 +264,8 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
                   ))}
                 </ul>
               </>
+            ) : (
+              <p><strong>업로드된 파일:</strong> 없음</p>
             )}
           </div>
         </SlidePanel>

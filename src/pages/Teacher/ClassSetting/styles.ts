@@ -5,12 +5,12 @@ export const Container = styled.div`
   padding: 2rem 10rem;
 `;
 
-export const ErrorMessage  = styled.input`
+export const ErrorMessage  = styled.div`
   color: ${theme.colors.red};
 `;
 
 export const Icon  = styled.div`
-  size: 24px;
+  font-size: 24px;
   cursor: pointer;
   margin-bottom: 1rem; 
   display: flex;

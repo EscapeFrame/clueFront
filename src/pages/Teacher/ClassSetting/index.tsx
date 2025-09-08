@@ -42,13 +42,13 @@ export default function ClassSetting() {
 
             try {
                 setDataLoading(true);
-                const response = await Customapi.get(`/api/class/${classRoomId}`);
+                const res = await Customapi.get(`/api/class/${classRoomId}`);
 
-                if (response.status !== 200) {
-                    throw new Error(`서버 에러: 상태 코드 ${response.status}`);
+                if (res.status < 200 || res.status >= 300) {
+                    throw new Error(`서버 에러: 상태 코드 ${res.status}`);
                 }
 
-                const classData = response.data;
+                const classData = res.data;
 
                 // target을 grade와 classNum으로 분리 (예: "3-2" -> grade: "3", classNum: "2")
                 const [grade, classNum] = classData.target ? classData.target.split('-') : ['', ''];
@@ -113,7 +113,7 @@ export default function ClassSetting() {
         try {
             const res = await Customapi.patch(`/api/class/${classRoomId}`, dataToSend);
 
-            if (res.status !== 200) {
+            if (res.status < 200 || res.status >= 300) {
                 console.error(`서버 에러: 상태 코드 ${res.status}`);
                 setError('학습실 수정에 실패했습니다. 잠시 후 다시 시도해 주세요.');
                 return;
