@@ -10,14 +10,14 @@ function RegisterPage() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const stuUserNumber = `${grade}${classNum}${stuNumber.padStart(2, '0')}`; // 2자리로 맞춤
     e.preventDefault();
     setLoading(true);
 
     try {
       await Customapi.post('/register', {
-        grade,
-        classNum,
-        stuNumber,
+        
+        classCode: stuUserNumber
       });
 
       // 회원가입 성공 후 메인 페이지로 이동
