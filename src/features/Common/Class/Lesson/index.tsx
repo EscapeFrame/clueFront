@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { FaCircleCheck } from 'react-icons/fa6';
+import { FaCircleCheck, FaPlus } from 'react-icons/fa6';
 import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
-
+import Button from '@/entities/UI/Button';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -78,6 +78,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  const handlePlusClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/class/${classRoomId}/make/lesson`);
+  };
+
   return (
     <s.Container>
       {/* 왼쪽: 강의 디렉토리 */}
@@ -90,7 +95,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                 <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
                   <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
                   <s.Name>{dir.name}</s.Name>
-                  <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
+                  <s.IconGroup>
+                    <s.PlusIcon onClick={handlePlusClick}>
+                      <FaPlus size={16} />
+                    </s.PlusIcon>
+                    <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
+                  </s.IconGroup>
                 </s.Item>
                 <s.SubDirectoryList $isExpanded={isExpanded}>
                   {dir.directoryList?.map(sub => (
@@ -118,6 +128,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         <s.Section>
           <NoticeCard cardTitle="최근 질문" notices={questions} onSelect={item => setSelectedModal({ type: 'question', item })} />
         </s.Section>
+        <Button text="정보수정하기" width = '100%' type={0} onClick={() => navigate(`/class/${classRoomId}/setting`)}/> {/* (선생님)정보 수정 페이지로 이동 */}
       </s.RightPanel>
 
       {/* 모달 */}
