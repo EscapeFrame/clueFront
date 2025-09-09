@@ -22,16 +22,8 @@ export default function App() {
 }
 
 function AuthWrapper() {
-  const { setAuthInfo, removeAuthInfo } = useAuth();
-  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6IjE1YzJjNTBmLTZlZmQtNDI2Mi05YmYwLWQxZDgzMWFlMzE2ZiIsInVzZXJuYW1lIjoiYWRtaW4yIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTczMjQ1MjQsImV4cCI6MTc1NzY4NDUyNH0.oOSYM3eawdEHa2us6Hclmd0X-YuFdx6ucokS1gFlFI0";
-  localStorage.setItem('accessToken', accessToken);
-
-  const user = {
-    userId: '2',
-    username: '유근찬',
-    role: 'TEACHER',
-  };
-
+  const { accessToken, user, setAuthInfo, removeAuthInfo } = useAuth();
+  
   let role = user?.role || null;
   if (role === 'STUDENT') role = 'STU';
   else if (role === 'TEACHER') role = 'TCH';
