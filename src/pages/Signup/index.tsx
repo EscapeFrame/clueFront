@@ -16,6 +16,10 @@ function RegisterPage() {
   const [loadingRegisterInfo, setLoadingRegisterInfo] = useState(true);
   const navigate = useNavigate();
 
+  // 역할 정규화
+  const normalizeRole = (r: string): 'STUDENT' | 'TEACHER' =>
+  r === 'TCH' || r === 'TEACHER' ? 'TEACHER' : 'STUDENT';
+
   useEffect(() => {
     // 첫 로그인일 때 요청
     if (window.location.pathname === '/register') {
@@ -26,7 +30,7 @@ function RegisterPage() {
             username: data.username,
             email: data.email,
             studentId: '',
-            role: data.role,
+            role: normalizeRole(data.role),
           });
           setIsRegistrationMode(true);
         })
@@ -74,13 +78,13 @@ function RegisterPage() {
   if (!isRegistrationMode) {
     alert('이미 등록된 사용자이거나, 잘못된 접근입니다. 메인 페이지로 이동합니다.');
     navigate('/');
-    return;
+    return null;
   }
 
   if (registerData && registerData.role === 'TEACHER') {
     alert('로그인이 완료 되었습니다. 메인페이지로 이동합니다.');
     navigate('/');
-    return true;
+    return null;
   }
 
   return (
