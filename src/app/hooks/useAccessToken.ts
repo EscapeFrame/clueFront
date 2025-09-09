@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CustomApi from '@/shared/config/api';
 import { User } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
@@ -10,12 +10,6 @@ export const useAuth = () => {
   });
 
   const [user, setUser] = useRecoilState(userState);
-  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6IjE1YzJjNTBmLTZlZmQtNDI2Mi05YmYwLWQxZDgzMWFlMzE2ZiIsInVzZXJuYW1lIjoiYWRtaW4yIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTczMjQ1MjQsImV4cCI6MTc1NzY4NDUyNH0.oOSYM3eawdEHa2us6Hclmd0X-YuFdx6ucokS1gFlFI0';
-  const TEST_USER: User = {
-    userId: '2',
-    username: '유근찬',
-    role: 'TEACHER',
-  };
 
   // 로그인시 사용자 정보 및 토큰 세팅
     const setAuthInfo = (token: string, userInfo: User) => {
@@ -25,11 +19,12 @@ export const useAuth = () => {
   };
 
   // 로그아웃
-  const removeAuthInfo = () => {
+  const removeAuthInfo = useCallback(() => {
     localStorage.removeItem('accessToken');
     setAccessToken(null);
     setUser({ username: "", userId: "", role: "" });
-  };
+  }, [setUser]);
+  
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -39,10 +34,10 @@ export const useAuth = () => {
         return;
       }
 
-      if (user) return;
+      if (user?.userId) return;
 
       try {
-        const res = await CustomApi.get('유저 정보');
+        const res = await CustomApi.get('/api/user/me');
         const userData = res.data;
         setUser({
           userId: userData.userId,
@@ -55,6 +50,6 @@ export const useAuth = () => {
       }
     };
     fetchUserInfo();
-  }, [accessToken, user]);
+  }, [accessToken, user, removeAuthInfo, setUser]);
   return { accessToken, user, setAuthInfo, removeAuthInfo };
 };
