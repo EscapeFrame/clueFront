@@ -17,7 +17,7 @@ export default function MyClass() {
     return tabMatch && searchMatch;
   });
 
-  const handleManageClass = (id: string | number) => navigate(`/class/setting/${id}`);
+  const handleManageClass = (id: string | number) => navigate(`/class/${id}/setting`);
   const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
   return (
