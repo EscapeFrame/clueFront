@@ -5,11 +5,11 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const CardContainer = styled.div`
   width: 100%;
-  height: 280px;
+  min-height: 8rem;
   padding: 1rem;
   background: ${theme.colors.white};
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid ${theme.colors.gray[400]};
   display: flex;
   flex-direction: column;
   overflow-y: auto;

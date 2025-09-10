@@ -51,7 +51,8 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     if (newFiles.length) setTempFiles(prev => [...prev, ...newFiles]);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // 버블링 방지
     if (!uploadedFiles.length || !uploadedFiles[0].file) return alert('업로드된 파일이 없습니다.');
     try {
       setIsSubmitting(true);
@@ -68,6 +69,12 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
   };
 
   const handleResubmit = async () => {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResubmit = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // 버블링 방지
     try {
       setIsResubmitting(true);
       await DeleteAssignment(String(data.id));
@@ -194,7 +201,6 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
           ]}
         >
           <div>
-            {/* 드래그 앤 드롭 영역 */}
             <s.FileUploadArea
               isDragOver={isDragOver}
               onDragOver={handleDragOver}
@@ -216,7 +222,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
             />
             <s.FileList>
               {tempFiles.length === 0 ? (
-                <p>파일이 없습니다</p>
+                <p>업로드할 파일을 선택해주세요</p>
               ) : (
                 <ul>
                   {tempFiles.map(file => (
@@ -265,6 +271,8 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
                   ))}
                 </ul>
               </>
+            ) : (
+              <p><strong>업로드된 파일:</strong> 없음</p>
             )}
           </div>
         </SlidePanel>

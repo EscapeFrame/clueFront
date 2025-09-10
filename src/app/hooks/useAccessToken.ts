@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CustomApi from '@/shared/config/api';
 import { User } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
@@ -18,20 +18,19 @@ export const useAuth = () => {
   };
 
   // 로그인시 사용자 정보 및 토큰 세팅
-  // const setAuthInfo = (token: string, userInfo: User) => {
-    const setAuthInfo = () => {
-    localStorage.setItem('accessToken', TEST_TOKEN);
-    setAccessToken(TEST_TOKEN);
-    setUser(TEST_USER);
+    const setAuthInfo = (token: string, userInfo: User) => {
+      localStorage.setItem('accessToken', token);
+      setAccessToken(token);
+      setUser(userInfo);
   };
 
   // 로그아웃
-  const removeAuthInfo = () => {
+  const removeAuthInfo = useCallback(() => {
     localStorage.removeItem('accessToken');
     setAccessToken(null);
-    setUser({ username: "", userId: "", role: ""});
-  };
-
+    setUser({ username: "", userId: "", role: "" });
+  }, [setUser]);
+  
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -56,11 +55,7 @@ export const useAuth = () => {
         removeAuthInfo();
       }
     };
-
     fetchUserInfo();
   }, [accessToken, user?.userId]);
-
   return { accessToken, user, setAuthInfo, removeAuthInfo };
-
-
 };

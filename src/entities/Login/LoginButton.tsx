@@ -24,19 +24,18 @@ function LoginButton() {
 
   const onLogout = async () => {
     try {
-      const res = await Customapi.post("/logout");
-      if (res.status === 200) {
-        localStorage.removeItem("accessToken");
-        removeAuthInfo();
-        setUser({
-          username: '',
-          userId: '',
-          role: '',
-        });
-        window.location.href = "/";
-      }
+      await Customapi.post("/logout");
     } catch (err) {
       console.error("로그아웃 중 오류:", err);
+    } finally {
+      localStorage.removeItem("accessToken");
+      removeAuthInfo();
+      setUser({
+        username: '',
+        userId: '',
+        role: '',
+      });
+      window.location.href = "/";
     }
   };
 

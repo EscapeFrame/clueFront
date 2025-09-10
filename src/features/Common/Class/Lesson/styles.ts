@@ -16,7 +16,7 @@ export const RightPanel = styled.div`
   width: 30%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.5rem;
 `;
 
 export const Section = styled.div`
@@ -106,4 +106,23 @@ export const DeleteIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const IconGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const PlusIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.gray[600]};
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.blue[600]};
+  }
 `;

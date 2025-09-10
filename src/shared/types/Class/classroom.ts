@@ -52,7 +52,7 @@ export interface ClassPost {
 export interface BasicInfoData {
   id?: string;
   subjectCategory: string;
-  period: string;
+  period?: string;
   grade: string;
   classNum: string;
   roomName: string;
