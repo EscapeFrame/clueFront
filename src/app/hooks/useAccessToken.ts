@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CustomApi from '@/shared/config/api';
 import { User } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
@@ -10,45 +10,20 @@ export const useAuth = () => {
   });
 
   const [user, setUser] = useRecoilState(userState);
-
-  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6IjE1YzJjNTBmLTZlZmQtNDI2Mi05YmYwLWQxZDgzMWFlMzE2ZiIsInVzZXJuYW1lIjoiYWRtaW4yIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTczMjAzNDQsImV4cCI6MTc1NzY4MDM0NH0.gNr197eIvaQ_zhFpVBzYOhSocGOQm1RRT0gIoiq3tTA';
-  const TEST_USER: User = {
-    userId: '2',
-    username: '유근찬',
-    role: 'TEACHER',
-  };
-
   // 로그인시 사용자 정보 및 토큰 세팅
-  // const setAuthInfo = (token: string, userInfo: User) => {
-    const setAuthInfo = () => {
-    localStorage.setItem('accessToken', TEST_TOKEN);
-    setAccessToken(TEST_TOKEN);
-    setUser(TEST_USER);
+    const setAuthInfo = (token: string, userInfo: User) => {
+      localStorage.setItem('accessToken', token);
+      setAccessToken(token);
+      setUser(userInfo);
   };
 
   // 로그아웃
-  const removeAuthInfo = () => {
+  const removeAuthInfo = useCallback(() => {
     localStorage.removeItem('accessToken');
     setAccessToken(null);
-    setUser({ username: "", userId: "", role: ""});
-  };
-  // // 사용자 정보 자동 초기화
-  // useEffect(() => {
-  //   // user가 비어있으면 TEST_USER로 초기화
-  //   if (!user.role) {
-  //     setUser(TEST_USER);
-  //     setAccessToken(TEST_TOKEN);
-  //     localStorage.setItem('accessToken', TEST_TOKEN);
-  //   }
-  // }, []);
-  // // }, [user.role, setUser]);
-  // 사용자 정보가 비어있으면 즉시 초기화
-  if (!user.role) {
-    setUser(TEST_USER);
-    setAccessToken(TEST_TOKEN);
-    localStorage.setItem('accessToken', TEST_TOKEN);
-  }
-
+    setUser({ username: "", userId: "", role: "" });
+  }, [setUser]);
+  
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -58,10 +33,10 @@ export const useAuth = () => {
         return;
       }
 
-      if (user.role) return; // role이 있으면 이미 설정됨
+      if (user?.userId) return;
 
       try {
-        const res = await CustomApi.get('유저 정보');
+        const res = await CustomApi.get('/api/user/me');
         const userData = res.data;
         setUser({
           userId: userData.userId,
@@ -73,9 +48,7 @@ export const useAuth = () => {
         removeAuthInfo();
       }
     };
-
     fetchUserInfo();
-  }, [accessToken, user.role, setUser]);
-
+  }, [accessToken, user, removeAuthInfo, setUser]);
   return { accessToken, user, setAuthInfo, removeAuthInfo };
 };
