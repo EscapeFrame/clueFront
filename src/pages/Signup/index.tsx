@@ -94,10 +94,10 @@ function RegisterPage() {
       {registerData && (
         <form onSubmit={handleRegisterSubmit}>
           <div>
-            <label htmlFor="studentId">학번:</label>
+            <label htmlFor="classCode">학번:</label>
             <input
-              id="studentId"
-              name="studentId"
+              id="classCode"
+              name="classCode"
               value={registerData.classCode}
               onChange={handleInputChange}
               required
