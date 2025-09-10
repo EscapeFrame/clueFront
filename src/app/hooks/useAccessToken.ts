@@ -17,13 +17,6 @@ export const useAuth = () => {
     role: 'TEACHER',
   };
 
-  const TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6ImM2YWYyNWVlLTBkYWQtNDJlZS04NWYzLWQ3YjFhZDY4YzEwYyIsInVzZXJuYW1lIjoiYWRtaW4yIiwicm9sZSI6IlRFQUNIRVIiLCJpYXQiOjE3NTcyNTUzNjIsImV4cCI6MTc1NzYxNTM2Mn0.MY0lvMwY_MkIh-yEyqHqhnCQPWo5hoGlRYW2nT6dUjs';
-  const TEST_USER: User = {
-    userId: '2',
-    username: '유근찬',
-    role: 'TEACHER',
-  };
-
   // 로그인시 사용자 정보 및 토큰 세팅
   // const setAuthInfo = (token: string, userInfo: User) => {
     const setAuthInfo = () => {

@@ -7,7 +7,7 @@ import Button from "@/entities/UI/Button";
 import DateInput from "@/entities/UI/InputBox/DateInput";
 import InputBox from "@/entities/UI/InputBox/Input";
 import AttachmentBox from "@/entities/UI/Attachment";
-import { SendMakeTask, attachFile } from "./api";
+import { SendMakeTask, attachFile, attachLink } from "./api";
 import { AssignmentAttachment } from "@/shared/types/Class/Assignment/Attachment";
 import { AssignmentCreateRequest } from '@/shared/types/Class/Assignment/Assignment';
 
@@ -88,13 +88,14 @@ const MakeTask: React.FC = () => {
 
   const handleUploadModalComplete = () => {
     if (!tempFiles.length) return;
-    const newAttachments = tempFiles.map(f => ({
+
+    const newAttachments: Attachment[] = tempFiles.map(f => ({
       type: f.type,
-      value: f.file ? URL.createObjectURL(f.file) : f.url ?? "",
-      originalFileName: f.name,
-      size: f.file?.size,
-      contentType: f.file?.type,
+      name: f.name,
+      url: f.file ? URL.createObjectURL(f.file) : f.url ?? undefined,
+      file: f.file,
     }));
+
     setAttachments(prev => [...prev, ...newAttachments]);
     setTempFiles([]);
     setIsFileModalOpen(false);
@@ -162,8 +163,8 @@ const MakeTask: React.FC = () => {
   const handleMakeTask = async () => {
     if (!classRoomId) return alert("classRoomId가 없습니다.");
 
-    const taskData: Task = {
-      classId: classRoomId!,
+    const taskData: AssignmentCreateRequest = {
+      class_id: classRoomId!,
       title: subject,
       content: description,
       start_date: startDate,
@@ -220,12 +221,10 @@ const MakeTask: React.FC = () => {
       <InputBox label="과제 이름" id="subject" required value={subject} onChange={e => setSubject(e.target.value)} />
       <InputBox label="안내사항" id="description" value={description} onChange={e => setDescription(e.target.value)} />
 
+      {/* UI 상태 업데이트 시에는 mapToDomainAttachment 사용X */}
       <AttachmentBox
-        attachments={mapToUIAttachment(attachments)}
-        setAttachments={ui => {
-          const updated = typeof ui === "function" ? ui(mapToUIAttachment(attachments)) : ui;
-          setAttachments(mapToDomainAttachment(updated));
-        }}
+        attachments={attachments}
+        setAttachments={setAttachments}
         openUploadModal={() => setIsFileModalOpen(true)}
         openLinkModal={platform => { setLinkPlatform(platform); setIsLinkModalOpen(true); }}
       />

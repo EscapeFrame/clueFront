@@ -100,3 +100,10 @@ export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
 `;
+
+export const DeleteIcon = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

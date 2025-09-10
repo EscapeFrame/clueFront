@@ -132,9 +132,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                   <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
                   {/* 선생님일 때만 삭제 아이콘 표시 */}
                   {isTeacher && (
-                    <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
-                      <IoClose size={16} />
-                    </s.DeleteIcon>
+                    <s.DeleteIcon
+                    onClick={(e: React.MouseEvent<HTMLDivElement>) => handleDeleteDirectory(dir.id, e)}
+                  >
+                    <IoClose size={16} />
+                  </s.DeleteIcon>                  
                   )}
                 </s.Item>
                 <s.SubDirectoryList $isExpanded={isExpanded}>
