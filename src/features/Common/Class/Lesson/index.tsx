@@ -34,9 +34,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   // 선생님인지 확인
   const isTeacher = user?.role === 'TEACHER';
-  console.log('Current user:', user);
-  console.log('User role:', user?.role);
-  console.log('Is teacher:', isTeacher);
 
   // 데이터 불러오기
   const fetchData = async () => {
@@ -65,7 +62,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
       const newSet = new Set(prev);
-      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
       return newSet;
     });
   };
@@ -106,8 +107,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         if (success) {
           setRefreshTrigger(prev => prev + 1);
         }
+        else {
+          alert("디렉토리 삭제에 실패했습니다.");
+        }
       } catch (error) {
         console.error("디렉토리 삭제 실패:", error);
+        alert("디렉토리 삭제 중 오류가 발생했습니다.");
       }
     }
   };

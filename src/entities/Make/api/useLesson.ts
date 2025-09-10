@@ -3,7 +3,7 @@ import { DirectoryCreateRequest, DirectoryUpdateRequest } from '@/shared/types/C
 
 
 export interface Directory {
-  id: number;
+  id: string;
   classRoomId: string;
   directoryOrder: number;
   name: string;
@@ -20,21 +20,16 @@ interface DirectoryApiResponse {
 export const fetchDirectories = async (classRoomId: string): Promise<Directory[]> => {
   const res = await Customapi.get(`/api/class/${classRoomId}/all`);
   
-  if (res.status !== 200 || !res.data) {
+  if (res.status < 200 || res.status >= 300 || !res.data) {
     console.error(`수업 디렉토리 조회 실패: ${res.status}`);
-    return [{
-      id: 0,
-      name: '디렉토리가 비었습니다.',
-      classRoomId: classRoomId,
-      directoryOrder: 0,
-    }];
+    return [];
   }
 
   const { directoryList } = res.data as DirectoryApiResponse;
 
   // ✅ directoryList를 Directory[]로 변환
   const convertedList: Directory[] = directoryList.map((d, index) => ({
-    id: d.directoryId,
+    id: String(d.directoryId),
     name: d.directoryName,
     classRoomId: classRoomId,
     directoryOrder: index + 1, // 정렬 순서가 없다면 index로 대체

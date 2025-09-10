@@ -40,7 +40,7 @@ export const Item = styled.div<{ $isRead: boolean }>`
   cursor: pointer;
   gap: 0.5rem;
   position: relative;
-  padding-right: 3rem; // 삭제 아이콘을 위한 공간
+  padding-right: 3rem;
 `;
 
 export const SubItem = styled.div<{ $isRead: boolean }>`
