@@ -37,3 +37,17 @@ export const Description = styled.div`
   color: ${theme.colors.gray[500]};
   margin-top: 4px;
 `;
+
+export const ModalWarning = styled.strong`
+  color: ${theme.colors.red};
+  ${fonts.P2}
+`;
+
+export const ErrorMessage = styled.div`
+  border: 1px solid ${theme.colors.gray[500]};
+  color: ${theme.colors.red};
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  ${fonts.P2}
+  margin-top: 1rem;
+`;

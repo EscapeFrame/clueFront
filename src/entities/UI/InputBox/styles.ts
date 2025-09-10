@@ -15,7 +15,7 @@ export const Label = styled.label`
 
 export const Select = styled.select`
   padding: 10px 12px;
-  border: 1px solid ${theme.colors.gray[200]};
+  border: 1px solid ${theme.colors.gray[400]};
   border-radius: 6px;
   ${fonts.P2}
   outline: none;
@@ -28,7 +28,7 @@ export const Select = styled.select`
 
 export const Input = styled.input`
   padding: 10px 12px;
-  border: 1px solid ${theme.colors.gray[200]};
+  border: 1px solid ${theme.colors.gray[400]};
   border-radius: 6px;
   ${fonts.P2}
   width: 97%;

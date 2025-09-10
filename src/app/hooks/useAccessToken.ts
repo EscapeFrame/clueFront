@@ -10,6 +10,7 @@ export const useAuth = () => {
   });
 
   const [user, setUser] = useRecoilState(userState);
+  
   // 로그인시 사용자 정보 및 토큰 세팅
     const setAuthInfo = (token: string, userInfo: User) => {
       localStorage.setItem('accessToken', token);
