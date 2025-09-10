@@ -10,6 +10,20 @@ export const Container = styled.div`
   padding: 0 8rem;
   overflow: hidden;
   width: 100%;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    padding: 4rem 2rem;
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem 0.5rem;
+  }
 `;
 
 export const LeftSection = styled.div`
