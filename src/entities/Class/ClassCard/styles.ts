@@ -17,6 +17,12 @@ export const Card = styled.div`
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
+  @media (max-width: 600px) {
+    height: auto;
+    padding: 0.75rem;
+    border-radius: 10px;
+    min-height: 120px;
+  }
 `;
 
 export const Title = styled.h3`
@@ -24,6 +30,9 @@ export const Title = styled.h3`
   font-weight: 600;
   margin: 0;
   padding: 0;
+  @media (max-width: 600px) {
+    ${fonts.P2};
+  }
 `;
 
 export const Description = styled.div`
@@ -33,6 +42,10 @@ export const Description = styled.div`
   margin: 0;
   padding: 0;
   justify-content: space-between;
+  @media (max-width: 600px) {
+    justify-content: flex-start;
+    gap: 10px;
+  }
 `;
 
 export const GoToLink = styled.button`
@@ -46,5 +59,10 @@ export const GoToLink = styled.button`
 
   &:hover {
     color: ${theme.colors.blue[700]};
+  }
+
+  @media (max-width: 600px) {
+    ${fonts.P1}
+    align-self: flex-start;
   }
 `;
