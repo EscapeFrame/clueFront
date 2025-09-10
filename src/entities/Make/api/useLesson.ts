@@ -28,6 +28,6 @@ export const updateDirectory = async ( request: DirectoryUpdateRequest): Promise
 
 // 디렉토리 삭제
 export const deleteDirectory = async (dirId: string): Promise<Directory> => {
-  const res = await Customapi.delete(`/api/directory`);
+  const res = await Customapi.delete(`/api/directory/${dirId}`);
   return res.data;
 };

@@ -19,24 +19,6 @@ interface Attachment {
   file?: File;
 }
 
-// 서버 -> UI 변환
-const mapToUIAttachment = (items: AssignmentAttachment[]): Attachment[] =>
-  items.map(item => ({
-    type: item.type as "file" | "link", // 타입 단언
-    name: item.originalFileName ?? "이름 없음",
-    url: item.type === "link" ? item.value : undefined,
-  }));
-
-// UI -> 서버 변환
-const mapToDomainAttachment = (items: Attachment[]): AssignmentAttachment[] =>
-  items.map(item => ({
-    type: item.type,
-    value: item.type === "link" ? item.url ?? "" : "",
-    originalFileName: item.name,
-    size: item.file?.size,
-    contentType: item.file?.type,
-  }));
-
 const MakeTask: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId?: string }>();
   const navigate = useNavigate();

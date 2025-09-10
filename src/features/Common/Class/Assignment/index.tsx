@@ -10,19 +10,20 @@ export const AssignmentComponent: React.FC = () => {
   const effectiveId = classId ?? classRoomId;
   const [assignmentList, setAssignmentList] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   // 컴포넌트 마운트 시(또는 effectiveId가 바뀔 때) 과제 목록 API 호출
   useEffect(() => {
-    if (!effectiveId) return;
+    if (!effectiveId) {
+      setLoading(false);
+      setAssignmentList([]);
+      return;
+    }
 
     setLoading(true);
     AssignmentsApi.getAll(effectiveId)
       .then((data) => {
-        // API에서 받은 AssignmentResponse[]를 Assignment[]로 강제 변환
-        // 실제로는 매핑 로직을 넣는 게 안전하지만 지금은 타입 단언으로 처리..
-        setAssignments(data as unknown as Assignment[]);
+        setAssignmentList(data as unknown as Assignment[]);
         setError(null);
       })
       .catch((err) => {
@@ -35,13 +36,14 @@ export const AssignmentComponent: React.FC = () => {
   }, [effectiveId]);
 
   // 특정 과제 수정 함수
-  const updateAssignment = (id: string|number, changes: Partial<Assignment>) => {
+  const updateAssignment = (id: string | number, changes: Partial<Assignment>) => {
     setAssignmentList(prev =>
       prev.map(a => (a.id === id ? { ...a, ...changes } : a))
     );
   };
 
   if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <s.Container>

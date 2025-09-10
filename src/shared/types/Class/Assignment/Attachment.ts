@@ -9,7 +9,7 @@ export interface AssignmentAttachment {
 
 // 과제 파일 타입 (다운로드 등 용도)
 export interface AssignmentFileType {
-  fileId: string | string;
+  fileId: string;
   fileName: string;
   fileSize: number;
 }

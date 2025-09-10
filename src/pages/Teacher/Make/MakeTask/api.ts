@@ -47,24 +47,24 @@ export async function attachFile(assignmentId: string, attachments: Attachment[]
         // 파일과 링크 분리
         const files = attachments.filter(att => att.type === "file" && att.file);
         const links = attachments.filter(att => att.type === "link" && att.url);
-        
+
         // 파일 업로드
         for (const fileAtt of files) { //여러개가 들어와도 처리
             if (fileAtt.file) {
                 const formData = new FormData();
                 formData.append('file', fileAtt.file);
                 formData.append('name', fileAtt.name);
-                
+
                 await Customapi.post(`/api/assignments/${assignmentId}/files`, formData);
             }
         }
-        
+
         if (links.length > 0) {
             await Customapi.post(`/api/assignments/${assignmentId}/links`, {
                 links: links.map(link => ({ name: link.name, url: link.url })) // 여러개가 들어와도 처리
             });
         }
-        
+
         return true;
     } catch (error) {
         console.error('첨부파일 업로드 실패:', error);
@@ -73,8 +73,9 @@ export async function attachFile(assignmentId: string, attachments: Attachment[]
 }
 
 export const attachLink = async (assignmentId: string, link: string) => {
-
-    await Customapi.post(`/api/assignments/${assignmentId}/link`,{
-        url: link
-    })
+    await Customapi.post(
+        `/api/assignments/${assignmentId}/links`,
+        { links: [{ name: link, url: link }] },
+        { headers: { 'Content-Type': 'application/json' } }
+    );
 };
