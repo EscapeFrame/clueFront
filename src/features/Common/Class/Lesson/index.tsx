@@ -13,11 +13,10 @@ import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/shared/model/userState';
-import Button from '@/entities/UI/Button';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useRecoilState(userState);
+  const [user] = useRecoilState(userState);
 
   // 상태 관리
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -173,7 +172,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         <s.Section>
           <NoticeCard cardTitle="최근 질문" notices={questions} onSelect={item => setSelectedModal({ type: 'question', item })} />
         </s.Section>
-        <Button text="정보수정하기" width = '100%' type={0} onClick={() => navigate(`/class/${classRoomId}/setting`)}/> {/* (선생님)정보 수정 페이지로 이동 */}
       </s.RightPanel>
 
       {/* 모달 */}
