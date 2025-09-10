@@ -6,7 +6,7 @@ import Customapi from '@/shared/config/api';
 interface RegisterData {
   username: string;
   email: string;
-  studentId: string;
+  classCode: string;
   role: string;
 }
 
@@ -29,7 +29,7 @@ function RegisterPage() {
           setRegisterData({
             username: data.username,
             email: data.email,
-            studentId: '',
+            classCode: '',
             role: normalizeRole(data.role),
           });
           setIsRegistrationMode(true);
@@ -53,7 +53,7 @@ function RegisterPage() {
     try {
       const payload = {
         ...registerData,
-        studentId: Number(registerData.studentId),
+        classCode: registerData.classCode.trim(),
       };
       await Customapi.post('/register', payload);
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
@@ -67,7 +67,7 @@ function RegisterPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (registerData) {
-      setRegisterData({ ...registerData, studentId: value });
+      setRegisterData({ ...registerData, classCode: value });
     }
   };
 
@@ -94,11 +94,11 @@ function RegisterPage() {
       {registerData && (
         <form onSubmit={handleRegisterSubmit}>
           <div>
-            <label htmlFor="studentId">학번:</label>
+            <label htmlFor="classCode">학번:</label>
             <input
-              id="studentId"
-              name="studentId"
-              value={registerData.studentId}
+              id="classCode"
+              name="classCode"
+              value={registerData.classCode}
               onChange={handleInputChange}
               required
             />
