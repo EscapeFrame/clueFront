@@ -19,6 +19,14 @@ interface Attachment {
   file?: File;
 }
 
+// UI 상태 변환용 함수 (TypeScript 오류 방지용)
+const mapToUIAttachment = (items: Attachment[]) =>
+  items.map(item => ({
+    type: item.type,
+    name: item.name,
+    url: item.url,
+  }));
+
 const MakeTask: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId?: string }>();
   const navigate = useNavigate();
@@ -206,11 +214,8 @@ const MakeTask: React.FC = () => {
       <AttachmentBox
         attachments={attachments}
         setAttachments={setAttachments}
-        attachments={mapToUIAttachment(attachments)}
-        setAttachments={ui => {
-          const updated = typeof ui === "function" ? ui(mapToUIAttachment(attachments)) : ui;
-          setAttachments(mapToDomainAttachment(updated));
-        }}
+        openUploadModal={() => setIsFileModalOpen(true)}
+        openLinkModal={platform => { setLinkPlatform(platform); setIsLinkModalOpen(true); }}
       />
 
       <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />

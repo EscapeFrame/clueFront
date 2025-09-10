@@ -13,6 +13,7 @@ import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/shared/model/userState';
+import Button from '@/entities/UI/Button';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();

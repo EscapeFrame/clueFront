@@ -126,10 +126,3 @@ export const PlusIcon = styled.div`
     color: ${({ theme }) => theme.colors.blue[600]};
   }
 `;
-
-export const DeleteIcon = styled.div`
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;

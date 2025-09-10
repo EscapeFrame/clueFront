@@ -68,11 +68,6 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     }
   };
 
-  const handleResubmit = async () => {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleResubmit = async (e: React.MouseEvent) => {
     e.stopPropagation(); // 버블링 방지
     try {
@@ -271,9 +266,9 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
                   ))}
                 </ul>
               </>
-            ) : (
+            )} : (
               <p><strong>업로드된 파일:</strong> 없음</p>
-            )}
+            )
           </div>
         </SlidePanel>
       )}
