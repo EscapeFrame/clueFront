@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { Login } from '@/pages/Login/index';
+import {Login} from '@/pages/Login/index';
 import RegisterPage from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
 import Setting from '@/pages/Common/Setting/Setting';
@@ -18,7 +18,6 @@ import TCHMakeScorecard from '@/pages/Teacher/Make/MakeScorecard';
 import TCHMarkDown from '@/pages/Teacher/Make/MarkDownEditor';
 import TCHClass from '@/pages/Teacher/Class';
 import TCHMakeLesson from '@/pages/Teacher/Make/MakeLesson';
-import TCHClassSetting from '@/pages/Teacher/ClassSetting';
 
 interface AppRoutesProps {
   role: string | null;
@@ -50,7 +49,6 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path='/class/make/score' element={<TCHMakeScorecard />} />
           <Route path='/class/make/markdown' element={<TCHMarkDown />} />
           <Route path='/class/:classRoomId/make/lesson' element={<TCHMakeLesson />} />
-          <Route path='/class/:classRoomId/setting' element={<TCHClassSetting />} />
         </>
       )}
       {role === 'STU' && (
@@ -65,7 +63,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
         <>
           <Route path='/login' element={<Login />} />
           <Route path='/setting' element={<Setting />} />
-          <Route path='/setting/user' element={<p>정보 수정 페이지</p>} />
+          <Route path='setting/user' element={<p>정보 수정 페이지</p>} />
         </>
       )}
 
