@@ -21,7 +21,7 @@ export default function TaskGuide(): React.ReactNode {
         }
         
         setPosts(
-          data.sort((a, b) => dayjs(a.dueDate).diff(today, 'day') - dayjs(b.dueDate).diff(today, 'day'))
+          data.sort((a, b) => dayjs(a.endDate).diff(today, 'day') - dayjs(b.endDate).diff(today, 'day'))
         );
       } catch (error) {
         console.error('수행평가 조회실패: ', error);
@@ -38,12 +38,11 @@ export default function TaskGuide(): React.ReactNode {
       <s.Explain>간편하게 수행평가를 확인하세요!</s.Explain>
       <s.CardContainer>
         {posts.map((post, index) => {
-          const remainingDays = dayjs(post.dueDate).diff(today, 'day');
+          const remainingDays = dayjs(post.endDate).diff(today, 'day');
           return (
             <DdayCard
               key={index}
               dDay={remainingDays}
-              content={post.body}
               url={post.available ? post.link : ''}
               title={post.title}
             />

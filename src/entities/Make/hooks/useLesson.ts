@@ -32,9 +32,11 @@ export const useDirectories = (classRoomId: string) => {
       );
       setDirectories(sorted);
       setSelectedDir((prev) =>
-        prev != null && sorted.some((d) => d.id === prev)
+        prev != null && sorted.some((d) => Number(d.id) === prev)
           ? prev
-          : sorted[0]?.id ?? null,
+          : sorted[0]?.id !== undefined && sorted[0]?.id !== null
+            ? Number(sorted[0].id)
+            : null,
       );
     } catch {
       if (seq === loadSeq.current)
@@ -90,7 +92,7 @@ export const useDirectories = (classRoomId: string) => {
     
     setError(null);
     try {
-      const targetDir = directories.find(dir => dir.id === dirId);
+      const targetDir = directories.find(dir => Number(dir.id) === dirId);
       if (!targetDir) return;
       
       const request: DirectoryUpdateRequest = {
