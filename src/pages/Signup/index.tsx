@@ -12,7 +12,6 @@ interface RegisterData {
 
 function RegisterPage() {
   const [registerData, setRegisterData] = useState<RegisterData | null>(null);
-  const [isRegistrationMode, setIsRegistrationMode] = useState(false);
   const [loadingRegisterInfo, setLoadingRegisterInfo] = useState(true);
   const navigate = useNavigate();
 
@@ -32,11 +31,7 @@ function RegisterPage() {
             classCode: '',
             role: normalizeRole(data.role),
           });
-          setIsRegistrationMode(true);
-        })
-        .catch(() => {
-          setIsRegistrationMode(false);
-          // 첫 로그인이 아니면 메인으로 이동
+          console.log("data:",data);
         })
         .finally(() => setLoadingRegisterInfo(false));
     } else {
@@ -47,15 +42,17 @@ function RegisterPage() {
   //신규 사용자의 폼
   const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('registerData:', registerData);
     // 데이터가 없으면 리턴
     if (!registerData) return;
+
 
     try {
       const payload = {
         ...registerData,
         classCode: registerData.classCode.trim(),
       };
-      await Customapi.post('/register', payload);
+      await Customapi.post('/register', JSON.stringify(payload));
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
       navigate('/');
     } catch (err) {
@@ -73,12 +70,6 @@ function RegisterPage() {
 
   if (loadingRegisterInfo) {
     return <div>정보를 불러오는 중...</div>;
-  }
-
-  if (!isRegistrationMode) {
-    alert('이미 등록된 사용자이거나, 잘못된 접근입니다. 메인 페이지로 이동합니다.');
-    navigate('/');
-    return null;
   }
 
   if (registerData && registerData.role === 'TEACHER') {
