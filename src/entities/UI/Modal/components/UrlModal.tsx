@@ -25,9 +25,12 @@ const UrlModal: React.FC<ModalProps> = ({
           {children}
           <s.StyledInput
             type="url"
+            inputMode='url'
+            autoFocus
             placeholder={placeholder}
             value={inputValue || ''}  // 외부 상태 사용
             onChange={onInputChange}  // 외부 핸들러 사용
+            aria-label="URL 입력"
           />
         </s.Content>
 
