@@ -6,7 +6,7 @@ import {
 } from "@/entities/Make/api/useLesson";
 import { DirectoryCreateRequest } from "@/shared/types/Class/directory";
 
-export const useDirectories = (classRoomId: number) => {
+export const useDirectories = (classRoomId: string) => {
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [selectedDir, setSelectedDir] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);

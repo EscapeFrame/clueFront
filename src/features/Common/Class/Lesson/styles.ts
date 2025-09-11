@@ -101,6 +101,13 @@ export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
   flex-direction: column;
 `;
 
+export const DeleteIcon = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const IconGroup = styled.div`
   display: flex;
   align-items: center;

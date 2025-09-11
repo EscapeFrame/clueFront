@@ -1,5 +1,5 @@
 import Customapi from '@/shared/config/api';
-import { Assignment } from '@/shared/types/Class/Assignment/assignmentAttachment'
+import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
 import { Exam } from '@/shared/types/Class/Exam';
 import { NewsItem, QuestionItem } from '@/shared/types/Class/Lesson';
 
@@ -13,6 +13,7 @@ interface DirectoryApiResponse {
 
 // 과제 목록 조회
 export const AssignmentsApi = async (classId: string): Promise<Assignment[]> => {
+
   const res = await Customapi.get(`/api/assignments/${classId}/all`);
 
   if (res.status < 200 || res.status >= 300) {
@@ -35,17 +36,23 @@ export const ExamApi = async (examNumber: string): Promise<Exam[]> => {
 
 // 수업 디렉토리 조회(없음)
 export const getLessonDirectories = async (classRoomId: string): Promise<DirectoryApiResponse> => {
-  try {
-    const res = await Customapi.get<DirectoryApiResponse>(`/api/class/${classRoomId}/all`);
-    if (res.status < 200 || res.status >= 300) {
-      console.error(`수업 디렉토리 조회 실패: ${res.status}`);
-      return { directoryList: [] };
-    }
-    return res.data ?? { directoryList: [] };
-  } catch (e) {
-    console.error('수업 디렉토리 조회 실패:', e);
+  const res = await Customapi.get(`/api/class/${classRoomId}/all`);
+  if (res.status < 200 || res.status >= 300) {
+    console.error(`수업 디렉토리 조회 실패: ${res.status}`);
     return { directoryList: [] };
   }
+  console.log(res.data);
+  if(!res.data) {
+    return {
+      directoryList: [
+        {
+          directoryId: 0,
+          directoryName: '디렉토리가 비었습니다.',
+        },
+      ],
+    };;
+  }
+  return res.data;
 };
 
 // 새소식 조회(없음)

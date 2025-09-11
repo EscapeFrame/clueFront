@@ -1,12 +1,17 @@
-import { useState } from 'react';
 import { ModalProps } from '@/shared/types/modal';
 import { renderButtons } from '../index';
 import * as s from '../styles';
 
 const InputModal: React.FC<ModalProps> = ({
-  title, children, onClose, isWarning, buttons, placeholder,
+  title, 
+  children, 
+  onClose, 
+  isWarning, 
+  buttons, 
+  placeholder,
+  inputValue,      // 외부에서 전달받은 값 사용
+  onInputChange,   // 외부에서 전달받은 핸들러 사용
 }) => {
-  const [inputValue, setInputValue] = useState('');
 
   return (
     <s.Overlay>
@@ -21,8 +26,8 @@ const InputModal: React.FC<ModalProps> = ({
           <s.StyledInput
             type="text"
             placeholder={placeholder}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={inputValue || ''}  // 외부 상태 사용
+            onChange={onInputChange}  // 외부 핸들러 사용
           />
         </s.Content>
 
