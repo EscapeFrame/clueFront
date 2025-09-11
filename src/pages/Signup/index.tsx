@@ -52,7 +52,7 @@ function RegisterPage() {
         ...registerData,
         classCode: registerData.classCode.trim(),
       };
-      await Customapi.post('/register', JSON.stringify(payload));
+      await Customapi.post('/register', payload);
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
       navigate('/');
     } catch (err) {
