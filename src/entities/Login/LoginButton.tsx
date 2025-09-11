@@ -3,6 +3,7 @@ import { userState } from '@/shared/model/userState';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { Container, LoginButtonStyled, LogoutButtonStyled } from './Button.styles';
+import googleLogo from '../../../public/google.png';
 import Customapi from '@/shared/config/api';
 
 function LoginButton() {
@@ -43,6 +44,7 @@ function LoginButton() {
     <Container>
       {!accessToken ? (
         <LoginButtonStyled onClick={onGoogleLogin}>
+          <img src={googleLogo} alt="google logo" />
           Google 로그인
         </LoginButtonStyled>
       ) : (
