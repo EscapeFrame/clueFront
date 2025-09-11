@@ -2,6 +2,7 @@ import CustomApi from "@/shared/config/api";
 import { PendingTaskItem } from '@/shared/types/task';
 
 const normalizeDate = (dateStr: string): string => {
+  if (!dateStr) return dateStr;
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) {
     console.warn('date:', dateStr);
@@ -23,9 +24,10 @@ export const pendingTasksApi = {
 
       const normalizedData = res.data.map((task: PendingTaskItem) => ({
         ...task,
-        dueDate: normalizeDate(task.dueDate),
+        dueDate: normalizeDate(task.endDate),
       }));
 
+      console.log('Normalized pending tasks:', normalizedData);
       return normalizedData;
     } catch (error) {
       console.error('미제출 과제 조회 실패:', error);
@@ -40,9 +42,9 @@ export const pendingTasksApi = {
 
       const normalizedData = res.data.map((task: PendingTaskItem) => ({
         ...task,
-        dueDate: normalizeDate(task.dueDate),
+        dueDate: normalizeDate(task.endDate),
       }));
-
+      console.log('Normalized all tasks:', normalizedData);
       return normalizedData;
     } catch (error) {
       console.error('전체 과제 조회 실패:', error);

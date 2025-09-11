@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as s from './styles';
-import { ExamApi } from '../api';
+import { ExamApi } from '../useExam';
 import { Exam } from '@/shared/types/Class/Exam';
 
 export const ExamComponent: React.FC = () => {

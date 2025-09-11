@@ -1,4 +1,4 @@
-import {AssignmentAttachment } from '../Assignment/assignmentAttachment';
+import {AssignmentAttachment } from './Attachment';
 
 // 과제 전체•단일 조회
 export interface AssignmentResponse {
@@ -13,7 +13,7 @@ export interface AssignmentResponse {
 
 // 과제 만들기
 export interface AssignmentCreateRequest {
-  class_id: number;
+  class_id: string;
   content: string;
   end_date: string;
   start_date: string;

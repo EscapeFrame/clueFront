@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as s from './styles';
 import { LuClock4 } from 'react-icons/lu';
 import { FaRegFile, FaXmark } from 'react-icons/fa6';
-import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/Assignment/assignmentAttachment';
+import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/Assignment/Attachment';
 import { differenceInDays, parseISO } from 'date-fns';
 import Button from '@/entities/UI/Button';
 import { Modal } from '@/entities/UI/Modal';
@@ -64,7 +64,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     } catch (err) {
       console.error('과제 제출 실패:', err);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // 재제출(취소) 처리 후 버튼 비활성 복구
     }
   };
 
@@ -84,25 +84,27 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     }
   };
 
-  const handleFileUploadClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 버블링 방지
-    setShowUploadModal(true);
-  };
-
   const renderDeadlineOrSubmission = () => {
-    if (isSubmitted)
-      return (
-        <s.InfoItem>
-          <LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}
-        </s.InfoItem>
-      );
-    const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
+      if (isSubmitted)
     return (
       <s.InfoItem>
-        <LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일
+        <LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}
       </s.InfoItem>
     );
-  };
+  if (!data.deadline) {
+    return (
+      <s.InfoItem>
+        <LuClock4 /> 마감일 정보 없음
+      </s.InfoItem>
+    );
+  }
+  const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
+  return (
+    <s.InfoItem>
+      <LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일
+    </s.InfoItem>
+  );
+  }
 
   // 파일 업로드 모달 닫기
   const handleUploadModalClose = () => {
@@ -142,7 +144,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
             <s.FileItem
               key={file.id}
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation(); // 파일 클릭시 상세패널 막기
                 if (!isSubmitted) alert(`파일명: ${file.name}\n크기: ${file.size}`);
               }}
             >
@@ -177,7 +179,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
             />
           ) : (
             <>
-              <Button type={0} text="파일 업로드" onClick={handleFileUploadClick} />
+              <Button type={0} text="파일 업로드" onClick={() => setShowUploadModal(true)} />
               <Button type={1} text="과제 제출하기" onClick={handleSubmit} disabled={isSubmitting} />
             </>
           )}
@@ -253,7 +255,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
                 ? `제출함 (제출일: ${data.submissionDate ?? '없음'})`
                 : '미제출'}
             </p>
-            {uploadedFiles.length > 0 ? (
+            {uploadedFiles.length > 0 && (
               <>
                 <strong>업로드한 파일 목록:</strong>
                 <ul>
@@ -264,9 +266,9 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
                   ))}
                 </ul>
               </>
-            ) : (
+            )} : (
               <p><strong>업로드된 파일:</strong> 없음</p>
-            )}
+            )
           </div>
         </SlidePanel>
       )}

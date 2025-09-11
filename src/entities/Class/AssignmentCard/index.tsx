@@ -6,7 +6,7 @@ import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
 import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import Button from '@/entities/UI/Button';
-import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/Assignment/assignmentAttachment';
+import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/Assignment/Attachment';
 import { differenceInDays, parseISO } from 'date-fns';
 import { MdOutlineFileUpload } from "react-icons/md";
 import { SubmitAssignment, DeleteAssignment } from '../api';
@@ -96,7 +96,7 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     }
   };
 
-  const handleResubmit = async() => {
+  const handleResubmit = async () => {
     // setIsSubmitted(false);
     // updateAssignment(data.id,{ isSubmitted: true });
     // DeleteAssignment(String(data.id)).catch(console.error)
@@ -117,8 +117,23 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     if (isSubmitted) {
       return <s.InfoItem><LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}</s.InfoItem>;
     }
-    const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
-    return <s.InfoItem><LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일</s.InfoItem>;
+
+    if (!data.deadline || typeof data.deadline !== "string" || data.deadline.trim() === "") {
+      return <s.InfoItem><LuClock4 /> 마감일 정보 없음</s.InfoItem>;
+    }
+
+    try {
+      const parsed = parseISO(data.deadline);
+      if (isNaN(parsed.getTime())) {
+        return <s.InfoItem><LuClock4 /> 마감일 정보 오류</s.InfoItem>;
+      }
+
+      const daysLeft = differenceInDays(parsed, new Date());
+      return <s.InfoItem><LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일</s.InfoItem>;
+    } catch (e) {
+      console.error("Invalid deadline:", data.deadline, e);
+      return <s.InfoItem><LuClock4 /> 마감일 정보 오류</s.InfoItem>;
+    }
   };
 
   return (

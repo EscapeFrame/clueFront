@@ -39,3 +39,12 @@ export const Label = styled.label`
   display: block;
   margin-bottom: 8px;
 `;
+
+export const FileUploadArea = styled.div<{ isDragOver?: boolean }>`
+  border: 2px dashed ${props => (props.isDragOver ? "#4a90e2" : "#ccc")};
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+`;
