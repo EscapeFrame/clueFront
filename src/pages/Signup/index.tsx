@@ -39,6 +39,23 @@ function RegisterPage() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    // 메타 태그 생성 및 추가
+    const metaTag = document.createElement('meta');
+    metaTag.name = "referrer";
+    metaTag.content = "no-referrer-when-downgrade";
+    metaTag.id = "referrer-meta-tag"; // 제거를 위한 ID
+    document.head.appendChild(metaTag);
+
+    // 컴포넌트 언마운트 시 메타 태그 제거
+    return () => {
+      const tag = document.getElementById("referrer-meta-tag");
+      if (tag) {
+        document.head.removeChild(tag);
+      }
+    };
+  }, []); // 빈 배열로 마운트/언마운트 시 한 번만 실행
+
   //신규 사용자의 폼
   const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,6 +96,7 @@ function RegisterPage() {
   }
 
   return (
+    
     // 디자인 나오기 전 임시
     <div>
       <h2>추가 정보 입력</h2>
