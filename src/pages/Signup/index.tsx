@@ -89,46 +89,46 @@ function RegisterPage() {
     // 디자인 나오기 전 임시
     <s.Container>
       <s.Tittle>정보를 입력해주세요</s.Tittle>
-      {/* {registerData && ( */}
-      <s.Form onSubmit={handleRegisterSubmit}>
-        <s.InputGroup>
-          <label htmlFor="grade">학년:</label>
-          <input
-            id="grade"
-            name="grade"
-            value={studentInfo.grade}
-            placeholder='학년을 입력해주세요.'
-            onChange={handleStudentInfoChange}
-            required
-          />
-        </s.InputGroup>
-        <s.InputGroup>
-          <label htmlFor="classNum">반:</label>
-          <input
-            id="classNum"
-            name="classNum"
-            value={studentInfo.classNum}
-            placeholder='반을 입력해주세요.'
-            onChange={handleStudentInfoChange}
-            required
-          />
-        </s.InputGroup>
-        <s.InputGroup>
-          <label htmlFor="studentNum">번호:</label>
-          <input
-            id="studentNum"
-            name="studentNum"
-            value={studentInfo.studentNum}
-            placeholder='번호를 입력해주세요.'
-            onChange={handleStudentInfoChange}
-            required
-          />
-        </s.InputGroup>
-        <s.SubmitButton type="submit">
-          회원가입 완료
-        </s.SubmitButton>
-      </s.Form>
-      {/* )} */}
+      {registerData && (
+        <s.Form onSubmit={handleRegisterSubmit}>
+          <s.InputGroup>
+            <label htmlFor="grade">학년:</label>
+            <input
+              id="grade"
+              name="grade"
+              value={studentInfo.grade}
+              placeholder='학년을 입력해주세요.'
+              onChange={handleStudentInfoChange}
+              required
+            />
+          </s.InputGroup>
+          <s.InputGroup>
+            <label htmlFor="classNum">반:</label>
+            <input
+              id="classNum"
+              name="classNum"
+              value={studentInfo.classNum}
+              placeholder='반을 입력해주세요.'
+              onChange={handleStudentInfoChange}
+              required
+            />
+          </s.InputGroup>
+          <s.InputGroup>
+            <label htmlFor="studentNum">번호:</label>
+            <input
+              id="studentNum"
+              name="studentNum"
+              value={studentInfo.studentNum}
+              placeholder='번호를 입력해주세요.'
+              onChange={handleStudentInfoChange}
+              required
+            />
+          </s.InputGroup>
+          <s.SubmitButton type="submit">
+            회원가입 완료
+          </s.SubmitButton>
+        </s.Form>
+      )}
     </s.Container>
   );
 }
