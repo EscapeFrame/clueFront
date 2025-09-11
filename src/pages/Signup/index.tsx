@@ -13,11 +13,8 @@ interface RegisterData {
 function RegisterPage() {
   const [registerData, setRegisterData] = useState<RegisterData | null>(null);
   const [loadingRegisterInfo, setLoadingRegisterInfo] = useState(true);
+  const [studentInfo, setStudentInfo] = useState({ grade: '', classNum: '', studentNum: '' });
   const navigate = useNavigate();
-
-  // 역할 정규화
-  const normalizeRole = (r: string): 'STUDENT' | 'TEACHER' =>
-  r === 'TCH' || r === 'TEACHER' ? 'TEACHER' : 'STUDENT';
 
   useEffect(() => {
     // 첫 로그인일 때 요청
@@ -29,7 +26,7 @@ function RegisterPage() {
             username: data.username,
             email: data.email,
             classCode: '',
-            role: normalizeRole(data.role),
+            role: data.role,
           });
           console.log("data:",data);
         })
@@ -39,6 +36,11 @@ function RegisterPage() {
     }
   }, [navigate]);
 
+  const handleStudentInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setStudentInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
   //신규 사용자의 폼
   const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,11 +48,18 @@ function RegisterPage() {
     // 데이터가 없으면 리턴
     if (!registerData) return;
 
+    const { grade, classNum, studentNum } = studentInfo;
+
+    if (!grade || !classNum || !studentNum) {
+      alert('학년, 반, 번호를 모두 입력해주세요.');
+      return;
+    }
 
     try {
+      const classCode = `${grade}${classNum}${studentNum.padStart(2, '0')}`;
       const payload = {
         ...registerData,
-        classCode: registerData.classCode.trim(),
+        classCode: classCode,
       };
       await Customapi.post('/register', payload);
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
@@ -58,13 +67,6 @@ function RegisterPage() {
     } catch (err) {
       console.error('회원가입 실패:', err);
       alert('회원가입 중 오류가 발생했습니다.');
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value  = e.target.value;
-    if (registerData) {
-      setRegisterData({ ...registerData, classCode: value });
     }
   };
 
@@ -82,16 +84,36 @@ function RegisterPage() {
 
     // 디자인 나오기 전 임시
     <div>
-      <h2>추가 정보 입력</h2>
+      <h2>정보를 입력해주세요</h2>
       {registerData && (
         <form onSubmit={handleRegisterSubmit}>
           <div>
-            <label htmlFor="classCode">학번:</label>
+            <label htmlFor="grade">학년:</label>
             <input
-              id="classCode"
-              name="classCode"
-              value={registerData.classCode}
-              onChange={handleInputChange}
+              id="grade"
+              name="grade"
+              value={studentInfo.grade}
+              onChange={handleStudentInfoChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="classNum">반:</label>
+            <input
+              id="classNum"
+              name="classNum"
+              value={studentInfo.classNum}
+              onChange={handleStudentInfoChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="studentNum">번호:</label>
+            <input
+              id="studentNum"
+              name="studentNum"
+              value={studentInfo.studentNum}
+              onChange={handleStudentInfoChange}
               required
             />
           </div>
