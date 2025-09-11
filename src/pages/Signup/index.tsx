@@ -62,7 +62,7 @@ function RegisterPage() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+    const value  = e.target.value;
     if (registerData) {
       setRegisterData({ ...registerData, classCode: value });
     }
