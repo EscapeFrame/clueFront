@@ -29,7 +29,7 @@ function RegisterPage() {
             classCode: '',
             role: data.role,
           });
-          console.log("data:",data);
+          console.log("data:", data);
         })
         .finally(() => setLoadingRegisterInfo(false));
     } else {
@@ -49,9 +49,12 @@ function RegisterPage() {
     // 데이터가 없으면 리턴
     if (!registerData) return;
 
-    const { grade, classNum, studentNum } = studentInfo;
+    const grade = studentInfo.grade.trim();
+    const classNum = studentInfo.classNum.trim();
+    const studentNum = studentInfo.studentNum.trim();
 
-    if (!grade || !classNum || !studentNum) {
+    const isDigits = (v: string) => /^\d+$/.test(v);
+    if (!grade || !classNum || !studentNum || !isDigits(grade) || !isDigits(classNum) || !isDigits(studentNum)) {
       alert('학년, 반, 번호를 모두 입력해주세요.');
       return;
     }
@@ -87,44 +90,44 @@ function RegisterPage() {
     <s.Container>
       <s.Tittle>정보를 입력해주세요</s.Tittle>
       {/* {registerData && ( */}
-        <s.Form onSubmit={handleRegisterSubmit}>
-          <s.InputGroup>
-            <label htmlFor="grade">학년:</label>
-            <input
-              id="grade"
-              name="grade"
-              value={studentInfo.grade}
-              placeholder='학년을 입력해주세요.'
-              onChange={handleStudentInfoChange}
-              required
-            />
-          </s.InputGroup>
-          <s.InputGroup>
-            <label htmlFor="classNum">반:</label>
-            <input
-              id="classNum"
-              name="classNum"
-              value={studentInfo.classNum}
-              placeholder='반을 입력해주세요.'
-              onChange={handleStudentInfoChange}
-              required
-            />
-          </s.InputGroup>
-          <s.InputGroup>
-            <label htmlFor="studentNum">번호:</label>
-            <input
-              id="studentNum"
-              name="studentNum"
-              value={studentInfo.studentNum}
-              placeholder='번호를 입력해주세요.'
-              onChange={handleStudentInfoChange}
-              required
-            />
-          </s.InputGroup>
-          <s.SubmitButton type="submit">
-            회원가입 완료
-          </s.SubmitButton>
-        </s.Form>
+      <s.Form onSubmit={handleRegisterSubmit}>
+        <s.InputGroup>
+          <label htmlFor="grade">학년:</label>
+          <input
+            id="grade"
+            name="grade"
+            value={studentInfo.grade}
+            placeholder='학년을 입력해주세요.'
+            onChange={handleStudentInfoChange}
+            required
+          />
+        </s.InputGroup>
+        <s.InputGroup>
+          <label htmlFor="classNum">반:</label>
+          <input
+            id="classNum"
+            name="classNum"
+            value={studentInfo.classNum}
+            placeholder='반을 입력해주세요.'
+            onChange={handleStudentInfoChange}
+            required
+          />
+        </s.InputGroup>
+        <s.InputGroup>
+          <label htmlFor="studentNum">번호:</label>
+          <input
+            id="studentNum"
+            name="studentNum"
+            value={studentInfo.studentNum}
+            placeholder='번호를 입력해주세요.'
+            onChange={handleStudentInfoChange}
+            required
+          />
+        </s.InputGroup>
+        <s.SubmitButton type="submit">
+          회원가입 완료
+        </s.SubmitButton>
+      </s.Form>
       {/* )} */}
     </s.Container>
   );
