@@ -8,7 +8,6 @@ import DateInput from "@/entities/UI/InputBox/DateInput";
 import InputBox from "@/entities/UI/InputBox/Input";
 import AttachmentBox from "@/entities/UI/Attachment";
 import { SendMakeTask, attachFile, attachLink } from "./api";
-import { AssignmentAttachment } from "@/shared/types/Class/Assignment/Attachment";
 import { AssignmentCreateRequest } from '@/shared/types/Class/Assignment/Assignment';
 
 // API 첨부파일 인터페이스
@@ -20,12 +19,6 @@ interface Attachment {
 }
 
 // UI 상태 변환용 함수 (TypeScript 오류 방지용)
-const mapToUIAttachment = (items: Attachment[]) =>
-  items.map(item => ({
-    type: item.type,
-    name: item.name,
-    url: item.url,
-  }));
 
 const MakeTask: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId?: string }>();
