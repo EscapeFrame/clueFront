@@ -10,6 +10,7 @@ export const Container = styled.div`
 `;
 
 export const LoginButtonStyled = styled.button`
+  display: flex;
   background: ${theme.colors.white};
   color: ${theme.colors.black};
   border-radius: 8px;
@@ -19,9 +20,16 @@ export const LoginButtonStyled = styled.button`
   cursor: pointer;
   margin: 0 0.5em;
   transition: background 0.2s;
+  gap: 1rem;
   &:hover {
     background: ${theme.colors.blue[100]};
   }
+
+  & img {
+    width: 22px;
+    height: 22px;
+  }
+
 `;
 
 export const LogoutButtonStyled = styled.button`
