@@ -8,7 +8,6 @@ interface UsePendingTasksReturn {
   error: string | null;
   refetch: () => Promise<void>;
   submitTask: (submissionId: string | number) => Promise<void>;
-  createTask: (task: PendingTaskItem) => Promise<void>;
 }
 
 export const usePendingTasks = (): UsePendingTasksReturn => {
@@ -58,22 +57,6 @@ export const usePendingTasks = (): UsePendingTasksReturn => {
     }
   }, [fetchPendingTasks]);
 
-  const createTask = useCallback(async (task: PendingTaskItem) => {
-    try {
-      const result = await pendingTasksApi.createTask(task);
-      
-      if (typeof result === 'number') {
-        throw new Error(`과제 생성에 실패했습니다. (상태코드: ${result})`);
-      }
-      
-      // 생성 완료 후 목록 새로고침
-      await fetchPendingTasks();
-    } catch (err) {
-      console.error('과제 생성 중 오류 발생:', err);
-      throw err; // 컴포넌트에서 에러 처리할 수 있도록 다시 throw
-    }
-  }, [fetchPendingTasks]);
-
   const refetch = useCallback(async () => {
     await fetchPendingTasks();
   }, [fetchPendingTasks]);
@@ -87,7 +70,6 @@ export const usePendingTasks = (): UsePendingTasksReturn => {
     loading,
     error,
     refetch,
-    submitTask,
-    createTask
+    submitTask
   };
 };

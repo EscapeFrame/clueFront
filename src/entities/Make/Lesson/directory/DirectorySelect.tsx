@@ -1,67 +1,84 @@
 import React, { useState } from "react";
 import * as s from "./styles";
 import { useDirectories } from "@/entities/Make/hooks/useLesson";
+import { IoClose } from "react-icons/io5";
 
 interface Props {
   classRoomId: string;
   onDirectoryAdded?: () => void;
 }
 
-const DirectorySelect: React.FC<Props> = ({ classRoomId }) => {
+const DirectorySelect: React.FC<Props> = ({ classRoomId, onDirectoryAdded }) => {
   const {
-    directories,
-    selectedDir,
-    setSelectedDir,
-    isAdding,
-    setIsAdding,
     addDirectory,
-    isLoading,
-    error,
+    isLoading = false,
+    error = null,
   } = useDirectories(classRoomId);
 
+  const [isAdding, setIsAdding] = useState(false); // 로컬 상태로 관리
   const [newDirName, setNewDirName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>{error}</p>;
 
-  return (
-    <s.SelectBox>
-      <select
-        value={selectedDir ?? ""}
-        onChange={(e) => {
-          if (e.target.value === "__add__") {
-            setIsAdding(true);
-          } else {
-            setSelectedDir(Number(e.target.value));
-          }
-        }}
-      >
-        {directories.map((dir) => (
-          <option key={dir.id} value={dir.id}>
-            {dir.name}
-          </option>
-        ))}
-        <option value="__add__">+ 새 디렉토리 추가</option>
-      </select>
+  const handleAddDirectory = async () => {
+    const name = newDirName.trim();
+    if (!name || isSubmitting) return;
 
-      {isAdding && (
-        <input
-          type="text"
-          value={newDirName}
-          onChange={(e) => setNewDirName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              const name = newDirName.trim();
-              if(!name) return
-              addDirectory(name);
-              setNewDirName("");
-            }
-          }}
-          placeholder="디렉토리 이름 입력"
-          autoFocus
-        />
+    setIsSubmitting(true);
+    try {
+      await addDirectory(name);
+      setNewDirName("");
+      setIsAdding(false);
+      onDirectoryAdded?.();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancelAdd = () => {
+    setNewDirName("");
+    setIsAdding(false);
+  };
+
+  const handleDeleteDirectory = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleCancelAdd();
+  };
+
+  return (
+    <>
+      {!isAdding && (
+        <s.AddButton onClick={() => setIsAdding(true)}>
+          + 새 디렉토리 추가
+        </s.AddButton>
       )}
-    </s.SelectBox>
+      {isAdding && (
+        <s.DirectoryContainer>
+          <s.DirectoryInput
+            type="text"
+            value={newDirName}
+            onChange={(e) => setNewDirName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !isSubmitting) {
+                handleAddDirectory();
+              } else if (e.key === "Escape") {
+                handleCancelAdd();
+              }
+            }}
+            placeholder="디렉토리명을 입력해주세요"
+            autoFocus
+            disabled={isSubmitting}
+          />
+          <s.flexer>
+            <s.DeleteIcon2 onClick={handleDeleteDirectory}>
+            <IoClose size={16} />
+            </s.DeleteIcon2>
+          </s.flexer>
+        </s.DirectoryContainer>
+      )}
+    </>
   );
 };
 

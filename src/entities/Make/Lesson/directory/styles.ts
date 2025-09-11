@@ -4,16 +4,106 @@ import { theme } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const SelectBox = styled.div`
+  background-color: ${theme.colors.white};
+  border: 1px solid ${theme.colors.gray[300]};
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 1rem 0;
+  cursor: pointer;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
 
-  select,
-  input {
-    border: 1px solid ${theme.colors.gray[300]};
-    border-radius: 8px;
-    padding: 8px;
-    ${fonts.P2}
+export const AddButton = styled.div`
+  background-color: ${theme.colors.blue[500]};
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+`;
+
+export const Input = styled.input`
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: inherit;
+  width: 100%;
+`;
+
+export const DirectoryContainer = styled.div`
+  background-color: ${theme.colors.white};
+  border: 1px solid ${theme.colors.gray[300]};
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+`;
+
+export const DirectoryInput = styled.input`
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: inherit;
+  width: 100%;
+`;
+
+export const ArrowIcon = styled.span`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
+export const DeleteIcon = styled.span`
+  position: absolute;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(239, 68, 68, 0.1);
+  
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.2);
   }
+`;
+
+export const DeleteIcon2 = styled.span`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(239, 68, 68, 0.1);
+  z-index: 1;
+  
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+  }
+`;
+
+export const flexer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

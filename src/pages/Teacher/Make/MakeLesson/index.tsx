@@ -8,7 +8,8 @@ import { useParams, useNavigate } from "react-router-dom";
 const LessonCreator: React.FC = () => {
   const navigate = useNavigate();
   const { classRoomId } = useParams<{ classRoomId: string }>();
-  const id = classRoomId && !Number.isNaN(Number(classRoomId)) ? Number(classRoomId) : null;
+
+  console.log(classRoomId)
 
   const handleCardClick = (url: string) => {
     navigate(url);
@@ -19,7 +20,7 @@ const LessonCreator: React.FC = () => {
       <s.Title>수업 만들기</s.Title>
       <s.desc>어떤 형식의 수업을 원하시나요?</s.desc>
 
-      {id !== null && <DirectorySelect classRoomId={id} />}
+      {classRoomId && <DirectorySelect classRoomId={classRoomId} />}
 
       <s.Grid>
         {lessonCards.map((card) => (

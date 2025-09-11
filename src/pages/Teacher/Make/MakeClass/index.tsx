@@ -35,7 +35,26 @@ export default function MakeClass() {
   };
 
   const handleSubmit = async () => {
+
+    if (!basicInfo.subjectCategory) {
+      alert('과목분류를 선택해주세요.');
+      return;
+    }
+    if (!basicInfo.grade) {
+      alert('학년을 선택해주세요.');
+      return;
+    }
+    if (!basicInfo.classNum) {
+      alert('반을 선택해주세요.');
+      return;
+    }
+    if (!basicInfo.roomName || basicInfo.roomName.trim() === '') {
+      alert('교실 이름을 입력해주세요.');
+      return;
+    }
+
     setLoading(true);
+    
     const dataToSend = {
       name: basicInfo.roomName,
       description: basicInfo.description,
@@ -43,6 +62,8 @@ export default function MakeClass() {
       target: `${basicInfo.grade}-${basicInfo.classNum}`,
       isActivation: isActivation,
     };
+
+    
 
     console.log('제출 값:', { basicInfo, isActivation, isChatEnabled, dataToSend });
 

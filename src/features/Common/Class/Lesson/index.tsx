@@ -8,16 +8,15 @@ import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
-import { getLessonDirectories, getLessonNews, getLessonQuestions } from '@/features/Common/Class/api/useLesson';
+import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/shared/model/userState';
-import Button from '@/entities/UI/Button';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useRecoilState(userState);
+  const [user] = useRecoilState(userState);
 
   // 상태 관리
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -35,9 +34,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   // 선생님인지 확인
   const isTeacher = user?.role === 'TEACHER';
-  console.log('Current user:', user);
-  console.log('User role:', user?.role);
-  console.log('Is teacher:', isTeacher);
 
   // 데이터 불러오기
   const fetchData = async () => {
@@ -66,7 +62,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
       const newSet = new Set(prev);
-      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
       return newSet;
     });
   };
@@ -107,8 +107,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         if (success) {
           setRefreshTrigger(prev => prev + 1);
         }
+        else {
+          alert("디렉토리 삭제에 실패했습니다.");
+        }
       } catch (error) {
         console.error("디렉토리 삭제 실패:", error);
+        alert("디렉토리 삭제 중 오류가 발생했습니다.");
       }
     }
   };
@@ -133,11 +137,9 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                   <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
                   {/* 선생님일 때만 삭제 아이콘 표시 */}
                   {isTeacher && (
-                    <s.DeleteIcon
-                    onClick={(e: React.MouseEvent<HTMLDivElement>) => handleDeleteDirectory(dir.id, e)}
-                  >
-                    <IoClose size={16} />
-                  </s.DeleteIcon>                  
+                    <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
+                      <IoClose size={16} />
+                    </s.DeleteIcon>
                   )}
                 </s.Item>
                 <s.SubDirectoryList $isExpanded={isExpanded}>
@@ -170,7 +172,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         <s.Section>
           <NoticeCard cardTitle="최근 질문" notices={questions} onSelect={item => setSelectedModal({ type: 'question', item })} />
         </s.Section>
-        <Button text="정보수정하기" width = '100%' type={0} onClick={() => navigate(`/class/${classRoomId}/setting`)}/> {/* (선생님)정보 수정 페이지로 이동 */}
       </s.RightPanel>
 
       {/* 모달 */}
