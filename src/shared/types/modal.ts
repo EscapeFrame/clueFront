@@ -7,7 +7,7 @@ export interface ButtonData {
 
 export interface ModalProps {
   title: string;
-  notes?: 'default' | 'input' | 'file';
+  notes?: 'default' | 'input' | 'file' | 'url';
   children?: React.ReactNode;
   onClose: () => void;
   isWarning?: boolean;

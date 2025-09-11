@@ -257,7 +257,7 @@ const MakeTask: React.FC = () => {
       {isLinkModalOpen && (
         <Modal
           title={`${linkPlatform?.toUpperCase()} 링크 첨부`}
-          notes="input"
+          notes="url"
           onClose={() => { setIsLinkModalOpen(false); setLinkPlatform(null); setLinkInput(""); }}
           buttons={[
             { text: "등록", type: 0, onClick: handleLinkSubmit },

@@ -3,6 +3,7 @@ import Button from '@/entities/UI/Button';
 import InputModal from './components/InputModal';
 import FileModal from './components/FileModal';
 import DefaultModal from './components/DefaultModal';
+import UrlModal from './components/UrlModal';
 
 export const renderButtons = (
   buttons: ButtonData[],
@@ -19,6 +20,8 @@ export const renderButtons = (
 
 export const Modal: React.FC<ModalProps> = (props) => {
   switch (props.notes) {
+    case 'url':
+      return <UrlModal {...props} />;
     case 'input':
       return <InputModal {...props} />;
     case 'file':
