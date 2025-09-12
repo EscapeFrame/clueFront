@@ -6,6 +6,17 @@ export const Container = styled.div`
   padding: 2rem 8rem;
   background: ${theme.colors.blue[100]};
   width: 100%;
+
+  @media (max-width: 1200px) {
+    padding: 2rem 4rem;
+  }
+
+  min-width: 600px;
+
+  @media (max-width: 768px) {
+    items: center;
+    padding: 1rem 2rem;
+  }
 `;
 
 export const Title = styled.h1`
@@ -30,6 +41,11 @@ export const Wrapper = styled.div`
   padding: 2rem;
   background: ${theme.colors.white};
   border-radius: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 1rem;
+  }
 `;
 
 export const Half = styled.div`
