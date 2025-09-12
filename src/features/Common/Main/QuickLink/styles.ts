@@ -7,6 +7,16 @@ export const Container = styled.div`
   display: grid;
   width: 100%;
   box-sizing: border-box;
+
+  @media (max-width: 1200px) {
+    padding: 30px 4rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px 2rem;
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+  }
 `;
 
 export const LinkContainer = styled.div`
@@ -17,6 +27,12 @@ export const LinkContainer = styled.div`
   overflow-x: auto;                /* 넘치면 스크롤 */
   width: 100%;
   box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, 1fr);
+    overflow-x: unset;
+  }
 `;
 
 export const Link = styled.a`
