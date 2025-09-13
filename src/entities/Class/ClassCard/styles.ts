@@ -8,14 +8,23 @@ export const Card = styled.div`
   border-radius: 12px;
   background-color: ${theme.colors.white};
   height: 10rem;
-  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   transition: box-shadow 0.2s ease;
+
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 1200px) {
+    padding: 0.8rem;
+    height: 9rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.6rem;
+    height: auto;
   }
 `;
 
@@ -24,6 +33,14 @@ export const Title = styled.h3`
   font-weight: 600;
   margin: 0;
   padding: 0;
+
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P1}
+  }
 `;
 
 export const Description = styled.div`
@@ -33,6 +50,16 @@ export const Description = styled.div`
   margin: 0;
   padding: 0;
   justify-content: space-between;
+
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+    flex-direction: column;
+    gap: 0.3rem;
+  }
 `;
 
 export const GoToLink = styled.button`
@@ -46,5 +73,14 @@ export const GoToLink = styled.button`
 
   &:hover {
     color: ${theme.colors.blue[700]};
+  }
+
+  @media (max-width: 1200px) {
+    ${fonts.P3}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+    align-self: center;
   }
 `;

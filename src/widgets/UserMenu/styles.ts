@@ -8,6 +8,10 @@ export const DropdownContainer = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1001;
+
+  @media (max-width: 768px) {
+    justify-content: flex-end;
+  }
 `;
 
 export const DropdownButton = styled.button`
@@ -16,7 +20,12 @@ export const DropdownButton = styled.button`
   cursor: pointer;
   ${fonts.P3}
   color: ${theme.colors.black};
-  padding: 0.5rem; // 터치 영역 보장하게끔..?
+  padding: 0.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0.4rem;
+    ${fonts.P2};
+  }
 `;
 
 export const DropdownMenu = styled.div`
@@ -27,12 +36,15 @@ export const DropdownMenu = styled.div`
   border: 1px solid ${theme.colors.gray[500]};
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 1rem ${theme.colors.gray[200]};
-
   width: clamp(200px, 25vw, 320px);
   display: flex;
   flex-direction: column;
   z-index: 999;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 180px;
+  }
 `;
 
 export const ProfileInfoBox = styled.div`
@@ -42,6 +54,10 @@ export const ProfileInfoBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
 `;
 
 export const ProfileImage = styled.img`
@@ -49,17 +65,30 @@ export const ProfileImage = styled.img`
   height: 48px;
   border-radius: 50%;
   margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 export const ProfileName = styled.div`
   ${fonts.P2}
   font-weight: 600;
   margin-bottom: 0.25rem;
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+  }
 `;
 
 export const ProfileStudentNumber = styled.div`
   ${fonts.P1}
   color: ${theme.colors.gray[600]};
+
+  @media (max-width: 768px) {
+    ${fonts.P2};
+  }
 `;
 
 export const DropdownItem = styled.a`
@@ -70,7 +99,6 @@ export const DropdownItem = styled.a`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-
   transition: background-color 0.2s ease;
 
   &:hover {
@@ -78,8 +106,18 @@ export const DropdownItem = styled.a`
     color: ${theme.colors.blue[600]};
   }
 
+  @media (max-width: 1200px) {
+    padding: 0.65rem 0.9rem;
+    ${fonts.P3};
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.6rem 0.75rem;
+    ${fonts.P3};
+  }
+
   @media (max-width: 480px) {
-    padding: 0.75rem 0.75rem;
-    ${fonts.P2}
+    padding: 0.5rem 0.6rem;
+    ${fonts.P2};
   }
 `;

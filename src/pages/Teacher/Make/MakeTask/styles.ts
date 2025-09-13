@@ -8,12 +8,18 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-`;
 
-export const AttachBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  @media (max-width: 1200px) {
+    padding: 2rem 8rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem 1rem;
+  }
 `;
 
 export const HeaderRow = styled.div`
@@ -21,23 +27,51 @@ export const HeaderRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 `;
 
 export const FileItem = styled.div`
   background-color: ${theme.colors.gray[100]};
   padding: 0.5rem;
   border-radius: 5px;
+
+  @media (max-width: 480px) {
+    padding: 0.4rem;
+    ${fonts.P2}
+  }
 `;
 
 export const Title = styled.div`
   ${fonts.P5};
   font-weight:600;
+
+  @media (max-width: 768px) {
+    ${fonts.P4};
+  }
+
+  @media (max-width: 480px) {
+    ${fonts.P3};
+  }
 `;
 
 export const Label = styled.label`
   font-weight: 600;
   display: block;
   margin-bottom: 8px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 480px) {
+    margin-bottom: 4px;
+    ${fonts.P2};
+  }
 `;
 
 export const FileUploadArea = styled.div<{ isDragOver?: boolean }>`
@@ -47,4 +81,12 @@ export const FileUploadArea = styled.div<{ isDragOver?: boolean }>`
   cursor: pointer;
   border-radius: 8px;
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `;

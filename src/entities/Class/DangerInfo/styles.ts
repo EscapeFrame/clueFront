@@ -5,42 +5,106 @@ import { fonts } from '@/shared/theme/font.styles';
 export const Container = styled.div`
   background-color: ${theme.colors.white};
   margin-bottom: 40px;
+
+  @media (max-width: 1200px) {
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const Title = styled.div`
-    ${fonts.P4};
-    font-weight:600;
+  ${fonts.P4};
+  font-weight: 600;
+
+  @media (max-width: 1200px) {
+    ${fonts.P3};
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P2};
+  }
 `;
 
 export const SubTitle = styled.div`
   ${fonts.P2};
   margin-bottom: 20px;
+
+  @media (max-width: 1200px) {
+    ${fonts.P3};
+    margin-bottom: 15px;
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+    margin-bottom: 10px;
+  }
 `;
 
 export const Section = styled.div`
   margin-bottom: 20px;
+
+  @media (max-width: 1200px) {
+    margin-bottom: 15px;
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 10px;
+  }
 `;
 
 export const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 `;
 
 export const FunctionTitle = styled.div`
   ${fonts.P2};
   font-weight: 600;
+
+  @media (max-width: 1200px) {
+    ${fonts.P3};
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+  }
 `;
 
 export const Description = styled.div`
   ${fonts.P2};
   color: ${theme.colors.gray[500]};
   margin-top: 4px;
+
+  @media (max-width: 1200px) {
+    ${fonts.P3};
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+  }
 `;
 
 export const ModalWarning = styled.strong`
   color: ${theme.colors.red};
   ${fonts.P2}
+
+  @media (max-width: 1200px) {
+    ${fonts.P3};
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+  }
 `;
 
 export const ErrorMessage = styled.div`
@@ -50,4 +114,14 @@ export const ErrorMessage = styled.div`
   border-radius: 6px;
   ${fonts.P2}
   margin-top: 1rem;
+
+  @media (max-width: 1200px) {
+    ${fonts.P3};
+    padding: 0.6rem 0.8rem;
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+    padding: 0.5rem 0.6rem;
+  }
 `;
