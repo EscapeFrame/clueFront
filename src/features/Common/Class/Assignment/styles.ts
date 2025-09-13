@@ -60,6 +60,7 @@ export const Status = styled.span<StatusProps>`
 
   @media (max-width: 600px) {
     padding: 1px 6px;
+  };
 `;
 
 export const Body = styled.div`

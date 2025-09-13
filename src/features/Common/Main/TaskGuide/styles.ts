@@ -54,8 +54,8 @@ export const Title = styled.div`
 `;
 
 export const Explain = styled.div`
-  display: "flex";
-  justifycontent: "space-between";
+  display: flex;
+  justifycontent: space-between;
   margin: 0;
   padding: 0;
 `;
