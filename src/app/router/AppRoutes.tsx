@@ -31,7 +31,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
   return (
     <Routes>
 
-      <Route path='/login' element={<TCHHome />} />
+      <Route path='/login' element={<Login />} />
       <Route path='/register' element = {<RegisterPage />} />
 
       {!isAuthenticated && (
