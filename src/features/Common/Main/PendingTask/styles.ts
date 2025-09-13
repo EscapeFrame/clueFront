@@ -15,6 +15,10 @@ export const CardContainer = styled.div`
   gap: 8px;
   margin-top: 12px;
 
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   max-height: 280px;         // 고정 높이로 제한
   overflow-y: auto;          // 스크롤 가능
   padding-right: 4px;        // 스크롤바 공간 확보 (선택사항)

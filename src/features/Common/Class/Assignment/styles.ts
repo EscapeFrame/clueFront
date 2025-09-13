@@ -12,6 +12,10 @@ export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 export const Card = styled.div`
@@ -27,6 +31,7 @@ export const Card = styled.div`
   &:hover {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
+
 `;
 
 export const Header = styled.div`
@@ -51,6 +56,10 @@ export const Status = styled.span<StatusProps>`
   padding: 2px 8px;
   border-radius: 12px;
   user-select: none;
+
+  @media (max-width: 600px) {
+    padding: 1px 6px;
+  };
 `;
 
 export const Body = styled.div`
@@ -75,6 +84,10 @@ export const TimeInfo = styled.div`
 
 export const Footer = styled.div`
   padding: 8px 16px 16px 16px;
+
+  @media (max-width: 600px) {
+    padding: 8px 12px 12px 12px;
+  }
 `;
 
 export const ActionButtons = styled.div`

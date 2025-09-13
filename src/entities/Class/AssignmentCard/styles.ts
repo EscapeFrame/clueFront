@@ -32,6 +32,9 @@ export const CardContainer = styled.div`
   &:hover {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
+  @media (max-width: 600px) {
+    min-height: 400px;
+  }
 `;
 
 export const CardHeader = styled.div`
@@ -163,4 +166,9 @@ export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
   transition: background 0.2s, border 0.2s;
   cursor: pointer;
   user-select: none;
+
+  @media (max-width: 600px) {
+    min-height: 150px;
+    padding: 15px;
+  }
 `;
