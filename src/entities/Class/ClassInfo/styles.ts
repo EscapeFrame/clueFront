@@ -12,14 +12,17 @@ export const Container = styled.div`
   width: 100%;
 
   @media (max-width: 1200px) {
-    padding: 0 4rem;
+    flex-direction: column;
+    padding: 4rem 2rem;
+    gap: 2rem;
   }
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 1.5rem;
-    text-align: center;
-    gap: 1rem;
+    padding: 2rem 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem 0.5rem;
   }
 `;
 

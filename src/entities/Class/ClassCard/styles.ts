@@ -25,6 +25,8 @@ export const Card = styled.div`
   @media (max-width: 768px) {
     padding: 0.6rem;
     height: auto;
+    border-radius: 10px;
+    min-height: 120px;
   }
 `;
 

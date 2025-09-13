@@ -3,6 +3,7 @@ import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
+  min-width: 600px;
   padding: 2rem 8rem;
   background: ${theme.colors.blue[100]};
   width: 100%;
@@ -10,13 +11,10 @@ export const Container = styled.div`
   @media (max-width: 1200px) {
     padding: 2rem 4rem;
   }
-
+  
   @media (max-width: 768px) {
-    padding: 1.5rem 2rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem;
+    align-items: center;
+    padding: 1rem 2rem;
   }
 `;
 
