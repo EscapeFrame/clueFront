@@ -41,7 +41,7 @@ export const InputGroup = styled.div`
     padding: 0.8rem;
     border: 1px solid ${theme.colors.gray[300]};
     border-radius: 12px;
-    font-size: 1rem;
+    ${fonts.P3};
 
     &:focus {
       border-color: ${theme.colors.blue[500]};
@@ -58,7 +58,7 @@ export const SubmitButton = styled.button`
   color: ${theme.colors.white};
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  ${fonts.P3};
   cursor: pointer;
 
   &:hover {

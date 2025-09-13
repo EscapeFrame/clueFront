@@ -10,6 +10,14 @@ export const Container = styled.div`
   border-radius: 8px;
   padding: 0.6rem 1rem;
   width: 20rem;
+  max-width: 100%;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border: 1px solid ${theme.colors.blue[500]};
+    box-shadow: 0 0 0 2px ${theme.colors.blue[100]};
+    background-color: ${theme.colors.white};
+  }
 `;
 
 export const SearchField = styled.input`
@@ -22,6 +30,7 @@ export const SearchField = styled.input`
 
 export const SearchIcon = styled(IoSearch)`
   color: ${theme.colors.gray[500]};
-  margin-left: 0.6rem;
+  flex-shrink: 0;
+  ${fonts.P1}
   cursor: pointer;
 `;

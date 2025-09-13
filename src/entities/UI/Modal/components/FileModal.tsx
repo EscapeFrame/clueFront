@@ -30,7 +30,7 @@ const FileModal: React.FC<FileModalProps> = ({ onClose, onFileUpload }) => {
 
         <s.Content>
           <s.DropZone
-            isDragOver={isDragOver}
+            $isDragOver={isDragOver}
             onDragOver={(e) => {
               e.preventDefault();
               setIsDragOver(true);

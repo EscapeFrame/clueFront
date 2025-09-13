@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { theme } from '@/shared/theme/theme.styles';
+import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   width: 85%;
@@ -9,7 +10,7 @@ export const Container = styled.div`
 `;
 
 export const Label = styled.span`
-  font-size: 14px;
+    ${fonts.P2};
   font-weight: 500;
   color: ${theme.colors.black};
 `;

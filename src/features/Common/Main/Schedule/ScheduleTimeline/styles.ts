@@ -90,7 +90,7 @@ export const Description = styled.div`
 `;
 
 export const ArrowIcon = styled(IoIosArrowForward)`
-  font-size: 1.25rem;
+  ${fonts.P4};
   color: ${theme.colors.gray[400]};
   flex-shrink: 0;
 `;

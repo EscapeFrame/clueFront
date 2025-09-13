@@ -15,6 +15,14 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
     variant === 'pending' ? theme.colors.blue[500] : theme.colors.white};
   border: ${({ variant }) =>
     variant === 'completed' ? `2px solid ${theme.colors.blue[400]}` : 'none'};
+
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+  }
 `;
 
 // 카드 레이아웃
@@ -32,8 +40,15 @@ export const CardContainer = styled.div`
   &:hover {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
-  @media (max-width: 600px) {
-    min-height: 400px;
+
+  @media (max-width: 1200px) {
+    padding: 0.8rem;
+    min-height: 240px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    min-height: auto;
   }
 `;
 
@@ -43,6 +58,12 @@ export const CardHeader = styled.div`
   align-items: center;
   margin-bottom: 1rem;
   gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 `;
 
 export const Title = styled.div`
@@ -51,6 +72,14 @@ export const Title = styled.div`
   font-weight: 600;
   margin: 0;
   word-break: break-word;
+
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P1}
+  }
 `;
 
 export const InfoSection = styled.div`
@@ -58,6 +87,10 @@ export const InfoSection = styled.div`
   flex-direction: column;
   gap: 0.75rem;
   flex-grow: 1;
+
+  @media (max-width: 768px) {
+    gap: 0.5rem;
+  }
 `;
 
 export const InfoItem = styled.div`
@@ -72,6 +105,15 @@ export const InfoItem = styled.div`
     width: 1rem;
     height: 1rem;
   }
+
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+    flex-wrap: wrap;
+  }
 `;
 
 // 파일 목록
@@ -79,6 +121,10 @@ export const FileListSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    gap: 0.3rem;
+  }
 `;
 
 export const FileItem = styled.div`
@@ -89,6 +135,16 @@ export const FileItem = styled.div`
   border-radius: 8px;
   background-color: #f5f5f5;
   border: 1px solid ${theme.colors.gray[200]};
+
+  @media (max-width: 1200px) {
+    padding: 0.4rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
 `;
 
 export const FileInfoContainer = styled.div`
@@ -100,16 +156,36 @@ export const FileInfoContainer = styled.div`
     width: 1rem;
     height: 1rem;
   }
+
+  @media (max-width: 768px) {
+    gap: 0.3rem;
+  }
 `;
 
 export const FileNameText = styled.div`
   ${fonts.P1}
   color: ${theme.colors.black};
+
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+  }
 `;
 
 export const FileSizeText = styled.div`
   ${fonts.P1}
   color: ${theme.colors.gray[400]};
+
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+  }
 `;
 
 export const FileRemoveButton = styled.button`
@@ -117,11 +193,16 @@ export const FileRemoveButton = styled.button`
   border: none;
   color: ${theme.colors.gray[400]};
   cursor: pointer;
-  font-size: 1rem;
+  ${fonts.P3};
   margin-left: 0.5rem;
 
   &:hover {
     color: ${theme.colors.black};
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P2};
+    margin-left: 0;
   }
 `;
 
@@ -130,6 +211,10 @@ export const ButtonSection = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   margin-top: auto;
+
+  @media (max-width: 768px) {
+    gap: 0.3rem;
+  }
 `;
 
 export const DelChose = styled.input`
@@ -148,12 +233,25 @@ export const ChoseFile = styled.label`
   &:hover {
     color: ${theme.colors.blue[600]};
   }
+
+  @media (max-width: 1200px) {
+    ${fonts.P3}
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+    padding: 0.2rem 0.4rem;
+  }
 `;
 
 export const FileList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    gap: 0.3rem;
+  }
 `;
 
 export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
@@ -167,8 +265,12 @@ export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
   cursor: pointer;
   user-select: none;
 
-  @media (max-width: 600px) {
-    min-height: 150px;
+  @media (max-width: 1200px) {
     padding: 15px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    ${fonts.P2};
   }
 `;

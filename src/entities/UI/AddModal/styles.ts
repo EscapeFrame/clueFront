@@ -1,4 +1,36 @@
 import styled from '@emotion/styled';
+import { fonts } from '@/shared/theme/font.styles';
+import { theme } from '@/shared/theme/theme.styles';
+
+export const ModalWrapper = styled.div`
+  background: ${theme.colors.white};
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    max-width: 90%;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px;
+    border-radius: 8px;
+  }
+`;
+
+export const Title = styled.h2`
+  margin: 0;
+  ${fonts.P3}
+  font-weight: 600;
+  color: ${theme.colors.black};
+
+  @media (max-width: 480px) {
+    ${fonts.P2};
+  }
+`;
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -13,15 +45,6 @@ export const ModalOverlay = styled.div`
   z-index: 9999;
 `;
 
-export const ModalWrapper = styled.div`
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  min-width: 400px;
-  max-width: 500px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-`;
-
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -29,19 +52,12 @@ export const Header = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Title = styled.h2`
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-`;
-
 export const CloseButton = styled.button`
   background: none;
   border: none;
-  font-size: 20px;
+  ${fonts.P3}
   cursor: pointer;
-  color: #666;
+  color: ${theme.colors.gray[500]};
   padding: 0;
   width: 24px;
   height: 24px;
@@ -50,16 +66,16 @@ export const CloseButton = styled.button`
   justify-content: center;
   
   &:hover {
-    color: #333;
+    color: ${theme.colors.black};
   }
 `;
 
 export const InputField = styled.input`
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid #ddd;
+  border: 1px solid ${theme.colors.gray[400]};
   border-radius: 8px;
-  font-size: 14px;
+  ${fonts.P2};
   margin-bottom: 16px;
   box-sizing: border-box;
   
@@ -69,7 +85,7 @@ export const InputField = styled.input`
   }
   
   &::placeholder {
-    color: #999;
+    color: ${theme.colors.gray[600]};
   }
 `;
 
@@ -87,10 +103,10 @@ export const SelectField = styled.div`
 export const SelectInput = styled.div`
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid #ddd;
+  border: 1px solid ${theme.colors.gray[600]};
   border-radius: 8px;
-  font-size: 14px;
-  background: white;
+  ${fonts.P2};
+  background: ${theme.colors.white};
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -103,12 +119,12 @@ export const SelectInput = styled.div`
 `;
 
 export const SelectPlaceholder = styled.span`
-  color: #999;
+  color: ${theme.colors.gray[600]};
 `;
 
 export const ChevronIcon = styled.span`
-  color: #666;
-  font-size: 12px;
+  color: ${theme.colors.gray[500]};
+  ${fonts.P1}
 `;
 
 export const ButtonContainer = styled.div`
@@ -120,15 +136,15 @@ export const ButtonContainer = styled.div`
 export const Button = styled.button<{ primary?: boolean }>`
   padding: 10px 20px;
   border-radius: 6px;
-  font-size: 14px;
+  ${fonts.P2}
   font-weight: 500;
   cursor: pointer;
   border: ${props => props.primary ? 'none' : '1px solid #007bff'};
-  background: ${props => props.primary ? '#007bff' : 'white'};
-  color: ${props => props.primary ? 'white' : '#007bff'};
+  background: ${props => props.primary ? '#007bff' : theme.colors.white};
+  color: ${props => props.primary ? theme.colors.white : '#007bff'};
   
   &:hover {
-    background: ${props => props.primary ? '#0056b3' : '#f8f9fa'};
+    background: ${props => props.primary ? '#0056b3' : theme.colors.gray[200]};
   }
 `;
 
@@ -137,8 +153,8 @@ export const Dropdown = styled.div`
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border: 1px solid #ddd;
+  background: ${theme.colors.white};
+  border: 1px solid ${theme.colors.gray[400]};
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -149,10 +165,10 @@ export const Dropdown = styled.div`
 export const DropdownItem = styled.div`
   padding: 12px 16px;
   cursor: pointer;
-  font-size: 14px;
+  ${fonts.P2}
   
   &:hover {
-    background: #f8f9fa;
+    background: ${theme.colors.gray[200]};
   }
   
   &:first-child {

@@ -1,3 +1,4 @@
+import { fonts } from '@/shared/theme/font.styles';
 import styled from '@emotion/styled';
 
 interface StatusProps {
@@ -43,13 +44,13 @@ export const Header = styled.div`
 
 export const Title = styled.h3`
   margin: 0;
-  font-size: 1.1rem;
+    ${fonts.P4};
   font-weight: 600;
   color: #333;
 `;
 
 export const Status = styled.span<StatusProps>`
-  font-size: 0.8rem;
+    ${fonts.P2};
   font-weight: 700;
   color: ${({ $isSubmitted }) => ($isSubmitted ? '#2ecc71' : '#e74c3c')};
   border: 1.5px solid ${({ $isSubmitted }) => ($isSubmitted ? '#2ecc71' : '#e74c3c')};
@@ -64,7 +65,7 @@ export const Status = styled.span<StatusProps>`
 
 export const Body = styled.div`
   padding: 0 16px 12px 16px;
-  font-size: 0.9rem;
+  ${fonts.P2};
   color: #555;
 `;
 
@@ -100,14 +101,14 @@ export const ActionButtons = styled.div`
 `;
 
 export const DetailHeading = styled.h4`
-  font-size: 1.1rem;
+  ${fonts.P3};
   font-weight: 700;
   margin: 16px 0 8px;
 `;
 
 export const DetailText = styled.p`
   margin: 4px 0;
-  font-size: 0.95rem;
+  ${fonts.P3};
   color: #333;
 
   strong {

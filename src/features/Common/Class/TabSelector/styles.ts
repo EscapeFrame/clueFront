@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { theme } from '@/shared/theme/theme.styles';
+import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ export const TabButton = styled.button<{ isActive: boolean }>`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.9rem;
+  ${fonts.P2};
   font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
   color: ${({ isActive }) => (isActive ? theme.colors.blue[500] : theme.colors.gray[300])};
   border-bottom: ${({ isActive }) => (isActive ? `2px solid ${theme.colors.blue[500]}` : 'none')};
