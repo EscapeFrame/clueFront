@@ -20,20 +20,20 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: ${fonts.P5};
+  ${fonts.P5};
   color: ${theme.colors.black};
   margin-bottom: 16px;
 
   @media (max-width: 1200px) {
-    font-size: ${fonts.P4};
+    ${fonts.P4};
   }
 
   @media (max-width: 768px) {
-    font-size: ${fonts.P3};
+    ${fonts.P3};
   }
 
   @media (max-width: 480px) {
-    font-size: ${fonts.P2};
+    ${fonts.P2};
   }
 `;
 
@@ -107,16 +107,16 @@ export const TeacherInput = styled.div`
 
 export const TeacherLabel = styled.label`
   display: block;
-  font-size: ${fonts.P2};
+  ${fonts.P2};
   color: ${theme.colors.black};
   margin-bottom: 8px;
 
   @media (max-width: 768px) {
-    font-size: ${fonts.P3};
+    ${fonts.P3};
   }
 
   @media (max-width: 480px) {
-    font-size: ${fonts.P2};
+    ${fonts.P2};
   }
 `;
 
@@ -125,7 +125,7 @@ export const TeacherInputField = styled.input`
   padding: 12px 16px;
   border: 1px solid ${theme.colors.gray[400]};
   border-radius: 8px;
-  font-size: ${fonts.P1};
+  ${fonts.P1};
   box-sizing: border-box;
 
   &:focus {
@@ -135,12 +135,12 @@ export const TeacherInputField = styled.input`
 
   @media (max-width: 768px) {
     padding: 10px 14px;
-    font-size: ${fonts.P2};
+    ${fonts.P2};
   }
 
   @media (max-width: 480px) {
     padding: 8px 12px;
-    font-size: ${fonts.P3};
+    ${fonts.P3};
   }
 `;
 
@@ -201,12 +201,12 @@ export const GoogleSheetB = styled.button`
 
   @media (max-width: 768px) {
     padding: 10px 14px;
-    font-size: ${fonts.P2};
+    ${fonts.P2};
   }
 
   @media (max-width: 480px) {
     padding: 8px 12px;
-    font-size: ${fonts.P3};
+    ${fonts.P3};
   }
 `;
 

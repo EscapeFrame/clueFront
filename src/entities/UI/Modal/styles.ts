@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LuUpload } from "react-icons/lu";
+import { LuUpload } from 'react-icons/lu';
 import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
@@ -13,15 +13,18 @@ export const Overlay = styled.div`
   z-index: 9999;
 `;
 
-// 모달 래퍼
-export const ModalWrapper = styled.div<{ $variant?: 'default' | 'warning' }>`
+export const ModalWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isWarning' && prop !== '$variant',
+})<{ $variant?: 'default' | 'warning'; isWarning?: boolean }>`
   background: ${theme.colors.white};
   border-radius: 8px;
   width: 400px;
   max-width: 90%;
+  max-height: 90vh;
   padding: 20px;
-  box-shadow: ${({ $variant }) =>
-    $variant === 'warning'
+  overflow: auto;
+  box-shadow: ${({ $variant, isWarning }) =>
+    $variant === 'warning' || isWarning
       ? '0 0 15px 5px red'
       : '0 0 10px rgba(0,0,0,0.1)'};
 
@@ -38,7 +41,7 @@ export const Header = styled.header`
 
 export const Title = styled.h2`
   margin: 0;
-  font-size: 1.25rem;
+    ${fonts.P4};
 `;
 
 export const CloseBtn = styled.button`
@@ -69,7 +72,6 @@ export const Footer = styled.footer`
   gap: 10px;
 `;
 
-// 파일 업로드
 export const DropZone = styled.label<{ $isDragOver: boolean }>`
   display: block;
   padding: 32px;
@@ -83,7 +85,7 @@ export const DropZone = styled.label<{ $isDragOver: boolean }>`
   p {
     margin-top: 12px;
     color: ${({ $isDragOver }) => ($isDragOver ? '#2563eb' : theme.colors.gray[500])};
-    font-size: 0.95rem;
+    ${fonts.P3};
   }
 `;
 
@@ -96,7 +98,17 @@ export const HiddenFileInput = styled.input`
   display: none;
 `;
 
-// 버튼
+export const StyledInput = styled.input`
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid ${theme.colors.gray[300]};
+  border-radius: 6px;
+  ${fonts.P2};
+  color: ${theme.colors.black};
+  &::placeholder { color: ${theme.colors.gray[400]}; }
+  &:focus { outline: 2px solid ${theme.colors.blue[600]}; outline-offset: 2px; }
+`;
+
 const ButtonBase = styled.button`
   padding: 10px 16px;
   border-radius: 6px;

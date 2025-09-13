@@ -193,7 +193,7 @@ export const FileRemoveButton = styled.button`
   border: none;
   color: ${theme.colors.gray[400]};
   cursor: pointer;
-  font-size: 1rem;
+  ${fonts.P3};
   margin-left: 0.5rem;
 
   &:hover {

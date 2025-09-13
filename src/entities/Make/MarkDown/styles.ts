@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { blue, theme } from '@/shared/theme/theme.styles';
+import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   display: flex;
@@ -58,17 +59,17 @@ export const SectionTitle = styled.h3`
   padding: 16px 20px;
   background: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
-  font-size: 16px;
+  ${fonts.P2};
   font-weight: 600;
   color: #495057;
 
   @media (max-width: 1200px) {
-    font-size: 15px;
+    ${fonts.P2};
     padding: 12px 16px;
   }
 
   @media (max-width: 768px) {
-    font-size: 14px;
+    ${fonts.P1};
     padding: 10px 14px;
   }
 `;
@@ -80,7 +81,7 @@ export const previousButton = styled.div`
   cursor: pointer;
 
   @media (max-width: 768px) {
-    font-size: 14px;
+    ${fonts.P2};
     padding: 8px;
   }
 `;
@@ -92,7 +93,7 @@ export const cancelButton = styled.div`
   cursor: pointer;
 
   @media (max-width: 768px) {
-    font-size: 14px;
+    ${fonts.P2};
     padding: 8px;
   }
 `;
@@ -114,7 +115,7 @@ export const endButton = styled.div`
   }
 
   @media (max-width: 768px) {
-    font-size: 14px;
+    ${fonts.P2};
     padding: 8px 16px;
     margin-top: 8px;
     margin-bottom: 8px;
@@ -140,7 +141,7 @@ export const EditorWrapper = styled.div`
   }
 `;
 
-export const saveWrapper = styled.div`
+export const SaveWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-right: 10px;
@@ -197,7 +198,7 @@ export const ViewerWrapper = styled.div`
     padding: 2px 6px;
     border-radius: 4px;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 0.9em;
+    ${fonts.P2};
   }
 
   pre {

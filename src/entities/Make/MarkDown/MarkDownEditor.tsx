@@ -57,14 +57,14 @@ export default function MarkDwonEditor() {
                     <s.previousButton onClick={previous}>
                         이전으로
                     </s.previousButton>
-                    <s.saveWrapper>
+                    <s.SaveWrapper>
                         <s.cancelButton onClick={cancel}>
                             취소
                         </s.cancelButton>
                         <s.endButton onClick={endModal}>
                             완료
                         </s.endButton>
-                    </s.saveWrapper>
+                    </s.SaveWrapper>
                 </s.ButtonWrapper>
             </s.EditorSection>
 
