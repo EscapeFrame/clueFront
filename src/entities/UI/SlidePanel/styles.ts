@@ -1,3 +1,5 @@
+import { fonts } from '@/shared/theme/font.styles';
+import { theme } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 export const Overlay = styled.div<{ isOpen: boolean }>`
@@ -15,29 +17,38 @@ export const Panel = styled.div<{ isOpen: boolean; width: string }>`
   top: 0; right: 0;
   height: 100vh;
   width: ${({ width }) => width};
-  background-color: #fff;
+  max-width: 100%;
+  background-color: ${theme.colors.white};
   box-shadow: -4px 0 8px rgba(0,0,0,0.1);
   transform: translateX(${({ isOpen }) => (isOpen ? '0' : '100%')});
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   display: flex;
   flex-direction: column;
   z-index: 1000;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const Header = styled.div`
   padding: 16px 24px;
-  font-size: 1.25rem;
+  ${fonts.P4};
   font-weight: 600;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid ${theme.colors.gray[200]};
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  background: ${theme.colors.white};
+  z-index: 1;
 `;
 
 export const CloseButton = styled.button`
   border: none;
   background: transparent;
-  font-size: 1.5rem;
+  ${fonts.P4}
   cursor: pointer;
   line-height: 1;
 `;
