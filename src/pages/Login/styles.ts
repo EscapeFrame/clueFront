@@ -3,6 +3,7 @@ import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
+  display: flex;
   justify-content: center;
   position: relative;
   margin-top: 10%;

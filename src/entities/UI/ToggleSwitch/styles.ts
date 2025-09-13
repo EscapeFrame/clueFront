@@ -43,10 +43,10 @@ export const Checkbox = styled.input<{ checked?: boolean }>`
   }
 
   &:checked + span::before {
-    transform: translateX(32px) translateY(-50%);
+    transform: translateX(40px) translateY(-50%);
 
     @media (max-width: 480px) {
-      transform: translateX(22px) translateY(-50%);
+    transform: translateX(30px) translateY(-50%);
     }
   }
 `;
