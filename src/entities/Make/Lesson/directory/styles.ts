@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { fonts } from "@/shared/theme/font.styles";
 import { theme } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
@@ -13,6 +12,10 @@ export const SelectBox = styled.div`
   cursor: pointer;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 export const AddButton = styled.div`
@@ -22,6 +25,10 @@ export const AddButton = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 export const Input = styled.input`
@@ -43,6 +50,10 @@ export const DirectoryContainer = styled.div`
   gap: 0.5rem;
   margin-bottom: 0.5rem;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 export const DirectoryInput = styled.input`
