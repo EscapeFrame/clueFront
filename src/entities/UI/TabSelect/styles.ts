@@ -30,7 +30,7 @@ export const TabButton = styled.button<TabButtonProps>`
   font-weight: ${({ active }) => (active ? 600 : "normal")};
   color: ${({ active }) => (active ? theme.colors.black : theme.colors.gray[600])};
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: 0.4rem 0.8rem;
     ${fonts.P2};
   }
