@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   align-items: center;
   gap: 8px;
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     gap: 6px;
   }
 `;
@@ -23,7 +23,7 @@ export const Switch = styled.label`
   width: 64px;
   height: 32px;
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     width: 48px;
     height: 24px;
   }
@@ -45,7 +45,7 @@ export const Checkbox = styled.input<{ checked?: boolean }>`
   &:checked + span::before {
     transform: translateX(40px) translateY(-50%);
 
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
     transform: translateX(30px) translateY(-50%);
     }
   }
@@ -75,14 +75,14 @@ export const Slider = styled.span`
     transition: 0.3s;
     border-radius: 50%;
 
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       height: 14px;
       width: 14px;
       left: 2px;
     }
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: 0 2px;
     border-radius: 20px;
   }
