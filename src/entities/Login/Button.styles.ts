@@ -26,9 +26,10 @@ export const LoginButtonStyled = styled.button`
   }
 
   & img {
-    width: 22px;
-    height: 22px;
+    width: 22px !important;
+    height: 22px !important;
   }
+    
 
 `;
 

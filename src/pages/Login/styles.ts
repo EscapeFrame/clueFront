@@ -21,13 +21,6 @@ export const Container = styled.div`
     }
   }
 
-  @media (max-width: 768px) {
-    img {
-      width: 40%;
-      height: 40%;
-    }
-  }
-
 `;
 
 export const LogoBox = styled.div`
@@ -58,11 +51,6 @@ export const LoginScript = styled.div`
     ${fonts.P2}
     margin-bottom: 40px;
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P1}
-    margin-bottom: 30px;
-  }
 `;
 
 export const AgreementScript = styled.div`
@@ -77,9 +65,5 @@ export const AgreementScript = styled.div`
 
   @media (max-width: 768px) {
     ${fonts.P3}
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P1}
   }
 `;
