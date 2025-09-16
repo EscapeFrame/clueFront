@@ -29,11 +29,6 @@ export const Image = styled.img`
     max-width: 180px;
     margin-bottom: 1rem;
   }
-
-  @media (max-width: 480px) {
-    max-width: 140px;
-    margin-bottom: 0.8rem;
-  }
 `;
 
 export const Message = styled.p`
@@ -48,11 +43,6 @@ export const Message = styled.p`
   @media (max-width: 768px) {
     ${fonts.P3}
     margin-bottom: 0.8rem;
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P2}
-    margin-bottom: 0.6rem;
   }
 `;
 
@@ -72,9 +62,5 @@ export const GoToMain = styled.div`
 
   @media (max-width: 768px) {
     ${fonts.P3}
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P2}
   }
 `;
