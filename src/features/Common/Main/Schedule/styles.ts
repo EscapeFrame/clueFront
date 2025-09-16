@@ -27,10 +27,6 @@ export const Title = styled.h1`
   @media (max-width: 768px) {
     ${fonts.P4};
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P3};
-  }
 `;
 
 export const Explain = styled.p`
@@ -39,7 +35,7 @@ export const Explain = styled.p`
   padding: 0;
   margin: 0;
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     ${fonts.P1};
   }
 `;
@@ -57,11 +53,6 @@ export const Wrapper = styled.div`
     flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem;
-    gap: 1rem;
   }
 `;
 
