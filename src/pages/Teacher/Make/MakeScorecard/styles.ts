@@ -17,10 +17,6 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     padding: 1.5rem 2rem;
   }
-
-  @media (max-width: 480px) {
-    padding: 1rem 1rem;
-  }
 `;
 
 export const Title = styled.div`
@@ -91,10 +87,6 @@ export const GridRow = styled.div<{ columnCount?: number }>`
   @media (max-width: 768px) {
     gap: 6px;
   }
-
-  @media (max-width: 480px) {
-    gap: 4px;
-  }
 `;
 
 export const HeaderField = styled.input`
@@ -112,10 +104,6 @@ export const HeaderField = styled.input`
   @media (max-width: 768px) {
     ${fonts.P2};
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P3};
-  }
 `;
 
 export const RemoveButton = styled.button`
@@ -132,7 +120,7 @@ export const RemoveButton = styled.button`
     color: ${theme.colors.blue[500]};
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     top: 2px;
     right: 2px;
   }
@@ -155,11 +143,6 @@ export const CellBox = styled.div`
     min-height: 60px;
     padding: 6px;
   }
-
-  @media (max-width: 480px) {
-    min-height: 50px;
-    padding: 4px;
-  }
 `;
 
 export const SpacerCell = styled.div`
@@ -179,10 +162,6 @@ export const HeaderBox = styled.div`
   @media (max-width: 768px) {
     padding: 8px;
   }
-
-  @media (max-width: 480px) {
-    padding: 6px;
-  }
 `;
 
 export const TextArea = styled.textarea`
@@ -200,10 +179,6 @@ export const TextArea = styled.textarea`
   @media (max-width: 768px) {
     min-height: 60px;
   }
-
-  @media (max-width: 480px) {
-    min-height: 50px;
-  }
 `;
 
 export const TextBlock = styled.div`
@@ -213,10 +188,6 @@ export const TextBlock = styled.div`
 
   @media (max-width: 768px) {
     ${fonts.P3};
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P4};
   }
 `;
 
@@ -228,10 +199,6 @@ export const RowAddWrapper = styled.div`
 
   @media (max-width: 768px) {
     margin-top: 12px;
-  }
-
-  @media (max-width: 480px) {
-    margin-top: 8px;
   }
 `;
 
@@ -255,11 +222,6 @@ export const AddRowButton = styled.button`
     height: 36px;
     padding: 10px 0;
   }
-
-  @media (max-width: 480px) {
-    height: 32px;
-    padding: 8px 0;
-  }
 `;
 
 export const AddColumnButton = styled.button`
@@ -282,10 +244,6 @@ export const AddColumnButton = styled.button`
 
   @media (max-width: 768px) {
     ${fonts.P3};
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P2};
   }
 `;
 
