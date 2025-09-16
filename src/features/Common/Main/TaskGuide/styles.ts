@@ -14,10 +14,6 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     padding: 20px 2rem;
   }
-
-  @media (max-width: 480px) {
-    padding: 15px 1rem;
-  }
 `;
 
 export const CardContainer = styled.div`
@@ -37,10 +33,6 @@ export const CardContainer = styled.div`
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
-    max-height: 300px;
-  }
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(2, 1fr);
     max-height: 300px;
   }
 `;
