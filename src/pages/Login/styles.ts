@@ -3,7 +3,6 @@ import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
-  display: flex;
   justify-content: center;
   position: relative;
   margin-top: 10%;
@@ -17,26 +16,11 @@ export const Container = styled.div`
 
   @media (max-width: 1200px) {
     img {
-      width: 25%;
-      height: 25%;
+      width: 20%;
+      height: 20%;
     }
   }
 
-  @media (max-width: 768px) {
-    margin-top: 8%;
-    img {
-      width: 40%;
-      height: 40%;
-    }
-  }
-
-  @media (max-width: 480px) {
-    margin-top: 6%;
-    img {
-      width: 60%;
-      height: 60%;
-    }
-  }
 `;
 
 export const LogoBox = styled.div`
@@ -44,9 +28,10 @@ export const LogoBox = styled.div`
   margin: auto;
   display: flex;
   text-align: center;
+  height: 100%;
+  width: 100%;
 
   @media (max-width: 768px) {
-    flex-direction: column;
     gap: 8px;
   }
 `;
@@ -66,11 +51,6 @@ export const LoginScript = styled.div`
     ${fonts.P2}
     margin-bottom: 40px;
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P1}
-    margin-bottom: 30px;
-  }
 `;
 
 export const AgreementScript = styled.div`
@@ -85,9 +65,5 @@ export const AgreementScript = styled.div`
 
   @media (max-width: 768px) {
     ${fonts.P3}
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P1}
   }
 `;
