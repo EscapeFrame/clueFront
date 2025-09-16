@@ -11,7 +11,7 @@ export const Title = styled.div`
   margin-bottom: 0.5rem;
   ${fonts.P3};
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     ${fonts.P2};
   }
 `;
@@ -41,7 +41,7 @@ export const Button = styled.button`
     background: ${theme.colors.gray[100]};
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     flex: 1 1 40%;
   }
 `;
@@ -68,7 +68,7 @@ export const Item = styled.div`
   position: relative;
   word-break: break-word; // 긴 파일명 처리
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     ${fonts.P2};
     padding: 6px 10px;
   }
