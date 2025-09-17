@@ -27,7 +27,7 @@ export const Grid = styled.div`
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media (max-width: 7681px) {
+  @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;

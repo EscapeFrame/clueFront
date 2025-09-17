@@ -10,7 +10,7 @@ export const LinkItemWrapper = styled.div`
   border-bottom: 1px solid #f1f3f5;
   cursor: pointer;
 
-  @ media (max-width: 768px) {
+  @media (max-width: 768px) {
     padding: 8px 0;
   }
 `;
