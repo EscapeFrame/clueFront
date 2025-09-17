@@ -14,11 +14,6 @@ export const ModalWrapper = styled.div`
     padding: 16px;
     max-width: 90%;
   }
-
-  @media (max-width: 480px) {
-    padding: 12px;
-    border-radius: 8px;
-  }
 `;
 
 export const Title = styled.h2`
@@ -27,7 +22,7 @@ export const Title = styled.h2`
   font-weight: 600;
   color: ${theme.colors.black};
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     ${fonts.P2};
   }
 `;

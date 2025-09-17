@@ -28,7 +28,7 @@ export const ModalWrapper = styled.div.withConfig({
       ? '0 0 15px 5px red'
       : '0 0 10px rgba(0,0,0,0.1)'};
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     width: 90%;
   }
 `;

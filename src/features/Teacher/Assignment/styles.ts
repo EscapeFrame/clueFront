@@ -16,10 +16,6 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     padding: 1.5rem 2rem;
   }
-
-  @media (max-width: 480px) {
-    padding: 1rem;
-  }
 `;
 
 export const Grid = styled.div`
@@ -31,12 +27,8 @@ export const Grid = styled.div`
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
   }
 `;
 
@@ -138,7 +130,7 @@ export const AddButton = styled.div`
   right: 2rem;
   z-index: 10;
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     bottom: 1.5rem;
     right: 1.5rem;
   }

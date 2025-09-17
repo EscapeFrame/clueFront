@@ -19,11 +19,7 @@ export const Container = styled.div`
 
   @media (max-width: 768px) {
     padding: 2rem 1rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem 0.5rem;
-  }
+}
 `;
 
 export const LeftSection = styled.div`

@@ -58,7 +58,7 @@ export const Status = styled.span<StatusProps>`
   border-radius: 12px;
   user-select: none;
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 1px 6px;
   };
 `;
@@ -86,7 +86,7 @@ export const TimeInfo = styled.div`
 export const Footer = styled.div`
   padding: 8px 16px 16px 16px;
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     padding: 8px 12px 12px 12px;
   }
 `;

@@ -16,10 +16,6 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     padding: 2rem 2rem;
   }
-
-  @media (max-width: 480px) {
-    padding: 1rem 1rem;
-  }
 `;
 
 export const HeaderRow = styled.div`
@@ -40,7 +36,7 @@ export const FileItem = styled.div`
   padding: 0.5rem;
   border-radius: 5px;
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: 0.4rem;
     ${fonts.P2}
   }
@@ -53,10 +49,6 @@ export const Title = styled.div`
   @media (max-width: 768px) {
     ${fonts.P4};
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P3};
-  }
 `;
 
 export const Label = styled.label`
@@ -66,10 +58,6 @@ export const Label = styled.label`
 
   @media (max-width: 768px) {
     margin-bottom: 6px;
-  }
-
-  @media (max-width: 480px) {
-    margin-bottom: 4px;
     ${fonts.P2};
   }
 `;

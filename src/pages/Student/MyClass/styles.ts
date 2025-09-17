@@ -13,10 +13,6 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     padding: 1.5rem 2rem;
   }
-
-  @media (max-width: 480px) {
-    padding: 1rem 1rem;
-  }
 `;
 
 export const TitleFont = styled.h1`
@@ -31,11 +27,6 @@ export const TitleFont = styled.h1`
   @media (max-width: 768px) {
     ${fonts.P3}
     margin-bottom: 16px;
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P2}
-    margin-bottom: 12px;
   }
 `;
 
@@ -56,12 +47,6 @@ export const AddButton = styled.button`
   @media (max-width: 768px) {
     width: 140px;
     height: 32px;
-    ${fonts.P3};
-  }
-
-  @media (max-width: 480px) {
-    width: 120px;
-    height: 30px;
     ${fonts.P3};
   }
 `;
@@ -89,10 +74,6 @@ export const ModalInput = styled.input`
   @media (max-width: 768px) {
     padding: 0.5rem 0.8rem;
   }
-
-  @media (max-width: 480px) {
-    padding: 0.4rem 0.6rem;
-  }
 `;
 
 export const EmptyMessage = styled.p`
@@ -106,10 +87,6 @@ export const Grid = styled.div`
 
   @media (max-width: 768px) {
     gap: 12px;
-  }
-
-  @media (max-width: 480px) {
-    gap: 8px;
   }
 `;
 
@@ -148,10 +125,6 @@ export const CardTitle = styled.h2`
   @media (max-width: 768px) {
     ${fonts.P3};
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P2};
-  }
 `;
 
 export const CardDescription = styled.p`
@@ -160,10 +133,6 @@ export const CardDescription = styled.p`
 
   @media (max-width: 768px) {
     ${fonts.P3};
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P2};
   }
 `;
 
@@ -183,9 +152,6 @@ export const InfoContent = styled.p`
     ${fonts.P3};
   }
 
-  @media (max-width: 480px) {
-    ${fonts.P2};
-  }
 `;
 
 export const ErrorMessage = styled.p`
@@ -194,10 +160,6 @@ export const ErrorMessage = styled.p`
 
   @media (max-width: 768px) {
     margin-bottom: 12px;
-  }
-
-  @media (max-width: 480px) {
-    margin-bottom: 8px;
   }
 `;
 
@@ -213,7 +175,4 @@ export const AddModalInput = styled.input`
     padding: 0.5rem 0.8rem;
   }
 
-  @media (max-width: 480px) {
-    padding: 0.4rem 0.6rem;
-  }
 `;

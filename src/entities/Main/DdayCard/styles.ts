@@ -28,7 +28,7 @@ export const Card = styled.a<{ isUrgent: boolean }>`
   }
 
   @media (max-width: 768px) {
-    max-width: 100%;  // 모바일에서는 부모 너비 100%
+    max-width: 100%;
     padding: 1rem;
   }
 `;

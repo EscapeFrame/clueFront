@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { theme } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   padding: 2rem 8rem;
@@ -12,10 +12,6 @@ export const Container = styled.div`
 
   @media (max-width: 768px) {
     padding: 1.5rem 2rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem 1rem;
   }
 `;
 
@@ -30,10 +26,6 @@ export const Title = styled.h1`
 
   @media (max-width: 768px) {
     ${fonts.P3};
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P2};
   }
 `;
 
@@ -60,10 +52,6 @@ export const InfoIcon = styled.span`
   @media (max-width: 768px) {
     ${fonts.P3};
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P2};
-  }
 `;
 
 export const InfoText = styled.p`
@@ -73,10 +61,6 @@ export const InfoText = styled.p`
 
   @media (max-width: 768px) {
     ${fonts.P2};
-  }
-
-  @media (max-width: 480px) {
-    ${fonts.P1};
   }
 `;
 
@@ -114,10 +98,6 @@ export const TeacherLabel = styled.label`
   @media (max-width: 768px) {
     ${fonts.P3};
   }
-
-  @media (max-width: 480px) {
-    ${fonts.P2};
-  }
 `;
 
 export const TeacherInputField = styled.input`
@@ -137,11 +117,6 @@ export const TeacherInputField = styled.input`
     padding: 10px 14px;
     ${fonts.P2};
   }
-
-  @media (max-width: 480px) {
-    padding: 8px 12px;
-    ${fonts.P3};
-  }
 `;
 
 export const ButtonGroup = styled.div`
@@ -151,10 +126,6 @@ export const ButtonGroup = styled.div`
 
   @media (max-width: 768px) {
     gap: 10px;
-  }
-
-  @media (max-width: 480px) {
-    gap: 8px;
   }
 `;
 
@@ -179,11 +150,6 @@ export const PDFB = styled.button`
     padding: 10px 14px;
     ${fonts.P2};
   }
-
-  @media (max-width: 480px) {
-    padding: 8px 12px;
-    ${fonts.P3};
-  }
 `;
 
 export const GoogleSheetB = styled.button`
@@ -202,11 +168,6 @@ export const GoogleSheetB = styled.button`
   @media (max-width: 768px) {
     padding: 10px 14px;
     ${fonts.P2};
-  }
-
-  @media (max-width: 480px) {
-    padding: 8px 12px;
-    ${fonts.P3};
   }
 `;
 

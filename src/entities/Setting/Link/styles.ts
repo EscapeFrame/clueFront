@@ -9,6 +9,10 @@ export const LinkItemWrapper = styled.div`
   padding: 12px 0;
   border-bottom: 1px solid #f1f3f5;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    padding: 8px 0;
+  }
 `;
 
 export const TextGroup = styled.div`
