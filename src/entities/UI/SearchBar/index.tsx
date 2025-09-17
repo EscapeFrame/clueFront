@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import type { ChangeEvent, KeyboardEvent, CompositionEvent } from 'react';
 import * as s from './styles';
 
 type SearchProps = {
@@ -8,11 +9,21 @@ type SearchProps = {
 export function SearchBar({ onSearch }: SearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
+  const isComposingRef = useRef(false);
+  const lastQueryRef = useRef('');
+
+  const doSearch = (q: string) => {
+    const query = q.trim();
+    if (query === lastQueryRef.current) return;
+    lastQueryRef.current = query;
     onSearch(query);
-    console.log("검색어:", query);
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const q = e.target.value;
+    setSearchQuery(q);
+    if (isComposingRef.current) return;
+    doSearch(q);
   };
 
   const handleSearch = () => {
@@ -33,6 +44,11 @@ export function SearchBar({ onSearch }: SearchProps) {
         value={searchQuery}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onCompositionStart={() => { isComposingRef.current = true; }}
+        onCompositionEnd={(e: CompositionEvent<HTMLInputElement>) => {
+          isComposingRef.current = false;
+          doSearch((e.target as HTMLInputElement).value);
+        }}
       />
       <s.SearchIcon size={20} onClick={handleSearch} />
     </s.Container>
