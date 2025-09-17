@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import type { ChangeEvent, KeyboardEvent, CompositionEvent } from 'react';
 import * as s from './styles';
 
 type SearchProps = {
@@ -8,10 +9,31 @@ type SearchProps = {
 export function SearchBar({ onSearch }: SearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSearch = () => onSearch(searchQuery);
+  const isComposingRef = useRef(false);
+  const lastQueryRef = useRef('');
+
+  const doSearch = (q: string) => {
+    const query = q.trim();
+    if (query === lastQueryRef.current) return;
+    lastQueryRef.current = query;
+    onSearch(query);
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const q = e.target.value;
+    setSearchQuery(q);
+    if (isComposingRef.current) return;
+    doSearch(q);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchQuery);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleSearch();
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -20,8 +42,13 @@ export function SearchBar({ onSearch }: SearchProps) {
         type="text"
         placeholder="찾으시는 학습실을 입력해주세요."
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onCompositionStart={() => { isComposingRef.current = true; }}
+        onCompositionEnd={(e: CompositionEvent<HTMLInputElement>) => {
+          isComposingRef.current = false;
+          doSearch((e.target as HTMLInputElement).value);
+        }}
       />
       <s.SearchIcon size={20} onClick={handleSearch} />
     </s.Container>
