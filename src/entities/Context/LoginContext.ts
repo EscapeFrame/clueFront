@@ -9,8 +9,9 @@ export interface User {
 
 export interface UserContextType {
   accessToken: string | null;
+  refreshToken: string | null;
   user: User | null;
-  setAuthInfo: (token: string, userInfo: User) => void;
+  setAuthInfo: (accessToken: string, refreshToken: string) => void;
   removeAuthInfo: () => void;
 }
 

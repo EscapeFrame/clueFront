@@ -26,6 +26,7 @@ interface AppRoutesProps {
 export const AppRoutes = ({ role }: AppRoutesProps) => {
 
   const isAuthenticated = role !== null;
+  console.log("role in AppRoutes: ", role);
 
   return (
     <Routes>

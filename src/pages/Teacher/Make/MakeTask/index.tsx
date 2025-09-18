@@ -121,6 +121,7 @@ const MakeTask: React.FC = () => {
       );
       for (const link of newLinks) {
         try {
+          console.log("새 링크 전송 중...", link.url);
           await attachLink(createdAssignmentId, link.url as string);
           processedLinkUrlsRef.current.add(link.url as string);
         } catch (e) {

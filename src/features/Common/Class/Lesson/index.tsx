@@ -33,7 +33,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // 선생님인지 확인
-  const isTeacher = user?.role === 'TEACHER';
+  const isTeacher = 'TEACHER';
 
   // 데이터 불러오기
   const fetchData = async () => {
