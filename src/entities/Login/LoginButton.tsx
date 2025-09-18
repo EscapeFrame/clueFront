@@ -13,14 +13,11 @@ function LoginButton() {
   if (!context) {
     throw new Error("LoginButton은 UserContext.Provider 안에서 사용되어야 합니다.");
   }
-  const { setAuthInfo, removeAuthInfo, accessToken, user } = context;
+  const { setAuthInfo, removeAuthInfo, accessToken } = context;
 
-  const onGoogleLogin = () => {
-    const redirectUri = encodeURIComponent(
-      `${window.location.origin}/login/oauth2/code/google`
-    );
+const onGoogleLogin = () => {
     const API_URL = import.meta.env.VITE_API_BASE_URL;
-    window.location.href = `${API_URL}/oauth2/authorization/google?prompt=login&redirect_uri=${redirectUri}`;
+    window.location.href = `${API_URL}/oauth2/authorization/google`;
   };
 
   const onLogout = async () => {

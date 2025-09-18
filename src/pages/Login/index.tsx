@@ -1,11 +1,25 @@
 import LoginButton from "@/entities/Login/LoginButton"
 import * as S from './styles'
+import { useEffect, useContext } from "react";
+import { UserContext } from "@/entities/Context/LoginContext";
 
 export function Login() {
+    const context = useContext(UserContext);
 
-    console.log("로그인 페이지");
-    const token =  localStorage.getItem('accessToken');
-    if(!token) console.log("토큰이 없음");
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+            if (context) {
+                context.setAuthInfo(accessToken, refreshToken);
+                // 토큰 저장 후, 메인 페이지로 이동하며 새로고침
+                window.location.href = '/';
+            }
+        }
+    }, [context]);
+
     return (
         <S.Container>
             <S.LogoBox>
@@ -23,4 +37,4 @@ export function Login() {
     )
 }
 
-export default Login()
+export default Login
