@@ -33,7 +33,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // 선생님인지 확인
-  const isTeacher = 'TEACHER';
+  const isTeacher = user?.role === 'TCH';
 
   // 데이터 불러오기
   const fetchData = async () => {
@@ -93,13 +93,13 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   const handleDeleteDirectory = async (dirId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     // 선생님이 아니면 삭제 불가
     if (!isTeacher) {
       alert("선생님만 디렉토리를 삭제할 수 있습니다.");
       return;
     }
-    
+
     if (window.confirm("정말로 이 디렉토리를 삭제하시겠습니까?")) {
       try {
         const success = await deleteDirectory(dirId);
