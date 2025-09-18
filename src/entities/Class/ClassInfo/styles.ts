@@ -11,15 +11,9 @@ export const Container = styled.div`
   overflow: hidden;
   width: 100%;
 
-  @media (max-width: 1200px) {
-    flex-direction: column;
-    padding: 4rem 2rem;
-    gap: 2rem;
-  }
-
   @media (max-width: 768px) {
     padding: 2rem 1rem;
-}
+  }
 `;
 
 export const LeftSection = styled.div`
