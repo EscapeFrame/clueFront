@@ -18,7 +18,7 @@ Customapi.interceptors.request.use(
   (config) => {
     const accesToken = localStorage.getItem('accessToken');
     if (accesToken) {
-      config.headers['Authorization'] = `${accesToken}`;
+      config.headers['Authorization'] = `Bearer ${accesToken}`;
     }
     return config;
   },
