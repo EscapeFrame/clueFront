@@ -6,8 +6,8 @@ import { useRecoilState } from 'recoil';
 export const useAuth = () => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
   const [refreshToken, setRefreshToken] = useState<string | null>(localStorage.getItem('refreshToken'));
-
   const [user, setUser] = useRecoilState(userState);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   // 로그인시 사용자 정보 및 토큰 세팅
   const setAuthInfo = useCallback((accessToken: string, refreshToken: string) => {
@@ -29,18 +29,19 @@ export const useAuth = () => {
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     const fetchUserInfo = async () => {
-      // 토큰 없을 시 로그인으로
       if (!accessToken) {
-        console.log('accessToken 없음');
+        setLoading(false);
         return;
       }
 
-      if (user?.userId) return;
+      if (user?.userId) {
+        setLoading(false);
+        return;
+      }
 
       try {
         const res = await Customapi.get('/api/user/me');
         const userData = res.data;
-        console.log('Setting user info in Recoil:', userData);
         setUser({
           userId: userData.userId,
           username: userData.username,
@@ -48,9 +49,12 @@ export const useAuth = () => {
         });
       } catch (error) {
         console.error('유저 정보 조회 실패: ', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUserInfo();
   }, [accessToken, user, removeAuthInfo, setUser]);
-  return { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo };
+
+  return { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo, loading };
 };
