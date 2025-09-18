@@ -155,7 +155,8 @@ const MakeTask: React.FC = () => {
     };
 
     function formatDateTime(dateStr: string): string {
-      return `${dateStr} 00:00`;
+      const dateString = dateStr.replace("T", " ");
+      return dateString.length === 10 ? dateString + " 00:00:00" : dateString;
     }
 
     try {
