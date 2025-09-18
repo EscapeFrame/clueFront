@@ -31,19 +31,19 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
   return (
     <Routes>
 
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element = {<RegisterPage />} />
-
-      {!isAuthenticated && (
-        <>
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </>
+      {isAuthenticated ? (
+        <Route path='/login' element={<Navigate to='/' replace />} />
+      ) : (
+        <Route path='/login' element={<Login />} />
       )}
+      <Route path='/register' element={<RegisterPage />} />
+
+      {!isAuthenticated && <Route path='*' element={<Navigate to='/login' replace />} />}
       {role === 'TCH' && (
         <>
-          <Route path="/" element={<TCHHome />} />
-          <Route path="/class" element={<TCHMyClass />} />
-          <Route path="/class/:classRoomId" element={<TCHClass />} />
+          <Route path='/' element={<TCHHome />} />
+          <Route path='/class' element={<TCHMyClass />} />
+          <Route path='/class/:classRoomId' element={<TCHClass />} />
           <Route path='/class/make' element={<TCHMakeClass />} />
           <Route path='/timeline' element={<AddTimeLine />} />
           <Route path='/class/:classRoomId/make/task' element={<TCHMakeTask />} />
@@ -54,15 +54,14 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
       )}
       {role === 'STU' && (
         <>
-          <Route path="/" element={<STUHome />} />
-          <Route path="/class" element={<STUMyClass />} />
-          <Route path="/class/:classRoomId" element={<STUClass />} />
+          <Route path='/' element={<STUHome />} />
+          <Route path='/class' element={<STUMyClass />} />
+          <Route path='/class/:classRoomId' element={<STUClass />} />
         </>
       )}
 
       {isAuthenticated && (
         <>
-          <Route path='/login' element={<Login />} />
           <Route path='/setting' element={<Setting />} />
           <Route path='setting/user' element={<p>정보 수정 페이지</p>} />
         </>

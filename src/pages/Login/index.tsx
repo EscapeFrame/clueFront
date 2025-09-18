@@ -29,7 +29,7 @@ export function Login() {
         } else {
             console.log("Tokens not found in URL params.");
         }
-    }, [context]);
+    });
 
     return (
         <S.Container>

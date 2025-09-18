@@ -40,6 +40,7 @@ export const useAuth = () => {
       try {
         const res = await Customapi.get('/api/user/me');
         const userData = res.data;
+        console.log('Setting user info in Recoil:', userData);
         setUser({
           userId: userData.userId,
           username: userData.username,
