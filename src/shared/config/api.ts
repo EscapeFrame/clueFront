@@ -15,12 +15,12 @@ const Customapi = axios.create({
 
 // header에 필요시 accesToken 담도록 수정
 Customapi.interceptors.request.use(
-  (res) => {
+  (config) => {
     const accesToken = localStorage.getItem('accessToken');
     if (accesToken) {
-      res.headers['Authorization'] = `Bearer ${accesToken}`;
+      config.headers['Authorization'] = `${accesToken}`;
     }
-    return res;
+    return config;
   },
   (error) => {
     return Promise.reject(error);
