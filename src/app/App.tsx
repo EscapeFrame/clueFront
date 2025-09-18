@@ -7,7 +7,6 @@ import { UserContext } from '@/entities/Context/LoginContext';
 import { AppRoutes } from '@/app/router/AppRoutes';
 import { useAuth } from './hooks/useAccessToken';
 import Navbar from '@/widgets/Navbar/index';
-import { useEffect } from 'react';
 
 export default function App() {
   return (
@@ -25,18 +24,6 @@ export default function App() {
 function AuthWrapper() {
   const { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo } = useAuth();
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-
-    if (accessToken && refreshToken) {
-      setAuthInfo(accessToken, refreshToken);
-      // URL에서 토큰을 제거하여 주소를 정리합니다.
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-  }, [setAuthInfo]);
-  
   let role = user?.role || null;
   if (role === 'STUDENT') role = 'STU';
   else if (role === 'TEACHER') role = 'TCH';
