@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import CustomApi from '@/shared/config/api';
+import Customapi from '@/shared/config/api';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
 
@@ -38,7 +38,7 @@ export const useAuth = () => {
       if (user?.userId) return;
 
       try {
-        const res = await CustomApi.get('/api/user/me');
+        const res = await Customapi.get('/api/user/me');
         const userData = res.data;
         setUser({
           userId: userData.userId,
