@@ -24,7 +24,7 @@ export default function App() {
 function AuthWrapper() {
   const { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo } = useAuth();
 
-  console.log('User object in AuthWrapper:', user);
+
 
   let role = user?.role || null;
   if (role === 'STUDENT') role = 'STU';

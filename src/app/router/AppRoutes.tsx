@@ -24,46 +24,49 @@ interface AppRoutesProps {
 }
 
 export const AppRoutes = ({ role }: AppRoutesProps) => {
-
   const isAuthenticated = role !== null;
-  console.log("role in AppRoutes: ", role);
+
+
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
 
   return (
     <Routes>
+      <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route path="/register" element={<Navigate to="/" replace />} />
 
-      {isAuthenticated ? (
-        <Route path='/login' element={<Navigate to='/' replace />} />
-      ) : (
-        <Route path='/login' element={<Login />} />
-      )}
-      <Route path='/register' element={<RegisterPage />} />
-
-      {!isAuthenticated && <Route path='*' element={<Navigate to='/login' replace />} />}
       {role === 'TCH' && (
         <>
-          <Route path='/' element={<TCHHome />} />
-          <Route path='/class' element={<TCHMyClass />} />
-          <Route path='/class/:classRoomId' element={<TCHClass />} />
-          <Route path='/class/make' element={<TCHMakeClass />} />
-          <Route path='/timeline' element={<AddTimeLine />} />
-          <Route path='/class/:classRoomId/make/task' element={<TCHMakeTask />} />
-          <Route path='/class/make/score' element={<TCHMakeScorecard />} />
-          <Route path='/class/make/markdown' element={<TCHMarkDown />} />
-          <Route path='/class/:classRoomId/make/lesson' element={<TCHMakeLesson />} />
+          <Route path="/" element={<TCHHome />} />
+          <Route path="/class" element={<TCHMyClass />} />
+          <Route path="/class/:classRoomId" element={<TCHClass />} />
+          <Route path="/class/make" element={<TCHMakeClass />} />
+          <Route path="/timeline" element={<AddTimeLine />} />
+          <Route path="/class/:classRoomId/make/task" element={<TCHMakeTask />} />
+          <Route path="/class/make/score" element={<TCHMakeScorecard />} />
+          <Route path="/class/make/markdown" element={<TCHMarkDown />} />
+          <Route path="/class/:classRoomId/make/lesson" element={<TCHMakeLesson />} />
         </>
       )}
       {role === 'STU' && (
         <>
-          <Route path='/' element={<STUHome />} />
-          <Route path='/class' element={<STUMyClass />} />
-          <Route path='/class/:classRoomId' element={<STUClass />} />
+          <Route path="/" element={<STUHome />} />
+          <Route path="/class" element={<STUMyClass />} />
+          <Route path="/class/:classRoomId" element={<STUClass />} />
         </>
       )}
 
       {isAuthenticated && (
         <>
-          <Route path='/setting' element={<Setting />} />
-          <Route path='setting/user' element={<p>정보 수정 페이지</p>} />
+          <Route path="/setting" element={<Setting />} />
+          <Route path="setting/user" element={<p>정보 수정 페이지</p>} />
         </>
       )}
 
