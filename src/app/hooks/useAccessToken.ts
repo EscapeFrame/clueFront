@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import CustomApi from '@/shared/config/api';
-import { User } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
 
@@ -8,20 +7,26 @@ export const useAuth = () => {
   const [accessToken, setAccessToken] = useState<string | null>(() => {
     return localStorage.getItem('accessToken');
   });
+  const [refreshToken, setRefreshToken] = useState<string | null>(() => {
+    return localStorage.getItem('refreshToken');
+  });
 
   const [user, setUser] = useRecoilState(userState);
 
   // 로그인시 사용자 정보 및 토큰 세팅
-    const setAuthInfo = (token: string, userInfo: User) => {
-      localStorage.setItem('accessToken', token);
-      setAccessToken(token);
-      setUser(userInfo);
-  };
+  const setAuthInfo = useCallback((accessToken: string, refreshToken: string) => {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+  }, []);
 
   // 로그아웃
   const removeAuthInfo = useCallback(() => {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     setAccessToken(null);
+    setRefreshToken(null);
     setUser({ username: "", userId: "", role: "" });
   }, [setUser]);
   
@@ -51,5 +56,5 @@ export const useAuth = () => {
     };
     fetchUserInfo();
   }, [accessToken, user, removeAuthInfo, setUser]);
-  return { accessToken, user, setAuthInfo, removeAuthInfo };
+  return { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo };
 };
