@@ -47,7 +47,7 @@ export function AssignmentCard({ data, assignmentId }: AssignmentCardProps & {
       <Button
         type={0}
         text="제출현황"
-        onClick={() => navigate(`${assignmentId}/check`)}
+        onClick={() => navigate(`/class/${assignmentId}/check`)}
       />
     </s.CardContainer>
   );

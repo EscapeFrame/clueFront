@@ -18,7 +18,7 @@ export const dummyClassInfo = {
 // -------------------- 과제 더미 --------------------
 export const dummyAssignments: Assignment[] = [
   {
-    id: 1,
+  assignmentId: 1,
     title: "수학 숙제 1",
     content: "문제 1~10 풀기",
     description: "각 문제를 PDF로 제출",
@@ -33,7 +33,7 @@ export const dummyAssignments: Assignment[] = [
     ],
   },
   {
-    id: 2,
+    assignmentId: 2,
     title: "영어 숙제 1",
     content: "영단어 암기",
     description: "암기한 내용을 사진으로 제출",
@@ -51,7 +51,7 @@ export const dummyAssignments: Assignment[] = [
 
 // -------------------- DetailAssignments Props 더미 --------------------
 export const dummyAssignment: Assignment & { submittedCount: number; totalCount: number } = {
-  id: "1",
+  assignmentId: "1",
   title: "샘플 과제 제목",
   content: "학생들이 해야 할 주요 내용",
   description: "과제 상세 설명입니다. 학생들이 제출해야 하는 내용과 주의 사항을 여기에 작성합니다.",
