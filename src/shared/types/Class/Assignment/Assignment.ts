@@ -2,7 +2,7 @@ import {AssignmentAttachment } from './Attachment';
 
 // 과제 전체•단일 조회
 export interface AssignmentResponse {
-  AssignmentAttachments: AssignmentAttachment[];
+  attachmentDtos: AssignmentAttachment[];
   assignmentId: number; // 과제 아이디
   content: string; // 과제 내용
   endDate: string; // 과제 마감일
