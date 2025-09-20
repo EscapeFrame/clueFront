@@ -63,7 +63,7 @@ export const AssignmentComponent: React.FC = () => {
                             <AssignmentCard
                                 key={a.id}
                                 data={a}
-                                classRoomId={String(effectiveId)}
+                                assignmentId={String(a.id)}
                                 updateAssignment={(id, changes) => {
                                     setAssignments(prev => {
                                         const idx = prev.findIndex(x => x.id === id);

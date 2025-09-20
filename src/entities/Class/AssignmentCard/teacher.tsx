@@ -7,12 +7,17 @@ import { differenceInDays, parseISO } from 'date-fns';
 import Button from '@/entities/UI/Button';
 import * as s from './styles';
 
-export function AssignmentCard({ data, classRoomId }: AssignmentCardProps & { classRoomId: string }) {
+export function AssignmentCard({ data, assignmentId, onStatusClick }: AssignmentCardProps & { assignmentId: string }) {
   const [isSubmitted] = useState(data.isSubmitted);
 
   const navigate = useNavigate();
-  const DetailAssignments = () => { // 제출현황 페이지로 이동
-    navigate(`/class/${classRoomId}/check/${data.id}`);
+
+  const handleStatusClick = () => {
+    if (onStatusClick) {
+      onStatusClick(assignmentId);
+    } else {
+      navigate(`/class/${assignmentId}/check`);
+    }
   };
 
   const renderDeadlineOrSubmission = () => {
@@ -46,7 +51,7 @@ export function AssignmentCard({ data, classRoomId }: AssignmentCardProps & { cl
           <s.InfoItem><IoCalendarClearOutline /> 마감일: {data.endDate}</s.InfoItem>
           {renderDeadlineOrSubmission()}
         </s.InfoSection>
-        <Button type={0} text="제출현황" onClick={DetailAssignments} />
+        <Button type={0} text="제출현황" onClick={handleStatusClick} />
       </s.CardContainer>
     </>
   );

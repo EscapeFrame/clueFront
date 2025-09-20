@@ -79,6 +79,7 @@ export interface Assignment {
 export interface AssignmentCardProps {
   data: Assignment;
   updateAssignment: (id: string | number, changes: Partial<Assignment>) => void;
+  onStatusClick?: (assignmentId: string) => void;
 }
 
 // AssignmentComponent Props (필요하면)
