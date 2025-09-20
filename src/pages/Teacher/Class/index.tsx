@@ -11,9 +11,11 @@ import { tabs } from './data';
 import { getClassInfo as ClassData } from '@/entities/Class/api';
 import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import NotFound from '@/pages/NotFound';
+import { DetailAssignment } from '@/features/Teacher/DetailAssignments';
 
 const Classroom: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId: string }>();
+    const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('lesson');
 
   // API로 가져온 클래스 정보를 담을 state
@@ -46,6 +48,10 @@ const Classroom: React.FC = () => {
     localStorage.setItem('classroom-tab', tab);
   };
 
+  const handleBackToList = () => {
+    setSelectedAssignment(null);
+  };
+
   if (!classRoomId) return <NotFound />;
 
   const renderContent = () => {
@@ -53,7 +59,14 @@ const Classroom: React.FC = () => {
       case 'lesson':
         return <LessonComponent classRoomId={classRoomId} />;
       case 'assignment':
-        return <AssignmentComponent />;
+        return selectedAssignment ? (
+          <DetailAssignment
+            assignmentId={selectedAssignment}
+            onBack={handleBackToList}
+          />
+        ) : (
+          <AssignmentComponent />
+        );
       case 'exam':
         return <ExamComponent />;
       default:

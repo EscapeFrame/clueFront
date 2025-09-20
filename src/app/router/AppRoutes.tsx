@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import {Login} from '@/pages/Login/index';
+import { Login } from '@/pages/Login/index';
 import RegisterPage from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
 import Setting from '@/pages/Common/Setting/Setting';
