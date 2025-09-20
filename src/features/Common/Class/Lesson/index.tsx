@@ -33,7 +33,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // 선생님인지 확인
-  const isTeacher = user?.role === 'TCH'|| 'TEACHER';
+  const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
 
   // 디버긍용
   useEffect(() => {
