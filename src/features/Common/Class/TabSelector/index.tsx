@@ -1,13 +1,6 @@
 import { SearchBar } from '@/entities/UI/SearchBar';
 import * as s from './styles';
-
-export type CategoryKey = '전체' | '인문과목' | '전공과목';
-
-export const CATEGORY_MAP: Record<CategoryKey, number> = {
-  '전체': -1,
-  '인문과목': 1,
-  '전공과목': 2,
-};
+import {CATEGORY_FILTER_MAP} from './category';
 
 type TabSelectorProps = {
   selectedTab: string;
@@ -19,7 +12,7 @@ export default function TabSelector({ selectedTab, onSelectTab, onSearch }: TabS
   return (
     <s.Container>
       <s.TabList>
-        {Object.keys(CATEGORY_MAP).map(key => (
+        {Object.keys(CATEGORY_FILTER_MAP).map(key => (
           <s.TabButton
             key={key}
             isActive={selectedTab === key} 
