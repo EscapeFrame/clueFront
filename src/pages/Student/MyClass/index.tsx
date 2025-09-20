@@ -2,7 +2,7 @@ import * as s from './styles';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
-import { CategoryKey } from '@/features/Common/Class/TabSelector/category';
+import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector/category';
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
 import { useModal } from '@/entities/UI/Modal/modal.hooks';
 import { Modal } from '@/entities/UI/Modal';
@@ -17,7 +17,8 @@ export default function MyClass() {
 
   // 탭 + 검색 필터링
   const filteredClasses = myClasses.filter((cls) => {
-    const tabMatch = selectedTab === '전체' ? true : cls.subject?.includes(selectedTab);
+    const filterValue = CATEGORY_FILTER_MAP[selectedTab as CategoryKey];
+    const tabMatch = filterValue === null ? true : cls.sort === filterValue;
     const searchMatch = cls.name.toLowerCase().includes(searchValue.toLowerCase());
     return tabMatch && searchMatch;
   });
@@ -61,7 +62,7 @@ export default function MyClass() {
               <s.CardDescription>{cls.description || '설명이 없습니다.'}</s.CardDescription>
               <s.InfoBlock>
                 <s.InfoContent>
-                  {cls.subject || '미정'} | {cls.assignedClass || '미정'}
+                  {cls.sort || '미정'} | {cls.assignedClass || '미정'}
                 </s.InfoContent>
               </s.InfoBlock>
             </s.Card>
