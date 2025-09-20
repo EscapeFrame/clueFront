@@ -47,3 +47,16 @@ export async function getClassInfo(classroomId: string) {
         throw error;
     }
 }
+
+export async function getCheckStudent(assignmentId: string) {
+    try {
+        const response = await Customapi.get(`/api/assignments/${assignmentId}/check`);
+        if (response.status !== 200) {
+            return response.status;
+        }
+        return response.data;
+    } catch (error) {
+        console.error('학생 제출 현황 조회 실패:', error);
+        throw error;
+    }
+}

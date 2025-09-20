@@ -1,4 +1,4 @@
-import { Assignment, AssignmentFileType, DetailAssignmentData, DetailAssignmentStudent, StudentAssignmentResponse, TeacherSubmissionCheckResponse } from '@/shared/types/Class/Assignment/Attachment';
+import { Assignment, AssignmentFileType, DetailAssignmentData, StudentAssignmentResponse, TeacherSubmissionCheckResponse } from '@/shared/types/Class/Assignment/Attachment';
 
 // -------------------- 클래스 정보 더미 --------------------
 export const dummyClassInfo = {
