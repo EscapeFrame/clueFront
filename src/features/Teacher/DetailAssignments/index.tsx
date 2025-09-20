@@ -34,12 +34,26 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
         const fetchAssignment = async () => {
             setLoading(true);
             try {
-                const data = await AssignmentsApi.getById(assignmentId);
-                if (data) {
-                    const assignmentData = { ...data, submittedCount: data.submittedCount || 0, totalCount: data.totalCount || 0 } as (Assignment & { submittedCount: number; totalCount: number });
-                    setAssignment(assignmentData);
-                    setEditTitle(assignmentData.title);
-                    setEditDescription(assignmentData.description);
+                const responseData = await AssignmentsApi.getById(assignmentId);
+                if (responseData) {
+                    // Map the API response to the component's Assignment type
+                    const mappedData: Assignment & { submittedCount: number; totalCount: number } = {
+                        assignmentId: responseData.assignmentId,
+                        title: responseData.title,
+                        content: responseData.content,
+                        description: responseData.content, // Map content to description
+                        deadline: responseData.endDate,     // Map endDate to deadline
+                        endDate: responseData.endDate,
+                        files: responseData.AssignmentAttachments.map(att => att.originalFileName || null), // Map attachments to file names
+                        isSubmitted: false, 
+                        submissionDate: null,
+                        submittedCount: (responseData as any).submittedCount || 0, 
+                        totalCount: (responseData as any).totalCount || 0,       
+                    };
+
+                    setAssignment(mappedData);
+                    setEditTitle(mappedData.title);
+                    setEditDescription(mappedData.description);
                     setError(null);
                 } else {
                     setError('과제 정보를 불러오지 못했습니다.');
