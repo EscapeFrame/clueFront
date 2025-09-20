@@ -54,7 +54,6 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/class/make/score" element={<TCHMakeScorecard />} />
           <Route path="/class/make/markdown" element={<TCHMarkDown />} />
           <Route path="/class/:classRoomId/make/lesson" element={<TCHMakeLesson />} />
-          <Route path="/class/:assignmentId/check" element={<div>제출현황 페이지</div>} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
         </>
       )}

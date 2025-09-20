@@ -52,6 +52,10 @@ const Classroom: React.FC = () => {
     setSelectedAssignment(null);
   };
 
+  const handleAssignmentSelect = (assignmentId: string) => {
+    setSelectedAssignment(assignmentId);
+  };
+
   if (!classRoomId) return <NotFound />;
 
   const renderContent = () => {
@@ -65,7 +69,7 @@ const Classroom: React.FC = () => {
             onBack={handleBackToList}
           />
         ) : (
-          <AssignmentComponent />
+          <AssignmentComponent onAssignmentSelect={handleAssignmentSelect} />
         );
       case 'exam':
         return <ExamComponent />;
