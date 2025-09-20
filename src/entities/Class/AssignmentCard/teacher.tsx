@@ -11,7 +11,7 @@ export function AssignmentCard({ data, assignmentId }: AssignmentCardProps & {
   assignmentId: string;
 }) {
   const navigate = useNavigate();
-  const [isSubmitted] = useState(data.isSubmitted);
+  const [isSubmitted] = useState(data.isSubmitted ?? false);
   const renderDeadlineOrSubmission = () => {
     if (isSubmitted) {
       return <s.InfoItem><LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}</s.InfoItem>;
