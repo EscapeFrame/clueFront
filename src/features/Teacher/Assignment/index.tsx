@@ -6,7 +6,11 @@ import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
 import Button from '@/entities/UI/Button';
 import * as s from './styles';
 
-export const AssignmentComponent: React.FC = () => {
+interface AssignmentComponentProps {
+  onAssignmentSelect: (assignmentId: string) => void;
+}
+
+export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssignmentSelect }) => {
     const { classId, classRoomId } = useParams<{ classId?: string | undefined; classRoomId?: string | undefined }>();
     // classId가 없으면 classRoomId를 사용
     const effectiveId = classId ?? classRoomId;
@@ -60,22 +64,23 @@ export const AssignmentComponent: React.FC = () => {
                         <div>등록된 과제가 없습니다.</div>
                     ) : (
                         assignments.map((a: Assignment) => (
-                            <AssignmentCard
-                                key={a.assignmentId}
-                                data={a}
-                                assignmentId={String(a.assignmentId)}
-                                updateAssignment={(id, changes) => {
-                                    setAssignments(prev => {
-                                        const idx = prev.findIndex(x => x.assignmentId === id);
-                                        if (idx >= 0) {
-                                            const newAssignments = [...prev];
-                                            newAssignments[idx] = { ...newAssignments[idx], ...changes };
-                                            return newAssignments;
-                                        }
-                                        return prev;
-                                    });
-                                }}
-                            />
+                            <div key={a.assignmentId} onClick={() => onAssignmentSelect(String(a.assignmentId))}>
+                                <AssignmentCard
+                                    data={a}
+                                    assignmentId={String(a.assignmentId)}
+                                    updateAssignment={(id, changes) => {
+                                        setAssignments(prev => {
+                                            const idx = prev.findIndex(x => x.assignmentId === id);
+                                            if (idx >= 0) {
+                                                const newAssignments = [...prev];
+                                                newAssignments[idx] = { ...newAssignments[idx], ...changes };
+                                                return newAssignments;
+                                            }
+                                            return prev;
+                                        });
+                                    }}
+                                />
+                            </div>
                         ))
                     )}
                 </s.Grid>
