@@ -7,10 +7,11 @@ export interface DateInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   id?: string; 
   required?: boolean; 
+  min?: string;
 }
 
 export default function DateInput({
-  label,value,onChange,id,required,
+  label,value,onChange,id,required, min
 }: DateInputProps) {
   return (
     <s.Wrapper>
@@ -19,7 +20,7 @@ export default function DateInput({
       </s.Label>
       <s.InputWrapper>
         <s.Input
-          type="date" id={id} value={value} onChange={onChange} required={required}
+          type="date" id={id} value={value} onChange={onChange} required={required} min={min}
         />
       </s.InputWrapper>
     </s.Wrapper>

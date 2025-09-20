@@ -174,6 +174,12 @@ const MakeTask: React.FC = () => {
   const handleMakeTask = async () => {
     if (!classRoomId) return alert("classRoomId가 없습니다.");
 
+    // 날짜 유효성 검사
+    if (startDate && dueDate && startDate > dueDate) {
+      alert('시작일이 마감일보다 느립니다.');
+      return;
+    }
+
     const taskData: AssignmentCreateRequest = {
       class_id: classRoomId!,
       title: subject,
@@ -242,7 +248,7 @@ const MakeTask: React.FC = () => {
       />
 
       <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
-      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} />
+      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} />
 
       <Button text="완료" disabled={!isFormValid} onClick={handleMakeTask} />
 
