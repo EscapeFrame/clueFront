@@ -44,7 +44,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                         description: responseData.content, // Map content to description
                         deadline: responseData.endDate,     // Map endDate to deadline
                         endDate: responseData.endDate,
-                        files: responseData.AssignmentAttachments.map(att => att.originalFileName || null), // Map attachments to file names
+                        files: responseData.attachmentDtos.map(att => att.originalFileName || null), // Map attachments to file names
                         isSubmitted: false, 
                         submissionDate: null,
                         submittedCount: (responseData as any).submittedCount || 0, 
