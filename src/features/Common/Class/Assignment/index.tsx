@@ -38,7 +38,7 @@ export const AssignmentComponent: React.FC = () => {
   // 특정 과제 수정 함수
   const updateAssignment = (id: string | number, changes: Partial<Assignment>) => {
     setAssignmentList(prev =>
-      prev.map(a => (a.id === id ? { ...a, ...changes } : a))
+      prev.map(a => (a.assignmentId === id ? { ...a, ...changes } : a))
     );
   };
 
@@ -50,7 +50,7 @@ export const AssignmentComponent: React.FC = () => {
       <s.Grid>
         {assignmentList.map(a => (
           <AssignmentCard
-            key={a.id}
+            key={a.assignmentId}
             data={a}
             updateAssignment={updateAssignment}
           />

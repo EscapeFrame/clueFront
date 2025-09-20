@@ -56,9 +56,9 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     if (!uploadedFiles.length || !uploadedFiles[0].file) return alert('업로드된 파일이 없습니다.');
     try {
       setIsSubmitting(true);
-      await SubmitAssignment(String(data.id), uploadedFiles[0].file);
+      await SubmitAssignment(String(data.assignmentId), uploadedFiles[0].file);
       setIsSubmitted(true);
-      updateAssignment(data.id, { isSubmitted: true });
+      updateAssignment(data.assignmentId, { isSubmitted: true });
       alert('과제 제출 완료');
       setShowUploadModal(false);
     } catch (err) {
@@ -72,9 +72,9 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     e.stopPropagation(); // 버블링 방지
     try {
       setIsResubmitting(true);
-      await DeleteAssignment(String(data.id));
+      await DeleteAssignment(String(data.assignmentId));
       setIsSubmitted(false);
-      updateAssignment(data.id, { isSubmitted: false });
+      updateAssignment(data.assignmentId, { isSubmitted: false });
       alert('제출 취소 완료');
     } catch (e) {
       alert('제출 취소 실패');
