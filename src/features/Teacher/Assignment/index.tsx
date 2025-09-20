@@ -64,23 +64,23 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
                         <div>등록된 과제가 없습니다.</div>
                     ) : (
                         assignments.map((a: Assignment) => (
-                            <div key={a.assignmentId} onClick={() => onAssignmentSelect(String(a.assignmentId))}>
-                                <AssignmentCard
-                                    data={a}
-                                    assignmentId={String(a.assignmentId)}
-                                    updateAssignment={(id, changes) => {
-                                        setAssignments(prev => {
-                                            const idx = prev.findIndex(x => x.assignmentId === id);
-                                            if (idx >= 0) {
-                                                const newAssignments = [...prev];
-                                                newAssignments[idx] = { ...newAssignments[idx], ...changes };
-                                                return newAssignments;
-                                            }
-                                            return prev;
-                                        });
-                                    }}
-                                />
-                            </div>
+                            <AssignmentCard
+                                key={a.assignmentId}
+                                data={a}
+                                assignmentId={String(a.assignmentId)}
+                                onAssignmentSelect={onAssignmentSelect}
+                                updateAssignment={(id, changes) => {
+                                    setAssignments(prev => {
+                                        const idx = prev.findIndex(x => x.assignmentId === id);
+                                        if (idx >= 0) {
+                                            const newAssignments = [...prev];
+                                            newAssignments[idx] = { ...newAssignments[idx], ...changes };
+                                            return newAssignments;
+                                        }
+                                        return prev;
+                                    });
+                                }}
+                            />
                         ))
                     )}
                 </s.Grid>
