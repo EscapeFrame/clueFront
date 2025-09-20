@@ -79,10 +79,27 @@ export interface Assignment {
 export interface AssignmentCardProps {
   data: Assignment;
   updateAssignment: (id: string | number, changes: Partial<Assignment>) => void;
+  onClickDetail?: () => void;
 }
 
 // AssignmentComponent Props (필요하면)
 export interface AssignmentComponentProps {
   // 예시로 id 하나만 넣음, 필요에 따라 확장하세요
   classId: string;
+}
+
+// DetailAssignment에 필요한 학생 제출 현황 타입
+export interface DetailAssignmentStudent {
+  userName: string;          // 학생 이름
+  classNumberGrade: number;  // 학생 학번
+  isSubmitted: boolean;      // 제출 여부
+  contentId: string;         // 과제 아이디
+  files?: AssignmentFile;
+  userImg?: string | null; // 이미지 URL
+  userSubmitDate?: string | null; // yyyy-mm-dd 형식
+}
+
+// DetailAssignment API/컴포넌트 전체 타입
+export interface DetailAssignmentData {
+  student: DetailAssignmentStudent[];
 }

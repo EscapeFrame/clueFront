@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
 import { AssignmentCardProps } from '@/shared/types/Class/Assignment/Attachment';
@@ -7,13 +6,11 @@ import { differenceInDays, parseISO } from 'date-fns';
 import Button from '@/entities/UI/Button';
 import * as s from './styles';
 
-export function AssignmentCard({ data, classRoomId }: AssignmentCardProps & { classRoomId: string }) {
+export function AssignmentCard({ data, onClickDetail}: AssignmentCardProps & {
+  classRoomId: string;
+  onClickDetail?: () => void; // optional로 정의, 버튼 클릭 시 상세 페이지 전환
+}) {
   const [isSubmitted] = useState(data.isSubmitted);
-
-  const navigate = useNavigate();
-  const DetailAssignments = () => { // 제출현황 페이지로 이동
-    navigate(`/class/${classRoomId}/check/${data.id}`);
-  };
 
   const renderDeadlineOrSubmission = () => {
     if (isSubmitted) {
@@ -39,15 +36,19 @@ export function AssignmentCard({ data, classRoomId }: AssignmentCardProps & { cl
   };
 
   return (
-    <>
-      <s.CardContainer>
-        <s.InfoSection>
-          <s.Title>{data.title}</s.Title>
-          <s.InfoItem><IoCalendarClearOutline /> 마감일: {data.endDate}</s.InfoItem>
-          {renderDeadlineOrSubmission()}
-        </s.InfoSection>
-        <Button type={0} text="제출현황" onClick={DetailAssignments} />
-      </s.CardContainer>
-    </>
+    <s.CardContainer>
+      <s.InfoSection>
+        <s.Title>{data.title}</s.Title>
+        <s.InfoItem><IoCalendarClearOutline /> 마감일: {data.endDate}</s.InfoItem>
+        {renderDeadlineOrSubmission()}
+      </s.InfoSection>
+
+      {/* 제출현황 버튼 클릭 시 상세 페이지로 전환 */}
+      <Button
+        type={0}
+        text="제출현황"
+        onClick={onClickDetail}
+      />
+    </s.CardContainer>
   );
 }

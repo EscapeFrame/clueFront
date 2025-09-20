@@ -1,21 +1,23 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { AssignmentsApi } from '@/features/Common/Class/api/useAssignment';
 import { AssignmentCard } from '@/entities/Class/AssignmentCard/teacher';
 import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
 import Button from '@/entities/UI/Button';
 import * as s from './styles';
+import { dummyAssignments } from '@/shared/theme/dummy'; // 더미 데이터 사용
+import { DetailAssignment } from '../DetailAssignments';
 
 export const AssignmentComponent: React.FC = () => {
-    const { classId, classRoomId } = useParams<{ classId?: string | undefined; classRoomId?: string | undefined }>();
-    // classId가 없으면 classRoomId를 사용
+    const { classId, classRoomId } = useParams<{ classId?: string; classRoomId?: string }>();
     const effectiveId = classId ?? classRoomId;
-    const navigate = useNavigate();
     const [assignments, setAssignments] = useState<Assignment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
 
-    // 컴포넌트 마운트 시(또는 effectiveId가 바뀔 때) 과제 목록 API 호출
+    const navigate = useNavigate();
+
+    // API 호출 대신 더미 데이터 사용** (실제 API 호출은 아래 주석 참고)
     useEffect(() => {
         if (!effectiveId) {
             setLoading(false);
@@ -24,26 +26,42 @@ export const AssignmentComponent: React.FC = () => {
         }
 
         setLoading(true);
+
+        // 더미 데이터로 시뮬레이션
+        setTimeout(() => {
+            setAssignments(dummyAssignments);
+            setLoading(false);
+            setError(null);
+        }, 500);
+
+        /*
+        // 실제 API 호출
         AssignmentsApi.getAll(effectiveId)
-            .then((data) => {
-                // API에서 받은 AssignmentResponse[]를 Assignment[]로 강제 변환
-                console.log('API Response:', data); // 실제 데이터 구조 확인
-                console.log('Data length:', data?.length); // 데이터 개수 확인
-                setAssignments(data as unknown as Assignment[]);
-                setError(null);
-            })
-            .catch((err) => {
-                console.error(err);
-                setError("과제를 불러오는 중 오류가 발생했습니다.");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+          .then((data) => {
+            setAssignments(data as unknown as Assignment[]);
+            setError(null);
+          })
+          .catch((err) => {
+            console.error(err);
+            setError("과제를 불러오는 중 오류가 발생했습니다.");
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+        */
     }, [effectiveId]);
+
     const MakeTask = () => {
         if (!classRoomId) return;
         navigate(`/class/${classRoomId}/make/task`);
     };
+
+    const handleBackToList = () => setSelectedAssignment(null);
+
+    // 상세 페이지 렌더링 조건
+    if (selectedAssignment) {
+        return <DetailAssignment assignmentId={selectedAssignment} onBack={handleBackToList} />;
+    }
 
     return (
         <s.Container>
@@ -59,14 +77,15 @@ export const AssignmentComponent: React.FC = () => {
                     {assignments.length === 0 ? (
                         <div>등록된 과제가 없습니다.</div>
                     ) : (
-                        assignments.map((a: Assignment) => (
+                        assignments.map((a) => (
                             <AssignmentCard
                                 key={a.id}
                                 data={a}
                                 classRoomId={String(effectiveId)}
+                                onClickDetail={() => setSelectedAssignment(String(a.id))}
                                 updateAssignment={(id, changes) => {
-                                    setAssignments(prev => {
-                                        const idx = prev.findIndex(x => x.id === id);
+                                    setAssignments((prev) => {
+                                        const idx = prev.findIndex((x) => x.id === id);
                                         if (idx >= 0) {
                                             const newAssignments = [...prev];
                                             newAssignments[idx] = { ...newAssignments[idx], ...changes };
