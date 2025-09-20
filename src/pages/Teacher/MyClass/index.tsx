@@ -1,7 +1,8 @@
 import * as s from './styles';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TabSelector, { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector';
+import TabSelector from '@/features/Common/Class/TabSelector';
+import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector/category';
 import Button from '@/entities/UI/Button';
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
 
