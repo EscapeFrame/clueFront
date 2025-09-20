@@ -6,10 +6,10 @@ import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import { stateData } from './data';
 import { useEffect, useState } from 'react';
 import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
-import { dummyAssignment } from '@/shared/theme/dummy';
 import { Modal } from '@/entities/UI/Modal';
 import Button from '@/entities/UI/Button';
 import { AssignmentEntry } from '@/entities/Class/AssignmentEntry';
+import { AssignmentsApi } from '@/features/Common/Class/api/useAssignment';
 
 interface UploadedFile {
     id: string;
@@ -20,6 +20,8 @@ interface UploadedFile {
 
 export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => void }> = ({ assignmentId, onBack }) => {
     const [assignment, setAssignment] = useState<(Assignment & { submittedCount: number; totalCount: number }) | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState('');
     const [editDescription, setEditDescription] = useState('');
@@ -29,10 +31,28 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     let fileInputRef = useState<HTMLInputElement | null>(null)[0];
 
     useEffect(() => {
-        const assignmentData = { ...dummyAssignment, id: assignmentId };
-        setAssignment(assignmentData);
-        setEditTitle(assignmentData.title);
-        setEditDescription(assignmentData.description);
+        const fetchAssignment = async () => {
+            setLoading(true);
+            try {
+                const data = await AssignmentsApi.getById(assignmentId);
+                if (data) {
+                    const assignmentData = { ...data, submittedCount: data.submittedCount || 0, totalCount: data.totalCount || 0 } as (Assignment & { submittedCount: number; totalCount: number });
+                    setAssignment(assignmentData);
+                    setEditTitle(assignmentData.title);
+                    setEditDescription(assignmentData.description);
+                    setError(null);
+                } else {
+                    setError('과제 정보를 불러오지 못했습니다.');
+                }
+            } catch (err) {
+                setError('과제 정보를 불러오는 중 오류가 발생했습니다.');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAssignment();
     }, [assignmentId]);
 
     const handleEdit = () => {
@@ -133,7 +153,9 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
         setTempFiles(prev => prev.filter(f => f.id !== fileId));
     };
 
-    if (!assignment) return <p>로딩중...</p>;
+    if (loading) return <p>로딩중...</p>;
+    if (error) return <p>{error}</p>;
+    if (!assignment) return <p>과제 정보를 찾을 수 없습니다.</p>;
 
     const { title, description, files, endDate, isSubmitted, submissionDate, submittedCount, totalCount } = assignment;
 
@@ -157,7 +179,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                             />
                             <s.EditButtonGroup>
                                 <Button text='저장' type={0} width={'90px'} onClick={handleSaveEdit} />
-                                <Button text='취소' type={1} width={'90px'} onClick={handleSaveEdit} />
+                                <Button text='취소' type={1} width={'90px'} onClick={handleCancelEdit} />
                             </s.EditButtonGroup>
                         </>
                     ) : (
@@ -194,7 +216,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                         <Icon3 />
                         <div className="text-group">
                             <span>{stateData[3].name}</span>
-                            <span>{Math.round((submittedCount / totalCount) * 100)}%</span>
+                            <span>{totalCount > 0 ? Math.round((submittedCount / totalCount) * 100) : 0}%</span>
                         </div>
                     </s.DetailState>
                 </s.State>
