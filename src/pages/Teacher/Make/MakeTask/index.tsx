@@ -86,10 +86,38 @@ const MakeTask: React.FC = () => {
   const handleUploadModalClose = () => { setTempFiles([]); setIsFileModalOpen(false); };
 
   // 링크 등록
+  const isValidUrl = (url: string, platform: string | null): boolean => {
+    if (!platform) return false;
+
+    try {
+      new URL(url);
+    } catch {
+      return false;
+    }
+
+    switch (platform) {
+      case 'youtube':
+        return url.includes('youtube.com');
+      case 'drive':
+        return url.includes('drive.google.com');
+      case 'notion':
+        return url.includes('notion.so');
+      case 'link':
+        return true;
+      default:
+        return false;
+    }
+  };
+
   const handleLinkSubmit = async () => {
     if (!linkInput) return;
     const url = linkInput.trim();
     if (!url) return;
+
+    if (!isValidUrl(url, linkPlatform)) {
+      alert('유효하지 않은 URL입니다. 선택된 플랫폼에 맞는 주소를 입력해주세요.');
+      return;
+    }
 
     setAttachments(prev => [
       ...prev,
