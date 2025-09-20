@@ -70,7 +70,7 @@ export interface Assignment {
   duringDate?: string;
   endDate?: string;
   remainingTime?: string;
-  isSubmitted: boolean;
+  isSubmitted?: boolean;
   submissionDate?: string | null;
   files?: AssignmentFileType[] | (string | null)[];
 }
