@@ -62,7 +62,7 @@ export interface StudentAssignmentResponse {
 
 // 과제 타입 (AssignmentCard에서 사용하는 타입)
 export interface Assignment {
-  id: string | number;
+  assignmentId: string | number;
   title: string;
   content: string;
   description: string;

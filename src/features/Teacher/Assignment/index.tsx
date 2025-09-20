@@ -61,12 +61,12 @@ export const AssignmentComponent: React.FC = () => {
                     ) : (
                         assignments.map((a: Assignment) => (
                             <AssignmentCard
-                                key={a.id}
+                                key={a.assignmentId}
                                 data={a}
-                                assignmentId={String(a.id)}
+                                assignmentId={String(a.assignmentId)}
                                 updateAssignment={(id, changes) => {
                                     setAssignments(prev => {
-                                        const idx = prev.findIndex(x => x.id === id);
+                                        const idx = prev.findIndex(x => x.assignmentId === id);
                                         if (idx >= 0) {
                                             const newAssignments = [...prev];
                                             newAssignments[idx] = { ...newAssignments[idx], ...changes };
