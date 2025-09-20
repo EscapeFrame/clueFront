@@ -86,9 +86,9 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     if (!fileToSubmit) return alert('파일 데이터가 없습니다.');
 
     try {
-      await SubmitAssignment(String(data.id), fileToSubmit);
+      await SubmitAssignment(String(data.assignmentId), fileToSubmit);
       setIsSubmitted(true);
-      updateAssignment(data.id, { isSubmitted: true });
+      updateAssignment(data.assignmentId, { isSubmitted: true });
       alert('과제 제출 완료');
       setShowUploadModal(false);
     } catch {
@@ -101,9 +101,9 @@ export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) 
     // updateAssignment(data.id,{ isSubmitted: true });
     // DeleteAssignment(String(data.id)).catch(console.error)
     try {
-      await DeleteAssignment(String(data.id));
+      await DeleteAssignment(String(data.assignmentId));
       setIsSubmitted(false);
-      updateAssignment(data.id, { isSubmitted: false });
+      updateAssignment(data.assignmentId, { isSubmitted: false });
       alert('제출 취소 완료');
     } catch (e) {
       // setIsSubmitted(prev);
