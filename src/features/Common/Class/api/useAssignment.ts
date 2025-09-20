@@ -7,6 +7,19 @@ import {
 const API_BASE_URL = '/api/assignments';
 
 export const AssignmentsApi = {
+  getById: async (assignmentId: string): Promise<AssignmentResponse | null> => {
+    try {
+      const res = await Customapi.get<AssignmentResponse>(`${API_BASE_URL}/${assignmentId}`);
+      if (res.status < 200 || res.status >= 300) {
+        console.error(`과제 상세 정보 불러오기 실패: status ${res.status}`);
+        return null;
+      }
+      return res.data;
+    } catch (error: any) {
+      console.error('과제 상세 정보 불러오기 실패:', error);
+      return null;
+    }
+  },
   getAll: async (classId: string): Promise<AssignmentResponse[]> => {
     try {
       const res = await Customapi.get<AssignmentResponse[]>(`${API_BASE_URL}/${classId}/all`);
