@@ -86,10 +86,38 @@ const MakeTask: React.FC = () => {
   const handleUploadModalClose = () => { setTempFiles([]); setIsFileModalOpen(false); };
 
   // 링크 등록
+  const isValidUrl = (url: string, platform: string | null): boolean => {
+    if (!platform) return false;
+
+    try {
+      new URL(url);
+    } catch {
+      return false;
+    }
+
+    switch (platform) {
+      case 'youtube':
+        return url.includes('youtube.com');
+      case 'drive':
+        return url.includes('drive.google.com');
+      case 'notion':
+        return url.includes('notion.so');
+      case 'link':
+        return true;
+      default:
+        return false;
+    }
+  };
+
   const handleLinkSubmit = async () => {
     if (!linkInput) return;
     const url = linkInput.trim();
     if (!url) return;
+
+    if (!isValidUrl(url, linkPlatform)) {
+      alert('유효하지 않은 URL입니다. 선택된 플랫폼에 맞는 주소를 입력해주세요.');
+      return;
+    }
 
     setAttachments(prev => [
       ...prev,
@@ -146,6 +174,12 @@ const MakeTask: React.FC = () => {
   const handleMakeTask = async () => {
     if (!classRoomId) return alert("classRoomId가 없습니다.");
 
+    // 날짜 유효성 검사
+    if (startDate && dueDate && startDate > dueDate) {
+      alert('시작일이 마감일보다 느립니다.');
+      return;
+    }
+
     const taskData: AssignmentCreateRequest = {
       class_id: classRoomId!,
       title: subject,
@@ -155,7 +189,8 @@ const MakeTask: React.FC = () => {
     };
 
     function formatDateTime(dateStr: string): string {
-      return `${dateStr} 00:00`;
+      const dateString = dateStr.replace("T", " ");
+      return dateString.length === 10 ? dateString + " 00:00:00" : dateString;
     }
 
     try {
@@ -213,7 +248,7 @@ const MakeTask: React.FC = () => {
       />
 
       <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
-      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} />
+      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} />
 
       <Button text="완료" disabled={!isFormValid} onClick={handleMakeTask} />
 

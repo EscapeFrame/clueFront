@@ -11,7 +11,6 @@ export function AssignmentCard({ data, onClickDetail}: AssignmentCardProps & {
   onClickDetail?: () => void; // optional로 정의, 버튼 클릭 시 상세 페이지 전환
 }) {
   const [isSubmitted] = useState(data.isSubmitted);
-
   const renderDeadlineOrSubmission = () => {
     if (isSubmitted) {
       return <s.InfoItem><LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}</s.InfoItem>;

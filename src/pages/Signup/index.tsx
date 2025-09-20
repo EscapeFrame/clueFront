@@ -14,7 +14,7 @@ interface RegisterData {
 function RegisterPage() {
   const [registerData, setRegisterData] = useState<RegisterData | null>(null);
   const [loadingRegisterInfo, setLoadingRegisterInfo] = useState(true);
-  const [studentInfo, setStudentInfo] = useState({ grade: '', classNum: '', studentNum: '' });
+  const [studentInfo, setStudentInfo] = useState({ grade: '', classNum: '', studentNum: '', studentMail: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +52,13 @@ function RegisterPage() {
     const grade = studentInfo.grade.trim();
     const classNum = studentInfo.classNum.trim();
     const studentNum = studentInfo.studentNum.trim();
+    const mail = studentInfo.studentMail.trim();
+    
+    const mailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!mailRegex.test(mail)) {
+      alert('올바른 이메일 형식이 아닙니다.');
+      return;
+    }
 
     const isDigits = (v: string) => /^\d+$/.test(v);
     if (!grade || !classNum || !studentNum || !isDigits(grade) || !isDigits(classNum) || !isDigits(studentNum)) {
@@ -120,6 +127,17 @@ function RegisterPage() {
               name="studentNum"
               value={studentInfo.studentNum}
               placeholder='번호를 입력해주세요.'
+              onChange={handleStudentInfoChange}
+              required
+            />
+          </s.InputGroup>
+          <s.InputGroup>
+            <label htmlFor="studentMail">메일:</label>
+            <input
+              id="studentMail"
+              name="studentMail"
+              value={studentInfo.studentMail}
+              placeholder='메일 입력해주세요.'
               onChange={handleStudentInfoChange}
               required
             />
