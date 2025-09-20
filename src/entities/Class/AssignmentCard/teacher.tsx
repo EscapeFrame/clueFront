@@ -5,11 +5,12 @@ import { AssignmentCardProps } from '@/shared/types/Class/Assignment/Attachment'
 import { differenceInDays, parseISO } from 'date-fns';
 import Button from '@/entities/UI/Button';
 import * as s from './styles';
+import { useNavigate } from 'react-router-dom';
 
-export function AssignmentCard({ data, onClickDetail}: AssignmentCardProps & {
-  classRoomId: string;
-  onClickDetail?: () => void; // optional로 정의, 버튼 클릭 시 상세 페이지 전환
+export function AssignmentCard({ data, assignmentId }: AssignmentCardProps & {
+  assignmentId: string;
 }) {
+  const navigate = useNavigate();
   const [isSubmitted] = useState(data.isSubmitted);
   const renderDeadlineOrSubmission = () => {
     if (isSubmitted) {
@@ -46,7 +47,7 @@ export function AssignmentCard({ data, onClickDetail}: AssignmentCardProps & {
       <Button
         type={0}
         text="제출현황"
-        onClick={onClickDetail}
+        onClick={() => navigate(`${assignmentId}/check`)}
       />
     </s.CardContainer>
   );
