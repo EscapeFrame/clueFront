@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
-import { DetailAssignmentStudent, DetailAssignmentData } from '@/shared/types/Class/Assignment/Attachment';
-import { dummyDetailAssignmentData } from '@/shared/theme/dummy';
+import { DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
+import { getCheckStudent } from '@/entities/Class/api';
 
 interface AssignmentEntryProps {
   assignmentId: string;
   totalCount: number;
 }
 
-export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId, totalCount }) => {
+export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }) => {
   const [students, setStudents] = useState<DetailAssignmentStudent[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<DetailAssignmentStudent[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
@@ -18,8 +18,19 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId, 
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
-    const assignmentData = dummyDetailAssignmentData[assignmentId];
-    setStudents(assignmentData ? assignmentData.student : []);
+    const fetchStudents = async () => {
+      try {
+        const data = await getCheckStudent(assignmentId);
+        setStudents(data.student || []);
+      } catch (error) {
+        console.error('학생 제출 현황 조회 실패:', error);
+        setStudents([]);
+      }
+    };
+    fetchStudents();
+
+    console.log("assignmentId:", assignmentId);
+    console.log("students:", students);
   }, [assignmentId]);
 
   const parseStudentNumber = (num: number) => {
