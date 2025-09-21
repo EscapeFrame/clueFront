@@ -38,7 +38,7 @@ export const ClassInfo: React.FC<ClassInfoProps> = ({
         setClassData({
           name: response.name || "",
           description: response.description || "",
-          teacherName: response.teacherName || "",
+          teacherName: response.teacherNames && response.teacherNames.length > 0 ? response.teacherNames[0] : "",
           progress: 0,
           maxProgress: 100,
         });

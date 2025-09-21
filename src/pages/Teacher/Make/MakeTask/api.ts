@@ -59,7 +59,7 @@ export async function attachFile(
         formData.append("name", fileAtt.name);
 
         await Customapi.post(
-          `/api/assignments/${assignmentId}/files`,
+          `/api/assignments/${assignmentId}/file`,
           formData,
         );
       }
@@ -67,7 +67,7 @@ export async function attachFile(
 
     if (links.length > 0) {
       await Customapi.post(`/api/assignments/${assignmentId}/links`, {
-        links: links.map((link) => ({ name: link.name, url: link.url })), // 여러개가 들어와도 처리
+        links: links.map((link) => [{ "url":link.url }]),
       });
     }
 
@@ -78,9 +78,4 @@ export async function attachFile(
   }
 }
 
-export const attachLink = async (assignmentId: string, link: string) => {
-  const payload = {
-    url: [{name: "url", url: link}]
-  };
-  await Customapi.post(`/api/assignments/${assignmentId}/links`, payload);
-};
+
