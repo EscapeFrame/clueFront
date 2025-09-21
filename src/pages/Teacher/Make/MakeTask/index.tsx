@@ -114,7 +114,7 @@ const MakeTask: React.FC = () => {
     }
 
     function formatDateTime(dateStr: string): string {
-      return `${dateStr} 00:00`;
+      return `${dateStr}T00:00`;
     }
 
     try {
