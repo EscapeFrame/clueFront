@@ -12,7 +12,7 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
   const { classId } = useParams<{ classId: string }>();
   const [classData, setClassData] = useState({
     name: name || '',
-    teacherName: teacherName ? teacherName.join(', ') : "선생",
+    teacherNames: teacherName ? teacherName : [],
     description: description || '',
     progress: progress || 0,
     maxProgress: maxProgress || 100,
@@ -38,7 +38,7 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
         setClassData({
           name: response.name || "",
           description: response.description || "",
-          teacherName: response.teacherNames ? response.teacherNames.join(', ') : "",
+          teacherNames: response.teacherNames || [],
           progress: 0,
           maxProgress: 100,
         });
@@ -71,7 +71,7 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
 
         <s.TeacherRow>
           <FaUserAlt />
-          <span>{classData.teacherName}님</span>
+          <span>{classData.teacherNames.join(', ')}님</span>
         </s.TeacherRow>
 
         <ProgressBar progress={classData.progress} maxProgress={classData.maxProgress} />
