@@ -6,14 +6,22 @@ import { FaUserAlt } from "react-icons/fa";
 import { getClassInfo } from '../api';
 import * as s from './styles';
 
+interface ClassDataState {
+  name: string;
+  teacherName: string;
+  description: string;
+  progress: number;
+  maxProgress: number;
+}
+
 export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
   name, teacherName, description, progress, maxProgress
 }) => {
   console.log("ClassInfo props:", { name, teacherName, description, progress, maxProgress });
   const { classId } = useParams<{ classId: string }>();
-  const [classData, setClassData] = useState({
+  const [classData, setClassData] = useState<ClassDataState>({
     name: name || '',
-    teacherNames: teacherName ? teacherName : [],
+    teacherName: (teacherName && teacherName.length > 0) ? teacherName.join(', ') : "선생",
     description: description || '',
     progress: progress || 0,
     maxProgress: maxProgress || 100,
@@ -40,7 +48,7 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
         setClassData({
           name: response.name || "",
           description: response.description || "",
-          teacherName: response.teacherNames ? response.teacherNames.join(', ') : "",
+          teacherName: (response.teacherNames && response.teacherNames.length > 0) ? response.teacherNames.join(', ') : "선생",
           progress: 0,
           maxProgress: 100,
         });
@@ -54,6 +62,8 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
       setIsLoading(false);
     }
   };
+
+  console.log("Rendering teacherName:", classData.teacherName);
 
   if (isLoading) {
     return (
@@ -74,7 +84,6 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
         <s.TeacherRow>
           <FaUserAlt />
           <span>{classData.teacherName}님</span>
-          {console.log("Rendering teacherName:", classData.teacherName)}
         </s.TeacherRow>
 
         <ProgressBar progress={classData.progress} maxProgress={classData.maxProgress} />
