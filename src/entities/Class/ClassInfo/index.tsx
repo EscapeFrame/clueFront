@@ -42,12 +42,14 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
           progress: 0,
           maxProgress: 100,
         });
+        console.log("Class data set:", response);
       } else {
         console.warn('클래스 정보 조회 실패:', response);
       }
     } catch (error) {
       console.error('클래스 정보 조회 실패:', error);
     } finally {
+      console.log("classData",classData);
       setIsLoading(false);
     }
   };
@@ -71,7 +73,7 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
 
         <s.TeacherRow>
           <FaUserAlt />
-          <span>{classData.teacherNames.join(', ')}님</span>
+          <span>{classData.teacherNames}님</span>
         </s.TeacherRow>
 
         <ProgressBar progress={classData.progress} maxProgress={classData.maxProgress} />
