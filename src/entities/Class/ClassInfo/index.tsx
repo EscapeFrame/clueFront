@@ -8,20 +8,20 @@ import * as s from './styles';
 
 interface ClassDataState {
   name: string;
-  teacherName: string;
+  teacherNames: string[];
   description: string;
   progress: number;
   maxProgress: number;
 }
 
 export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
-  name, teacherName, description, progress, maxProgress
+  name, teacherNames, description, progress, maxProgress
 }) => {
-  console.log("ClassInfo props:", { name, teacherName, description, progress, maxProgress });
+  console.log("ClassInfo props:", { name, teacherNames, description, progress, maxProgress });
   const { classId } = useParams<{ classId: string }>();
   const [classData, setClassData] = useState<ClassDataState>({
     name: name || '',
-    teacherName: (teacherName && teacherName.length > 0) ? teacherName.join(', ') : "선생",
+    teacherNames: teacherNames || [],
     description: description || '',
     progress: progress || 0,
     maxProgress: maxProgress || 100,
@@ -30,6 +30,7 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    console.log("useEffect triggered with classId:", classId);
     if (classId) {
       loadClassInfo();
     }
@@ -48,11 +49,10 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
         setClassData({
           name: response.name || "",
           description: response.description || "",
-          teacherName: (response.teacherNames && response.teacherNames.length > 0) ? response.teacherNames.join(', ') : "선생",
+          teacherNames: response.teacherNames || [],
           progress: 0,
           maxProgress: 100,
         });
-        console.log("classData after API fetch:", classData);
       } else {
         console.warn('클래스 정보 조회 실패:', response);
       }
@@ -62,8 +62,6 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
       setIsLoading(false);
     }
   };
-
-  console.log("Rendering teacherName:", classData.teacherName);
 
   if (isLoading) {
     return (
@@ -83,7 +81,7 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
         <s.Description>{classData.description}</s.Description>
         <s.TeacherRow>
           <FaUserAlt />
-          <span>{classData.teacherName}님</span>
+          <span>{classData.teacherNames.length > 0 ? classData.teacherNames.join(', ') : "선생"}님</span>
         </s.TeacherRow>
 
         <ProgressBar progress={classData.progress} maxProgress={classData.maxProgress} />
