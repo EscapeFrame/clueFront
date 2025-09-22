@@ -6,13 +6,13 @@ import { FaUserAlt } from "react-icons/fa";
 import { getClassInfo } from '../api';
 import * as s from './styles';
 
-export const ClassInfo: React.FC<ClassInfoProps> = ({
+export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
   name, teacherName, description, progress, maxProgress
 }) => {
   const { classId } = useParams<{ classId: string }>();
   const [classData, setClassData] = useState({
     name: name || '',
-    teacherName: teacherName || "선생님",
+    teacherName: teacherName ? teacherName.join(', ') : "선생",
     description: description || '',
     progress: progress || 0,
     maxProgress: maxProgress || 100,
@@ -38,7 +38,7 @@ export const ClassInfo: React.FC<ClassInfoProps> = ({
         setClassData({
           name: response.name || "",
           description: response.description || "",
-          teacherName: response.teacherNames && response.teacherNames.length > 0 ? response.teacherNames[0] : "",
+          teacherName: response.teacherNames ? response.teacherNames.join(', ') : "",
           progress: 0,
           maxProgress: 100,
         });
