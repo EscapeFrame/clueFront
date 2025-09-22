@@ -6,17 +6,27 @@ import { FaUserAlt } from "react-icons/fa";
 import { getClassInfo } from '../api';
 import * as s from './styles';
 
+interface ClassDataState {
+  name: string;
+  teacherName: string;
+  description: string;
+  progress: number;
+  maxProgress: number;
+}
+
 export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
   name, teacherName, description, progress, maxProgress
 }) => {
+  console.log("ClassInfo props:", { name, teacherName, description, progress, maxProgress });
   const { classId } = useParams<{ classId: string }>();
-  const [classData, setClassData] = useState({
+  const [classData, setClassData] = useState<ClassDataState>({
     name: name || '',
-    teacherNames: teacherName ? teacherName : [],
+    teacherName: (teacherName && teacherName.length > 0) ? teacherName.join(', ') : "선생",
     description: description || '',
     progress: progress || 0,
     maxProgress: maxProgress || 100,
   });
+  console.log("Initial classData state:", classData);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -38,21 +48,22 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
         setClassData({
           name: response.name || "",
           description: response.description || "",
-          teacherNames: response.teacherNames || [],
+          teacherName: (response.teacherNames && response.teacherNames.length > 0) ? response.teacherNames.join(', ') : "선생",
           progress: 0,
           maxProgress: 100,
         });
-        console.log("Class data set:", response);
+        console.log("classData after API fetch:", classData);
       } else {
         console.warn('클래스 정보 조회 실패:', response);
       }
     } catch (error) {
       console.error('클래스 정보 조회 실패:', error);
     } finally {
-      console.log("classData",classData);
       setIsLoading(false);
     }
   };
+
+  console.log("Rendering teacherName:", classData.teacherName);
 
   if (isLoading) {
     return (
@@ -70,10 +81,9 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
       <s.LeftSection>
         <s.Title>{classData.name}</s.Title>
         <s.Description>{classData.description}</s.Description>
-
         <s.TeacherRow>
           <FaUserAlt />
-          <span>{classData.teacherNames}님</span>
+          <span>{classData.teacherName}님</span>
         </s.TeacherRow>
 
         <ProgressBar progress={classData.progress} maxProgress={classData.maxProgress} />
