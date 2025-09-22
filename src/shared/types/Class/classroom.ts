@@ -6,7 +6,7 @@ export interface ClassInfoProps {
   target: string;
   isActivation: boolean;
   createdAt: string
-  teacherName: string;
+  teacherName: string[];
   progress: number;
   maxProgress: number;
   imageUrl: string;
