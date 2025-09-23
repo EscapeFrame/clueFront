@@ -40,7 +40,7 @@ export default function Dropdown({ role, studentNumber, name, myImage }: Dropdow
 
           <s.DropdownItem href="/setting"><AiFillSetting />&nbsp;설정</s.DropdownItem>
           <s.DropdownItem href="#Q&A"><AiFillQuestionCircle />&nbsp;문의하기</s.DropdownItem>
-          <s.DropdownItem href="/logout"><MdOutlineLogout />&nbsp;로그아웃</s.DropdownItem>
+          <s.DropdownItem href="/login"><MdOutlineLogout />&nbsp;로그아웃</s.DropdownItem>
         </s.DropdownMenu>
       )}
     </s.DropdownContainer>
