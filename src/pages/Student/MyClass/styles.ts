@@ -55,7 +55,7 @@ export const EmptyMessage = styled.p`
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
 `;
 
@@ -67,7 +67,7 @@ export const Card = styled.div`
   transition: box-shadow 0.3s;
   cursor: pointer;
 
-  max-width: 30vh;
+  max-width: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
