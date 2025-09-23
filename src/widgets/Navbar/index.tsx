@@ -21,7 +21,7 @@ export default function Navbar({ userId, username, role }: NavbarProps) {
             <li><s.NavItem href="#action1">수강신청</s.NavItem></li>
             <li><s.NavItem href="#action2">서비스 소개</s.NavItem></li>
           </s.NavLinks>
-          <Dropdown role={role} studentNumber={userId} name={username} myImage={"sample.jpg"} />
+          <Dropdown role={role} studentNumber={userId} name={username} myImage={"sample.png"} />
         </s.NavbarNav>
       </s.Container>
     </s.NavbarWrapper>
