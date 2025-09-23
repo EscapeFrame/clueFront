@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { theme } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   padding: 2rem 8rem;
@@ -28,7 +28,7 @@ export const Flexible = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+`;
 
 export const ModalInput = styled.input`
   width: 100%;
@@ -37,16 +37,16 @@ export const ModalInput = styled.input`
   padding: 0.6rem 1rem;
   border: 1px solid ${theme.colors.gray[300]};
   outline: none;
-`
+`;
 
 export const EmptyMessage = styled.p`
-color:${theme.colors.gray[600]};
+  color: ${theme.colors.gray[600]};
 `;
 
 export const Grid = styled.div`
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
 `;
 
 export const Card = styled.div`
@@ -59,31 +59,31 @@ export const Card = styled.div`
   max-width: 50vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;  
+  justify-content: space-between;
   height: 10em;
   &:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 `;
 
 export const CardTitle = styled.h2`
-${fonts.P4}
-font-weight: 500;
-margin: 0;
+  ${fonts.P4}
+  font-weight: 500;
+  margin: 0;
 `;
 
 export const CardDescription = styled.p`
-color: ${theme.colors.gray[600]};
-margin: 0;
+  color: ${theme.colors.gray[600]};
+  margin: 0;
 `;
 
 export const InfoBlock = styled.div`
-margin: 0;
+  margin: 0;
 `;
 
 export const ErrorMessage = styled.p`
-color: ${theme.colors.red};
-margin-bottom: 16px;
+  color: ${theme.colors.red};
+  margin-bottom: 16px;
 `;
 
 export const InfoContent = styled.p`

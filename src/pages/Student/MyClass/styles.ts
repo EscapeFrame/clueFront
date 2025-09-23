@@ -1,33 +1,16 @@
-import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { theme } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   padding: 2rem 8rem;
   background-color: ${theme.colors.white};
-
-  @media (max-width: 1200px) {
-    padding: 2rem 4rem;
-  }
-
-  @media (max-width: 768px) {
-    padding: 1.5rem 2rem;
-  }
 `;
 
 export const TitleFont = styled.h1`
   ${fonts.P5}
   font-weight: 600;
   margin-bottom: 24px;
-
-  @media (max-width: 1200px) {
-    ${fonts.P4}
-  }
-
-  @media (max-width: 768px) {
-    ${fonts.P3}
-    margin-bottom: 16px;
-  }
 `;
 
 export const AddButton = styled.button`
@@ -55,12 +38,6 @@ export const Flexible = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
 `;
 
 export const ModalInput = styled.input`
@@ -70,10 +47,6 @@ export const ModalInput = styled.input`
   padding: 0.6rem 1rem;
   border: 1px solid ${theme.colors.gray[300]};
   outline: none;
-
-  @media (max-width: 768px) {
-    padding: 0.5rem 0.8rem;
-  }
 `;
 
 export const EmptyMessage = styled.p`
@@ -84,10 +57,6 @@ export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
-
-  @media (max-width: 768px) {
-    gap: 12px;
-  }
 `;
 
 export const Card = styled.div`
@@ -97,34 +66,20 @@ export const Card = styled.div`
   border: 1px solid ${theme.colors.gray[400]};
   transition: box-shadow 0.3s;
 
+  max-width: 50vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;  
+  justify-content: space-between;
   height: 10em;
-  cursor: pointer;
-
   &:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-
-  @media (max-width: 768px) {
-    padding: 12px;
-    height: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 `;
 
 export const CardTitle = styled.h2`
   ${fonts.P4}
   font-weight: 500;
-  margin: 0 0 8px 0;
-
-  @media (max-width: 1200px) {
-    ${fonts.P3};
-  }
-
-  @media (max-width: 768px) {
-    ${fonts.P3};
-  }
+  margin: 0;
 `;
 
 export const CardDescription = styled.p`
@@ -137,9 +92,6 @@ export const CardDescription = styled.p`
 `;
 
 export const InfoBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0;
   margin-top: 0;
 `;
 
@@ -151,16 +103,11 @@ export const InfoContent = styled.p`
   @media (max-width: 768px) {
     ${fonts.P3};
   }
-
 `;
 
 export const ErrorMessage = styled.p`
   color: ${theme.colors.red};
   margin-bottom: 16px;
-
-  @media (max-width: 768px) {
-    margin-bottom: 12px;
-  }
 `;
 
 export const AddModalInput = styled.input`
@@ -174,5 +121,4 @@ export const AddModalInput = styled.input`
   @media (max-width: 768px) {
     padding: 0.5rem 0.8rem;
   }
-
 `;
