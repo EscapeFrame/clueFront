@@ -65,11 +65,12 @@ export const Card = styled.div`
   border-radius: 16px;
   border: 1px solid ${theme.colors.gray[400]};
   transition: box-shadow 0.3s;
+  cursor: pointer;
 
-  max-width: 50vh;
+  max-width: 30vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 10em;
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
