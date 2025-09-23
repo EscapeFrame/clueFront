@@ -40,7 +40,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
 
   return (
     <Routes>
-      <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route path="/login" element= {< Login />} />
       <Route path="/register" element={<Navigate to="/" replace />} />
 
       {role === 'TCH' && (
