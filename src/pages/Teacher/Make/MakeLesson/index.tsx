@@ -7,13 +7,23 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const LessonCreator: React.FC = () => {
   const navigate = useNavigate();
-  const { classRoomId } = useParams<{ classRoomId: string }>();
+  const useparams = useParams();
+  const { classRoomId } = useparams
+  const { directoryId } = useparams
 
   console.log(classRoomId)
 
   const handleCardClick = (url: string) => {
     navigate(url);
   };
+
+  if (!classRoomId) {
+    return false;
+  }
+
+  if(!directoryId) {
+    return false;
+  }
 
   return (
     <s.Container>
