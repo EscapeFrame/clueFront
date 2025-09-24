@@ -8,7 +8,7 @@ import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
-import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
+import { getLessonDirectories, getLessonNews, getLessonQuestions, getClassCode } from '../api';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
@@ -21,6 +21,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   // 상태 관리
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [code, setCode] = useState("")
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0); // 리로드 트리거
@@ -55,6 +56,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       setDirectories(dirs);
       setNews(await getLessonNews(classRoomId));
       setQuestions(await getLessonQuestions(classRoomId));
+      setCode(await getClassCode(classRoomId));
     } catch (err) {
       console.error(err);
     } finally {
@@ -173,6 +175,15 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
       {/* 오른쪽: 새소식 + 질문 */}
       <s.RightPanel>
+        {isTeacher && (
+          <s.Section>
+            <NoticeCard
+              cardTitle="수업참가 코드"
+              notices={code ? [{ id: 'class-code', title: code, content: '', date: '' }] : []}
+              onSelect={() => {}}
+            />
+          </s.Section>
+        )}
         <s.Section>
           <NoticeCard cardTitle="새소식" notices={news} onSelect={item => setSelectedModal({ type: 'news', item })} />
         </s.Section>
