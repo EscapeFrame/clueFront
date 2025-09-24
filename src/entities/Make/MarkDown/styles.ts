@@ -82,7 +82,8 @@ export const previousButton = styled.div`
 
   @media (max-width: 768px) {
     ${fonts.P2};
-    padding: 8px;
+    padding: 4px;
+    padding-left: 24px;
   }
 `;
 
@@ -94,7 +95,8 @@ export const cancelButton = styled.div`
 
   @media (max-width: 768px) {
     ${fonts.P2};
-    padding: 8px;
+    padding: 4px;
+    padding-left: 24px;
   }
 `;
 
@@ -112,6 +114,7 @@ export const endButton = styled.div`
   @media (max-width: 1200px) {
     padding-left: 24px;
     padding-right: 24px;
+    margin: 8px;
   }
 
   @media (max-width: 768px) {
