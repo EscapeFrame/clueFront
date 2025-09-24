@@ -19,6 +19,7 @@ import TCHMarkDown from '@/pages/Teacher/Make/MarkDownEditor';
 import TCHClass from '@/pages/Teacher/Class';
 import TCHMakeLesson from '@/pages/Teacher/Make/MakeLesson';
 import ClassSetting from '@/pages/Teacher/ClassSetting';
+import TCHMakeSlide from '@/pages/Teacher/Make/MakeSlide';
 
 interface AppRoutesProps {
   role: string | null;
@@ -40,7 +41,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
 
   return (
     <Routes>
-      <Route path="/login" element= {< Login />} />
+      <Route path="/login" element={< Login />} />
       <Route path="/register" element={<Navigate to="/" replace />} />
 
       {role === 'TCH' && (
@@ -54,6 +55,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/class/make/score" element={<TCHMakeScorecard />} />
           <Route path="/class/make/markdown" element={<TCHMarkDown />} />
           <Route path="/class/:classRoomId/make/lesson" element={<TCHMakeLesson />} />
+          <Route path="/class/:classRoomId/make/lesson/google-slide" element={<TCHMakeSlide accessToken={''} />} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
         </>
       )}
