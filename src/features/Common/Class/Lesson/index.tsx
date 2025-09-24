@@ -129,7 +129,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     setRefreshTrigger(prev => prev + 1);
   };
 
-  const makeLesson = () => {
+  const makeLesson = (dirId : string) => {
+    navigate(`${dirId}/make/lesson`);
   }
 
   return (
@@ -166,7 +167,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                   ))}
                   {/* 선생님만 수업 추가 가능 */}
                   {isTeacher &&
-                    <s.AddSub onClick={() => makeLesson()}>수업 추가하기</s.AddSub>
+                    <s.AddSub onClick={() => makeLesson(dir.id)}>수업 추가하기</s.AddSub>
                   }
                 </s.SubDirectoryList>
               </s.DirectoryWrapper>
