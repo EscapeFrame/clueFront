@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { FaCircleCheck } from 'react-icons/fa6';
@@ -129,6 +129,9 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  const makeLesson = () => {
+  }
+
   return (
     <s.Container>
       {/* 왼쪽: 강의 디렉토리 */}
@@ -149,6 +152,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                     </s.DeleteIcon>
                   )}
                 </s.Item>
+                {/* 서브 디렉토리 */}
                 <s.SubDirectoryList $isExpanded={isExpanded}>
                   {dir.directoryList?.map(sub => (
                     <s.SubItem
@@ -160,6 +164,10 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                       <s.Name>{sub.name}</s.Name>
                     </s.SubItem>
                   ))}
+                  {/* 선생님만 수업 추가 가능 */}
+                  {isTeacher &&
+                    <s.AddSub onClick={() => makeLesson()}>수업 추가하기</s.AddSub>
+                  }
                 </s.SubDirectoryList>
               </s.DirectoryWrapper>
             );
