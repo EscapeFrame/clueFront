@@ -11,10 +11,11 @@ const MakeSlide: React.FC = () => {
     const accessToken = localStorage.getItem('googleAccessToken'); // 토큰 가져오게해주세용ㅇ
 
     const createAndSavePresentation = async () => {
-        if (!accessToken) {
-            setError("액세스 토큰이 없습니다. 다시 로그인해주세요.");
-            return;
-        }
+        /*  if (!accessToken) {
+              setError("액세스 토큰이 없습니다. 다시 로그인해주세요.");
+              return;
+          }
+      */
 
         setLoading(true);
         setError(null);
