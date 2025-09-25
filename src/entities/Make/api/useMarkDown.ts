@@ -17,7 +17,7 @@ export async function submitMarkDown(data: MarkDownSubmission) {
     formData.append("directoryId", data.directoryId);
     console.log("넘어온 값",data.file)
 
-    const response = await Customapi.post(`/api/document`, {
+    const response = await Customapi.post(`/api/document/file`, {
         files: data.file,
         classRoomId:data.classRoomId,
         directoryId:data.directoryId,
