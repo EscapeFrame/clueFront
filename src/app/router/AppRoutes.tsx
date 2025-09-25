@@ -70,7 +70,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
       {isAuthenticated && (
         <>
           <Route path="/setting" element={<Setting />} />
-          <Route path="setting/user" element={<p>정보 수정 페이지</p>} />
+          <Route path="/setting/user" element={<p>정보 수정 페이지</p>} />
         </>
       )}
 
