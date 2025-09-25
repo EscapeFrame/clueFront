@@ -8,14 +8,7 @@ const MakeSlide: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const accessToken = localStorage.getItem('googleAccessToken'); // 토큰 가져오게해주세용ㅇ
-
     const createAndSavePresentation = async () => {
-        /*  if (!accessToken) {
-              setError("액세스 토큰이 없습니다. 다시 로그인해주세요.");
-              return;
-          }
-      */
 
         setLoading(true);
         setError(null);
@@ -27,12 +20,6 @@ const MakeSlide: React.FC = () => {
                 {
                     title: "My New Slide via Axios",
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        "Content-Type": "application/json",
-                    },
-                }
             );
 
             const newPresentationId = slidesResponse.data.presentationId;
@@ -75,7 +62,7 @@ const MakeSlide: React.FC = () => {
             {loading && <p>생성 중...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {presentationId && (
-                <p>생성된 프레젠테이션 ID: {presentationId} (백엔드에 저장됨)</p>
+                <p>생성된 프레젠테이션 ID: {presentationId}</p> 
             )}
         </s.Container>
     );
