@@ -15,7 +15,7 @@ export const useSchedule = (grade: number, classNumber: number) => {
         setLoading(true);
         setError(null);
 
-        const data = await timetableApi.getWeeklyTimetable(grade, classNumber);
+        const data = await timetableApi.getWeeklyTimetable();
 
         if (Array.isArray(data)) {
           setSchedule(data);
