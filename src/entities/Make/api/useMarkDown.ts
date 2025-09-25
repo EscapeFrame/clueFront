@@ -25,7 +25,7 @@ export async function submitMarkDown(data: MarkDownSubmission) {
 
     const response = await Customapi.post(`/api/document/file`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "multipart/formed-data",
       },
     });
     return response.data;
