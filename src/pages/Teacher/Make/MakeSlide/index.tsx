@@ -23,7 +23,6 @@ const MakeSlide: React.FC = () => {
             );
 
             const newPresentationId = slidesResponse.data.presentationId;
-            setPresentationId(newPresentationId);
 
             // 생성된 ID를 서버에 저장
             const backendResponse = await Customapi.post(
@@ -40,6 +39,7 @@ const MakeSlide: React.FC = () => {
 
             if (backendResponse.status === 200 || backendResponse.status === 201) {
                 console.log("프레젠테이션 ID가 백엔드에 성공적으로 저장되었습니다.");
+                setPresentationId(newPresentationId);
             } else {
                 throw new Error("백엔드 저장에 실패했습니다.");
             }
