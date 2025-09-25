@@ -34,11 +34,6 @@ export const useAuth = () => {
         return;
       }
 
-      if (user?.userId) {
-        setLoading(false);
-        return;
-      }
-
       try {
         const res = await Customapi.get('/api/user/me');
         const userData = res.data;
