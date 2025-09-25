@@ -8,6 +8,11 @@ interface DirectoryApiResponse {
   directoryList: Array<{
     directoryId: number;
     directoryName: string;
+    documentList: Array<{
+      documentId: string;
+      title: string;
+      createdAt: string;
+    }>;
   }>;
 }
 
