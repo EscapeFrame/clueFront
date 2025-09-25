@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from '@/pages/Login/index';
 import RegisterPage from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
-import Setting from '@/pages/Common/Setting/Setting';
+import Setting from '@/pages/Common/Setting/alarm/Setting';
+import UserSetting from '@/pages/Common/Setting/user/userSetting';
 
 import STUHome from '@/pages/Student/Main/index';
 import STUMyClass from '@/pages/Student/MyClass';
@@ -73,7 +74,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
       {isAuthenticated && (
         <>
           <Route path="/setting" element={<Setting />} />
-          <Route path="setting/user" element={<p>정보 수정 페이지</p>} />
+          <Route path="/setting/user" element={<UserSetting />} />
         </>
       )}
 
