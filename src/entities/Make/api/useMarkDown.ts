@@ -17,7 +17,7 @@ export async function submitMarkDown(data: MarkDownSubmission) {
     formData.append("directoryId", data.directoryId);
     formData.append(
       "metadata",
-      new Blob([JSON.stringify({ "title": data.metadata })], {
+      new Blob([JSON.stringify([{ title: data.metadata }])], {
         type: "application/json",
       }),
     );
