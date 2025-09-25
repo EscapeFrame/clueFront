@@ -11,6 +11,6 @@ export default function MarkDown() {
 
     console.log(documentId);
     return (
-        <MarkDownViewer documentId={documentId} />
+        <MarkDownViewer />
     )
 }
