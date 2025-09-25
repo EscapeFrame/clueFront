@@ -38,6 +38,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
             return false
         }
         const file = new File([mdContent], 'markdown.md', { type: 'text/markdown' }); // text -> file
+        console.log("file", file)
         const submissionData = {
             file: file,
             classRoomId: classRoomId,
