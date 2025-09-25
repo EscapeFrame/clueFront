@@ -12,23 +12,22 @@ interface MarkDownSubmission {
 export async function submitMarkDown(data: MarkDownSubmission) {
   try {
     const formData = new FormData();
-    formData.append("file", data.file);
+    formData.append("files", data.file);
     formData.append("classRoomId", data.classRoomId);
     formData.append("directoryId", data.directoryId);
-    console.log("넘어온 값",data.file)
-
-    const response = await Customapi.post(`/api/document/file`, {
-        files: data.file,
-        classRoomId:data.classRoomId,
-        directoryId:data.directoryId,
-        metadata: [{"title": data.metadata, "type": "string"}],
-      },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
+    formData.append(
+      "metadata",
+      new Blob([JSON.stringify({ title: data.metadata })], {
+        type: "string",
+      }),
     );
+    console.log("넘어온 값", data.file);
+
+    const response = await Customapi.post(`/api/document/file`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("MarkDown 전달 실패:", error);
