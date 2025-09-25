@@ -18,14 +18,14 @@ export async function submitMarkDown(data: MarkDownSubmission) {
     formData.append(
       "metadata",
       new Blob([JSON.stringify({ title: data.metadata })], {
-        type: "string",
+        type: "application/json",
       }),
     );
     console.log("넘어온 값", data.file);
 
     const response = await Customapi.post(`/api/document/file`, formData, {
       headers: {
-        "Content-Type": "multipart/formed-data",
+        // The Content-Type is intentionally removed to let the browser handle it.
       },
     });
     return response.data;
