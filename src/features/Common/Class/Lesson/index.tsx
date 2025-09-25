@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { FaCircleCheck } from 'react-icons/fa6';
@@ -96,7 +96,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           return d;
         })
       );
-      navigate(`/class/${classRoomId}/${dir.id}`); // 미확정
+      navigate(`/class/${classRoomId}/${dir.id}`, { state: { title: dir.name } });
     } else {
       toggleDirectory(dir.id);
     }
