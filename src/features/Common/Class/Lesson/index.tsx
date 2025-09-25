@@ -50,7 +50,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         id: dir.directoryId.toString(),
         name: dir.directoryName,
         isRead: false,
-        directoryList: [], // 필요시 documentList로 변환 가능
+        directoryList: dir.documentList.map(doc => ({
+          id: doc.documentId,
+          name: doc.title,
+          isRead: false,
+        })),
       }));
       setDirectories(dirs);
       setNews(await getLessonNews(classRoomId));
