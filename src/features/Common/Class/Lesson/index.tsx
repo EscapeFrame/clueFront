@@ -13,6 +13,7 @@ import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/shared/model/userState';
+import { NoticeItem } from '@/shared/types/notice';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   // 상태 관리
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [code, setCode] = useState("")
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
+  const [code, setCode] = useState("코드를 불러오지 못했습니다.")
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0); // 리로드 트리거
 
@@ -47,6 +48,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const fetchData = async () => {
     try {
       const classInfo = await getLessonDirectories(classRoomId);
+      setCode(classInfo.code)
       const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
         id: dir.directoryId.toString(),
         name: dir.directoryName,
@@ -131,6 +133,24 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  const handleCodeSelect = (item: NoticeItem) => {
+    navigator.clipboard.writeText(item.title)
+      .then(() => {
+        alert('수업 코드가 클립보드에 복사되었습니다.');
+      })
+      .catch(err => {
+        console.error('Failed to copy code: ', err);
+        alert('코드 복사에 실패했습니다.');
+      });
+  };
+
+  const codeNotice: NoticeItem[] = [{
+    id: 'class-code',
+    title: code,
+    content: '클릭하여 수업 코드를 복사하세요.',
+    date: '클릭하여 복사'
+  }];
+
   return (
     <s.Container>
       {/* 왼쪽: 강의 디렉토리 */}
@@ -184,6 +204,9 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
             />
           </s.Section>
         )}
+        <s.Section>
+          <NoticeCard cardTitle="수업 참가 코드" notices={codeNotice} onSelect={handleCodeSelect} />
+        </s.Section>
         <s.Section>
           <NoticeCard cardTitle="새소식" notices={news} onSelect={item => setSelectedModal({ type: 'news', item })} />
         </s.Section>
