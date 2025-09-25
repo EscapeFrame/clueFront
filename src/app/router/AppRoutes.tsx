@@ -34,7 +34,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="*" element={<TCHMakeSlide/>} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
   }
