@@ -54,10 +54,12 @@ export const ViewerSection = styled.div`
   }
 `;
 
-export const SectionTitle = styled.h3`
+export const SectionTitle = styled.input`
   margin: 0;
   padding: 16px 20px;
   background: #f8f9fa;
+  border: none;
+  outline: none;
   border-bottom: 1px solid #e9ecef;
   ${fonts.P2};
   font-weight: 600;

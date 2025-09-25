@@ -1,6 +1,5 @@
 import React from "react";
 import * as s from "./styles";
-import DirectorySelect from "@/entities/Make/Lesson/directory/DirectorySelect";
 import LessonCard from "@/entities/Make/Lesson/Card";
 import { lessonCards } from "@/entities/Make/Lesson/Card/data";
 import { useParams, useNavigate } from "react-router-dom";
@@ -29,8 +28,6 @@ const LessonCreator: React.FC = () => {
     <s.Container>
       <s.Title>수업 만들기</s.Title>
       <s.desc>어떤 형식의 수업을 원하시나요?</s.desc>
-
-      {classRoomId && <DirectorySelect classRoomId={classRoomId} />}
 
       <s.Grid>
         {lessonCards.map((card) => (
