@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from '@/pages/Login/index';
 import RegisterPage from '@/pages/Signup';
 import NotFound from '@/pages/NotFound';
-import Setting from '@/pages/Common/Setting/Setting';
+import Setting from '@/pages/Common/Setting/alarm/Setting';
 
 import STUHome from '@/pages/Student/Main/index';
 import STUMyClass from '@/pages/Student/MyClass';
