@@ -6,7 +6,7 @@ export const lessonCards = [
       "모듈형 구성으로 직관적인 편집",
       "이미지, 영상, 링크 등 다양한 콘텐츠 삽입",
     ],
-    url: "/class/make/markdown",
+    url: "markdown",
   },
   {
     title: "Google Docs",
@@ -16,7 +16,7 @@ export const lessonCards = [
   {
     title: "Code",
     desc: ["실시간 코드 실행 가능", "문법 강조 및 자동완성 지원", "인터랙티브한 학습 가능", "다양한 언어 지원"],
-    url: "/lesson/code",
+    url: "code",
   },
   {
     title: "Google Slide",

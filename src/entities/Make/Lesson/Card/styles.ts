@@ -10,6 +10,9 @@ export const Card = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -45,6 +48,7 @@ export const CardList = styled.ul`
   list-style: none;
   margin: 0;
   padding: 10px;
+  flex-grow: 1;
 
   @media (max-width: 1200px) {
     ${fonts.P3};

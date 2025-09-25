@@ -53,7 +53,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         id: dir.directoryId.toString(),
         name: dir.directoryName,
         isRead: false,
-        directoryList: [], // 필요시 documentList로 변환 가능
+        directoryList: dir.documentList.map(doc => ({
+          id: doc.documentId,
+          name: doc.title,
+          isRead: false,
+        })),
       }));
       setDirectories(dirs);
       setNews(await getLessonNews(classRoomId));
@@ -96,7 +100,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           return d;
         })
       );
-      navigate(`/class/${classRoomId}/${dir.id}`); // 미확정
+      navigate(`/class/${classRoomId}/${dir.id}`, { state: { title: dir.name } });
     } else {
       toggleDirectory(dir.id);
     }
@@ -171,6 +175,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                     </s.DeleteIcon>
                   )}
                 </s.Item>
+                {/* 서브 디렉토리 */}
                 <s.SubDirectoryList $isExpanded={isExpanded}>
                   {dir.directoryList?.map(sub => (
                     <s.SubItem
@@ -182,6 +187,10 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                       <s.Name>{sub.name}</s.Name>
                     </s.SubItem>
                   ))}
+                  {/* 선생님만 수업 추가 가능 */}
+                  {isTeacher &&
+                    <s.AddSub onClick={() => makeLesson(dir.id)}>수업 추가하기</s.AddSub>
+                  }
                 </s.SubDirectoryList>
               </s.DirectoryWrapper>
             );

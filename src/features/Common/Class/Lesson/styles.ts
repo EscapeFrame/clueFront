@@ -53,6 +53,16 @@ export const SubItem = styled.div<{ $isRead: boolean }>`
   cursor: pointer;
 `;
 
+export const AddSub = styled.div `
+  background-color: ${theme.colors.blue[400]};
+  border: 1px solid ${theme.colors.gray[300]};
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+`
+
 export const Check = styled.span`
   width: 1rem;
   text-align: center;
