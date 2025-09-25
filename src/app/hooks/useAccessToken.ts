@@ -29,7 +29,7 @@ export const useAuth = () => {
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (!accessToken) {
+      if (!accessToken || user.userId) {
         setLoading(false);
         return;
       }
@@ -48,8 +48,9 @@ export const useAuth = () => {
         setLoading(false);
       }
     };
+
     fetchUserInfo();
-  }, [accessToken, user, removeAuthInfo, setUser]);
+  }, [accessToken, user.userId, setUser]);
 
   return { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo, loading };
 };
