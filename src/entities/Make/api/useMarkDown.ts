@@ -22,9 +22,6 @@ export async function submitMarkDown(data: MarkDownSubmission) {
         "Content-Type": "multipart/form-data",
       },
     });
-    if (response.status !== 200) {
-      return response.status;
-    }
     return response.data;
   } catch (error) {
     console.error("MarkDown 전달 실패:", error);
