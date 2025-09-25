@@ -83,7 +83,7 @@ export default function UserInfo() {
       <S.ChatSection>
         <h3>보관된 채팅</h3>
         <ul>
-          {["유근환", "김민재", "이도"].map((name) => (
+          {["유근찬", "김민재", "이도"].map((name) => (
             <li key={name}>
               {name} <a href="#">보러가기 &gt;</a>
             </li>
