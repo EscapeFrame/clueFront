@@ -17,8 +17,8 @@ export async function submitMarkDown(data: MarkDownSubmission) {
     formData.append("directoryId", data.directoryId);
     formData.append(
       "metadata",
-      new Blob([JSON.stringify({ title: data.metadata })], {
-        type: "string",
+      new Blob([JSON.stringify({ "title": data.metadata })], {
+        type: "application/json",
       }),
     );
     console.log("넘어온 값", data.file);
