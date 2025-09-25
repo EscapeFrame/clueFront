@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { FaCircleCheck } from 'react-icons/fa6';
@@ -8,11 +8,12 @@ import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
-import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
+import { getLessonDirectories, getLessonNews, getLessonQuestions, getClassCode } from '../api';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/shared/model/userState';
+import { NoticeItem } from '@/shared/types/notice';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
+  const [code, setCode] = useState("코드를 불러오지 못했습니다.")
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0); // 리로드 트리거
 
@@ -46,15 +48,21 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const fetchData = async () => {
     try {
       const classInfo = await getLessonDirectories(classRoomId);
+      setCode(classInfo.code)
       const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
         id: dir.directoryId.toString(),
         name: dir.directoryName,
         isRead: false,
-        directoryList: [], // 필요시 documentList로 변환 가능
+        directoryList: dir.documentList.map(doc => ({
+          id: doc.documentId,
+          name: doc.title,
+          isRead: false,
+        })),
       }));
       setDirectories(dirs);
       setNews(await getLessonNews(classRoomId));
       setQuestions(await getLessonQuestions(classRoomId));
+      setCode(await getClassCode(classRoomId));
     } catch (err) {
       console.error(err);
     } finally {
@@ -92,7 +100,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           return d;
         })
       );
-      navigate(`/class/${classRoomId}/${dir.id}`); // 미확정
+      navigate(`/class/${classRoomId}/${dir.id}`, { state: { title: dir.name } });
     } else {
       toggleDirectory(dir.id);
     }
@@ -129,9 +137,23 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     setRefreshTrigger(prev => prev + 1);
   };
 
-  const makeLesson = (dirId : string) => {
-    navigate(`${dirId}/make/lesson`);
-  }
+  const handleCodeSelect = (item: NoticeItem) => {
+    navigator.clipboard.writeText(item.title)
+      .then(() => {
+        alert('수업 코드가 클립보드에 복사되었습니다.');
+      })
+      .catch(err => {
+        console.error('Failed to copy code: ', err);
+        alert('코드 복사에 실패했습니다.');
+      });
+  };
+
+  const codeNotice: NoticeItem[] = [{
+    id: 'class-code',
+    title: code,
+    content: '클릭하여 수업 코드를 복사하세요.',
+    date: '클릭하여 복사'
+  }];
 
   return (
     <s.Container>
@@ -182,6 +204,18 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
       {/* 오른쪽: 새소식 + 질문 */}
       <s.RightPanel>
+        {isTeacher && (
+          <s.Section>
+            <NoticeCard
+              cardTitle="수업참가 코드"
+              notices={code ? [{ id: 'class-code', title: code, content: '', date: '' }] : []}
+              onSelect={() => {}}
+            />
+          </s.Section>
+        )}
+        <s.Section>
+          <NoticeCard cardTitle="수업 참가 코드" notices={codeNotice} onSelect={handleCodeSelect} />
+        </s.Section>
         <s.Section>
           <NoticeCard cardTitle="새소식" notices={news} onSelect={item => setSelectedModal({ type: 'news', item })} />
         </s.Section>

@@ -20,6 +20,7 @@ import TCHClass from '@/pages/Teacher/Class';
 import TCHMakeLesson from '@/pages/Teacher/Make/MakeLesson';
 import ClassSetting from '@/pages/Teacher/ClassSetting';
 import TCHMakeSlide from '@/pages/Teacher/Make/MakeSlide';
+import MarkDownViewerPage from '@/features/Common/Class/Lesson/markdown/Markdown';
 
 interface AppRoutesProps {
   role: string | null;
@@ -49,6 +50,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/" element={<TCHHome />} />
           <Route path="/class" element={<TCHMyClass />} />
           <Route path="/class/:classRoomId" element={<TCHClass />} />
+          <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
           <Route path="/class/make" element={<TCHMakeClass />} />
           <Route path="/timeline" element={<AddTimeLine />} />
           <Route path="/class/:classRoomId/make/task" element={<TCHMakeTask />} />
@@ -64,6 +66,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
           <Route path="/" element={<STUHome />} />
           <Route path="/class" element={<STUMyClass />} />
           <Route path="/class/:classRoomId" element={<STUClass />} />
+          <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
         </>
       )}
 

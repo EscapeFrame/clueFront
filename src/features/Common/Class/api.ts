@@ -5,9 +5,15 @@ import { NewsItem, QuestionItem } from '@/shared/types/Class/Lesson';
 
 // API 응답 타입 정의
 interface DirectoryApiResponse {
+  code: string;
   directoryList: Array<{
     directoryId: number;
     directoryName: string;
+    documentList: Array<{
+      documentId: string;
+      title: string;
+      createdAt: string;
+    }>;
   }>;
 }
 
@@ -38,21 +44,18 @@ export const getLessonDirectories = async (classRoomId: string): Promise<Directo
   const res = await Customapi.get(`/api/class/${classRoomId}/all`);
   if (res.status !== 200) {
     console.error(`수업 디렉토리 조회 실패: ${res.status}`);
-    return { directoryList: [] };
   }
   console.log(res.data);
   if(!res.data) {
-    return {
-      directoryList: [
-        {
-          directoryId: 0,
-          directoryName: '디렉토리가 비었습니다.',
-        },
-      ],
-    };;
+    console.error(`값이 비었습니다.`);
   }
   return res.data;
 };
+
+export const getClassCode = async (classRoomId:string) => {
+  const res = await Customapi.get(`api/code/${classRoomId}`);
+  return res.data
+}
 
 // 새소식 조회(없음)
 export const getLessonNews = async (classRoomId: string): Promise<NewsItem[]> => {
