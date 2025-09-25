@@ -132,6 +132,10 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  const makeLesson = (dirId: string) => {
+    navigate(`${dirId}/make/lesson`);
+  }
+
   // 디렉토리 추가 완료 시 리로드 트리거
   const handleDirectoryAdded = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -209,7 +213,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
             <NoticeCard
               cardTitle="수업참가 코드"
               notices={code ? [{ id: 'class-code', title: code, content: '', date: '' }] : []}
-              onSelect={() => {}}
+              onSelect={() => { }}
             />
           </s.Section>
         )}
