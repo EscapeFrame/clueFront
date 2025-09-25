@@ -6,7 +6,7 @@ import { Modal } from '@/entities/UI/Modal';
 import { submitMarkDown } from '../api/useMarkDown';
 // 언젠가는 Modal 컴포넌트 다시 손봐야 할듯
 
-export default function MarkDwonEditor() {
+export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoomId: string, directoryId: string }) {
     const defaultTemplate = '# 마크다운을 작성해보세요\n\n## 제목\n- 목록 1\n- 목록 2\n\n**굵은 글씨**와 *기울임체*도 사용할 수 있습니다.';
     const [mdContent, setMdContent] = useState(defaultTemplate);
     const navigate = useNavigate();
@@ -31,12 +31,24 @@ export default function MarkDwonEditor() {
     }
 
     // 완료
-    const end = () => {
+    const end = async () => {
         const file = new File([mdContent], 'markdown.md', { type: 'text/markdown' }); // text -> file
-        submitMarkDown(file);
-        console.log(file);
-        setIsEndOpen(false);
-        // 이동경로 추후 생각해보기
+        const submissionData = {
+            file: file,
+            classRoomId: classRoomId,
+            directoryId: directoryId,
+            metadata: "",
+        }
+        try {
+            await submitMarkDown(submissionData);
+            console.log(file);
+            setIsEndOpen(false);
+            navigate(`/class/${classRoomId}`); 
+        } catch (error) {
+            console.error("Markdown submission failed:", error);
+            alert("마크다운 제출에 실패했습니다.");
+            setIsEndOpen(false);
+        }
     }
 
     return (
@@ -96,7 +108,7 @@ export default function MarkDwonEditor() {
                 >
                     현재 작성 중인 내용이 초기화됩니다.
                 </Modal>
-            )}  
+            )}
             {/* 이전 */}
             {isPreviousOpen && (
                 <Modal
@@ -114,7 +126,7 @@ export default function MarkDwonEditor() {
                     작성 중인 내용은 저장되지 않습니다.
                 </Modal>
             )}
-            {/* 완료 */}    
+            {/* 완료 */}
             {isEndOpen && (
                 <Modal
                     title="작성을 완료하시겠습니까?"
