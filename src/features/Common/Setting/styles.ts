@@ -87,7 +87,7 @@ export const FormGroup = styled.div`
 
   label {
     ${fonts.P3};
-    color: ${theme.colors.gray[700]};
+    color: ${theme.colors.black};
     font-weight: 500;
   }
 
