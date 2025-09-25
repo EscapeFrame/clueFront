@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { blue, theme } from '@/shared/theme/theme.styles';
+import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
@@ -19,22 +19,6 @@ export const Container = styled.div`
     height: auto;
     gap: 12px;
     padding: 12px;
-  }
-`;
-
-export const EditorSection = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: ${theme.colors.white};
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  height: 95%;
-
-  @media (max-width: 768px) {
-    height: auto;
-    min-height: 300px;
   }
 `;
 
@@ -73,98 +57,6 @@ export const SectionTitle = styled.input`
   @media (max-width: 768px) {
     ${fonts.P1};
     padding: 10px 14px;
-  }
-`;
-
-export const previousButton = styled.div`
-  margin-top: 10px;
-  padding: 10px;
-  color: ${blue[500]};
-  cursor: pointer;
-
-  @media (max-width: 768px) {
-    ${fonts.P2};
-    padding: 4px;
-    padding-left: 24px;
-  }
-`;
-
-export const cancelButton = styled.div`
-  margin-top: 10px;
-  padding: 10px;
-  color: ${blue[500]};
-  cursor: pointer;
-
-  @media (max-width: 768px) {
-    ${fonts.P2};
-    padding: 4px;
-    padding-left: 24px;
-  }
-`;
-
-export const endButton = styled.div`
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 10px;
-  color: black;
-  background-color: ${blue[500]};
-  border-radius: 5px;
-  cursor: pointer;
-  padding-left: 30px;
-  padding-right: 30px;
-
-  @media (max-width: 1200px) {
-    padding-left: 24px;
-    padding-right: 24px;
-    margin: 8px;
-  }
-
-  @media (max-width: 768px) {
-    ${fonts.P2};
-    padding: 8px 16px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
-`;
-
-export const EditorWrapper = styled.div`
-  flex: 1;
-  overflow: hidden;
-  height: 100%;
-
-  .w-md-editor {
-    border: none;
-    border-radius: 0;
-  }
-
-  .w-md-editor-content {
-    border-radius: 0;
-  }
-
-  @media (max-width: 768px) {
-    height: auto;
-  }
-`;
-
-export const SaveWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-right: 10px;
-
-  @media (max-width: 768px) {
-    margin-right: 0;
-    flex-direction: column;
-    gap: 8px;
-  }
-`;
-
-export const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 8px;
   }
 `;
 
