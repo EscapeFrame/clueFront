@@ -9,6 +9,7 @@ export const TableWrapper = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto;
 `;
 
 export const Title = styled.div`
@@ -25,7 +26,8 @@ export const HeaderCell = styled.th`
 `;
 
 export const TimeCell = styled.td`
-  padding: 0.75rem;
+  padding: 0.5rem;
+  width: 4rem;
   background: ${theme.colors.gray[100]};
   border: 1px solid ${theme.colors.gray[300]};
   font-weight: 600;
