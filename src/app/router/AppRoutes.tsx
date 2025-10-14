@@ -23,6 +23,8 @@ import ClassSetting from '@/pages/Teacher/ClassSetting';
 import TCHMakeSlide from '@/pages/Teacher/Make/MakeSlide';
 import MarkDownViewerPage from '@/features/Common/Class/Lesson/markdown/Markdown';
 
+import { LinkSaveRoutes } from '@/linkSave/app/Routes';
+
 interface AppRoutesProps {
   role: string | null;
 }
@@ -75,6 +77,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
         <>
           <Route path="/setting" element={<Setting />} />
           <Route path="/setting/user" element={<UserSetting />} />
+          <Route path="/linksave/*" element={<LinkSaveRoutes />} />
         </>
       )}
 
