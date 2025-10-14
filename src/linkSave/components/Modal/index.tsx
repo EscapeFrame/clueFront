@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
 import { LinkCard, LinkFormData } from '@/linkSave/types/card';
+import ToggleSwitch from '@/entities/UI/ToggleSwitch';
 
 interface LinkFormModalProps {
   isOpen: boolean;
@@ -12,14 +13,14 @@ interface LinkFormModalProps {
   onSubmit: (data: LinkFormData, cardId?: string) => void;
 }
 
-const ALL_TAGS = ['반', '학년', '인문과목', '전공과목', '방과후', '기타']; // 예시 태그 목록
+const ALL_TAGS = ['반', '인문과목', '전공과목', '방과후', '기타']; // 태그 목록
 
-const LinkFormModal: React.FC<LinkFormModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  modalTitle, 
-  initialData, 
-  onSubmit 
+const LinkFormModal: React.FC<LinkFormModalProps> = ({
+  isOpen,
+  onClose,
+  modalTitle,
+  initialData,
+  onSubmit
 }) => {
   const [formData, setFormData] = useState<LinkFormData>({
     title: '',
@@ -27,7 +28,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
     explanation: '',
     tags: [],
   });
-  
+
   // 수정 모드 진입 시, initialData로 폼 데이터 초기화
   useEffect(() => {
     if (initialData) {
@@ -66,18 +67,18 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // 유효성 검사 (예: 필수 필드)
     if (!formData.title || !formData.url || formData.tags.length === 0) {
-        alert('필수 입력 항목(*)을 모두 채워주세요.');
-        return;
+      alert('필수 입력 항목(*)을 모두 채워주세요.');
+      return;
     }
 
     // onSubmit 함수를 통해 부모 컴포넌트에 데이터 전달 (API 호출 담당)
     onSubmit(formData, initialData?.id);
     onClose(); // 제출 후 모달 닫기
   };
-  
+
   const isConfirmDisabled = !formData.title || !formData.url || formData.tags.length === 0;
 
   return (
@@ -89,30 +90,30 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
         </S.ModalHeader>
 
         <form onSubmit={handleSubmit}>
-          <FormInputGroup 
-            label="제목" 
-            name="title" 
-            value={formData.title} 
-            onChange={handleChange} 
-            placeholder="제목을 입력해주세요." 
-            isRequired 
+          <FormInputGroup
+            label="제목"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="제목을 입력해주세요."
+            isRequired
           />
-          
-          <FormInputGroup 
-            label="URL" 
-            name="url" 
-            value={formData.url} 
-            onChange={handleChange} 
-            placeholder="URL을 입력해주세요." 
-            isRequired 
+
+          <FormInputGroup
+            label="URL"
+            name="url"
+            value={formData.url}
+            onChange={handleChange}
+            placeholder="URL을 입력해주세요."
+            isRequired
           />
-          
-          <FormInputGroup 
-            label="설명" 
-            name="explanation" 
-            value={formData.explanation} 
-            onChange={handleChange} 
-            placeholder="URL에 대한 설명을 간단히 적어주세요." 
+
+          <FormInputGroup
+            label="설명"
+            name="explanation"
+            value={formData.explanation}
+            onChange={handleChange}
+            placeholder="URL에 대한 설명을 간단히 적어주세요."
             isTextarea
           />
 
@@ -131,6 +132,12 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
             ))}
           </S.TagButtonContainer>
 
+          <S.FormLabel>공개범위 <span>*</span></S.FormLabel>
+          <S.TagDescription>중복 선택이 가능하며, 1개 이상 선택해주세요.</S.TagDescription>
+          <S.TagButtonContainer>
+            
+          </S.TagButtonContainer>
+
           <S.ModalFooter>
             <S.CancelButton type="button" onClick={onClose}>취소</S.CancelButton>
             <S.ConfirmButton type="submit" disabled={isConfirmDisabled}>확인</S.ConfirmButton>
@@ -145,37 +152,37 @@ export default LinkFormModal;
 
 // 폼 입력 그룹을 위한 보조 컴포넌트
 interface FormInputGroupProps {
-    label: string;
-    name: keyof LinkFormData;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    placeholder: string;
-    isRequired?: boolean;
-    isTextarea?: boolean;
+  label: string;
+  name: keyof LinkFormData;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  placeholder: string;
+  isRequired?: boolean;
+  isTextarea?: boolean;
 }
 
 const FormInputGroup: React.FC<FormInputGroupProps> = ({ label, name, value, onChange, placeholder, isRequired = false, isTextarea = false }) => (
-    <>
-        <S.FormLabel>
-            {label} {isRequired && <span>*</span>}
-        </S.FormLabel>
-        {isTextarea ? (
-            <S.FormTextarea 
-                name={name} 
-                value={value} 
-                onChange={onChange} 
-                placeholder={placeholder} 
-                required={isRequired}
-            />
-        ) : (
-            <S.FormInput 
-                type="text" 
-                name={name} 
-                value={value} 
-                onChange={onChange} 
-                placeholder={placeholder} 
-                required={isRequired}
-            />
-        )}
-    </>
+  <>
+    <S.FormLabel>
+      {label} {isRequired && <span>*</span>}
+    </S.FormLabel>
+    {isTextarea ? (
+      <S.FormTextarea
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={isRequired}
+      />
+    ) : (
+      <S.FormInput
+        type="text"
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={isRequired}
+      />
+    )}
+  </>
 );

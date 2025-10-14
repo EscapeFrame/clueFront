@@ -76,9 +76,17 @@ export const Item = styled.div`
   align-items: center; /* 텍스트 세로 중앙정렬 */
   height: 100%; /* 높이 꽉 채워서 정렬 안정화 */
   cursor: pointer;
+  transition: all 0.3s ease;
 
   &:hover {
     color: ${theme.colors.blue[600]};
+  }
+
+  &.active {
+    background-color: #0077FF;
+    color: white;
+    border-radius: 16px;
+    padding: 5px 20px;
   }
 
   @media (max-width: 480px) {
