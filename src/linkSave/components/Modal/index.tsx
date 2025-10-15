@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
 import { LinkCard, LinkFormData } from '@/linkSave/types/card';
+import { FormInputGroup } from './Input';
 
 interface LinkFormModalProps {
   isOpen: boolean;
@@ -148,40 +149,3 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
 };
 
 export default LinkFormModal;
-
-// 폼 입력 그룹을 위한 보조 컴포넌트
-interface FormInputGroupProps {
-  label: string;
-  name: keyof LinkFormData;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  placeholder: string;
-  isRequired?: boolean;
-  isTextarea?: boolean;
-}
-
-const FormInputGroup: React.FC<FormInputGroupProps> = ({ label, name, value, onChange, placeholder, isRequired = false, isTextarea = false }) => (
-  <>
-    <S.FormLabel>
-      {label} {isRequired && <span>*</span>}
-    </S.FormLabel>
-    {isTextarea ? (
-      <S.FormTextarea
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={isRequired}
-      />
-    ) : (
-      <S.FormInput
-        type="text"
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={isRequired}
-      />
-    )}
-  </>
-);
