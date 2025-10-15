@@ -90,7 +90,7 @@ export const FormTextarea = styled(FormInput.withComponent('textarea'))`
 export const TagDescription = styled.p`
   font-size: 0.8em;
   color: #8c8c8c;
-  margin-top: -16px;
+  margin-top: -10px;
   margin-bottom: 12px;
 `;
 

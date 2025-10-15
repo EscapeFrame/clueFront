@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
 import { LinkCard, LinkFormData } from '@/linkSave/types/card';
-import ToggleSwitch from '@/entities/UI/ToggleSwitch';
 
 interface LinkFormModalProps {
   isOpen: boolean;
