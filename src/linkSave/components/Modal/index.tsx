@@ -1,5 +1,3 @@
-// src/linkSave/components/LinkFormModal.tsx
-
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
 import { LinkCard, LinkFormData } from '@/linkSave/types/card';
