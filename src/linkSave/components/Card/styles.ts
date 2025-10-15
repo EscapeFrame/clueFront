@@ -9,104 +9,113 @@ export const CardGrid = styled.div`
 `;
 
 export const CardContainer = styled.div`
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 16px;
   position: relative;
   transition: transform 0.2s, box-shadow 0.2s;
-  min-height: 150px;
   display: flex;
   flex-direction: column;
-
+  height: 200px;
+  
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   }
 `;
 
-// === 카드 헤더 (삭제/수정 아이콘) ===
+// 헤더: 날짜 왼쪽, 버튼 오른쪽
 export const CardHeader = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+`;
+
+export const CardDate = styled.p`
+  color: #666;
+  font-size: 0.85em;
+  margin: 0px;
+  padding: 0px;
+`;
+
+export const CardActions = styled.div`
+  display: flex;
   gap: 8px;
-  margin-bottom: 8px;
+`;
 
-  & > button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #a0a0a0;
-    transition: color 0.15s;
-    font-size: 18px; // 아이콘 크기
+export const EditButton = styled.button`
+  color: #0077ff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.2s;
 
-    &:hover {
-      color: #ff4d4f; // 삭제 버튼은 빨간색
-    }
-    
-    // 수정 아이콘 (펜 모양)
-    &:first-of-type:hover {
-        color: #1890ff; // 수정 버튼은 파란색
-    }
+  &:hover {
+    color: #b7daff;
   }
 `;
 
-// === 카드 내용 ===
-export const CardDate = styled.p`
-  color: #7f7f7f;
-  font-size: 0.85em;
-  margin-bottom: 4px;
+export const DeleteButton = styled.button`
+  color: #ff6d6d;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #eba8a8;
+  }
+`;
+
+export const CardContent = styled.div`
+  flex: 1;
+  overflow: hidden;
+  margin: 8px 0;
+  padding-bottom: 36px;
 `;
 
 export const CardTitle = styled.h3`
   font-size: 1.15em;
   font-weight: 600;
-  margin: 0 0 4px 0;
-  color: #333333;
+  margin: 0px;
+  color: #18191A;
 `;
 
 export const CardExplanation = styled.p`
   font-size: 0.9em;
-  color: #666666;
-  margin: 0 0 12px 0;
-  flex-grow: 1; /* 내용을 채워서 태그가 아래로 붙도록 */
+  color: #666;
+  margin: 0;
+  line-height: 1.3em;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 최대 3줄 표시 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const CardTagContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 5px;
+  position: absolute;
+  bottom: 20px; /* 카드 하단에서 20px */
+  left: 16px;
+  right: 16px;
 `;
 
 export const CardTag = styled.span`
-  background-color: #e6f7ff; /* 밝은 파란색 배경 */
-  color: #1890ff; /* 파란색 텍스트 */
+  background-color: #EBF6FF;
+  color: #0077FF;
   border-radius: 4px;
+  border: 1px solid #86C1FF;
   padding: 3px 8px;
   font-size: 0.75em;
   font-weight: 500;
   margin-right: 6px;
-`;
-
-export const AddLinkButton = styled.button`
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    background-color: #1890ff; /* 파란색 */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1em;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-        background-color: #40a9ff;
-    }
-
-    & > span {
-        font-size: 1.2em; /* + 아이콘 */
-        margin-right: 4px;
-        line-height: 1;
-    }
 `;

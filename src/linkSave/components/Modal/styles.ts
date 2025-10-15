@@ -142,7 +142,7 @@ export const CancelButton = styled.button`
 
 export const ConfirmButton = styled.button`
   padding: 10px 20px;
-  background-color: #1890ff;
+  background-color: #0077FF;
   color: white;
   border: none;
   border-radius: 4px;
@@ -151,11 +151,11 @@ export const ConfirmButton = styled.button`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #40a9ff;
+    background-color: #578FCA;
   }
 
   &:disabled {
-    background-color: #91d5ff;
+    background-color: #D9D9D9;
     cursor: not-allowed;
   }
 `;
