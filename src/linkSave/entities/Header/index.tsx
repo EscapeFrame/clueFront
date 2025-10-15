@@ -1,8 +1,5 @@
-// src/linkSave/entities/Header.tsx
-
 import React from 'react';
 import * as s from './styles';
-// SearchBar 컴포넌트는 제공해주신 경로를 따릅니다.
 import SearchBar from '@/linkSave/components/SearchBar';
 import { categoryData } from "./data";
 import { IconType } from 'react-icons';

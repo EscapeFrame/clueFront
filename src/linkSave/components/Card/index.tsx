@@ -1,5 +1,3 @@
-// src/components/LinkCardItem.tsx
-
 import React from 'react';
 import { LinkCard } from '@/linkSave/types/card';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
