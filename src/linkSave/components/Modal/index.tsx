@@ -24,7 +24,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<LinkFormData>({
     title: '',
-    url: '',
+    link: '',
     explanation: '',
     subjectType: [],
   });
@@ -40,14 +40,14 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
     if (initialData) {
       setFormData({
         title: initialData.title,
-        url: initialData.link,
+        link: initialData.link,
         explanation: initialData.description,
         subjectType: initialData.subjectType,
       });
     } else {
       setFormData({
         title: '',
-        url: '',
+        link: '',
         explanation: '',
         subjectType: [],
       });
@@ -82,7 +82,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.url || formData.subjectType.length === 0) {
+    if (!formData.title || !formData.link || formData.subjectType.length === 0) {
       alert('필수 입력 항목(*)을 모두 채워주세요.');
       return;
     }
@@ -98,7 +98,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   };
 
   const isConfirmDisabled =
-    !formData.title || !formData.url || formData.subjectType.length === 0;
+    !formData.title || !formData.link || formData.subjectType.length === 0;
 
   return (
     <S.ModalOverlay onClick={onClose}>
@@ -124,8 +124,8 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
           <FormInputGroup
             label="URL"
             type="url"
-            name="url"
-            value={formData.url}
+            name="link"
+            value={formData.link}
             onChange={handleChange}
             placeholder="URL을 입력해주세요."
             isRequired

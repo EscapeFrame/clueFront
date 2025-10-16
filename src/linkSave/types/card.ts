@@ -10,7 +10,7 @@ export interface LinkCard {
 // 폼에서 관리할 데이터 구조
 export interface LinkFormData {
     title: string;
-    url: string;
+    link: string;
     explanation: string;
     subjectType: string[];
 }
