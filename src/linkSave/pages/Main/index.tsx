@@ -25,9 +25,6 @@ export const LinkSaveMain = () => {
         setSearchQuery(query.toLowerCase());
     }, []);
 
-
-    // === 이벤트 핸들러 ===
-
     // 1. 링크 추가 버튼 클릭 (Header에서 호출)
     const handleAddLinkClick = useCallback(() => {
         setModalMode('추가');
