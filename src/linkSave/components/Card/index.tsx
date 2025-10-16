@@ -13,7 +13,7 @@ interface LinkCardItemProps {
 const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) => {
 
   const handleCardClick = () => {
-    window.open(card.url, '_blank', 'noopener,noreferrer');
+    window.open(card.link, '_blank', 'noopener,noreferrer');
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -38,11 +38,11 @@ const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) =
 
       <S.CardContent>
         <S.CardTitle>{card.title}</S.CardTitle>
-        <S.CardExplanation>{card.explanation}</S.CardExplanation>
+        <S.CardExplanation>{card.description}</S.CardExplanation>
       </S.CardContent>
 
       <S.CardTagContainer>
-        {card.tags.map((tag, i) => <S.CardTag key={i}>{tag}</S.CardTag>)}
+        {card.subjectType.map((subjectType, i) => <S.CardTag key={i}>{subjectType}</S.CardTag>)}
       </S.CardTagContainer>
     </S.CardContainer>
   );

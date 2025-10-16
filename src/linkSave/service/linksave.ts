@@ -1,29 +1,31 @@
-import SubCustomapi from "../lib/api";
-import { LinkCard } from "../types/card";
+import SubCustomapi from '../lib/api';
+import { LinkCard, LinkFormData } from '../types/card';
 
-const api =  SubCustomapi;
-
+// 1. 모든 링크 조회 (카테고리 무관)
 export const fetchAllLinks = async (): Promise<LinkCard[]> => {
-  const res = await api.get("/linksave");
-  return res.data;
-}
-
-export const fetchLinks = async (link_id:string): Promise<LinkCard[]> => {
-  const res = await api.get(`/linksave/${link_id}`);
-  return res.data;
+    const response = await SubCustomapi.get('/linksave');
+    return response.data;
 };
 
-export const addLink = async (linkData: LinkCard): Promise<LinkCard> => {
-  const res = await api.post("/linksave", linkData);
-  return res.data;
+// 2. 특정 카테고리 링크 조회
+export const fetchLinks = async (link_id: string): Promise<LinkCard[]> => {
+    const response = await SubCustomapi.get(`/linksave/${link_id}`);
+    return response.data;
 };
 
-export const updateLink = async (link_id: string, linkData: Omit<LinkCard, "id" | "date">): Promise<LinkCard> => {
-  const res = await api.put(`/linksave/${link_id}`, linkData);
-  return res.data;
+// 3. 링크 추가
+export const addLink = async (linkData: LinkFormData): Promise<LinkCard> => {
+    const response = await SubCustomapi.post('/linksave', linkData);
+    return response.data;
 };
 
+// 4. 링크 수정
+export const updateLink = async ({ link_id, linkData }: { link_id: string, linkData: Partial<LinkFormData> }): Promise<LinkCard> => {
+    const response = await SubCustomapi.patch(`/linksave/${link_id}`, linkData);
+    return response.data;
+};
+
+// 5. 링크 삭제
 export const deleteLink = async (link_id: string): Promise<void> => {
-  await api.delete(`/linksave/${link_id}`);
-  return;
+    await SubCustomapi.delete(`/linksave/${link_id}`);
 };

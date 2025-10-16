@@ -14,7 +14,7 @@ const LinkCardList: React.FC<LinkCardListProps> = ({ cards, activeCategory, onEd
   
   const filteredCards = activeCategory === '전체'
     ? cards
-    : cards.filter(card => card.tags.includes(activeCategory));
+    : cards.filter(card => card.subjectType.includes(activeCategory));
 
   return (
     <S.CardGrid>
