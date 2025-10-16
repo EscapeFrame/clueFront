@@ -1,8 +1,8 @@
-import { GoBriefcase } from "react-icons/go";
 import { IoBookOutline } from "react-icons/io5";
 import { HiOutlineAcademicCap } from "react-icons/hi2";
 import { CiClock2 } from "react-icons/ci";
 import { IconType } from "react-icons";
+import { LINK_CATEGORY_MAP } from '@/linkSave/types/card';
 
 export interface CategoryItem {
   name: string;
@@ -10,9 +10,8 @@ export interface CategoryItem {
 }
 
 export const categoryData: CategoryItem[] = [
-  { name: "전체" },
-  { name: "반", icon: GoBriefcase },
-  { name: "인문과목", icon: IoBookOutline },
-  { name: "전공과목", icon: HiOutlineAcademicCap },
-  { name: "방과후", icon: CiClock2 },
+    { name: LINK_CATEGORY_MAP.Total },
+    { name: LINK_CATEGORY_MAP.General, icon: IoBookOutline },
+    { name: LINK_CATEGORY_MAP.Professional, icon: HiOutlineAcademicCap },
+    { name: LINK_CATEGORY_MAP.AfterSchool, icon: CiClock2 },
 ];

@@ -4,7 +4,7 @@ import LinkCardList from '@/linkSave/components/CardList';
 import LinkFormModal from '@/linkSave/components/Modal';
 import DeleteConfirmModal from '@/linkSave/components/Modal/Delete';
 import * as S from './styles';
-import { LinkCard, LinkFormData } from '@/linkSave/types/card';
+import { LinkCard, LinkFormData, LINK_CATEGORY_ENGLISH_MAP, LinkCategoryKorean } from '@/linkSave/types/card';
 import { useGetAlllinks, useAddLink, useDeleteLink, useUpdateLink } from '@/linkSave/hooks/useLinkSave';
 
 export const LinkSaveMain = () => {
@@ -52,16 +52,21 @@ export const LinkSaveMain = () => {
     // 4. 추가/수정 폼 제출 (LinkFormModal에서 호출)
     const handleFormSubmit = useCallback(async (data: LinkFormData, cardId?: string) => {
         try {
+            const englishData = {
+                ...data,
+                subjectType: data.subjectType.map(koreanCategory => LINK_CATEGORY_ENGLISH_MAP[koreanCategory as LinkCategoryKorean] || koreanCategory)
+            };
+
             if (cardId) {
                 // 수정 로직
                 await updateLinkMutation.mutateAsync({
                     link_id: cardId,
-                    linkData: data
+                    linkData: englishData
                 });
                 console.log(`수정 완료 - ID: ${cardId}`);
             } else {
                 // 추가 로직
-                await addLinkMutation.mutateAsync(data);
+                await addLinkMutation.mutateAsync(englishData);
                 console.log('추가 완료');
             }
             setIsFormModalOpen(false);
@@ -85,15 +90,38 @@ export const LinkSaveMain = () => {
     }, [deleteLinkMutation]);
 
     const filteredCards = cards.filter(card => {
-        const categoryMatch = activeCategory === '전체' || card.subjectType?.includes(activeCategory);
+        const englishCategory = LINK_CATEGORY_ENGLISH_MAP[activeCategory as LinkCategoryKorean];
+        const categoryMatch = activeCategory === '전체' || (englishCategory && card.subjectType?.includes(englishCategory));
         const searchMatch = card.title?.toLowerCase().includes(searchQuery);
         return categoryMatch && searchMatch;
     });
 
-    if (isLoading) return <S.Wrapper><div>로딩 중...</div></S.Wrapper>;
+    if (isLoading) {
+        return <S.Wrapper>
+            <div>
+                <Header
+                    onAddLink={handleAddLinkClick}
+                    onSelectCategory={setActiveCategory}
+                    activeCategory={activeCategory}
+                    onSearch={handleSearch}
+                />
+            </div>
+            <div>로딩 중...</div>
+        </S.Wrapper>;
+    }
     if (isError) {
         console.error('링크 조회 중 에러 발생:', error);
-        return <S.Wrapper><div>링크를 불러오는 중 문제가 발생했습니다.</div></S.Wrapper>;
+        return <S.Wrapper>
+            <div>
+                <Header
+                    onAddLink={handleAddLinkClick}
+                    onSelectCategory={setActiveCategory}
+                    activeCategory={activeCategory}
+                    onSearch={handleSearch}
+                />
+            </div>
+            <div>링크를 불러오는 중 문제가 발생했습니다.</div>
+        </S.Wrapper>;
     }
 
     return (
@@ -113,7 +141,6 @@ export const LinkSaveMain = () => {
                 {/* LinkCardList에 현재 상태를 전달 */}
                 <LinkCardList
                     cards={filteredCards} // 필터링되지 않은 전체 목록
-                    activeCategory={activeCategory} // 필터링에 사용
                     onEdit={handleEditLinkClick}
                     onDelete={handleDeleteLinkClick}
                 />

@@ -12,7 +12,22 @@ export interface LinkFormData {
     title: string;
     url: string;
     explanation: string;
-    tags: string[];
+    subjectType: string[];
 }
 
-export type LinkCategory = '전체' | '인문과목' | '전공과목' | '방과후';
+export const LINK_CATEGORY_MAP = {
+  Total: '전체',
+  General: '인문과목',
+  Professional: '전공과목',
+  AfterSchool: '방과후',
+} as const;
+
+export type LinkCategory = keyof typeof LINK_CATEGORY_MAP;
+export type LinkCategoryKorean = typeof LINK_CATEGORY_MAP[LinkCategory];
+
+export const LINK_CATEGORY_ENGLISH_MAP: { [key in LinkCategoryKorean]?: LinkCategory } = {
+  '전체': 'Total',
+  '인문과목': 'General',
+  '전공과목': 'Professional',
+  '방과후': 'AfterSchool',
+};

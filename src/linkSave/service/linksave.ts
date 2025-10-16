@@ -7,7 +7,7 @@ export const fetchAllLinks = async (): Promise<LinkCard[]> => {
     return response.data;
 };
 
-// 2. 특정 카테고리 링크 조회
+// 2. 특정 링크 조회
 export const fetchLinks = async (link_id: string): Promise<LinkCard[]> => {
     const response = await SubCustomapi.get(`/linksave/${link_id}`);
     return response.data;
