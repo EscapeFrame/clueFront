@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
-import { LinkCard, LinkFormData } from '@/linkSave/types/card';
+import { LinkCard, LinkFormData, LINK_CATEGORY_MAP } from '@/linkSave/types/card';
 import { FormInputGroup } from './Input';
 import ToggleSwitch from '../UI/ToggleSwitch';
 
@@ -13,7 +13,7 @@ interface LinkFormModalProps {
   onSubmit: (data: LinkFormData, cardId?: string) => void;
 }
 
-const ALL_TAGS = ['반', '인문과목', '전공과목', '방과후', '기타']; // 태그 목록
+const ALL_TAGS = Object.values(LINK_CATEGORY_MAP).filter(v => v !== '전체');
 
 const LinkFormModal: React.FC<LinkFormModalProps> = ({
   isOpen,
@@ -26,7 +26,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
     title: '',
     url: '',
     explanation: '',
-    tags: [],
+    subjectType: [],
   });
 
   // 공개 범위 상태
@@ -42,14 +42,14 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
         title: initialData.title,
         url: initialData.link,
         explanation: initialData.description,
-        tags: initialData.subjectType,
+        subjectType: initialData.subjectType,
       });
     } else {
       setFormData({
         title: '',
         url: '',
         explanation: '',
-        tags: [],
+        subjectType: [],
       });
       setVisibility({ grade: false, class: false });
     }
@@ -67,9 +67,9 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   const handleTagToggle = (tag: string) => {
     setFormData(prev => ({
       ...prev,
-      tags: prev.tags.includes(tag)
-        ? prev.tags.filter(t => t !== tag)
-        : [...prev.tags, tag],
+      subjectType: prev.subjectType.includes(tag)
+        ? prev.subjectType.filter(t => t !== tag)
+        : [...prev.subjectType, tag],
     }));
   };
 
@@ -82,7 +82,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.url || formData.tags.length === 0) {
+    if (!formData.title || !formData.url || formData.subjectType.length === 0) {
       alert('필수 입력 항목(*)을 모두 채워주세요.');
       return;
     }
@@ -98,7 +98,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   };
 
   const isConfirmDisabled =
-    !formData.title || !formData.url || formData.tags.length === 0;
+    !formData.title || !formData.url || formData.subjectType.length === 0;
 
   return (
     <S.ModalOverlay onClick={onClose}>
@@ -154,7 +154,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
               <S.TagButton
                 key={tag}
                 type="button"
-                isSelected={formData.tags.includes(tag)}
+                isSelected={formData.subjectType.includes(tag)}
                 onClick={() => handleTagToggle(tag)}
               >
                 {tag}
