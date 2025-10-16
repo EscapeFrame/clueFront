@@ -90,6 +90,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
         <form onSubmit={handleSubmit}>
           <FormInputGroup
             label="제목"
+            type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
@@ -99,6 +100,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
 
           <FormInputGroup
             label="URL"
+            type = "url"
             name="url"
             value={formData.url}
             onChange={handleChange}
@@ -108,6 +110,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
 
           <FormInputGroup
             label="설명"
+            type = "text"
             name="explanation"
             value={formData.explanation}
             onChange={handleChange}

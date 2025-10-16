@@ -3,6 +3,7 @@ import * as S from '../styles';
 
 interface FormInputGroupProps {
   label: string;
+  type: string;
   name: keyof LinkFormData;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -11,7 +12,7 @@ interface FormInputGroupProps {
   isTextarea?: boolean;
 }
 
-export const FormInputGroup: React.FC<FormInputGroupProps> = ({ label, name, value, onChange, placeholder, isRequired = false, isTextarea = false }) => (
+export const FormInputGroup: React.FC<FormInputGroupProps> = ({ label, type, name, value, onChange, placeholder, isRequired = false, isTextarea = false }) => (
   <>
     <S.FormLabel>
       {label} {isRequired && <span>*</span>}
@@ -26,7 +27,7 @@ export const FormInputGroup: React.FC<FormInputGroupProps> = ({ label, name, val
       />
     ) : (
       <S.FormInput
-        type="text"
+        type={type}
         name={name}
         value={value}
         onChange={onChange}

@@ -8,6 +8,7 @@ import { LinkCard, LinkFormData } from '@/linkSave/types/card';
 
 export const LinkSaveMain = () => {
     const [activeCategory, setActiveCategory] = useState('전체');
+    const [searchQuery, setSearchQuery] = useState('');
     
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -19,6 +20,10 @@ export const LinkSaveMain = () => {
         { id: '1', date: '2025-12-31', title: 'Title', explanation: 'explanation', url: 'https://example.com/1', tags: ['반'] },
         { id: '2', date: '2025-12-31', title: 'Title 2', explanation: 'explanation 2', url: 'https://example.com/2', tags: ['전공과목'] },
     ]);
+
+    const handleSearch = useCallback((query: string) => {
+        setSearchQuery(query.toLowerCase());
+    }, []);
 
 
     // === 이벤트 핸들러 ===
@@ -74,6 +79,12 @@ export const LinkSaveMain = () => {
         setCards(prev => prev.filter(card => card.id !== cardId));
         setSelectedCard(null);
     }, []);
+
+    const filteredCards = cards.filter(card => {
+        const categoryMatch = activeCategory === '전체' || card.tags.includes(activeCategory);
+        const searchMatch = card.title.toLowerCase().includes(searchQuery);
+        return categoryMatch && searchMatch;
+    });
     
 
     return (
@@ -84,6 +95,7 @@ export const LinkSaveMain = () => {
                     onAddLink={handleAddLinkClick} 
                     onSelectCategory={setActiveCategory}
                     activeCategory={activeCategory}
+                    onSearch={handleSearch}
                 />
             </div>
             
@@ -91,7 +103,7 @@ export const LinkSaveMain = () => {
             <div>
                 {/* LinkCardList에 현재 상태를 전달 */}
                 <LinkCardList 
-                    cards={cards} // 필터링되지 않은 전체 목록
+                    cards={filteredCards} // 필터링되지 않은 전체 목록
                     activeCategory={activeCategory} // 필터링에 사용
                     onEdit={handleEditLinkClick}
                     onDelete={handleDeleteLinkClick}
