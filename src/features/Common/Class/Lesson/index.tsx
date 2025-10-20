@@ -154,7 +154,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   const codeNotice: NoticeItem[] = [{
     id: 'class-code',
-    title: code,
+    title: code ? code : '코드를 불러오지 못했습니다.',
     content: '클릭하여 수업 코드를 복사하세요.',
     date: '클릭하여 복사'
   }];
@@ -212,14 +212,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           <s.Section>
             <NoticeCard
               cardTitle="수업참가 코드"
-              notices={code ? [{ id: 'class-code', title: code, content: '', date: '' }] : []}
-              onSelect={() => { }}
+              notices={codeNotice}
+              onSelect={handleCodeSelect}
             />
           </s.Section>
         )}
-        <s.Section>
-          <NoticeCard cardTitle="수업 참가 코드" notices={codeNotice} onSelect={handleCodeSelect} />
-        </s.Section>
         <s.Section>
           <NoticeCard cardTitle="새소식" notices={news} onSelect={item => setSelectedModal({ type: 'news', item })} />
         </s.Section>
