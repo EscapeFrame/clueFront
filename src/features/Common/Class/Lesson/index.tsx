@@ -86,6 +86,17 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     });
   };
 
+    if (loading) {
+      return (
+        <s.Container>
+          {/* 나중에 loading style로 변경 */}
+          <div>
+            수업 정보를 불러오는 중...
+          </div>
+        </s.Container>
+      );
+    }
+
   const handleDirectoryClick = (dir: Directory, isSubDirectory: boolean = false) => {
     if (isSubDirectory) {
       setDirectories(prev =>
