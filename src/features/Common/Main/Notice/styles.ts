@@ -16,7 +16,7 @@ export const Container = styled.div`
   background: ${theme.colors.white};
   border-radius: 12px;
   margin: 0;
-  padding: 0 4rem;
+  padding: 0 8rem;
   box-sizing: border-box;
 `;
 
