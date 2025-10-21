@@ -7,7 +7,7 @@ export const Container = styled.div`
   padding: 2rem 4rem;
   background: white;
   width: 100%;
-  border-radius: 16px;
+  border-radius: 24px;
   border: 1px solid ${theme.colors.gray[200]};
 
   @media (max-width: 1200px) {
@@ -22,7 +22,6 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   ${fonts.P5}
-  font-weight: 600;
   padding: 0;
   margin: 0;
 

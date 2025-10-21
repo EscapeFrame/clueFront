@@ -17,6 +17,7 @@ export const Card = styled.a<{ isUrgent: boolean }>`
   transition: transform 0.3s ease;
   cursor: pointer;
   overflow: hidden;
+  flex-shrink: 0;
 
   &:hover {
     transform: scale(1.05);

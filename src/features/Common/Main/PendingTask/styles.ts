@@ -3,37 +3,40 @@ import styled from '@emotion/styled';
 import {theme} from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
-  background: ${theme.colors.blue[300]};
-  padding: 30px 8rem;
+  background: white;
+  padding: 2rem 4rem;
   max-height: 100%;
   overflow: hidden;
+  border-radius: 24px;
 `;
 
 export const CardContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-wrap: nowrap;
   gap: 8px;
   margin-top: 12px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  max-height: 280px;         // 고정 높이로 제한
-  overflow-y: auto;          // 스크롤 가능
-  padding-right: 4px;        // 스크롤바 공간 확보 (선택사항)
+  overflow-x: auto;          // 스크롤 가능
 `;
 
 export const Title = styled.div`
-    ${fonts.P4}
-    font-weight: 600;
+  ${fonts.P5}
+  padding: 0;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P4};
+  }
 `;
 
 export const Explain = styled.div`
-    display: 'flex';
-    justifyContent: 'space-between';
-    margin: 0;
-    padding: 0;
+  ${fonts.P2}
+  color: ${theme.colors.gray[500]};
+  padding: 0;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P1};
+  }
 `;
 
 export const LoadingContainer = styled.div`
