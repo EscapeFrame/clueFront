@@ -42,8 +42,13 @@ export const Brand = styled.a`
 export const LogoImg = styled.img`
   margin-left: auto;
 
-  height: 25px;
+  height: 40px;
   margin-right: 0.5rem; /* 텍스트랑 간격 */
+`;
+
+export const BrandText = styled.span`
+  font-family: 'Alexandria', sans-serif;
+  ${fonts.P4}
 `;
 
 export const NavbarNav = styled.nav`
@@ -79,4 +84,8 @@ export const NavItem = styled.a`
     margin-right: 0.75rem;
     ${fonts.P3}
   }
+`;
+
+export const UserMenuWrapper = styled.div`
+  display: flex;
 `;
