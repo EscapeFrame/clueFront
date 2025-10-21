@@ -17,7 +17,7 @@ export default function Navbar({ userId, username, role }: NavbarProps) {
         </s.Brand>
         <s.NavbarNav>
           <s.NavLinks>
-            <li><s.NavItem href="/class">학습실로 가기</s.NavItem></li>
+            <li><s.NavItem href="/class">내 학습실</s.NavItem></li>
             <li><s.NavItem href="#action1">수강신청</s.NavItem></li>
             <li><s.NavItem href="#action2">서비스 소개</s.NavItem></li>
           </s.NavLinks>

@@ -40,14 +40,18 @@ export const Brand = styled.a`
 `;
 
 export const LogoImg = styled.img`
+  margin-left: auto;
+
   height: 25px;
   margin-right: 0.5rem; /* 텍스트랑 간격 */
 `;
 
 export const NavbarNav = styled.nav`
+  margin-left: 20px;
   display: flex;
-  margin-left: auto;
   align-items: center; /* 세로 중앙정렬 */
+  flex-grow: 1;
+  justify-content: space-between;
 `;
 
 export const NavLinks = styled.ul`
