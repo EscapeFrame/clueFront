@@ -6,16 +6,17 @@ export const Container = styled.div`
   background: white;
   padding: 2rem 4rem;
   max-height: 100%;
-  overflow: hidden;
   border-radius: 24px;
 `;
 
 export const CardContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
-  gap: 8px;
+  margin-bottom: 1rem;
+  gap: 20px;
   margin-top: 12px;
   overflow-x: auto;          // 스크롤 가능
+  padding-bottom: 10px; /* 스크롤바 공간 확보 */
 `;
 
 export const Title = styled.div`
