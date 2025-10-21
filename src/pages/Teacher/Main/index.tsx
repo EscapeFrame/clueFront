@@ -3,7 +3,6 @@ import { QuickLink } from '@/features/Common/Main/QuickLink';
 import PendingTask from '@/features/Common/Main/PendingTask';
 import TaskGuide from '@/features/Common/Main/TaskGuide';
 import Notice from '@/features/Common/Main/Notice';
-import Footer from '@/widgets/Footer';
 import { MySchedule } from '@/features/Common/Main/Schedule';
 
 // const test = async () => {
@@ -22,7 +21,6 @@ export default function Home() {
             <Notice />          {/* 공지/안내 */}
             {/* 성취도 분석(추후 추가예정) */}
             <QuickLink />       {/* 학교서비스바로가기 */}
-            <Footer />
         </s.Container>
     );
 }
