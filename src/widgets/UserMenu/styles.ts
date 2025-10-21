@@ -34,7 +34,8 @@ export const Icon = styled.div`
   gap: 12px;
   margin-right: 16px;
   font-size: 1.25rem;
-  `;
+  cursor: pointer;
+`;
 
 export const ProfileImage = styled.img`
   width: 32px;
