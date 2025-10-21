@@ -1,5 +1,5 @@
 import { Card, DDayText, Title, Submit } from './styles';
-import { useIsUrgent, DDayCardProps } from './Dday.hooks';
+import { useIsUrgent, DDayCardProps } from './DdayCheck';
 
 export default function DDayCard({ dDay, url, title }: DDayCardProps) {
   const isUrgent = useIsUrgent(dDay);
