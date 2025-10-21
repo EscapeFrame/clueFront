@@ -4,9 +4,11 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   min-width: 600px;
-  padding: 2rem 8rem;
-  background: ${theme.colors.blue[100]};
+  padding: 2rem 4rem;
+  background: white;
   width: 100%;
+  border-radius: 16px;
+  border: 1px solid ${theme.colors.gray[200]};
 
   @media (max-width: 1200px) {
     padding: 2rem 1rem;
