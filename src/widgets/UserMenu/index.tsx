@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as s from './styles';
-import { AiFillSetting, AiFillQuestionCircle } from "react-icons/ai";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { MdOutlineLogout } from "react-icons/md";
-import { IoPerson } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 
 interface DropdownProps {
   studentNumber: number;
@@ -13,11 +12,21 @@ interface DropdownProps {
   role: string | null;
 }
 
-export default function Dropdown({ role, studentNumber, name, myImage }: DropdownProps) {
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const toggleDropdown = () => setDropdownVisible(!dropdownVisible);
+export default function Dropdown({ role, name, myImage }: DropdownProps) {
 
   const navigate = useNavigate();
+
+  const logout = () => {
+    navigate("/login");
+  }
+
+  const setting = () => {
+    navigate("/setting");
+  }
+
+  const question = () => {
+    alert("문의 구글 폼으로 이동.");
+  }
 
   if (role === null) {
     return (
@@ -29,20 +38,17 @@ export default function Dropdown({ role, studentNumber, name, myImage }: Dropdow
 
   return (
     <s.DropdownContainer>
-      <s.DropdownButton onClick={toggleDropdown}><IoPerson /></s.DropdownButton>
-      {dropdownVisible && (
-        <s.DropdownMenu>
-          <s.ProfileInfoBox>
-            <s.ProfileImage src={myImage} alt="프로필" />
-            <s.ProfileName>{name}</s.ProfileName>
-            <s.ProfileStudentNumber>{studentNumber}</s.ProfileStudentNumber>
-          </s.ProfileInfoBox>
-
-          <s.DropdownItem href="/setting"><AiFillSetting />&nbsp;설정</s.DropdownItem>
-          <s.DropdownItem href="#Q&A"><AiFillQuestionCircle />&nbsp;문의하기</s.DropdownItem>
-          <s.DropdownItem href="/login"><MdOutlineLogout />&nbsp;로그아웃</s.DropdownItem>
-        </s.DropdownMenu>
-      )}
+      <s.Icon>
+        <IoSettingsOutline onClick={setting} />
+        <AiOutlineQuestionCircle onClick={question}/>
+      </s.Icon>
+      <s.User>
+        <s.UserInfo>
+          <s.ProfileImage src={myImage} alt="프로필" />
+          <s.ProfileName>{name}</s.ProfileName>
+        </s.UserInfo>
+        <MdOutlineLogout onClick={logout} />
+      </s.User>
     </s.DropdownContainer>
   );
 }

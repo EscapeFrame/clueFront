@@ -40,14 +40,23 @@ export const Brand = styled.a`
 `;
 
 export const LogoImg = styled.img`
-  height: 25px;
+  margin-left: auto;
+
+  height: 40px;
   margin-right: 0.5rem; /* 텍스트랑 간격 */
 `;
 
+export const BrandText = styled.span`
+  font-family: 'Alexandria', sans-serif;
+  ${fonts.P4}
+`;
+
 export const NavbarNav = styled.nav`
+  margin-left: 20px;
   display: flex;
-  margin-left: auto;
   align-items: center; /* 세로 중앙정렬 */
+  flex-grow: 1;
+  justify-content: space-between;
 `;
 
 export const NavLinks = styled.ul`
@@ -75,4 +84,8 @@ export const NavItem = styled.a`
     margin-right: 0.75rem;
     ${fonts.P3}
   }
+`;
+
+export const UserMenuWrapper = styled.div`
+  display: flex;
 `;

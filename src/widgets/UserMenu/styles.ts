@@ -28,43 +28,19 @@ export const DropdownButton = styled.button`
   }
 `;
 
-export const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[500]};
-  border-radius: 0.5rem;
-  box-shadow: 0 0.5rem 1rem ${theme.colors.gray[200]};
-  width: clamp(200px, 25vw, 320px);
+export const Icon = styled.div`
   display: flex;
-  flex-direction: column;
-  z-index: 999;
-  overflow: hidden;
-
-  @media (max-width: 768px) {
-    width: 180px;
-  }
-`;
-
-export const ProfileInfoBox = styled.div`
-  padding: 16px;
-  text-align: center;
-  background-color: ${theme.colors.gray[100]};
-  display: flex;
-  flex-direction: column;
   align-items: center;
-
-  @media (max-width: 768px) {
-    padding: 12px;
-  }
+  gap: 12px;
+  margin-right: 16px;
+  font-size: 1.25rem;
+  cursor: pointer;
 `;
 
 export const ProfileImage = styled.img`
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  margin-bottom: 0.5rem;
 
   @media (max-width: 768px) {
     width: 40px;
@@ -75,49 +51,26 @@ export const ProfileImage = styled.img`
 export const ProfileName = styled.div`
   ${fonts.P2}
   font-weight: 600;
-  margin-bottom: 0.25rem;
 
   @media (max-width: 768px) {
     ${fonts.P3};
   }
 `;
 
-export const ProfileStudentNumber = styled.div`
-  ${fonts.P1}
-  color: ${theme.colors.gray[600]};
-
-  @media (max-width: 768px) {
-    ${fonts.P2};
-  }
-`;
-
-export const DropdownItem = styled.a`
-  text-decoration: none;
-  color: ${theme.colors.black};
-  padding: 0.75rem 1rem;
-  ${fonts.P2}
+export const User = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: background-color 0.2s ease;
+  gap: 12px;
+  background-color: #EBF6FF;
+  border-radius: 24px;
+  padding: 6px 12px;
+  item-align: center;
+`;
 
-  &:hover {
-    background-color: ${theme.colors.gray[100]};
-    color: ${theme.colors.blue[600]};
-  }
-
-  @media (max-width: 1200px) {
-    padding: 0.65rem 0.9rem;
-    ${fonts.P3};
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.6rem 0.75rem;
-    ${fonts.P3};
-  }
-
-  @media (max-width: 480px) {
-    padding: 0.5rem 0.6rem;
-    ${fonts.P2};
-  }
+export const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  item-align: center;
+  color: #0077FF;
 `;
