@@ -14,7 +14,15 @@ export function UserSetting() {
 
     const handleScrollTo = (section: "user" | "chat" | "alert") => {
         const refs = { user: userRef, chat: chatRef, alert: alertRef };
-        refs[section].current?.scrollIntoView({ behavior: "smooth" });
+        const element = refs[section].current;
+        
+        if (element && contentRef.current) {
+            const elementPosition = element.offsetTop;
+            contentRef.current.scrollTo({
+                top: elementPosition - 100, // 20px 여유 공간
+                behavior: "smooth"
+            });
+        }
         setActiveSection(section);
     };
 
@@ -28,8 +36,10 @@ export function UserSetting() {
                 { ref: alertRef, name: "alert" as const }
             ];
             
-            const scrollPosition = contentRef.current.scrollTop + 100;
+            // 현재 스크롤 위치 + 약간의 오프셋
+            const scrollPosition = contentRef.current.scrollTop + 150;
             
+            // 역순으로 확인하여 현재 보이는 섹션 찾기
             for (let i = sections.length - 1; i >= 0; i--) {
                 const section = sections[i];
                 if (section.ref.current && section.ref.current.offsetTop <= scrollPosition) {
@@ -41,6 +51,10 @@ export function UserSetting() {
 
         const content = contentRef.current;
         content?.addEventListener('scroll', handleScroll);
+        
+        // 초기 로드 시에도 활성 섹션 확인
+        handleScroll();
+        
         return () => content?.removeEventListener('scroll', handleScroll);
     }, []);
 

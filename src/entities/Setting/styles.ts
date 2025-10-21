@@ -4,6 +4,7 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   display: flex;
+  height: calc(100vh - 80px);
 `;
 
 export const MenuButton = styled.button<{ active?: boolean }>`
@@ -15,20 +16,23 @@ export const MenuButton = styled.button<{ active?: boolean }>`
   padding: 10px 0;
   border-radius: 8px;
   cursor: pointer;
-  background-color: ${({ active }) => (active ? colors.primary : "none")};
+  background-color: ${({ active }) => (active ? colors.primary : "transparent")};
   color: ${({ active }) => (active ? colors.white : colors.gray[4])};
-  transition: color 0.2s;
+  transition: all 0.2s;
 
   &:hover {
-    color: ${colors.primary};
+    color: ${({ active }) => (active ? colors.white : colors.primary)};
+    background-color: ${({ active }) => (active ? colors.blue.dep2 : "rgba(0, 0, 0, 0.05)")};
+
   }
 `;
+
 export const Sidebar = styled.nav<{ isOpen?: boolean }>`
   width: 220px;
   position: fixed;
   left: 8rem;
   top: 2rem;
-  height: 100vh;
+  height: calc(100vh - 80px); /* 네브바 높이 제외 */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -51,6 +55,7 @@ export const Content = styled.div<{ sidebarOpen?: boolean }>`
   flex: 1;
   margin-left: 220px;
   overflow-y: auto;
+  height: 100%;
   padding: 40px;
   scroll-behavior: smooth;
   display: flex;
@@ -79,7 +84,7 @@ export const Content = styled.div<{ sidebarOpen?: boolean }>`
 export const SidebarToggle = styled.button`
   display: none;
   position: fixed;
-  top: 20px;
+  top: 0;
   left: 20px;
   z-index: 1100;
   background: ${colors.primary};
