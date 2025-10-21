@@ -1,23 +1,24 @@
-import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { theme } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Card = styled.a<{ isUrgent: boolean }>`
   position: relative;
   display: block;
-  width: 100%;         // 부모 너비에 꽉 차게 변경
-  max-width: 300px;    // 최대 너비 제한
-  height: auto;        // 내용에 맞게 높이 자동 조절
+  width: 100%; // 부모 너비에 꽉 차게 변경
+  max-width: 300px; // 최대 너비 제한
+  height: auto; // 내용에 맞게 높이 자동 조절
   padding: 2rem 1.5rem;
   border-radius: 8px;
   background-color: ${theme.colors.white};
   color: ${theme.colors.black};
   text-decoration: none;
-  box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
   transition: transform 0.3s ease;
   cursor: pointer;
   overflow: hidden;
   flex-shrink: 0;
+  border: 1px solid #E9E9E9;
 
   &:hover {
     transform: scale(1.05);
@@ -63,12 +64,20 @@ export const DisabledCard = styled.div<{ isUrgent: boolean }>`
 export const Title = styled.div`
   ${fonts.P3}
   font-weight: 500;
+  margin: 1rem 0;
 `;
 
 export const DDayText = styled.div<{ isUrgent: boolean }>`
-  font-weight: 500;
+  ${fonts.P2}
   color: ${({ isUrgent }) =>
-    isUrgent ? theme.colors.red : theme.colors.gray[500]};
+    isUrgent ? theme.colors.red : "white"};
+  background: ${({isUrgent}) => isUrgent ? "#FFE3E9" : "#0077FF"};
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: ${({ isUrgent }) =>
+    isUrgent ? `1px solid ${theme.colors.red}` : "none"};
+  display: inline-block;
+
 
   @media (max-width: 768px) {
     font-weight: 600;

@@ -20,5 +20,5 @@ export function useDDayCard(content: string) {
 
 export function useIsUrgent(dDay: number) {
   // D-day~6일 빨간색, 8~14일 회색
-  return dDay >= 0 && dDay < 7;
+  return dDay >= 0 && dDay <= 7;
 }
