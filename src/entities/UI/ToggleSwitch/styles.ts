@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Wrapper = styled.div`
@@ -39,7 +39,7 @@ export const Checkbox = styled.input<{ checked?: boolean }>`
   }
 
   &:checked + span {
-    background-color: ${theme.colors.blue[500]};
+    background-color: ${colors.primary};
   }
 
   &:checked + span::before {
@@ -58,7 +58,7 @@ export const Slider = styled.span`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: ${theme.colors.gray[200]};
+  background-color: ${colors.gray[2]};
   transition: 0.3s;
   border-radius: 24px;
   padding: 0 3px;
@@ -68,10 +68,10 @@ export const Slider = styled.span`
     position: absolute;
     height: 18px;
     width: 18px;
-    left: 3px;
+    left: 5px;
     top: 50%;
     transform: translateY(-50%);
-    background-color: ${theme.colors.white};
+    background-color: ${colors.white};
     transition: 0.3s;
     border-radius: 50%;
 

@@ -1,85 +1,95 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
-export const Wrapper = styled.div`
-  padding: 0px 24px;
-
-  @media (max-width: 1200px) {
-    padding: 0px 20px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0px 16px;
-  }
+export const Container = styled.div`
+  display: flex;
 `;
 
-export const SectionTitle = styled.h2`
-  margin: 24px 0 5px;
-  color: ${theme.colors.black};
-
-  @media (max-width: 1200px) {
-    ${fonts.P3};
-  }
-
-  @media (max-width: 768px) {
-    ${fonts.P3};
-    margin: 16px 0 4px;
-  }
-`;
-
-export const SubTitle = styled.div`
-  ${fonts.P2};
-  color: ${theme.colors.gray[600]};
-  margin-bottom: 20px;
-
-  @media (max-width: 1200px) {
-    ${fonts.P3};
-    margin-bottom: 16px;
-  }
-
-  @media (max-width: 768px) {
-    ${fonts.P3};
-    margin-bottom: 12px;
-  }
-`;
-
-export const Divider = styled.hr`
-  border: none;
-  border-bottom: 1px solid ${theme.colors.gray[300]};
-  margin: 24px 0;
-
-  @media (max-width: 1200px) {
-    margin: 20px 0;
-  }
-
-  @media (max-width: 768px) {
-    margin: 16px 0;
-  }
-`;
-
-export const ConfirmButton = styled.button`
+export const MenuButton = styled.button<{ active?: boolean }>`
   width: 100%;
-  margin-top: 32px;
-  background: ${theme.colors.blue[500]};
-  color: ${theme.colors.white};
-  padding: 12px;
-  border-radius: 6px;
+  background: transparent;
   border: none;
+  text-align: center;
+  ${fonts.P3}
+  padding: 10px 0;
+  border-radius: 8px;
   cursor: pointer;
+  background-color: ${({ active }) => (active ? colors.primary : "none")};
+  color: ${({ active }) => (active ? colors.white : colors.gray[4])};
+  transition: color 0.2s;
 
   &:hover {
-    background: ${theme.colors.blue[600]};
+    color: ${colors.primary};
   }
+`;
+export const Sidebar = styled.nav<{ isOpen?: boolean }>`
+  width: 220px;
+  position: fixed;
+  left: 8rem;
+  top: 2rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+  transition: left 0.3s;
 
   @media (max-width: 1200px) {
-    margin-top: 24px;
-    padding: 10px;
+    left: ${({ isOpen }) => (isOpen ? "0" : "-260px")};
   }
 
   @media (max-width: 768px) {
-    margin-top: 20px;
-    padding: 8px;
-    ${fonts.P3};
+    left: ${({ isOpen }) => (isOpen ? "0" : "-100%")};
+    padding: 20px;
+  }
+`;
+
+export const Content = styled.div<{ sidebarOpen?: boolean }>`
+  flex: 1;
+  margin-left: 220px;
+  overflow-y: auto;
+  padding: 40px;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  transition: margin-left 0.3s;
+
+  @media (max-width: 1200px) {
+    margin-left: ${({ sidebarOpen }) => (sidebarOpen ? "220px" : "0")};
+    padding: 20px;
+  }
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: ${colors.gray[3]};
+    border-radius: 4px;
+  }
+`;
+
+export const SidebarToggle = styled.button`
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1100;
+  background: ${colors.primary};
+  border: none;
+  color: ${colors.white};
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+
+  @media (max-width: 1200px) {
+    display: block;
   }
 `;
