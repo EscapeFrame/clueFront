@@ -1,8 +1,8 @@
-export type CategoryKey = '전체' | '일반교과' | '전공교과' | '방과후교과';
+export type CategoryKey = '전체' | '일반과목' | '전공과목' | '방과후';
 
-export const CATEGORY_FILTER_MAP: Record<CategoryKey, string | null> = {
+export const CATEGORY_FILTER_MAP: Record<CategoryKey, 'sort' | 'professional' | 'afterSchool' | null> = {
   '전체': null,
-  '일반교과': 'sort',
-  '전공교과': 'professional',
-  '방과후교과': 'afterSchool',
+  '일반과목': 'sort',
+  '전공과목': 'professional',
+  '방과후': 'afterSchool',
 };

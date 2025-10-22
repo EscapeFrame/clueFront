@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
@@ -18,16 +18,15 @@ export const TabList = styled.div`
 
 export const TabButton = styled.button<{ isActive: boolean }>`
   padding: 0.5rem 1rem;
-  background-color: transparent;
   border: none;
   cursor: pointer;
   ${fonts.P2};
-  font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
-  color: ${({ isActive }) => (isActive ? theme.colors.blue[500] : theme.colors.gray[300])};
-  border-bottom: ${({ isActive }) => (isActive ? `2px solid ${theme.colors.blue[500]}` : 'none')};
+  color: ${({ isActive }) => (isActive ? colors.white : colors.gray[3])};
+  background-color: ${({ isActive }) => (isActive ? colors.primary : 'transparent')};
+  border-radius: ${({ isActive }) => (isActive ? '8rem' : '0')};
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    color: ${theme.colors.blue[500]};
+    color: ${colors.primary};
   }
 `;

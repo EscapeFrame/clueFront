@@ -29,3 +29,29 @@ export const theme = {
 };
 
 export type ThemeType = typeof theme;
+
+export const colors = {
+  primary: '#0077FF',
+  white: '#FFFFFF',
+  black: '#18191A',
+  gray: {
+    0: '#FAFAFA',
+    1: '#F7F7F7',
+    2: '#E9E9E9',
+    3: '#D9D9D9',
+    4: '#666666',
+  },
+  blue: {
+    light1: '#EBF6FF',
+    light2: '#D6EAFF',
+    light3: '#B7DAFF',
+    light4: '#86C1FF',
+    dep1: '#4191E5',
+    dep2: '#578FCA',
+  },
+  red: {
+    1: '#FFE3E9',
+    2: '#EBA8A8',
+    3: '#FF6D6D',
+  },
+};
