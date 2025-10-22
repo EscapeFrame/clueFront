@@ -17,6 +17,8 @@ export const CardContainer = styled.div`
   margin-top: 12px;
   overflow-x: auto;          // 스크롤 가능
   padding-bottom: 10px; /* 스크롤바 공간 확보 */
+
+  
 `;
 
 export const Title = styled.div`

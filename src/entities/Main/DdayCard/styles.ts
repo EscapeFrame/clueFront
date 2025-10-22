@@ -30,7 +30,7 @@ export const Card = styled.a<{ isUrgent: boolean }>`
   }
 
   @media (max-width: 768px) {
-    max-width: 100%;
+    max-width: 50%;
     padding: 1rem;
   }
 `;
@@ -123,8 +123,6 @@ export const Submit = styled.div`
   @media (max-width: 768px) {
     ${fonts.P2};
     bottom: 0.5rem;
-    right: 1rem;
-    text-align: center;
     left: 0;
   }
 `;
