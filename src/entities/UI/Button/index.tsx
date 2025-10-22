@@ -3,7 +3,7 @@ import * as s from './styles';
 interface ButtonProps {
   text: string;
   width?: string | number;
-  type?: 0 | 1; // 0: 기본, 1: 취소
+  type?: 0 | 1 | 2 | 3; // 0: primary, 1: light4, 2: line, 3: gray3
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean; // 활성화: false, 비활성화: true
 }
