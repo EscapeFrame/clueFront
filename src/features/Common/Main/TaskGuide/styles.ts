@@ -7,6 +7,8 @@ export const Container = styled.div`
   padding: 30px 8rem;
   max-height: 100%;
   overflow: hidden;
+  border-radius: 24px;
+  padding-bottom: 4rem;
   @media (max-width: 1200px) {
     padding: 30px 4rem;
   }
@@ -17,8 +19,6 @@ export const Container = styled.div`
 `;
 
 export const CardContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
   margin-top: 12px;
 
