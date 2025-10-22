@@ -6,9 +6,8 @@ export const Card = styled.a<{ isUrgent: boolean }>`
   position: relative;
   display: block;
   width: 100%; // 부모 너비에 꽉 차게 변경
-  max-width: 300px; // 최대 너비 제한
   height: auto; // 내용에 맞게 높이 자동 조절
-  padding: 2rem 1.5rem;
+  padding: 1rem 1.5rem;
   border-radius: 8px;
   background-color: ${theme.colors.white};
   color: ${theme.colors.black};
@@ -19,18 +18,19 @@ export const Card = styled.a<{ isUrgent: boolean }>`
   overflow: hidden;
   flex-shrink: 0;
   border: 1px solid #E9E9E9;
+  margin-bottom: 1rem;
 
   &:hover {
     transform: scale(1.05);
   }
 
   @media (max-width: 1200px) {
-    max-width: 250px;
+    max-width: 100%;
     padding: 1rem;
   }
 
   @media (max-width: 768px) {
-    max-width: 50%;
+    max-width: 100%;
     padding: 1rem;
   }
 `;
@@ -51,7 +51,7 @@ export const DisabledCard = styled.div<{ isUrgent: boolean }>`
   user-select: none;
 
   @media (max-width: 1200px) {
-    max-width: 250px;
+    max-width: 100%;
     padding: 1rem;
   }
 
@@ -123,6 +123,6 @@ export const Submit = styled.div`
   @media (max-width: 768px) {
     ${fonts.P2};
     bottom: 0.5rem;
-    left: 0;
+    right: 1rem;
   }
 `;

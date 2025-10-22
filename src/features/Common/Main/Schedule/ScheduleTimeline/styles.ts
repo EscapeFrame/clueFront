@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
-import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
-import { IoIosArrowForward } from 'react-icons/io';
+import styled from "@emotion/styled";
+import { fonts } from "@/shared/theme/font.styles";
+import { theme } from "@/shared/theme/theme.styles";
+import { IoIosArrowForward } from "react-icons/io";
 
 export const Container = styled.div`
   flex: 1;
@@ -19,7 +19,7 @@ export const List = styled.div`
   flex-direction: column;
   gap: 1.5rem;
 
-  max-height: 420px;  // 5개 정도 아이템 보이도록 제한
+  max-height: 420px; // 5개 정도 아이템 보이도록 제한
   overflow-y: auto;
   padding-right: 8px; // 스크롤바 공간 확보용
 `;
@@ -44,8 +44,7 @@ export const Circle = styled.div<{ isNow?: boolean; isLunch?: boolean }>`
   background: ${({ isNow, theme }) =>
     isNow ? theme.colors.blue[500] : theme.colors.white};
   color: ${theme.colors.black};
-  border: 2px solid
-    ${({ theme }) => theme.colors.blue[500]};
+  border: 2px solid ${({ theme }) => theme.colors.blue[500]};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,34 +52,40 @@ export const Circle = styled.div<{ isNow?: boolean; isLunch?: boolean }>`
 
 export const Right = styled.div`
   flex: 1;
-  padding-left: 1rem;
   cursor: pointer;
 `;
 
-export const Card = styled.div`
+export const Card = styled.div<{ isNow?: boolean; isLunch?: boolean }>`
   border: 1px solid ${theme.colors.gray[200]};
-  border-radius: 10px;
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  gap: 12px;
+  color: ${theme.colors.black};
+  border: 2px solid ${(isNow) => (isNow ? "#e9e9e9":"#86C1FF")};
 
-  &:hover {
-    background: ${theme.colors.gray[100]};
-  }
+  background: ${({ isNow, theme }) => (isNow ? "#EBF6FF" : theme.colors.white)};
+
+  border-radius: 12px;
+`;
+
+export const Period = styled.div`
+  ${fonts.P4}
+  color: #0077ff;
 `;
 
 export const CardText = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 48px;
   justify-content: center;
 `;
 
 export const Subject = styled.div`
-  ${fonts.P2}
+  ${fonts.P4}
   font-weight: 600;
+  display: flex;
+  gap: 12px;
 `;
 
 export const Description = styled.div`
@@ -93,4 +98,10 @@ export const ArrowIcon = styled(IoIosArrowForward)`
   ${fonts.P4};
   color: ${theme.colors.gray[400]};
   flex-shrink: 0;
+`;
+
+export const TimeText = styled.div`
+  ${fonts.P2}
+  color: ${theme.colors.gray[500]};
+  margin-left: auto;
 `;

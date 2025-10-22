@@ -1,11 +1,73 @@
 import * as s from './styles';
 import DdayCard from '@/entities/Main/DdayCard/index';
-import { usePendingTasks } from '@/features/Common/Main/hooks/usePendingTask';
+// import { usePendingTasks } from '@/features/Common/Main/hooks/usePendingTask';
 import dayjs from 'dayjs';
 import { PendingTaskItem } from '@/shared/types/task';
 
+const dummyTasks: PendingTaskItem[] = [
+  {
+    id: '1',
+    title: '수학 과제 - 미분과 적분',
+    endDate: '2025-10-25',
+    body: '미분과 적분 연습문제 풀이',
+    link: 'https://example.com/math-assignment',
+    available: true,
+  },
+  {
+    id: '2',
+    title: '영어 과제 - 에세이 작성',
+    endDate: '2025-10-28',
+    body: '자유 주제 에세이 500단어 이상',
+    link: 'https://example.com/english-essay',
+    available: false,
+  },
+  {
+    id: '3',
+    title: '과학 과제 - 실험 보고서',
+    endDate: '2025-11-01',
+    body: '화학 실험 보고서 작성',
+    link: 'https://example.com/science-report',
+    available: true,
+  },
+    {
+    id: '3',
+    title: '과학 과제 - 실험 보고서',
+    endDate: '2025-11-01',
+    body: '화학 실험 보고서 작성',
+    link: 'https://example.com/science-report',
+    available: true,
+  },
+    {
+    id: '3',
+    title: '과학 과제 - 실험 보고서',
+    endDate: '2025-11-01',
+    body: '화학 실험 보고서 작성',
+    link: 'https://example.com/science-report',
+    available: true,
+  },
+    {
+    id: '3',
+    title: '과학 과제 - 실험 보고서',
+    endDate: '2025-11-01',
+    body: '화학 실험 보고서 작성',
+    link: 'https://example.com/science-report',
+    available: true,
+  },
+    {
+    id: '3',
+    title: '과학 과제 - 실험 보고서',
+    endDate: '2025-11-01',
+    body: '화학 실험 보고서 작성',
+    link: 'https://example.com/science-report',
+    available: true,
+  },
+];
+
 export default function PendingTask(): React.ReactNode {
-  const { tasks, loading, error } = usePendingTasks();
+  // const { tasks, loading, error } = usePendingTasks();
+  const tasks = dummyTasks;
+  const loading = false;
+  const error = null;
   const today = dayjs();
 
   if (loading) {

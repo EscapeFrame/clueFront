@@ -1,4 +1,3 @@
-import { ScheduleTable } from './ScheduleTable';
 import { ScheduleTimeline } from './ScheduleTimeline';
 import * as s from './styles';
 import { useSchedule } from '../hooks/useSchedule';
@@ -29,12 +28,7 @@ export const MySchedule = () => {
       {!loading && !error && (
         <>
           <s.Wrapper>
-            <s.Half>
-              <ScheduleTable data={schedule} />
-            </s.Half>
-            <s.Half>
               <ScheduleTimeline data={schedule} today={todayKey} onClickSubject={handleClickSubject} />
-            </s.Half>
           </s.Wrapper>
         </>
       )}

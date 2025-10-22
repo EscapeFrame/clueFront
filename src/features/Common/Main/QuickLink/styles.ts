@@ -3,10 +3,14 @@ import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
-  padding: 30px 8rem;
+  padding: 3rem 2rem;
   display: grid;
   width: 100%;
   box-sizing: border-box;
+  background: white;
+  border-radius: 24px;
+  margin-bottom: 6rem;
+  gap: 16px;
 
   @media (max-width: 1200px) {
     padding: 30px 4rem;
@@ -16,6 +20,7 @@ export const Container = styled.div`
     padding: 20px 2rem;
     grid-template-columns: 1fr;
     row-gap: 20px;
+    margin-bottom: 2rem;
   }
 `;
 
@@ -82,8 +87,13 @@ export const TextOverImage = styled.div`
 `;
 
 export const Title = styled.div`
-    ${fonts.P4}
-    font-weight: 600;
+  ${fonts.P5}
+  padding: 0;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P4};
+  }
 `;
 
 export const Explain = styled.div`

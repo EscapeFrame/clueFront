@@ -39,30 +39,30 @@ export const ScheduleTimeline: React.FC<Props> = ({ data, today, onClickSubject 
 
   return (
     <s.Container>
-      <s.Title>수업 타임라인</s.Title>
       <s.List>
         {allItems.map(({ period, item }) => {
           const isNow = period === current;
+          // const isNow = true;
           const isLunch = item?.subject === '점심시간';
 
           return (
             <s.Item key={period}>
-              <s.Left>
-                <s.Circle isNow={isNow} isLunch={isLunch}>
-                  {isLunch ? <PiBowlFoodDuotone /> : `${period}교시`}
-                </s.Circle>
-              </s.Left>
-              <s.Right onClick={() => item?.subject && onClickSubject?.(item.subject)}>
-                <s.Card>
+              <s.Right>
+                <s.Card isNow={isNow} isLunch={isLunch} onClick={() => item?.subject && onClickSubject?.(item.subject)}>
+
                   {item ? (
                     <s.CardText>
-                      <s.Subject>{item.subject}</s.Subject>
+                      <s.Subject><s.Period>{isLunch ? <PiBowlFoodDuotone /> : `${period}`}</s.Period>{item.subject}</s.Subject>
                       {item.description && <s.Description>{item.description}</s.Description>}
                     </s.CardText>
                   ) : (
-                    <s.CardText />
+                    <s.CardText>
+                      <s.Subject><s.Period>{isLunch ? <PiBowlFoodDuotone /> : `${period}`}</s.Period>자습</s.Subject>
+                    </s.CardText>
                   )}
-                  {item && <s.ArrowIcon />}
+                  {ScheduleTime[period] && (
+                    <s.TimeText>{`${ScheduleTime[period].start} ~ ${ScheduleTime[period].end}`}</s.TimeText>
+                  )}
                 </s.Card>
               </s.Right>
             </s.Item>

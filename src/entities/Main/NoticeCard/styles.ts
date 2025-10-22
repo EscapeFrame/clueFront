@@ -5,21 +5,19 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const CardContainer = styled.div`
   width: 100%;
-  min-height: 8rem;
-  padding: 1rem;
+  padding-top: 1rem;
   background: ${theme.colors.white};
-  border-radius: 8px;
-  border: 1px solid ${theme.colors.gray[400]};
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  margin-bottom: 1rem;
 `;
 
 export const Title = styled.h2`
-  ${fonts.P3}
-  font-weight: 600;
+  ${fonts.P4}
+  font-weight: 700;
   color: ${theme.colors.black};
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   padding: 0;
 `;
 
@@ -32,12 +30,14 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 12px;
-  margin: 0;
-  transition: background-color 0.2s;
-  cursor: pointer;
+border-radius: 8px;
+border: 1px solid var(--gray-2, #E9E9E9);
+background: var(--white, #FFF);
+display: flex;
+height: 60px;
+padding: 1rem;
+justify-content: space-between;
+align-items: center;
 
   &:hover {
     background-color: ${theme.colors.blue[100]};
@@ -54,7 +54,7 @@ export const ItemTitle = styled.span`
 export const ItemDate = styled.span`
   ${fonts.P1}
   color: ${theme.colors.gray[600]};
-  margin: 0;
+  margin-top: 4px;
   padding: 0;
 `;
 

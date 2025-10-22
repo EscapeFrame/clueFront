@@ -4,7 +4,6 @@ import PendingTask from '@/features/Common/Main/PendingTask';
 import TaskGuide from '@/features/Common/Main/TaskGuide';
 import Notice from '@/features/Common/Main/Notice';
 import { MySchedule } from '@/features/Common/Main/Schedule';
-import Footer from '@/widgets/Footer';
 import * as s from './styles';
 
 interface HomeLayoutProps {
@@ -19,12 +18,11 @@ export default function HomePage() {
   return (
     <HomeLayout>
       <MySchedule />
-      <TaskGuide />       {/* 수행평가 안내*/}
       <PendingTask />     {/* 미제출과제*/}
+      <TaskGuide />       {/* 수행평가 안내*/}
       <Notice />          {/* 공지/안내 */}
       {/* 성취도 분석(추후 추가예정) */}
       <QuickLink />       {/* 학교서비스바로가기 */}
-      <Footer />
     </HomeLayout>
   );
 }

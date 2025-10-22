@@ -21,11 +21,6 @@ const data: OtherCardType[] = [
     src: '/GoTo/Occount.svg',
   },
   {
-    href: 'https://buma.wiki/',
-    homepage: '부마위키',
-    src: '/GoTo/BMwike.svg',
-  },
-  {
     href: 'https://read365.edunet.net/',
     homepage: '독서로',
     src: '/GoTo/read365.svg',
