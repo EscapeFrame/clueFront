@@ -15,12 +15,15 @@ export default function Home() {
 
     return (
         <s.Container>
+            <s.Left>
             <MySchedule />
             <PendingTask />     {/* 미제출과제*/}
             <TaskGuide />       {/* 수행평가 안내*/}
-            <Notice />          {/* 공지/안내 */}
-            {/* 성취도 분석(추후 추가예정) */}
             <QuickLink />       {/* 학교서비스바로가기 */}
-        </s.Container>
+            </s.Left>
+            <s.Right>
+                <Notice />          {/* 공지사항 */}
+            </s.Right>
+        </s.Container >
     );
 }

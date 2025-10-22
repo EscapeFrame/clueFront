@@ -4,7 +4,7 @@ import { theme } from "@/shared/theme/theme.styles";
 
 export const Container = styled.div`
   background: ${theme.colors.white};
-  padding: 30px 8rem;
+  padding: 3rem 2rem;
   max-height: 100%;
   overflow: hidden;
   border-radius: 24px;

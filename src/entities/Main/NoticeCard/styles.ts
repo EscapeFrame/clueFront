@@ -5,21 +5,22 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const CardContainer = styled.div`
   width: 100%;
-  min-height: 8rem;
-  padding: 1rem;
+  min-height: 12rem;
+  padding: 1.5rem;
   background: ${theme.colors.white};
-  border-radius: 8px;
-  border: 1px solid ${theme.colors.gray[400]};
   display: flex;
   flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid ${theme.colors.gray[200]};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow-y: auto;
 `;
 
 export const Title = styled.h2`
-  ${fonts.P3}
-  font-weight: 600;
+  ${fonts.P4}
+  font-weight: 700;
   color: ${theme.colors.black};
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   padding: 0;
 `;
 
@@ -28,16 +29,17 @@ export const List = styled.ul`
   padding: 0;
   margin: 0;
   flex-grow: 1;
-  overflow-y: auto;
 `;
 
 export const ListItem = styled.li`
   display: flex;
-  justify-content: space-between;
-  padding: 8px 12px;
-  margin: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 16px;
+  margin-bottom: 8px;
   transition: background-color 0.2s;
   cursor: pointer;
+  border-radius: 8px;
 
   &:hover {
     background-color: ${theme.colors.blue[100]};
@@ -45,16 +47,17 @@ export const ListItem = styled.li`
 `;
 
 export const ItemTitle = styled.span`
-  ${fonts.P2}
+  ${fonts.P3}
+  font-weight: 600;
   color: ${theme.colors.black};
   margin: 0;
   padding: 0;
 `;
 
 export const ItemDate = styled.span`
-  ${fonts.P1}
+  ${fonts.P2}
   color: ${theme.colors.gray[600]};
-  margin: 0;
+  margin-top: 4px;
   padding: 0;
 `;
 

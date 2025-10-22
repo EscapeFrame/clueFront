@@ -4,7 +4,7 @@ import {theme} from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
   background: white;
-  padding: 2rem 4rem;
+  padding: 3rem 2rem;
   max-height: 100%;
   border-radius: 24px;
 `;

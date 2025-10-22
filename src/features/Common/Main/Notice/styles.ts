@@ -6,25 +6,27 @@ export const TopContainer = styled.div`
   width: 100%;
   justify-content: center;
   align-items: flex-start;
-  margin: 2rem 0;
-  padding: 0;
+  padding: 3rem 2rem;
   box-sizing: border-box;
+  background: white;
+  border-radius: 24px;
 `;
 
 export const Container = styled.div`
   width: 100%;
   background: ${theme.colors.white};
-  border-radius: 12px;
   margin: 0;
-  padding: 0 8rem;
   box-sizing: border-box;
 `;
 
 export const Title = styled.div`
-  ${fonts.P4}
-  font-weight: 600;
-  margin: 0;
+  ${fonts.P5}
   padding: 0;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P4};
+  }
 `;
 
 export const Explain = styled.div`
@@ -35,9 +37,7 @@ export const Explain = styled.div`
 `;
 
 export const Row = styled.div`
-  display: flex;
   gap: 32px;
-  flex-wrap: nowrap;
   width: 100%;
   margin-top: 12px;
 `;

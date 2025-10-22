@@ -3,7 +3,7 @@ import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
-  padding: 2rem 4rem;
+  padding: 3rem 2rem;
   display: grid;
   width: 100%;
   box-sizing: border-box;

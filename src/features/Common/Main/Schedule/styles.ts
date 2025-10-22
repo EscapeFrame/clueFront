@@ -4,7 +4,7 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   min-width: 600px;
-  padding: 2rem 4rem;
+  padding: 3rem 2rem;
   background: white;
   width: 100%;
   border-radius: 24px;
