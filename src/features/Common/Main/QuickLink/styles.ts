@@ -20,6 +20,7 @@ export const Container = styled.div`
     padding: 20px 2rem;
     grid-template-columns: 1fr;
     row-gap: 20px;
+    margin-bottom: 2rem;
   }
 `;
 

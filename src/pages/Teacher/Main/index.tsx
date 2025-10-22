@@ -16,10 +16,10 @@ export default function Home() {
     return (
         <s.Container>
             <s.Left>
-            <MySchedule />
-            <PendingTask />     {/* 미제출과제*/}
-            <TaskGuide />       {/* 수행평가 안내*/}
-            <QuickLink />       {/* 학교서비스바로가기 */}
+                <MySchedule />
+                <PendingTask />     {/* 미제출과제*/}
+                <TaskGuide />       {/* 수행평가 안내*/}
+                <QuickLink />       {/* 학교서비스바로가기 */}
             </s.Left>
             <s.Right>
                 <Notice />          {/* 공지사항 */}

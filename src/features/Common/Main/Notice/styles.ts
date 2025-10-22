@@ -1,15 +1,29 @@
-import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { theme } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const TopContainer = styled.div`
-  width: 100%;
-  justify-content: center;
-  align-items: flex-start;
+  width: 400px;
+  max-height: 90vh;
+  position: fixed;
+  top: auto;
+  right: auto;
+  z-index: 100;
   padding: 3rem 2rem;
-  box-sizing: border-box;
   background: white;
   border-radius: 24px;
+  overflow-y: auto; // 스크롤 가능
+  padding-bottom: 10px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    padding: 2rem 1.5rem;
+    position : static;
+    top: auto;
+    left: 0;
+  }
 `;
 
 export const Container = styled.div`
