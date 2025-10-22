@@ -12,11 +12,13 @@ export const NavbarWrapper = styled.div`
   outline: 0.5px solid ${theme.colors.gray[300]};
   z-index: 1000;
 
+  min-width: 665px;
+
   display: flex;
   align-items: center;
 
   /* 반응형 패딩 */
-  @media (max-width: 768px) {
+  @media (max-width: 868px) {
     padding: 0.5rem 1.5rem;
   }
   @media (max-width: 480px) {
