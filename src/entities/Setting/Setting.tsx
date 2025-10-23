@@ -81,7 +81,7 @@ export function UserSetting() {
                 </S.MenuButton>
             </S.Sidebar>
 
-            <S.Content>
+            <S.Content ref={contentRef}>
                 <div ref={userRef}><UserSection /></div>
                 <div ref={chatRef}><ChatSection /></div>
                 <div ref={alertRef}><AlertSection /></div>
