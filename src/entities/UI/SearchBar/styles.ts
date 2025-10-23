@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 import { IoSearch } from 'react-icons/io5';
 
 export const Container = styled.div`
   display: flex;
   align-items: center;
-  background-color: ${theme.colors.gray[200]};
+  background-color: ${colors.white};
+  border: 1px solid ${colors.gray[2]};
+  color: ${colors.gray[4]};
   border-radius: 8px;
   padding: 0.6rem 1rem;
   width: 20rem;
@@ -14,9 +16,8 @@ export const Container = styled.div`
   transition: all 0.2s ease;
 
   &:focus-within {
-    border: 1px solid ${theme.colors.blue[500]};
-    box-shadow: 0 0 0 2px ${theme.colors.blue[100]};
-    background-color: ${theme.colors.white};
+    border: 1px solid ${colors.primary};
+    box-shadow: 0 0 0 2px ${colors.blue.light1};
   }
 `;
 
@@ -29,7 +30,7 @@ export const SearchField = styled.input`
 `;
 
 export const SearchIcon = styled(IoSearch)`
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   flex-shrink: 0;
   ${fonts.P1}
   cursor: pointer;

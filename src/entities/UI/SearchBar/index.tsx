@@ -40,7 +40,7 @@ export function SearchBar({ onSearch }: SearchProps) {
     <s.Container>
       <s.SearchField
         type="text"
-        placeholder="찾으시는 학습실을 입력해주세요."
+        placeholder="찾으시는 내용을 입력해주세요."
         value={searchQuery}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
