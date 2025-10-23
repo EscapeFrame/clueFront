@@ -59,7 +59,7 @@ export async function attachFile(
     }
 
     if (links.length > 0) {
-      await Customapi.post(`/api/assignments/${assignmentId}/links`, {
+      await Customapi.post(`/api/assignments/${assignmentId}/link`, {
         links: links.map((link) => [{ url: link.url }]),
       });
     }
