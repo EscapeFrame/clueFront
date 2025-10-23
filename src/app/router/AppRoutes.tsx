@@ -76,6 +76,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
         <>
           <Route path="/setting" element={<Setting />} />
           <Route path="/linksave/*" element={<LinkSaveRoutes />} />
+          <Route path="/register" element={<RegisterPage />} />
         </>
       )}
 
