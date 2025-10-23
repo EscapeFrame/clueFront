@@ -54,7 +54,11 @@ export async function attachFile(
         formData.append("file", fileAtt.file);
         formData.append("name", fileAtt.name);
 
-        await Customapi.post(`/api/assignments/${assignmentId}/file`, formData);
+        await Customapi.post(`/api/assignments/${assignmentId}/file`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
     }
 
