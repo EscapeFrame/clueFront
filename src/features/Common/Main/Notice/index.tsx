@@ -3,11 +3,17 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
-import
+import { useNotices } from '@/features/Common/Main/hooks/useNotice'; // ✅ useNotices 가져오기
 
 export default function Notice() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
-
+  const {
+    serviceNotices,
+    schoolNotices,
+    scheduleNotices,
+    loading,
+    error,
+  } = useNotices();
 
   return (
     <s.TopContainer>
@@ -18,22 +24,22 @@ export default function Notice() {
           <NoticeCard
             cardTitle="서비스공지"
             notices={serviceNotices}
-            loading={loading.service}
-            error={error.service}
+            loading={loading}
+            error={error}
             onSelect={setSelectedNotice}
           />
           <NoticeCard
             cardTitle="학교공지"
             notices={schoolNotices}
-            loading={loading.school}
-            error={error.school}
+            loading={loading}
+            error={error}
             onSelect={setSelectedNotice}
           />
           <NoticeCard
             cardTitle="일정안내"
             notices={scheduleNotices}
-            loading={loading.schedule}
-            error={error.schedule}
+            loading={loading}
+            error={error}
             onSelect={setSelectedNotice}
           />
         </s.Row>
@@ -42,7 +48,7 @@ export default function Notice() {
       {selectedNotice && (
         <Modal
           title={selectedNotice.title}
-          notes={'default'}
+          notes="default"
           onClose={() => setSelectedNotice(null)}
           buttons={[
             {
