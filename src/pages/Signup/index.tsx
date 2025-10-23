@@ -181,7 +181,7 @@ function RegisterPage() {
               <input
                 id="studentMail"
                 name="studentMail"
-                value={studentInfo.studentMail}
+                value={registerData.email}
                 placeholder='메일 입력해주세요.'
                 onChange={handleStudentInfoChange}
                 required
