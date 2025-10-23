@@ -3,24 +3,16 @@ import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
+  display: flex;
+  align-items: center;
   justify-content: center;
-  position: relative;
-  margin-top: 10%;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 10rem;
 
-  img {
-    width: 20%;
-    height: 20%;
-    object-fit: cover;
-    display: block;
+  @media (max-width: 856px) {
+    flex-direction: column;
   }
-
-  @media (max-width: 1200px) {
-    img {
-      width: 20%;
-      height: 20%;
-    }
-  }
-
 `;
 
 export const LogoBox = styled.div`
@@ -66,4 +58,57 @@ export const AgreementScript = styled.div`
   @media (max-width: 768px) {
     ${fonts.P3}
   }
+`;
+
+export const Left = styled.div`
+  width: 50%;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+`;
+
+export const Right = styled.div`
+  width: 50%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+`;
+
+export const Eclpise = styled.div`
+  width: 40%;
+  height: 50%;
+  border-radius: 518px;
+  background: rgba(134, 193, 255, 0.6);
+  filter: blur(50px);
+  position: absolute;
+  z-index: -100;
+`;
+
+export const Image = styled.img`
+  width: 80%;
+  height: auto;
+  z-index: 1;
+`;
+
+export const Tittle = styled.div`
+  ${fonts.P5}
+  margin-top: 2rem;
+  color: ${theme.colors.black};
+
+  @media (max-width: 856px) {
+    ${fonts.P4}
+  }
+`;
+
+export const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 500px;
 `;
