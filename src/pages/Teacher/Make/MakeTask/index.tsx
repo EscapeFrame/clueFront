@@ -128,6 +128,9 @@ const MakeTask: React.FC = () => {
       });
       
       const assignmentId = response.assignment_id;
+
+      console.log("받은 assignmentId:", assignmentId);
+      
       if (!assignmentId) {
         throw new Error("과제 생성 후 ID를 받지 못했습니다.");
       }
