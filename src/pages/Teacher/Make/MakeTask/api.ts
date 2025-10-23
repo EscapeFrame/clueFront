@@ -34,14 +34,7 @@ export const SendMakeTask = async (p: {
   console.log(res.data);
 
   // 서버 응답 전체 반환 (assignment_id 포함)
-  return res.data as {
-    assignment_id?: string;
-    class_id?: string;
-    title?: string;
-    content?: string;
-    start_date?: string;
-    end_date?: string;
-  };
+  return res.data 
 };
 
 export async function attachFile(
