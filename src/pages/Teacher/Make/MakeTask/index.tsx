@@ -127,9 +127,9 @@ const MakeTask: React.FC = () => {
         end_date: formatDateTime(dueDate),
       });
       
-      const assignmentId = response.assignment_id;
+      const assignmentId = response.data;
 
-      console.log("받은 assignmentId:", assignmentId);
+      console.log("받은 assignmentId:", assignmentId.assignment_id);
       
       if (!assignmentId) {
         throw new Error("과제 생성 후 ID를 받지 못했습니다.");
