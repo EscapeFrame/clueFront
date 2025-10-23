@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-// // 개발시 활성화
-const baseUrl = '';
+// // // 개발시 활성화
+// const baseUrl = '';
 
 //로그인 했을 때
 const Customapi = axios.create({
