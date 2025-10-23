@@ -74,7 +74,6 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
 
       {isAuthenticated && (
         <>
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/setting" element={<Setting />} />
           <Route path="/linksave/*" element={<LinkSaveRoutes />} />
         </>
