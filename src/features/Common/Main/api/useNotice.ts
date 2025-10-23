@@ -1,6 +1,5 @@
 import CustomApi from "@/shared/config/api";
 import { NoticeItem } from "@/shared/types/notice";
-import { create } from "@stylexjs/stylex";
 
 // 아직 적힌거 없음
 export const noticeApi = {
@@ -28,6 +27,7 @@ export const noticeApi = {
     }
   },
 
+  // 공지사항 생성
   createNotice: async (noticeData: Partial<NoticeItem>): Promise<NoticeItem | number> => {
     try {
       const res = await CustomApi.post("/api/notice", noticeData);
@@ -39,6 +39,18 @@ export const noticeApi = {
     }
   },
 
+  updateNotice: async (noticeId: string, noticeData: Partial<NoticeItem>): Promise<NoticeItem | number> => {
+    try {
+      const res = await CustomApi.put(`/api/notice/${noticeId}`, noticeData);
+      if (res.status !== 200) return res.status;
+      return res.data;
+    } catch (error) {
+      console.error("공지사항 수정 실패:", error);
+      throw error;
+    }
+  },
+
+  // 공지사항 삭제
   deleteNotice: async (noticeId: string): Promise<number> => {
     try {
       const res = await CustomApi.delete(`/api/notice/${noticeId}`);
