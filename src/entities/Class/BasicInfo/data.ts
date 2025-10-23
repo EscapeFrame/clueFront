@@ -10,9 +10,9 @@ export const BasicInfoDatas: BasicInfoData = {
 };
 
 export const subjectCategoryOptions = [
-  { value: 'sort', label: '일반교과' },
-  { value: 'professional', label: '전공교과' },
-  { value: 'afterSchool', label: '방과후교과' },
+  { value: 'GENERAL', label: '일반교과' },
+  { value: 'MAJOR', label: '전공교과' },
+  { value: 'AFTER', label: '방과후교과' },
 ];
 
 export const periodOptions = [

@@ -28,11 +28,11 @@ export default function MyClass() {
   // 아이콘 매핑
   const getIconByCategory = (categoryKey: string) => {
     switch (categoryKey) {
-      case 'sort':
+      case 'GENERAL':
         return <IoBookOutline />;
-      case 'professional':
+      case 'MAJOR':
         return <HiOutlineAcademicCap />;
-      case 'afterSchool':
+      case 'AFTER':
         return <FaRegClock />;
       default:
         return null;

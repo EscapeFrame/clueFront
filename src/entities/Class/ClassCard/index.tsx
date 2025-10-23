@@ -2,7 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { ClassPost } from '@/shared/types/Class/classroom';
 import * as s from './styles';
 
-interface ClassCardProps extends ClassPost {}
+interface ClassCardProps extends ClassPost {
+  classRoomId: string;
+}
 
 export const ClassCard: React.FC<ClassCardProps> = ({
   classRoomId, name, sort, target
