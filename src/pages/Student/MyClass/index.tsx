@@ -42,11 +42,11 @@ export default function MyClass() {
 
   const getIconByCategory = (categoryKey: string) => {
     switch (categoryKey) {
-      case 'sort':
+      case 'GENERAL':
         return <IoBookOutline />;
-      case 'professional':
+      case 'MAJOR':
         return <HiOutlineAcademicCap />;
-      case 'afterSchool':
+      case 'AFTER':
         return <FaRegClock />;
       default:
         return null;
