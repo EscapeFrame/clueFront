@@ -127,7 +127,7 @@ const MakeTask: React.FC = () => {
         end_date: formatDateTime(dueDate),
       });
       
-      const assignmentId = response.data;
+      const assignmentId = response;
 
       console.log("받은 assignmentId:", assignmentId);
       
