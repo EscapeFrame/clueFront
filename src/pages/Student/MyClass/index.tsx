@@ -5,9 +5,7 @@ import TabSelector from '@/features/Common/Class/TabSelector';
 import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector/category';
 import { useModal } from '@/entities/UI/Modal/modal.hooks';
 import { Modal } from '@/entities/UI/Modal';
-
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
-// import { useMyClass } from './data';
 import { FiPlus } from "react-icons/fi";
 import { IoBookOutline } from "react-icons/io5";
 import { HiOutlineAcademicCap } from "react-icons/hi2";
@@ -20,6 +18,7 @@ export default function MyClass() {
   const [searchValue, setSearchValue] = useState('');
   const { isOpen, openModal, closeModal } = useModal();
   const [code, setCode] = useState('');
+  const [modalError, setModalError] = useState<string | null>(null); // 모달 전용 에러 상태
 
   // 탭 + 검색 필터링
   const filteredClasses = myClasses.filter((cls) => {
@@ -33,11 +32,18 @@ export default function MyClass() {
 
   const handleJoinClass = async () => {
     const trimmed = code.trim();
-    if (!trimmed) return;
+    if (!trimmed) {
+      setModalError('학습실 코드를 입력해주세요.');
+      return;
+    }
+
     const ok = await joinClassroom(trimmed);
     if (ok) {
       setCode('');
+      setModalError(null);
       closeModal();
+    } else {
+      setModalError('학습실 추가에 실패했습니다. 코드를 확인해주세요.');
     }
   };
 
@@ -97,10 +103,13 @@ export default function MyClass() {
       {isOpen && (
         <Modal
           title="학습실 추가"
-          onClose={closeModal}
+          onClose={() => {
+            setModalError(null);
+            closeModal();
+          }}
           buttons={[
-            { text: '취소', onClick: closeModal },
-            { text: '확인', onClick: handleJoinClass },
+            { text: '취소', type:2, width:"50%", onClick: closeModal },
+            { text: '확인', type:0, width:"50%", onClick: handleJoinClass },
           ]}
         >
           <s.AddModalInput
@@ -109,6 +118,8 @@ export default function MyClass() {
             onChange={(e) => setCode(e.target.value)}
             placeholder="학습실 코드를 입력하세요"
           />
+
+          {modalError && <s.ErrorMessage>{modalError}</s.ErrorMessage>}
         </Modal>
       )}
     </s.Container>

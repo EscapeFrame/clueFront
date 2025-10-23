@@ -1,8 +1,9 @@
-export interface ButtonData {
+interface ButtonData {
   text: string;
-  type?: 0 | 1;
-  width?: string;
-  onClick?: () => void;
+  width?: string | number;
+  type?: 0 | 1 | 2 | 3; // 0: primary, 1: light4, 2: line, 3: gray3
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean; // 활성화: false, 비활성화: true
 }
 
 export interface ModalProps {

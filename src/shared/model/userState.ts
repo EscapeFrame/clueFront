@@ -21,6 +21,6 @@ export const userState = atom({
     default: {
         username: '공덕현',
         userId: '2201',
-        role: 'TEACHER',
+        role: 'STUDENT',
     },
 });
