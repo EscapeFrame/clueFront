@@ -30,6 +30,9 @@ export const SendMakeTask = async (p: {
       "Content-Type": "application/json",
     },
   });
+
+  console.log(res.data);
+
   // 서버 응답 전체 반환 (assignment_id 포함)
   return res.data as {
     assignment_id?: string;
@@ -58,16 +61,13 @@ export async function attachFile(
         formData.append("file", fileAtt.file);
         formData.append("name", fileAtt.name);
 
-        await Customapi.post(
-          `/api/assignments/${assignmentId}/file`,
-          formData,
-        );
+        await Customapi.post(`/api/assignments/${assignmentId}/file`, formData);
       }
     }
 
     if (links.length > 0) {
       await Customapi.post(`/api/assignments/${assignmentId}/links`, {
-        links: links.map((link) => [{ "url":link.url }]),
+        links: links.map((link) => [{ url: link.url }]),
       });
     }
 
@@ -77,5 +77,3 @@ export async function attachFile(
     throw error;
   }
 }
-
-
