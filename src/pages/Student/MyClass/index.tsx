@@ -6,7 +6,8 @@ import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSel
 import { useModal } from '@/entities/UI/Modal/modal.hooks';
 import { Modal } from '@/entities/UI/Modal';
 
-import { useMyClass } from './data';
+import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
+// import { useMyClass } from './data';
 import { FiPlus } from "react-icons/fi";
 import { IoBookOutline } from "react-icons/io5";
 import { HiOutlineAcademicCap } from "react-icons/hi2";
@@ -14,7 +15,7 @@ import { FaRegClock } from "react-icons/fa6";
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { myClasses, error, setCategoryFilter, addClassroom } = useMyClass();
+  const { myClasses, error, joinClassroom } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
   const { isOpen, openModal, closeModal } = useModal();
@@ -33,7 +34,7 @@ export default function MyClass() {
   const handleJoinClass = async () => {
     const trimmed = code.trim();
     if (!trimmed) return;
-    const ok = await addClassroom(trimmed);
+    const ok = await joinClassroom(trimmed);
     if (ok) {
       setCode('');
       closeModal();

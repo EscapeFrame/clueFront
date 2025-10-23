@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
 import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector/category';
 
-import { useMyClass } from './data';
+import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
+// import { useMyClass } from './data';
 import { FiPlus } from "react-icons/fi";
 import { IoBookOutline } from "react-icons/io5";
 import { HiOutlineAcademicCap } from "react-icons/hi2";
@@ -12,10 +13,11 @@ import { FaRegClock } from "react-icons/fa6";
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { myClasses, error, setCategoryFilter } = useMyClass();
+  const { myClasses, error } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
 
+  // 필터 로직
   const filteredClasses = myClasses.filter((cls) => {
     const filterValue = CATEGORY_FILTER_MAP[selectedTab as CategoryKey];
     const tabMatch = filterValue === null ? true : cls.categoryKey === filterValue;
@@ -25,7 +27,6 @@ export default function MyClass() {
 
   const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
-  // 아이콘 매핑
   const getIconByCategory = (categoryKey: string) => {
     switch (categoryKey) {
       case 'GENERAL':
@@ -53,10 +54,7 @@ export default function MyClass() {
 
         <TabSelector
           selectedTab={selectedTab}
-          onSelectTab={(tab) => {
-            setSelectedTab(tab as CategoryKey);
-            setCategoryFilter(CATEGORY_FILTER_MAP[tab as CategoryKey]);
-          }}
+          onSelectTab={(tab) => setSelectedTab(tab as CategoryKey)}
           onSearch={(query) => setSearchValue(query)}
         />
       </s.HeaderSection>
