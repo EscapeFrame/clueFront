@@ -1,4 +1,4 @@
-interface ButtonData {
+export interface ButtonData {
   text: string;
   width?: string | number;
   type?: 0 | 1 | 2 | 3; // 0: primary, 1: light4, 2: line, 3: gray3
