@@ -50,7 +50,7 @@ export async function getClassInfo(classroomId: string) {
 
 export async function getCheckStudent(assignmentId: string) {
     try {
-        const response = await Customapi.get(`/api/assignments/${assignmentId}/check`);
+        const response = await Customapi.get(`/api/submissions/${assignmentId}/check`);
         if (response.status !== 200) {
             return response.status;
         }
