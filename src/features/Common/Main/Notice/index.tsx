@@ -4,9 +4,17 @@ import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
 import { useNotices } from '@/features/Common/Main/hooks/useNotice';
+import dayjs from 'dayjs';
+import AddNoticeModal from '@/features/Common/Main/Notice/AddNoticeModal';
+import { useRecoilValue } from 'recoil';
+import { userState } from '@/shared/model/userState';
 
 export default function Notice() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
+
   const {
     serviceNotices,
     schoolNotices,
@@ -14,6 +22,7 @@ export default function Notice() {
     loading,
     error,
   } = useNotices();
+  const { refetch } = useNotices();
 
   return (
     <s.TopContainer>
@@ -23,7 +32,9 @@ export default function Notice() {
             <s.Title>공지안내</s.Title>
             <s.Explain>학교의 소식을 빠르게 알아보세요!</s.Explain>
           </div>
-          <s.AddButton>+</s.AddButton>
+          {isTeacher && (
+            <s.AddButton onClick={() => setIsAddModalOpen(true)}>+</s.AddButton>
+          )}
         </s.InventoryHeader>
         <s.Row>
           <NoticeCard
@@ -50,23 +61,39 @@ export default function Notice() {
         </s.Row>
       </s.Container>
 
-      {selectedNotice && (
-        <Modal
-          title={selectedNotice.title}
-          notes="default"
-          onClose={() => setSelectedNotice(null)}
-          buttons={[
-            {
-              text: '닫기',
-              type: 0,
-              width: '100%',
-              onClick: () => setSelectedNotice(null),
-            },
-          ]}
-        >
-          <p>{selectedNotice.content}</p>
-        </Modal>
+      {isAddModalOpen && (
+        <AddNoticeModal
+          onClose={() => setIsAddModalOpen(false)}
+          onSuccess={() => {
+            setIsAddModalOpen(false);
+            refetch();
+          }}
+        />
       )}
+
+      {selectedNotice && (() => {
+        const formattedDate = dayjs(selectedNotice.createdAt).format(
+          'YYYY-MM-DD',
+        );
+        return (
+          <Modal
+            title={selectedNotice.title}
+            notes="default"
+            onClose={() => setSelectedNotice(null)}
+            buttons={[
+              {
+                text: '닫기',
+                type: 0,
+                width: '100%',
+                onClick: () => setSelectedNotice(null),
+              },
+            ]}
+          >
+            <s.ModalDate>{formattedDate}</s.ModalDate>
+            <s.ModalContent>{selectedNotice.content}</s.ModalContent>
+          </Modal>
+        );
+      })()}
     </s.TopContainer>
   );
 }

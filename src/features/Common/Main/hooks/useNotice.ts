@@ -34,9 +34,9 @@ export const useNotices = (): UseNoticesReturn => {
       }
 
       // type 기준으로 분류
-      const service = result.filter((n: NoticeItem) => n.type === 'Service');
-      const school = result.filter((n: NoticeItem) => n.type === 'School');
-      const schedule = result.filter((n: NoticeItem) => n.type === 'Schedule');
+      const service = result.filter((n: NoticeItem) => n.type === 'SERVICE');
+      const school = result.filter((n: NoticeItem) => n.type === 'SCHOOL');
+      const schedule = result.filter((n: NoticeItem) => n.type === 'SCHEDULE');
 
       setServiceNotices(service);
       setSchoolNotices(school);
