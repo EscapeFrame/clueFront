@@ -3,25 +3,26 @@ import { theme } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const TopContainer = styled.div`
-  width: 400px;
+  width: 100%;
+  max-width: 500px;
   max-height: 90vh;
-  position: fixed;
-  top: auto;
-  right: auto;
-  z-index: 100;
-  padding: 3rem 2rem;
+  margin: 0 auto;
+  padding: 2rem;
   background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 24px;
-  overflow-y: auto; // 스크롤 가능
-  padding-bottom: 10px;
+  overflow-y: auto;
+  position: relative;
+
+  @media (max-width: 1200px) {
+    max-width: 100%;
+  }
 
   @media (max-width: 768px) {
     width: 100%;
-    height: 100%;
-    border-radius: 24px;
-    padding: 2rem 1.5rem;
-    top: auto;
-    left: 0;
+    height: auto;
+    border-radius: 16px;
+    padding: 1.5rem;
   }
 `;
 

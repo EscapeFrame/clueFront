@@ -6,7 +6,7 @@ export const Form = styled.form`
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  max-height: 60vh;
+  max-height: 80vh;
   overflow-y: auto;
   padding-right: 8px;
 `;
@@ -50,8 +50,50 @@ export const Textarea = styled.textarea`
   resize: vertical;
 `;
 
-export const Select = styled.select`
-  ${baseInputStyles}
+export const RadioGroup = styled.div`
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 15px;
+      color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+    }
+
+    input[type='radio'] {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      width: 18px;
+      height: 18px;
+      border: 2px solid ${({ theme }: { theme: ThemeType }) => theme.colors.gray[300]};
+      border-radius: 4px;
+      margin-right: 8px;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:checked {
+        background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+        border-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+      }
+
+      /* 체크 표시 아이콘 */
+      &:checked::after {
+        content: '✔';
+        font-size: 14px;
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
 `;
 
 export const UrlInputGroup = styled.div`

@@ -80,7 +80,7 @@ export default function AddNoticeModal({
 
   return (
     <Modal
-      title="공지사항 추가"
+      title="공지/안내 내용 작성"
       notes="default"
       onClose={onClose}
       buttons={[
@@ -96,11 +96,35 @@ export default function AddNoticeModal({
       <s.Form>
         <s.FormRow>
           <s.Label>종류</s.Label>
-          <s.Select value={type} onChange={(e) => setType(e.target.value as typeof type)}>
-            <option value="SCHOOL">학교공지</option>
-            <option value="SCHEDULE">일정안내</option>
-            <option value="SERVICE">서비스공지</option>
-          </s.Select>
+          <s.RadioGroup>
+            <label>
+              <input
+                type="radio"
+                value="SCHOOL"
+                checked={type === 'SCHOOL'}
+                onChange={(e) => setType(e.target.value as typeof type)}
+              />
+              학교공지
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="SCHEDULE"
+                checked={type === 'SCHEDULE'}
+                onChange={(e) => setType(e.target.value as typeof type)}
+              />
+              일정안내
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="SERVICE"
+                checked={type === 'SERVICE'}
+                onChange={(e) => setType(e.target.value as typeof type)}
+              />
+              서비스공지
+            </label>
+          </s.RadioGroup>
         </s.FormRow>
         <s.FormRow>
           <s.Label>제목</s.Label>
