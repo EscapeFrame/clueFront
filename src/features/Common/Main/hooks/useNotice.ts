@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { noticeApi } from '@/features/Common/Main/api/useNotice';
-import { NoticeItem } from '@/shared/types/notice';
+import { NoticeItem, DetailNoticeItem } from '@/shared/types/notice';
 
 interface UseNoticesReturn {
   serviceNotices: NoticeItem[];
@@ -68,18 +68,18 @@ export const useNotices = (): UseNoticesReturn => {
 
 // 개별 공지사항 상세 조회 훅
 interface UseNoticeDetailReturn {
-  notice: NoticeItem | null;
+  notice: DetailNoticeItem | null;
   loading: boolean;
   error: string | null;
-  fetchNoticeDetail: (noticeId: number) => Promise<void>;
+  fetchNoticeDetail: (noticeId: string) => Promise<void>;
 }
 
 export const useNoticeDetail = (): UseNoticeDetailReturn => {
-  const [notice, setNotice] = useState<NoticeItem | null>(null);
+  const [notice, setNotice] = useState<DetailNoticeItem | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchNoticeDetail = useCallback(async (noticeId: number) => {
+  const fetchNoticeDetail = useCallback(async (noticeId: string) => {
     try {
       setLoading(true);
       setError(null);

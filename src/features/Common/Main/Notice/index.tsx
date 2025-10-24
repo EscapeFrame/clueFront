@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import NoticeCard from '@/entities/Main/NoticeCard';
-import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
 import { useNotices } from '@/features/Common/Main/hooks/useNotice';
-import dayjs from 'dayjs';
 import AddNoticeModal from '@/features/Common/Main/Notice/AddNoticeModal';
+import NoticeDetailModal from '@/features/Common/Main/Notice/DetailNoticeModal';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 
@@ -71,29 +70,12 @@ export default function Notice() {
         />
       )}
 
-      {selectedNotice && (() => {
-        const formattedDate = dayjs(selectedNotice.createdAt).format(
-          'YYYY-MM-DD',
-        );
-        return (
-          <Modal
-            title={selectedNotice.title}
-            notes="default"
-            onClose={() => setSelectedNotice(null)}
-            buttons={[
-              {
-                text: '닫기',
-                type: 0,
-                width: '100%',
-                onClick: () => setSelectedNotice(null),
-              },
-            ]}
-          >
-            <s.ModalDate>{formattedDate}</s.ModalDate>
-            <s.ModalContent>{selectedNotice.content}</s.ModalContent>
-          </Modal>
-        );
-      })()}
+      {selectedNotice && (
+        <NoticeDetailModal
+          noticeId={selectedNotice.noticeId}
+          onClose={() => setSelectedNotice(null)}
+        />
+      )}
     </s.TopContainer>
   );
 }

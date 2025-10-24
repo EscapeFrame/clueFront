@@ -6,13 +6,14 @@ export interface NoticeItem {
   createdAt: string; // 공지 날짜 (YYYY-MM-DD)
 }
 
+export interface NoticeDocument {
+  noticeDocumentId: string;
+  title: string;
+  type: "FILE" | "LINK";
+}
+
 export interface DetailNoticeItem extends NoticeItem {
-  noticeDocuments : [
-    {
-      NoticeDocumentId: string;
-      title: string;
-    }
-  ]
+  noticeDocuments: NoticeDocument[];
 }
 
 export interface PostNoticeItem {

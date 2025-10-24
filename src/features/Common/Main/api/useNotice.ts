@@ -1,5 +1,5 @@
 import CustomApi from "@/shared/config/api";
-import { NoticeItem, PostNoticeItem } from "@/shared/types/notice";
+import { NoticeItem, PostNoticeItem, DetailNoticeItem } from "@/shared/types/notice";
 
 // 아직 적힌거 없음
 export const noticeApi = {
@@ -43,7 +43,7 @@ export const noticeApi = {
   },
 
   // 특정 공지사항 상세 조회
-  getNoticeDetail: async (noticeId: number): Promise<NoticeItem | number> => {
+  getNoticeDetail: async (noticeId: string): Promise<DetailNoticeItem | number> => {
     try {
       const res = await CustomApi.get(`/api/notice/${noticeId}`);
       if (res.status !== 200) return res.status;
@@ -91,6 +91,40 @@ export const noticeApi = {
       return res.status;
     } catch (error) {
       console.error("공지사항 삭제 실패:", error);
+      throw error;
+    }
+  },
+
+  // 공지사항 링크 조회
+  getNoticeLink: async (noticeDocumentId: string): Promise<string | number> => {
+    try {
+      const res = await CustomApi.get(`/api/notice/link/${noticeDocumentId}`);
+      if (res.status !== 200) return res.status;
+      return res.data;
+    } catch (error) {
+      console.error("공지사항 링크 조회 실패:", error);
+      throw error;
+    }
+  },
+
+  // 공지사항 파일 다운로드
+  downloadNoticeFile: async (noticeDocumentId: string, filename: string): Promise<void | number> => {
+    try {
+      const res = await CustomApi.get(`/api/notice/download/${noticeDocumentId}`, {
+        responseType: 'blob',
+      });
+      if (res.status !== 200) return res.status;
+
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename); // 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("공지사항 파일 다운로드 실패:", error);
       throw error;
     }
   },
