@@ -20,7 +20,8 @@ export const Container = styled.div`
 
 export const Left = styled.div`
   gap: 24px;
-  width: 100%;
+  min-width: 380px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,10 +29,8 @@ export const Left = styled.div`
 
 export const Right = styled.div`
   gap: 24px;
-  width: 30%;
   min-width: 380px;
   margin-left: auto;
-  height: 100vh;
   background-color: #f7f7f7;
   right: 0;
 

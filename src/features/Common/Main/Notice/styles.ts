@@ -5,13 +5,11 @@ import { fonts } from "@/shared/theme/font.styles";
 export const TopContainer = styled.div`
   width: 100%;
   max-width: 500px;
-  max-height: 90vh;
   margin: 0 auto;
   padding: 2rem;
   background: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 24px;
-  overflow-y: auto;
   position: relative;
 
   @media (max-width: 1200px) {
