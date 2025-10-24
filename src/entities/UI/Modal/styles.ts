@@ -18,7 +18,7 @@ export const ModalWrapper = styled.div.withConfig({
 })<{ $variant?: 'default' | 'warning'; isWarning?: boolean }>`
   background: ${theme.colors.white};
   border-radius: 8px;
-  width: 400px;
+  width: 500px;
   max-width: 90%;
   max-height: 90vh;
   padding: 20px;

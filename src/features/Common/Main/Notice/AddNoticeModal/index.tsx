@@ -1,12 +1,20 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
 import { noticeApi } from '@/features/Common/Main/api/useNotice';
 import { PostNoticeItem } from '@/shared/types/notice';
+import AttachmentBox from '@/entities/UI/Attachment';
 
 interface AddNoticeModalProps {
   onClose: () => void;
   onSuccess: () => void;
+}
+
+interface Attachment {
+  type: 'file' | 'link';
+  name: string;
+  url?: string;
+  file?: File;
 }
 
 export default function AddNoticeModal({
@@ -16,32 +24,56 @@ export default function AddNoticeModal({
   const [type, setType] = useState<'SCHOOL' | 'SCHEDULE' | 'SERVICE'>('SCHOOL');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [files, setFiles] = useState<File[]>([]);
-  const [urls, setUrls] = useState<{ value: string; title: string }[]>([]);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAddUrl = () => {
-    setUrls([...urls, { value: '', title: '' }]);
+  // 파일 업로드 모달 관련 상태
+  const [isFileModalOpen, setIsFileModalOpen] = useState(false);
+  const [tempFiles, setTempFiles] = useState<Attachment[]>([]);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 링크 모달 관련 상태
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [linkInput, setLinkInput] = useState('');
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files?.length) return;
+    const newFiles: Attachment[] = Array.from(files).map((f) => ({
+      type: 'file' as const,
+      name: f.name,
+      file: f,
+    }));
+    setTempFiles((prev) => [...prev, ...newFiles]);
   };
 
-  const handleRemoveUrl = (index: number) => {
-    setUrls(urls.filter((_, i) => i !== index));
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files?.length)
+      handleFileSelect({ target: { files } } as React.ChangeEvent<HTMLInputElement>);
   };
 
-  const handleUrlChange = (
-    index: number,
-    field: 'value' | 'title',
-    value: string,
-  ) => {
-    const newUrls = [...urls];
-    newUrls[index][field] = value;
-    setUrls(newUrls);
+  const handleUploadModalComplete = () => {
+    if (!tempFiles.length) return;
+    setAttachments((prev) => [...prev, ...tempFiles]);
+    setTempFiles([]);
+    setIsFileModalOpen(false);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles(Array.from(e.target.files));
-    }
+  const handleUploadModalClose = () => {
+    setTempFiles([]);
+    setIsFileModalOpen(false);
   };
 
   const handleSubmit = async () => {
@@ -52,18 +84,26 @@ export default function AddNoticeModal({
 
     setIsSubmitting(true);
 
+    const filesToUpload = attachments
+      .filter((att) => att.type === 'file' && att.file)
+      .map((att) => att.file as File);
+
+    const urlsToUpload = attachments
+      .filter((att) => att.type === 'link' && att.url)
+      .map((att) => ({ title: att.name, value: att.url as string }));
+
     const metadata: PostNoticeItem['metadata'] = {
       type,
       title,
       content,
-      fileInfo: files.map((file) => ({ title: file.name })),
-      urls: urls.filter((url) => url.value.trim() !== ''), // 빈 URL은 제외
+      fileInfo: filesToUpload.map((file) => ({ title: file.name })),
+      urls: urlsToUpload,
     };
 
     console.log('전송할 메타데이터:', metadata);
 
     try {
-      const result = await noticeApi.postNotice({ metadata, files });
+      const result = await noticeApi.postNotice({ metadata, files: filesToUpload });
       if (typeof result === 'number' && result >= 400) {
         alert(`공지사항 등록에 실패했습니다. (에러코드: ${result})`);
       } else {
@@ -76,6 +116,22 @@ export default function AddNoticeModal({
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleLinkSubmit = () => {
+    const url = linkInput.trim();
+    if (!url) return;
+
+    try {
+      new URL(url);
+    } catch {
+      alert('유효하지 않은 URL 형식입니다.');
+      return;
+    }
+
+    setAttachments((prev) => [...prev, { type: 'link', name: url, url }]);
+    setIsLinkModalOpen(false);
+    setLinkInput('');
   };
 
   return (
@@ -93,7 +149,7 @@ export default function AddNoticeModal({
         },
       ]}
     >
-      <s.Form>
+      <s.Form onSubmit={(e) => e.preventDefault()}>
         <s.FormRow>
           <s.Label>종류</s.Label>
           <s.RadioGroup>
@@ -136,7 +192,7 @@ export default function AddNoticeModal({
           />
         </s.FormRow>
         <s.FormRow>
-          <s.Label>내용</s.Label>
+          <s.Label>본문</s.Label>
           <s.Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -144,37 +200,64 @@ export default function AddNoticeModal({
           />
         </s.FormRow>
         <s.FormRow>
-          <s.Label>파일 첨부</s.Label>
-          <s.Input type="file" multiple onChange={handleFileChange} />
-        </s.FormRow>
-        <s.FormRow>
-          <s.Label>
-            URL 링크
-            <s.AddButton type="button" onClick={handleAddUrl}>
-              +
-            </s.AddButton>
-          </s.Label>
-          {urls.map((url, index) => (
-            <s.UrlInputGroup key={index}>
-              <s.Input
-                type="text"
-                value={url.title}
-                onChange={(e) => handleUrlChange(index, 'title', e.target.value)}
-                placeholder="링크 제목"
-              />
-              <s.Input
-                type="text"
-                value={url.value}
-                onChange={(e) => handleUrlChange(index, 'value', e.target.value)}
-                placeholder="https://example.com"
-              />
-              <s.RemoveButton type="button" onClick={() => handleRemoveUrl(index)}>
-                -
-              </s.RemoveButton>
-            </s.UrlInputGroup>
-          ))}
+          <AttachmentBox
+            attachments={attachments}
+            setAttachments={setAttachments}
+            openUploadModal={() => setIsFileModalOpen(true)}
+            openLinkModal={() => setIsLinkModalOpen(true)}
+          />
         </s.FormRow>
       </s.Form>
+      {isFileModalOpen && (
+        <Modal
+          title="파일 업로드"
+          onClose={handleUploadModalClose}
+          buttons={[
+            { text: '취소', type: 1, onClick: handleUploadModalClose },
+            { text: '완료', type: 0, onClick: handleUploadModalComplete },
+          ]}
+        >
+          <s.FileUploadArea
+            isDragOver={isDragOver}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {isDragOver
+              ? '여기에 파일을 놓으세요!'
+              : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}
+          </s.FileUploadArea>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileSelect}
+            style={{ display: 'none' }}
+          />
+          {tempFiles.length > 0 && (
+            <ul>
+              {tempFiles.map((f) => (
+                <li key={f.name}>{f.name}</li>
+              ))}
+            </ul>
+          )}
+        </Modal>
+      )}
+      {isLinkModalOpen && (
+        <Modal
+          title="링크 첨부"
+          notes="url"
+          onClose={() => setIsLinkModalOpen(false)}
+          buttons={[
+            { text: '등록', type: 0, onClick: handleLinkSubmit },
+            { text: '닫기', type: 1, onClick: () => setIsLinkModalOpen(false) },
+          ]}
+          placeholder="https://example.com"
+          inputValue={linkInput}
+          onInputChange={(e) => setLinkInput(e.target.value)}
+        />
+      )}
     </Modal>
   );
 }

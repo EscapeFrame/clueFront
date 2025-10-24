@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { fonts } from '@/shared/theme/font.styles';
 import { ThemeType } from '@/shared/theme/theme.styles';
 
 export const Form = styled.form`
@@ -129,5 +130,26 @@ export const RemoveButton = styled.button`
   background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.red};
   &:hover {
     opacity: 0.8;
+  }
+`;
+
+export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
+  border: ${({ isDragOver }) => isDragOver ? '2px solid #1976d2' : '2px dashed #ccc'};
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 12px;
+  text-align: center;
+  background: ${({ isDragOver }) => isDragOver ? '#e3f2fd' : '#fafafa'};
+  transition: background 0.2s, border 0.2s;
+  cursor: pointer;
+  user-select: none;
+
+  @media (max-width: 1200px) {
+    padding: 15px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    ${fonts.P2};
   }
 `;
