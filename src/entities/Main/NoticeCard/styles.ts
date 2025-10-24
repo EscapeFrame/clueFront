@@ -26,6 +26,7 @@ export const List = styled.ul`
   padding: 0;
   margin: 0;
   flex-grow: 1;
+  max-height: 250px; /* Adjust this value as needed */
   overflow-y: auto;
 `;
 
