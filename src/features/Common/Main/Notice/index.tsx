@@ -3,7 +3,7 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
-import { useNotices } from '@/features/Common/Main/hooks/useNotice'; // ✅ useNotices 가져오기
+import { useNotices } from '@/features/Common/Main/hooks/useNotice';
 
 export default function Notice() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
@@ -18,8 +18,13 @@ export default function Notice() {
   return (
     <s.TopContainer>
       <s.Container>
-        <s.Title>공지안내</s.Title>
-        <s.Explain>학교의 소식을 빠르게 알아보세요!</s.Explain>
+        <s.InventoryHeader>
+          <div>
+            <s.Title>공지안내</s.Title>
+            <s.Explain>학교의 소식을 빠르게 알아보세요!</s.Explain>
+          </div>
+          <s.AddButton>+</s.AddButton>
+        </s.InventoryHeader>
         <s.Row>
           <NoticeCard
             cardTitle="서비스공지"

@@ -33,6 +33,12 @@ export const Container = styled.div`
   box-sizing: border-box;
 `;
 
+export const InventoryHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const Title = styled.div`
   ${fonts.P5}
   padding: 0;
@@ -51,13 +57,25 @@ export const Explain = styled.div`
 `;
 
 export const Row = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 32px;
   width: 100%;
   margin-top: 12px;
+  display: grid;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+export const AddButton = styled.button`
+  ${fonts.P5}
+  color: ${theme.colors.blue[500]};
+  background-color: ${theme.colors.white};
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    color: ${theme.colors.black};
   }
 `;

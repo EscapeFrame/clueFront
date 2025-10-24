@@ -80,11 +80,7 @@ function RegisterPage() {
 
     try {
       const classCode = `${grade}${classNum}${studentNum.padStart(2, '0')}`;
-      const payload = {
-        ...registerData,
-        classCode: classCode,
-      };
-      await Customapi.post('/register', payload);
+      await Customapi.post('/register', classCode);
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
       navigate('/');
     } catch (err) {
@@ -104,8 +100,6 @@ function RegisterPage() {
   }
 
   return (
-
-    // 디자인 나오기 전 임시
     <s.Container>
       <s.Left>
         <s.Tittle>Welcome to CLUE service</s.Tittle>
@@ -183,8 +177,7 @@ function RegisterPage() {
                 name="studentMail"
                 value={registerData.email}
                 placeholder='메일 입력해주세요.'
-                onChange={handleStudentInfoChange}
-                required
+                readOnly
               />
             </s.InputGroup>
             <s.SubmitButton type="submit" disabled={!isFormValid}>

@@ -57,9 +57,9 @@ export default function NoticeCard({
       <s.Title>{cardTitle}</s.Title>
       <s.List>
         {notices.map((notice) => (
-          <s.ListItem key={notice.id} onClick={() => onSelect(notice)}>
+          <s.ListItem key={notice.noticeId} onClick={() => onSelect(notice)}>
             <s.ItemTitle>{notice.title}</s.ItemTitle>
-            <s.ItemDate>{notice.date}</s.ItemDate>
+            <s.ItemDate>{notice.noticeId}</s.ItemDate>
           </s.ListItem>
         ))}
       </s.List>
