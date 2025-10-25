@@ -21,7 +21,7 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
     const fetchStudents = async () => {
       try {
         const data = await getCheckStudent(assignmentId);
-        setStudents(data.student || []);
+        setStudents(data || []);
       } catch (error) {
         console.error('학생 제출 현황 조회 실패:', error);
         setStudents([]);
