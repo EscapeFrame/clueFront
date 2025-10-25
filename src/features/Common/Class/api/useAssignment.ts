@@ -46,7 +46,7 @@ export const AssignmentsApi = {
       return null;
     }
   },
-  update: async (assignmentId: string | number, changes: AssignmentUpdateRequest): Promise<AssignmentResponse | null> => {
+  update: async (assignmentId: string | number, changes: any): Promise<AssignmentResponse | null> => {
     try {
       const res = await Customapi.patch<AssignmentResponse>(`${API_BASE_URL}/${assignmentId}`, changes);
       if (res.status < 200 || res.status >= 300) {
