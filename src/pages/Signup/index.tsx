@@ -84,7 +84,7 @@ function RegisterPage() {
 
     try {
       const classCode = `${grade}${classNum}${studentNum.padStart(2, '0')}`;
-      await Customapi.post('/register', classCode);
+      await Customapi.post('/register', {"classCode": classCode});
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
       navigate('/');
     } catch (err) {
