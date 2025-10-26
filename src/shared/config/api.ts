@@ -42,7 +42,7 @@ Customapi.interceptors.response.use(
     const original = error.config;
 
     const isExpired = 
-    error.response?.data?.message === "토큰 유효기간 만료" // 백엔드랑 똑같아야지만 작동한다 되어있음.
+    error.response?.data?.message === 401
 
     if(isExpired && !original._retry) {
       original._retry = true;

@@ -6,9 +6,11 @@ import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import { stateData } from './data';
 import { useEffect, useState } from 'react';
 import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
+import DateInput from '@/entities/UI/InputBox/DateInput';
 import { Modal } from '@/entities/UI/Modal';
 import Button from '@/entities/UI/Button';
 import { AssignmentEntry } from '@/entities/Class/AssignmentEntry';
+import dayjs from 'dayjs';
 import { AssignmentsApi } from '@/features/Common/Class/api/useAssignment';
 
 interface UploadedFile {
@@ -25,10 +27,13 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const [isEditing, setIsEditing] = useState(false);
     const [editTitle, setEditTitle] = useState('');
     const [editDescription, setEditDescription] = useState('');
+    const [editEndDate, setEditEndDate] = useState('');
     const [showFileModal, setShowFileModal] = useState(false);
     const [tempFiles, setTempFiles] = useState<UploadedFile[]>([]);
     const [isDragOver, setIsDragOver] = useState(false);
     let fileInputRef = useState<HTMLInputElement | null>(null)[0];
+
+    const today = dayjs().format('YYYY-MM-DD');
 
     useEffect(() => {
         const fetchAssignment = async () => {
@@ -54,6 +59,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                     setAssignment(mappedData);
                     setEditTitle(mappedData.title);
                     setEditDescription(mappedData.description);
+                    setEditEndDate(dayjs(mappedData.endDate).format('YYYY-MM-DD'));
                     setError(null);
                 } else {
                     setError('과제 정보를 불러오지 못했습니다.');
@@ -73,13 +79,31 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
         setIsEditing(true);
     };
 
-    const handleSaveEdit = () => {
+    const handleSaveEdit = async () => {
         if (assignment) {
-            setAssignment({
-                ...assignment,
-                title: editTitle,
-                description: editDescription
-            });
+            try {
+                const updatedAssignment = await AssignmentsApi.update(assignment.assignmentId, {
+                    title: editTitle,
+                    content: editDescription,
+                    start_date: dayjs(assignment.duringDate).toISOString(), // Assuming startDate is duringDate
+                    end_date: dayjs(editEndDate).toISOString(),
+                });
+
+                if (updatedAssignment) {
+                    setAssignment({
+                        ...assignment,
+                        title: updatedAssignment.title,
+                        description: updatedAssignment.content,
+                        endDate: dayjs(updatedAssignment.endDate).format('YYYY-MM-DD'),
+                    });
+                    alert('과제가 성공적으로 수정되었습니다.');
+                } else {
+                    alert('과제 수정에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('과제 수정 중 오류 발생:', error);
+                alert('과제 수정 중 오류가 발생했습니다.');
+            }
         }
         setIsEditing(false);
     };
@@ -88,6 +112,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
         if (assignment) {
             setEditTitle(assignment.title);
             setEditDescription(assignment.description);
+            setEditEndDate(dayjs(assignment.endDate).format('YYYY-MM-DD'));
         }
         setIsEditing(false);
     };
@@ -202,13 +227,23 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                 </s.TitleContainer>
 
                 <s.State>
-                    <s.DetailState>
-                        <Icon0 />
-                        <div className="text-group">
-                            <span>{stateData[0].name}</span>
-                            <span>{endDate}</span>
-                        </div>
-                    </s.DetailState>
+                    {isEditing ? (
+                        <DateInput
+                            label="마감일"
+                            id="end-date-edit"
+                            value={editEndDate}
+                            onChange={(e) => setEditEndDate(e.target.value)}
+                            min={today}
+                        />
+                    ) : (
+                        <s.DetailState>
+                            <Icon0 />
+                            <div className="text-group">
+                                <span>{stateData[0].name}</span>
+                                <span>{dayjs(endDate).format('YYYY-MM-DD')}</span>
+                            </div>
+                        </s.DetailState>
+                    )}
 
                     <s.DetailState>
                         <Icon1 />
