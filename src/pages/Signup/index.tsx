@@ -22,12 +22,13 @@ function RegisterPage() {
 
   useEffect(() => {
     const { grade, classNum, studentNum, studentMail } = studentInfo;
-    const isValid = grade !== '' && classNum !== '' && studentNum !== '' && mailRegex.test(studentMail);
+    const isEmailValid = registerData?.email ? true : mailRegex.test(studentMail);
+    const isValid = grade !== '' && classNum !== '' && studentNum !== '' && isEmailValid;
     setIsFormValid(isValid);
     console.log('studentInfo:', studentInfo); // Debugging line
     console.log('mailRegex test result:', mailRegex.test(studentMail)); // Debugging line
     console.log('isFormValid:', isValid); // Debugging line
-  }, [studentInfo]);
+  }, [studentInfo, registerData]);
 
   useEffect(() => {
     // 첫 로그인일 때 요청
@@ -41,6 +42,9 @@ function RegisterPage() {
             classCode: '',
             role: data.role,
           });
+          if (data.email) {
+            setStudentInfo((prev) => ({ ...prev, studentMail: data.email }));
+          }
           console.log("data:", data);
         })
         .finally(() => setLoadingRegisterInfo(false));
@@ -80,7 +84,7 @@ function RegisterPage() {
 
     try {
       const classCode = `${grade}${classNum}${studentNum.padStart(2, '0')}`;
-      await Customapi.post('/register', classCode);
+      await Customapi.post('/register', {"classCode": classCode});
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
       navigate('/');
     } catch (err) {
@@ -175,9 +179,11 @@ function RegisterPage() {
               <input
                 id="studentMail"
                 name="studentMail"
-                value={registerData.email}
+                value={studentInfo.studentMail}
                 placeholder='메일 입력해주세요.'
-                readOnly
+                onChange={handleStudentInfoChange}
+                readOnly={!!registerData?.email}
+                required={!registerData?.email}
               />
             </s.InputGroup>
             <s.SubmitButton type="submit" disabled={!isFormValid}>
