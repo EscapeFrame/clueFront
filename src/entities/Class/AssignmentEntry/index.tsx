@@ -79,6 +79,10 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
     return numbers.sort((a, b) => a - b);
   };
 
+  const modalOpen = () => {
+    alert('학생 상세 페이지');
+  }
+
   return (
     <s.Container>
       <s.Title>학생 과제 현황</s.Title>
@@ -134,19 +138,21 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
           </s.EmptyMessage>
         ) : (
           filteredStudents.map(student => (
-            <s.StudentRow key={`${student.contentId}-${student.classNumberGrade}`}>
-              <s.UserAvatar imgUrl={student.userImg} />
-              <s.UserSection>
-                <s.UserInfo>
-                  <s.UserName>{student.userName}</s.UserName>
-                  <s.UserNumber>{student.classNumberGrade}</s.UserNumber>
-                </s.UserInfo>
-                <s.SubmitDate>제출일: {student.userSubmitDate || '-'}</s.SubmitDate>
-              </s.UserSection>
-              <s.StatusBadge isSubmitted={student.isSubmitted}>
-                {student.isSubmitted ? '제출' : '미제출'}
-              </s.StatusBadge>
-            </s.StudentRow>
+            <div onClick={modalOpen}>
+              <s.StudentRow key={`${student.contentId}-${student.classNumberGrade}`}>
+                <s.UserAvatar imgUrl={student.userImg} />
+                <s.UserSection>
+                  <s.UserInfo>
+                    <s.UserName>{student.userName}</s.UserName>
+                    <s.UserNumber>{student.classNumberGrade}</s.UserNumber>
+                  </s.UserInfo>
+                  <s.SubmitDate>제출일: {student.userSubmitDate || '-'}</s.SubmitDate>
+                </s.UserSection>
+                <s.StatusBadge isSubmitted={student.isSubmitted}>
+                  {student.isSubmitted ? '제출' : '미제출'}
+                </s.StatusBadge>
+              </s.StudentRow>
+            </div>
           ))
         )}
       </s.StudentList>
