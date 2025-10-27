@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
-import { DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
+import { AssignmentFile, DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
 import { getCheckStudent } from '@/entities/Class/api';
 
 interface AssignmentEntryProps {
@@ -16,6 +16,8 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
   const [selectedClass, setSelectedClass] = useState<string>('all');
   const [selectedNumber, setSelectedNumber] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<DetailAssignmentStudent | null>(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -79,9 +81,15 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
     return numbers.sort((a, b) => a - b);
   };
 
-  const modalOpen = () => {
-    alert('학생 상세 페이지');
-  }
+  const openModal = (student: DetailAssignmentStudent) => {
+    setSelectedStudent(student);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedStudent(null);
+  };
 
   return (
     <s.Container>
@@ -131,6 +139,7 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
         </s.SearchGroup>
       </s.FilterContainer>
 
+      {/* 학생 리스트 */}
       <s.StudentList>
         {filteredStudents.length === 0 ? (
           <s.EmptyMessage>
@@ -138,8 +147,8 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
           </s.EmptyMessage>
         ) : (
           filteredStudents.map(student => (
-            <div onClick={modalOpen}>
-              <s.StudentRow key={`${student.contentId}-${student.classNumberGrade}`}>
+            <div key={`${student.contentId}-${student.classNumberGrade}`} onClick={() => openModal(student)}>
+              <s.StudentRow>
                 <s.UserAvatar imgUrl={student.userImg} />
                 <s.UserSection>
                   <s.UserInfo>
@@ -149,13 +158,82 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                   <s.SubmitDate>제출일: {student.userSubmitDate || '-'}</s.SubmitDate>
                 </s.UserSection>
                 <s.StatusBadge isSubmitted={student.isSubmitted}>
-                  {student.isSubmitted ? '제출' : '미제출'}
+                  {student.isSubmitted ? '제출완료' : '미제출'}
                 </s.StatusBadge>
               </s.StudentRow>
             </div>
           ))
         )}
       </s.StudentList>
+
+      {/* 학생세부 과제확인 */}
+      {modalIsOpen && selectedStudent && (
+        <s.ModalOverlay onClick={closeModal}>
+          <s.ModalContent onClick={e => e.stopPropagation()}>
+            <s.ModalHeader>
+              <s.UserAvatar imgUrl={selectedStudent.userImg} />
+              <s.UserSection>
+                <s.UserInfo>
+                  <s.UserName>{selectedStudent.userName}</s.UserName>
+                  <s.UserNumber>{selectedStudent.classNumberGrade}</s.UserNumber>
+                </s.UserInfo>
+                <s.SubmitDate>
+                  제출일: {selectedStudent.userSubmitDate || '-'}
+                </s.SubmitDate>
+              </s.UserSection>
+              <s.StatusBadge isSubmitted={selectedStudent.isSubmitted}>
+                {selectedStudent.isSubmitted ? '제출완료' : '미제출'}
+              </s.StatusBadge>
+              <s.CloseButton onClick={closeModal}>×</s.CloseButton>
+            </s.ModalHeader>
+            <s.ModalBody>
+              {selectedStudent.isSubmitted ? (
+                selectedStudent.files && selectedStudent.files.length > 0 ? (
+                  <>
+                    <s.FileHeader>
+                      <span>총 {selectedStudent.files?.length || 0}개 파일</span>
+                      <button
+                        onClick={() => {
+                          (selectedStudent.files || []).forEach(file => {
+                            if (file.url) window.open(file.url, '_blank');
+                          });
+                        }}
+                      >
+                        전체 다운로드
+                      </button>
+                    </s.FileHeader>
+                    <ul>
+                      {selectedStudent.files.map((file: AssignmentFile, idx: number) => (
+                        <s.FileItem key={idx}>
+                          <div className="fileInfo">
+                            <a href={file.url || '#'} target="_blank" rel="noreferrer">
+                              {file.name || file.fileName}
+                            </a>
+                            <span>
+                              {file.fileSize
+                                ? (file.fileSize / 1024).toFixed(2) + ' KB'
+                                : '0 KB'}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => window.open(file.url || '#', '_blank')}
+                          >
+                            다운로드
+                          </button>
+                        </s.FileItem>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p>제출된 파일이 없습니다.</p>
+                )
+              ) : (
+                <p>현재 제출된 내용이 없습니다.</p>
+              )}
+            </s.ModalBody>
+          </s.ModalContent>
+        </s.ModalOverlay>
+      )}
     </s.Container>
   );
 };

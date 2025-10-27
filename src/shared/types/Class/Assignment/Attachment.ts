@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 // 과제 첨부
 export interface AssignmentAttachment {
   contentType?: string;
@@ -16,6 +18,8 @@ export interface AssignmentFileType {
 
 // 특정 학생 과제보기 - 파일
 export interface AssignmentFile {
+  name: ReactNode;
+  url: string | undefined;
   fileId?: string | null;
   fileName?: string | null;
   fileSize?: number | null;
@@ -94,7 +98,7 @@ export interface DetailAssignmentStudent {
   classNumberGrade: number;  // 학생 학번
   isSubmitted: boolean;      // 제출 여부
   contentId: string;         // 과제 아이디
-  files?: AssignmentFile;
+  files?: AssignmentFile[];
   userImg?: string | null; // 이미지 URL
   userSubmitDate?: string | null; // yyyy-mm-dd 형식
 }
