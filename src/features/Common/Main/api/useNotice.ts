@@ -1,5 +1,6 @@
 import CustomApi from "@/shared/config/api";
 import { NoticeItem, PostNoticeItem, DetailNoticeItem } from "@/shared/types/notice";
+import { AxiosError } from "axios";
 
 // 아직 적힌거 없음
 export const noticeApi = {
@@ -42,6 +43,33 @@ export const noticeApi = {
     return response.data;
   },
 
+  patchNotice: async (data: PostNoticeItem & { noticeId: string }) => {
+    if (!data.noticeId) {
+      console.error('Notice ID is required for patching.');
+      return 400;
+    }
+    const formData = new FormData();
+    formData.append(
+      "metadata",
+      new Blob([JSON.stringify(data.metadata)], { type: "application/json" }),
+    );
+
+    if (data.files && data.files.length > 0) {
+      data.files.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
+
+    try {
+      const response = await CustomApi.patch(`/api/notice/${data.noticeId}`, formData, {
+        headers: { 'Content-Type': undefined },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error patching notice:', error);
+      return (error as AxiosError).response?.status || 500;
+    }
+  },
   // 특정 공지사항 상세 조회
   getNoticeDetail: async (noticeId: string): Promise<DetailNoticeItem | number> => {
     try {

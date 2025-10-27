@@ -1,16 +1,18 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
 import { noticeApi } from '@/features/Common/Main/api/useNotice';
-import { PostNoticeItem } from '@/shared/types/notice';
+import { PostNoticeItem, DetailNoticeItem } from '@/shared/types/notice';
 import AttachmentBox from '@/entities/UI/Attachment';
 
 interface AddNoticeModalProps {
   onClose: () => void;
   onSuccess: () => void;
+  isEdit?: boolean;
+  initialData?: DetailNoticeItem | null;
 }
 
-interface Attachment {
+export interface Attachment {
   type: 'file' | 'link';
   name: string;
   url?: string;
@@ -20,6 +22,8 @@ interface Attachment {
 export default function AddNoticeModal({
   onClose,
   onSuccess,
+  isEdit = false,
+  initialData = null,
 }: AddNoticeModalProps) {
   const [type, setType] = useState<'SCHOOL' | 'SCHEDULE' | 'SERVICE'>('SCHOOL');
   const [title, setTitle] = useState('');
@@ -36,6 +40,23 @@ export default function AddNoticeModal({
   // 링크 모달 관련 상태
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
   const [linkInput, setLinkInput] = useState('');
+
+  useEffect(() => {
+    if (isEdit && initialData) {
+      setType(initialData.type as 'SCHOOL' | 'SCHEDULE' | 'SERVICE');
+      setTitle(initialData.title);
+      setContent(initialData.content);
+      const existingAttachments = initialData.noticeDocuments.map(doc => ({
+        type: doc.type.toLowerCase() as 'file' | 'link',
+        name: doc.title,
+        // For existing files, we don't have the File object, just metadata.
+        // For links, we'll need to fetch the URL if not readily available.
+        // This implementation assumes title is enough for display.
+        url: doc.type === 'LINK' ? doc.title : undefined,
+      }));
+      setAttachments(existingAttachments);
+    }
+  }, [isEdit, initialData]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -107,16 +128,25 @@ export default function AddNoticeModal({
     console.log('fileTitle갯수', metadata.fileInfo);
 
     try {
-      const result = await noticeApi.postNotice({ metadata, files: filesToUpload });
-      if (typeof result === 'number' && result >= 400) {
-        alert(`공지사항 등록에 실패했습니다. (에러코드: ${result})`);
+      let result;
+      if (isEdit && initialData) {
+        // In edit mode, we only send newly added files.
+        // The API should handle keeping old files if they are not in the new file list.
+        // This part might need adjustment based on backend implementation for file updates.
+        result = await noticeApi.patchNotice({ noticeId: initialData.noticeId, metadata, files: filesToUpload });
       } else {
-        alert('공지사항이 성공적으로 등록되었습니다.');
+        result = await noticeApi.postNotice({ metadata, files: filesToUpload });
+      }
+
+      if (typeof result === 'number' && result >= 400) {
+        alert(`공지사항 ${isEdit ? '수정' : '등록'}에 실패했습니다. (에러코드: ${result})`);
+      } else {
+        alert(`공지사항이 성공적으로 ${isEdit ? '수정' : '등록'}되었습니다.`);
         onSuccess();
       }
     } catch (error) {
       console.error('공지사항 등록 오류:', error);
-      alert('공지사항 등록 중 오류가 발생했습니다.');
+      alert(`공지사항 ${isEdit ? '수정' : '등록'} 중 오류가 발생했습니다.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -140,13 +170,13 @@ export default function AddNoticeModal({
 
   return (
     <Modal
-      title="공지/안내 내용 작성"
+      title={isEdit ? "공지/안내 내용 수정" : "공지/안내 내용 작성"}
       notes="default"
       onClose={onClose}
       buttons={[
         { text: '취소', type: 1, onClick: onClose },
         {
-          text: '등록',
+          text: isEdit ? '저장' : '등록',
           type: 0,
           onClick: handleSubmit,
           disabled: isSubmitting,

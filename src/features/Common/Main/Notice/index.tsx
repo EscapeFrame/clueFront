@@ -19,9 +19,8 @@ export default function Notice() {
     schoolNotices,
     scheduleNotices,
     loading,
-    error,
+    error, refetch,
   } = useNotices();
-  const { refetch } = useNotices();
 
   return (
     <s.TopContainer>
@@ -74,6 +73,10 @@ export default function Notice() {
         <NoticeDetailModal
           noticeId={selectedNotice.noticeId}
           onClose={() => setSelectedNotice(null)}
+          onSuccess={() => {
+            refetch();
+            setSelectedNotice(null);
+          }}
         />
       )}
     </s.TopContainer>
