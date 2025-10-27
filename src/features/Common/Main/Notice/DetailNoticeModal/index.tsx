@@ -74,11 +74,29 @@ export default function NoticeDetailModal({
     onClose(); // 상세 모달 닫기
   };
 
+  const handleDelete = async () => {
+    if (window.confirm('정말로 이 공지사항을 삭제하시겠습니까?')) {
+      try {
+        const status = await noticeApi.deleteNotice(noticeId);
+        if (status === 200) {
+          alert('공지사항이 삭제되었습니다.');
+          onSuccess();
+          onClose();
+        } else {
+          alert(`공지사항 삭제에 실패했습니다. (에러코드: ${status})`);
+        }
+      } catch (err) {
+        alert('공지사항 삭제 중 오류가 발생했습니다.');
+        console.error('Notice delete error:', err);
+      }
+    }
+  };
+
   // isTeacher가 true일 경우 수정 및 삭제 버튼 추가
   if (isTeacher) {
     modalButtons = [
       { text: '수정', type: 0, onClick: () => setIsEditModalOpen(true) },
-      { text: '삭제', type: 2, onClick: () => alert('삭제 기능 구현 예정') },
+      { text: '삭제', type: 2, onClick: handleDelete },
     ];
   }
 
