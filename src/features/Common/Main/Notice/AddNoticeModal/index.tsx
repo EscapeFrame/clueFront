@@ -104,7 +104,7 @@ export default function AddNoticeModal({
     console.log('전송할 파일들:', filesToUpload);
     console.log('전송할 링크들:', urlsToUpload);
     console.log('file갯수', filesToUpload.length);
-    console.log('fileTitle갯수', metadata.fileInfo.length);
+    console.log('fileTitle갯수', metadata.fileInfo);
 
     try {
       const result = await noticeApi.postNotice({ metadata, files: filesToUpload });
