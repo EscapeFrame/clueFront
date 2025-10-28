@@ -51,8 +51,7 @@ export async function attachFile(
       //여러개가 들어와도 처리
       if (fileAtt.file) {
         const formData = new FormData();
-        formData.append("file", fileAtt.file);
-        formData.append("name", fileAtt.name);
+        formData.append("files", fileAtt.file);
 
         await Customapi.post(`/api/assignments/${assignmentId}/file`, formData, {
           headers: {
