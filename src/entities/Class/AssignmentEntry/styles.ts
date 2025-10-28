@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors, theme } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
   background-color: ${theme.colors.white};
@@ -139,20 +139,33 @@ export const SubmitDate = styled.span`
   ${fonts.P2};
 `;
 
-export const UserAvatar = styled.div<{ imgUrl?: string | null }>`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 1px solid ${theme.colors.gray[400]};
-  background-color: ${({ imgUrl }) => (imgUrl ? 'transparent' : theme.colors.gray[400])};
-  background-image: ${({ imgUrl }) => (imgUrl ? `url(${imgUrl})` : 'none')};
-  background-size: cover;
-  background-position: center;
+// export const UserAvatar = styled.div<{ imgUrl?: string | null }>`
+//   width: 50px;
+//   height: 50px;
+//   border-radius: 50%;
+//   flex-shrink: 0;
+//   border: 1px solid ${theme.colors.gray[400]};
+//   background-color: ${({ imgUrl }) => (imgUrl ? 'transparent' : theme.colors.gray[400])};
+//   background-image: ${({ imgUrl }) => (imgUrl ? `url(${imgUrl})` : 'none')};
+//   background-size: cover;
+//   background-position: center;
 
-  @media (max-width: 600px) {
-    margin-bottom: 0.5rem;
-  }
+//   @media (max-width: 600px) {
+//     margin-bottom: 0.5rem;
+//   }
+// `;
+interface UserAvatarProps {
+  imgUrl?: string | null;
+  large?: boolean;
+}
+
+export const UserAvatar = styled.img<UserAvatarProps>`
+  width: ${({ large }) => (large ? '80px' : '40px')};
+  height: ${({ large }) => (large ? '80px' : '40px')};
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+  background: #ccc;
 `;
 
 export const UserName = styled.span`
@@ -167,11 +180,114 @@ export const UserNumber = styled.span`
 
 export const StatusBadge = styled.div<{ isSubmitted: boolean }>`
   padding: 4px 8px;
-  color: ${({ isSubmitted }) => isSubmitted ? theme.colors.blue[500] : theme.colors.red[300]};
+  color: ${({ isSubmitted }) => isSubmitted ? colors.primary : colors.black};
   border-radius: 4px;
   ${fonts.P3};
 
   @media (max-width: 600px) {
     margin-top: 0.5rem;
+  }
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const CloseButton = styled.button`
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+`;
+
+export const ModalBody = styled.div`
+  margin-top: 20px;
+  height: 25rem;
+  ul { margin: 0; padding: 0;}
+`;
+
+export const FileItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${colors.gray[3]};
+  border-radius: 0.5rem;
+  background-color: ${colors.white};
+  margin-bottom: 0.5rem;
+
+  .fileInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  a {
+    color: ${colors.black};
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  span {
+    ${fonts.P1}
+    color: ${theme.colors.gray[500]};
+  }
+
+  button {
+    background-color: ${colors.white};
+    color: ${colors.black};
+    border: 1px solid ${colors.gray[3]};
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${colors.primary};
+      color: ${colors.white};
+    }
+}
+`;
+
+export const FileHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  span {
+    font-weight: 500;
+  }
+
+  button {
+    background-color: ${colors.white};
+    color: ${colors.black};
+    border: 1px solid ${colors.gray[3]};
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${colors.primary};
+      color: ${colors.white};
+    }
   }
 `;

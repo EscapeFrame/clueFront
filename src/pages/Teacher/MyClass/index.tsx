@@ -5,7 +5,6 @@ import TabSelector from '@/features/Common/Class/TabSelector';
 import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector/category';
 
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
-// import { useMyClass } from './data';
 import { FiPlus } from "react-icons/fi";
 import { IoBookOutline } from "react-icons/io5";
 import { HiOutlineAcademicCap } from "react-icons/hi2";
