@@ -30,7 +30,7 @@ export const StyledButton = styled.button<{
       case 2: // Light4(outlined)
         return `
           background: ${colors.white};
-          color: ${colors.blue.light4};
+          color: ${colors.black};
           border: 1px solid ${colors.blue.light4};
         `;
       case 3: // Gray3

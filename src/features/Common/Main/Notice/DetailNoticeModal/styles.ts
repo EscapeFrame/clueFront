@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
-import { fonts } from '@/shared/theme/font.styles';
-import { ThemeType } from '@/shared/theme/theme.styles';
+import styled from "@emotion/styled";
+import { fonts } from "@/shared/theme/font.styles";
+import { ThemeType } from "@/shared/theme/theme.styles";
 
 export const ModalContentWrapper = styled.div`
   display: flex;
@@ -11,14 +11,24 @@ export const ModalContentWrapper = styled.div`
   overflow-y: auto; /* 내용이 길어지면 스크롤 */
 `;
 
-export const ModalTitle = styled.h3`
+export const Title = styled.h3`
+  color: black;
+  margin-bottom: 4px;
+  font-weight: 400;
+`;
+
+export const ModalTitle = styled.div`
+  ${fonts.P3};
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 0.5rem;
   color: ${({ theme }: { theme: ThemeType }) => theme.colors.black};
   margin: 0;
   word-break: break-word;
+  font-weight: 400;
 `;
 
 export const ModalMeta = styled.div`
-  display: flex;
   align-items: center;
   gap: 12px;
   ${fonts.P2};
@@ -30,33 +40,25 @@ export const NoticeType = styled.span<{ type: string }>`
   border-radius: 4px;
   ${fonts.P3};
   font-weight: 600;
-  color: white;
-  background-color: ${({ theme, type }: { theme: ThemeType, type: string }) => {
-    switch (type) {
-      case 'SCHOOL':
-        return theme.colors.blue[500];
-      case 'SCHEDULE':
-        return theme.colors.blue[500];
-      case 'SERVICE':
-        return theme.colors.blue[500];
-      default:
-        return theme.colors.gray[500];
-    }
-  }};
+  color: black;
 `;
 
-export const ModalText = styled.p`
-  ${fonts.P2};
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[300]};
-  white-space: pre-wrap;
-  word-break: break-word;
-  line-height: 1.6;
+export const ModalText = styled.div`
+  ${fonts.P3};
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-height: 180px; /* 최소 높이를 200px로 설정 (원하는 값으로 조절) */
+  color: ${({ theme }: { theme: ThemeType }) => theme.colors.black};
   margin: 0;
+  word-break: break-word;
+  font-weight: 400;
 `;
 
 export const AttachmentsSection = styled.div`
   margin-top: 20px;
-  border-top: 1px solid ${({ theme }: { theme: ThemeType }) => theme.colors.gray[200]};
+  border-top: 1px solid
+    ${({ theme }: { theme: ThemeType }) => theme.colors.gray[200]};
   padding-top: 20px;
 `;
 
