@@ -85,8 +85,8 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                 const updatedAssignment = await AssignmentsApi.update(assignment.assignmentId, {
                     title: editTitle,
                     content: editDescription,
-                    start_date: dayjs(assignment.duringDate).toISOString(), // Assuming startDate is duringDate
-                    end_date: dayjs(editEndDate).toISOString(),
+                    start_date: dayjs(assignment.duringDate).toISOString().slice(0, 16), // Assuming startDate is duringDate
+                    end_date: dayjs(editEndDate).toISOString().slice(0, 16),
                 });
 
                 if (updatedAssignment) {

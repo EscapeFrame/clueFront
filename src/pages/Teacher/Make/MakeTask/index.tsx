@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import dayjs from "dayjs";
 import * as S from "./styles";
 
 import { Modal } from "@/entities/UI/Modal";
@@ -113,18 +114,14 @@ const MakeTask: React.FC = () => {
       return;
     }
 
-    function formatDateTime(dateStr: string): string {
-      return `${dateStr} 00:00`;
-    }
-
     try {
       console.log("과제 생성 API 호출 중...");
       const response = await SendMakeTask({
         classId: classRoomId!,
         title: subject,
         content: description,
-        start_date: formatDateTime(startDate),
-        end_date: formatDateTime(dueDate),
+        start_date: dayjs(startDate).toISOString().slice(0, 16),
+        end_date: dayjs(dueDate).toISOString().slice(0, 16),
       });
       
       const assignmentId = response;
