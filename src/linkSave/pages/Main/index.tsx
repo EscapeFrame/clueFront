@@ -1,27 +1,32 @@
 import React, { useState, useCallback } from 'react';
-import Header from '@/linkSave/entities/Header'; // 제공해주신 경로
+import Header from '@/linkSave/entities/Header';
 import LinkCardList from '@/linkSave/components/CardList';
 import LinkFormModal from '@/linkSave/components/Modal';
 import DeleteConfirmModal from '@/linkSave/components/Modal/Delete';
 import * as S from './styles';
-import { LinkCard, LinkFormData } from '@/linkSave/types/card';
+import { LinkCard, LinkFormData, LINK_CATEGORY_ENGLISH_MAP, LinkCategoryKorean } from '@/linkSave/types/card';
+import { useGetAlllinks, useAddLink, useDeleteLink, useUpdateLink } from '@/linkSave/hooks/useLinkSave';
 
 export const LinkSaveMain = () => {
     const [activeCategory, setActiveCategory] = useState('전체');
-    
+    const [searchQuery, setSearchQuery] = useState('');
+
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState<'추가' | '수정'>('추가');
     const [selectedCard, setSelectedCard] = useState<LinkCard | null>(null); // 수정/삭제 대상 카드
 
-    // 임시 카드 목록 (실제는 API로 대체)
-    const [cards, setCards] = useState<LinkCard[]>([
-        { id: '1', date: '2025-12-31', title: 'Title', explanation: 'explanation', url: 'https://example.com/1', tags: ['반'] },
-        { id: '2', date: '2025-12-31', title: 'Title 2', explanation: 'explanation 2', url: 'https://example.com/2', tags: ['전공과목'] },
-    ]);
+    const { data: cardsData, isLoading, isError, error } = useGetAlllinks();
+    const addLinkMutation = useAddLink();
+    const updateLinkMutation = useUpdateLink();
+    const deleteLinkMutation = useDeleteLink();
 
+    // cardsData가 배열이 아닐 경우 빈 배열로 초기화
+    const cards: LinkCard[] = Array.isArray(cardsData) ? cardsData : [];
 
-    // === 이벤트 핸들러 ===
+    const handleSearch = useCallback((query: string) => {
+        setSearchQuery(query.toLowerCase());
+    }, []);
 
     // 1. 링크 추가 버튼 클릭 (Header에서 호출)
     const handleAddLinkClick = useCallback(() => {
@@ -29,7 +34,7 @@ export const LinkSaveMain = () => {
         setSelectedCard(null); // 초기화
         setIsFormModalOpen(true);
     }, []);
-    
+
     // 2. 카드 수정 버튼 클릭 (LinkCardItem에서 호출)
     const handleEditLinkClick = useCallback((card: LinkCard) => {
         setModalMode('수정');
@@ -45,54 +50,97 @@ export const LinkSaveMain = () => {
 
 
     // 4. 추가/수정 폼 제출 (LinkFormModal에서 호출)
-    const handleFormSubmit = useCallback((data: LinkFormData, cardId?: string) => {
-        if (cardId) {
-            // 수정 로직 (API: PUT/PATCH)
-            console.log(`수정 요청 - ID: ${cardId}`, data);
-            setCards(prev => prev.map(card => 
-                card.id === cardId 
-                    ? { ...card, ...data } // ...data가 title, url, explanation, tags를 업데이트
-                    : card
-            ));
-        } else {
-            // 추가 로직 (API: POST)
-            console.log('추가 요청', data);
-            const newCard: LinkCard = { 
-                ...data, 
-                id: Date.now().toString(), 
-                date: new Date().toISOString().split('T')[0] 
+    const handleFormSubmit = useCallback(async (data: LinkFormData, cardId?: string) => {
+        try {
+            const englishData = {
+                ...data,
+                subjectType: data.subjectType.map(koreanCategory => LINK_CATEGORY_ENGLISH_MAP[koreanCategory as LinkCategoryKorean] || koreanCategory)
             };
-            setCards(prev => [newCard, ...prev]);
+
+            if (cardId) {
+                // 수정 로직
+                await updateLinkMutation.mutateAsync({
+                    link_id: cardId,
+                    linkData: englishData
+                });
+                console.log(`수정 완료 - ID: ${cardId}`);
+            } else {
+                // 추가 로직
+                await addLinkMutation.mutateAsync(englishData);
+                console.log('추가 완료');
+            }
+            setIsFormModalOpen(false);
+        } catch (error) {
+            console.error('폼 제출 중 에러:', error);
+            alert(modalMode === '추가' ? '링크 추가에 실패했습니다.' : '링크 수정에 실패했습니다.');
         }
-    }, []);
+    }, [addLinkMutation, updateLinkMutation, modalMode]);
 
 
     // 5. 삭제 확인 (DeleteConfirmModal에서 호출)
-    const handleConfirmDelete = useCallback((cardId: string) => {
-        // 삭제 로직 (API: DELETE)
-        console.log(`삭제 확정 - ID: ${cardId}`);
-        setCards(prev => prev.filter(card => card.id !== cardId));
-        setSelectedCard(null);
-    }, []);
-    
+    const handleConfirmDelete = useCallback(async (cardId: string) => {
+        try {
+            await deleteLinkMutation.mutateAsync(cardId);
+            console.log(`삭제 완료 - ID: ${cardId}`);
+            setIsDeleteModalOpen(false);
+        } catch (error) {
+            console.error('삭제 중 에러:', error);
+            alert('링크 삭제에 실패했습니다.');
+        }
+    }, [deleteLinkMutation]);
+
+    const filteredCards = cards.filter(card => {
+        const englishCategory = LINK_CATEGORY_ENGLISH_MAP[activeCategory as LinkCategoryKorean];
+        const categoryMatch = activeCategory === '전체' || (englishCategory && card.subjectType?.includes(englishCategory));
+        const searchMatch = card.title?.toLowerCase().includes(searchQuery);
+        return categoryMatch && searchMatch;
+    });
+
+    if (isLoading) {
+        return <S.Wrapper>
+            <div>
+                <Header
+                    onAddLink={handleAddLinkClick}
+                    onSelectCategory={setActiveCategory}
+                    activeCategory={activeCategory}
+                    onSearch={handleSearch}
+                />
+            </div>
+            <div>로딩 중...</div>
+        </S.Wrapper>;
+    }
+    if (isError) {
+        console.error('링크 조회 중 에러 발생:', error);
+        return <S.Wrapper>
+            <div>
+                <Header
+                    onAddLink={handleAddLinkClick}
+                    onSelectCategory={setActiveCategory}
+                    activeCategory={activeCategory}
+                    onSearch={handleSearch}
+                />
+            </div>
+            <div>링크를 불러오는 중 문제가 발생했습니다.</div>
+        </S.Wrapper>;
+    }
 
     return (
         <S.Wrapper>
             {/* Header 영역 */}
             <div>
-                <Header 
-                    onAddLink={handleAddLinkClick} 
+                <Header
+                    onAddLink={handleAddLinkClick}
                     onSelectCategory={setActiveCategory}
                     activeCategory={activeCategory}
+                    onSearch={handleSearch}
                 />
             </div>
-            
+
             {/* Content 영역 (카드 목록) */}
             <div>
                 {/* LinkCardList에 현재 상태를 전달 */}
-                <LinkCardList 
-                    cards={cards} // 필터링되지 않은 전체 목록
-                    activeCategory={activeCategory} // 필터링에 사용
+                <LinkCardList
+                    cards={filteredCards} // 필터링되지 않은 전체 목록
                     onEdit={handleEditLinkClick}
                     onDelete={handleDeleteLinkClick}
                 />

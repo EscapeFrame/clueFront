@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
-import { LinkCard, LinkFormData } from '@/linkSave/types/card';
+import { LinkCard, LinkFormData, LINK_CATEGORY_MAP } from '@/linkSave/types/card';
 import { FormInputGroup } from './Input';
+import ToggleSwitch from '../UI/ToggleSwitch';
+
 
 interface LinkFormModalProps {
   isOpen: boolean;
@@ -11,73 +13,92 @@ interface LinkFormModalProps {
   onSubmit: (data: LinkFormData, cardId?: string) => void;
 }
 
-const ALL_TAGS = ['반', '인문과목', '전공과목', '방과후', '기타']; // 태그 목록
+const ALL_TAGS = Object.values(LINK_CATEGORY_MAP).filter(v => v !== '전체');
 
 const LinkFormModal: React.FC<LinkFormModalProps> = ({
   isOpen,
   onClose,
   modalTitle,
   initialData,
-  onSubmit
+  onSubmit,
 }) => {
   const [formData, setFormData] = useState<LinkFormData>({
     title: '',
-    url: '',
+    link: '',
     explanation: '',
-    tags: [],
+    subjectType: [],
   });
 
-  // 수정 모드 진입 시, initialData로 폼 데이터 초기화
+  // 공개 범위 상태
+  const [visibility, setVisibility] = useState({
+    grade: false,
+    class: false,
+  });
+
+  // 수정 모드 진입 시 데이터 초기화
   useEffect(() => {
     if (initialData) {
       setFormData({
         title: initialData.title,
-        url: initialData.url,
-        explanation: initialData.explanation,
-        tags: initialData.tags,
+        link: initialData.link,
+        explanation: initialData.description,
+        subjectType: initialData.subjectType,
       });
     } else {
-      // 추가 모드일 때는 폼 초기화
       setFormData({
         title: '',
-        url: '',
+        link: '',
         explanation: '',
-        tags: [],
+        subjectType: [],
       });
+      setVisibility({ grade: false, class: false });
     }
   }, [initialData, isOpen]);
 
   if (!isOpen) return null;
 
+  // 인풋 변경
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // 태그 토글
   const handleTagToggle = (tag: string) => {
     setFormData(prev => ({
       ...prev,
-      tags: prev.tags.includes(tag)
-        ? prev.tags.filter(t => t !== tag)
-        : [...prev.tags, tag],
+      subjectType: prev.subjectType.includes(tag)
+        ? prev.subjectType.filter(t => t !== tag)
+        : [...prev.subjectType, tag],
     }));
   };
 
+  // 공개범위 토글
+  const handleVisibilityToggle = (key: 'grade' | 'class', checked: boolean) => {
+    setVisibility(prev => ({ ...prev, [key]: checked }));
+  };
+
+  // 제출
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 유효성 검사 (예: 필수 필드)
-    if (!formData.title || !formData.url || formData.tags.length === 0) {
+    if (!formData.title || !formData.link || formData.subjectType.length === 0) {
       alert('필수 입력 항목(*)을 모두 채워주세요.');
       return;
     }
 
-    // onSubmit 함수를 통해 부모 컴포넌트에 데이터 전달 (API 호출 담당)
-    onSubmit(formData, initialData?.id);
-    onClose(); // 제출 후 모달 닫기
+    // 제출 시 onSubmit 콜백으로 전달
+    const submitData = {
+      ...formData,
+      visibility,
+    };
+
+    onSubmit(submitData, initialData?.id);
+    onClose();
   };
 
-  const isConfirmDisabled = !formData.title || !formData.url || formData.tags.length === 0;
+  const isConfirmDisabled =
+    !formData.title || !formData.link || formData.subjectType.length === 0;
 
   return (
     <S.ModalOverlay onClick={onClose}>
@@ -88,8 +109,10 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
         </S.ModalHeader>
 
         <form onSubmit={handleSubmit}>
+          {/* 제목 */}
           <FormInputGroup
             label="제목"
+            type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
@@ -97,17 +120,21 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
             isRequired
           />
 
+          {/* URL */}
           <FormInputGroup
             label="URL"
-            name="url"
-            value={formData.url}
+            type="url"
+            name="link"
+            value={formData.link}
             onChange={handleChange}
             placeholder="URL을 입력해주세요."
             isRequired
           />
 
+          {/* 설명 */}
           <FormInputGroup
             label="설명"
+            type="text"
             name="explanation"
             value={formData.explanation}
             onChange={handleChange}
@@ -115,14 +142,19 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
             isTextarea
           />
 
-          <S.FormLabel>태그 <span>*</span></S.FormLabel>
-          <S.TagDescription>중복 선택이 가능하며, 1개 이상 선택해주세요.</S.TagDescription>
+          {/* 태그 */}
+          <S.FormLabel>
+            태그 <span>*</span>
+          </S.FormLabel>
+          <S.TagDescription>
+            중복 선택이 가능하며, 1개 이상 선택해주세요.
+          </S.TagDescription>
           <S.TagButtonContainer>
             {ALL_TAGS.map(tag => (
               <S.TagButton
                 key={tag}
                 type="button"
-                isSelected={formData.tags.includes(tag)}
+                isSelected={formData.subjectType.includes(tag)}
                 onClick={() => handleTagToggle(tag)}
               >
                 {tag}
@@ -130,15 +162,34 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
             ))}
           </S.TagButtonContainer>
 
-          <S.FormLabel>공개범위 <span>*</span></S.FormLabel>
-          <S.TagDescription>중복 선택이 가능하며, 1개 이상 선택해주세요.</S.TagDescription>
+          {/* 공개범위 */}
+          <S.FormLabel>
+            공개범위 <span>*</span>
+          </S.FormLabel>
+          <S.TagDescription>원하는 범위를 선택해주세요.</S.TagDescription>
           <S.TagButtonContainer>
-            
+            학년
+            <ToggleSwitch
+              id="gradeToggle"
+              checked={visibility.grade}
+              onChange={checked => handleVisibilityToggle('grade', checked)}
+            />
+            반
+            <ToggleSwitch
+              id="classToggle"
+              checked={visibility.class}
+              onChange={checked => handleVisibilityToggle('class', checked)}
+            />
           </S.TagButtonContainer>
 
+          {/* 버튼 */}
           <S.ModalFooter>
-            <S.CancelButton type="button" onClick={onClose}>취소</S.CancelButton>
-            <S.ConfirmButton type="submit" disabled={isConfirmDisabled}>확인</S.ConfirmButton>
+            <S.CancelButton type="button" onClick={onClose}>
+              취소
+            </S.CancelButton>
+            <S.ConfirmButton type="submit" disabled={isConfirmDisabled}>
+              확인
+            </S.ConfirmButton>
           </S.ModalFooter>
         </form>
       </S.ModalContent>

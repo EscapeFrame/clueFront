@@ -8,9 +8,10 @@ interface HeaderProps {
     onAddLink: () => void; // 링크 추가 핸들러
     onSelectCategory: (category: string) => void; // 카테고리 선택 핸들러
     activeCategory: string;
+    onSearch: (query: string) => void;
 }
 
-export default function Header({ onAddLink, onSelectCategory, activeCategory }: HeaderProps) {
+export default function Header({ onAddLink, onSelectCategory, activeCategory, onSearch }: HeaderProps) {
     return (
         <s.HeaderContainer>
             <s.TopRow>
@@ -36,7 +37,7 @@ export default function Header({ onAddLink, onSelectCategory, activeCategory }: 
                     })}
                 </s.ItemContainer>
                 <s.SearchContainer>
-                    <SearchBar onSearch={(query) => console.log('Searching for:', query)} />
+                    <SearchBar onSearch={onSearch} />
                 </s.SearchContainer>
             </s.Container>
         </s.HeaderContainer>

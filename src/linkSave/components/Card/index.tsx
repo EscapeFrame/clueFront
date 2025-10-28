@@ -6,28 +6,43 @@ import * as S from './styles';
 
 interface LinkCardItemProps {
   card: LinkCard;
-  onEdit: (cardId: string) => void;
-  onDelete: (cardId: string) => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) => {
+
+  const handleCardClick = () => {
+    window.open(card.link, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit();
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete();
+  };
+
   return (
-    <S.CardContainer>
+    <S.CardContainer onClick={handleCardClick}>
       <S.CardHeader>
         <S.CardDate>{card.date}</S.CardDate>
         <S.CardActions>
-          <S.EditButton onClick={() => onEdit(card.id)}><HiOutlinePencilSquare /></S.EditButton>
-          <S.DeleteButton onClick={() => onDelete(card.id)}><GoTrash /></S.DeleteButton>
+          <S.EditButton onClick={handleEditClick}><HiOutlinePencilSquare /></S.EditButton>
+          <S.DeleteButton onClick={handleDeleteClick}><GoTrash /></S.DeleteButton>
         </S.CardActions>
       </S.CardHeader>
 
       <S.CardContent>
         <S.CardTitle>{card.title}</S.CardTitle>
-        <S.CardExplanation>{card.explanation}</S.CardExplanation>
+        <S.CardExplanation>{card.description}</S.CardExplanation>
       </S.CardContent>
 
       <S.CardTagContainer>
-        {card.tags.map((tag, i) => <S.CardTag key={i}>{tag}</S.CardTag>)}
+        {card.subjectType.map((subjectType, i) => <S.CardTag key={i}>{subjectType}</S.CardTag>)}
       </S.CardTagContainer>
     </S.CardContainer>
   );

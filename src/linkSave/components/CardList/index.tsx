@@ -5,20 +5,15 @@ import * as S from '../Card/styles';
 
 interface LinkCardListProps {
   cards: LinkCard[];
-  activeCategory: string;
   onEdit: (card: LinkCard) => void;
   onDelete: (card: LinkCard) => void;
 }
 
-const LinkCardList: React.FC<LinkCardListProps> = ({ cards, activeCategory, onEdit, onDelete }) => {
+const LinkCardList: React.FC<LinkCardListProps> = ({ cards, onEdit, onDelete }) => {
   
-  const filteredCards = activeCategory === '전체'
-    ? cards
-    : cards.filter(card => card.tags.includes(activeCategory));
-
   return (
     <S.CardGrid>
-        {filteredCards.map(card => (
+        {cards.map(card => (
             <LinkCardItem
                 key={card.id}
                 card={card}
