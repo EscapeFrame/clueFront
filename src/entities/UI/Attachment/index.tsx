@@ -5,10 +5,12 @@ import { SiNotion } from "react-icons/si";
 import { FiUpload } from "react-icons/fi";
 
 interface Attachment {
+  id: string;
   type: "file" | "link";
   name: string;
   url?: string;
   file?: File;
+  isNew?: boolean;
 }
 
 interface Props {

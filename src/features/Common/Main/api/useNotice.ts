@@ -1,5 +1,5 @@
 import CustomApi from "@/shared/config/api";
-import { NoticeItem, PostNoticeItem, DetailNoticeItem } from "@/shared/types/notice";
+import { NoticeItem, PostNoticeItem, DetailNoticeItem, NoticeDocument } from "@/shared/types/notice";
 import { AxiosError } from "axios";
 
 // 아직 적힌거 없음
@@ -43,11 +43,11 @@ export const noticeApi = {
     return response.data;
   },
 
-  patchNotice: async (data: PostNoticeItem & { noticeId: string }) => {
-    if (!data.noticeId) {
-      console.error('Notice ID is required for patching.');
-      return 400;
-    }
+  patchNotice: async (data: {
+    noticeId: string;
+    metadata: PostNoticeItem['metadata'];
+    files: File[];
+  }) => {
     const formData = new FormData();
     formData.append(
       "metadata",
@@ -132,6 +132,18 @@ export const noticeApi = {
     } catch (error) {
       console.error("공지사항 링크 조회 실패:", error);
       throw error;
+    }
+  },
+
+  // 공지사항 첨부파일 삭제
+  deleteNoticeDocument: async (noticeId: string, noticeDocumentId: string): Promise<number> => {
+    try {
+      const res = await CustomApi.delete(`/api/notice/${noticeId}/document/${noticeDocumentId}`);
+      return res.status;
+    } catch (error) {
+      console.error("공지사항 첨부파일 삭제 실패:", error);
+      const axiosError = error as AxiosError;
+      return axiosError.response?.status || 500;
     }
   },
 
