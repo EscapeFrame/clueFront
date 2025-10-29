@@ -58,13 +58,16 @@ export default function EditNoticeModal({
     }
   }, [initialData]);
 
-  const handleSetAttachments = (newAttachments: Attachment[] | ((prev: Attachment[]) => Attachment[])) => {
+  const handleSetAttachments = (
+    newAttachments: Attachment[] | ((prev: Attachment[]) => Attachment[])
+  ) => {
     const oldAttachments = attachments;
-    const updatedAttachments = typeof newAttachments === 'function' ? newAttachments(oldAttachments) : newAttachments;
-
-    const deleted = oldAttachments.filter(oldAtt => !oldAtt.isNew && !updatedAttachments.some(newAtt => newAtt.id === oldAtt.id));
+    const updatedAttachments =
+      typeof newAttachments === 'function'
+        ? newAttachments(oldAttachments)
+        : newAttachments;
+    const deleted = oldAttachments.filter(oldAtt => !oldAtt.isNew && !updatedAttachments.some(newAtt => newAtt.id === oldAtt.id && !newAtt.isNew));
     setDeletedAttachmentIds(prev => [...prev, ...deleted.map(d => d.id)]);
-
     setAttachments(updatedAttachments);
   };
 
@@ -146,7 +149,7 @@ export default function EditNoticeModal({
     };
 
     try {
-      const result = await noticeApi.patchNotice({ noticeId: initialData.noticeId, metadata, files: filesToUpload });
+      const result = await noticeApi.patchNotice({ noticeId: initialData.noticeId, metadata, files: filesToUpload});
 
       if (typeof result === 'number' && result >= 400) {
         alert(`공지사항 수정에 실패했습니다. (에러코드: ${result})`);
@@ -217,7 +220,7 @@ export default function EditNoticeModal({
           <s.Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="내용을 입력하세요" />
         </s.FormRow>
         <s.FormRow>
-          <AttachmentBox attachments={attachments} setAttachments={setAttachments} openUploadModal={() => setIsFileModalOpen(true)} openLinkModal={() => { setIsLinkModalOpen(true) }} />
+          <AttachmentBox attachments={attachments} setAttachments={handleSetAttachments} openUploadModal={() => setIsFileModalOpen(true)} openLinkModal={() => {setIsLinkModalOpen(true)}} />
         </s.FormRow>
       </s.Form>
       {isFileModalOpen && (
