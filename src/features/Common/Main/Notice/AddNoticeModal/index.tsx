@@ -13,10 +13,12 @@ interface AddNoticeModalProps {
 }
 
 export interface Attachment {
+  id: string;
   type: 'file' | 'link';
   name: string;
   url?: string;
   file?: File;
+  isNew?: boolean;
 }
 
 export default function AddNoticeModal({
@@ -48,6 +50,7 @@ export default function AddNoticeModal({
       setContent(initialData.content);
       const existingAttachments = initialData.noticeDocuments.map(doc => ({
         type: doc.type.toLowerCase() as 'file' | 'link',
+        id: doc.noticeDocumentId,
         name: doc.title,
         // For existing files, we don't have the File object, just metadata.
         // For links, we'll need to fetch the URL if not readily available.
@@ -62,9 +65,11 @@ export default function AddNoticeModal({
     const files = e.target.files;
     if (!files?.length) return;
     const newFiles: Attachment[] = Array.from(files).map((f) => ({
+      id: crypto.randomUUID(),
       type: 'file' as const,
       name: f.name,
       file: f,
+      isNew: true,
     }));
     setTempFiles((prev) => [...prev, ...newFiles]);
   };
@@ -163,7 +168,7 @@ export default function AddNoticeModal({
       return;
     }
 
-    setAttachments((prev) => [...prev, { type: 'link', name: url, url }]);
+    setAttachments((prev) => [...prev, { id: crypto.randomUUID(), type: 'link', name: url, url, isNew: true }]);
     setIsLinkModalOpen(false);
     setLinkInput('');
   };
@@ -272,7 +277,7 @@ export default function AddNoticeModal({
           {tempFiles.length > 0 && (
             <ul>
               {tempFiles.map((f) => (
-                <li key={f.name}>{f.name}</li>
+                <li key={f.id}>{f.name}</li>
               ))}
             </ul>
           )}

@@ -2,14 +2,17 @@ import { useState } from 'react';
 import NoticeCard from '@/entities/Main/NoticeCard';
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
+import { DetailNoticeItem } from '@/shared/types/notice';
 import { useNotices } from '@/features/Common/Main/hooks/useNotice';
 import AddNoticeModal from '@/features/Common/Main/Notice/AddNoticeModal';
 import NoticeDetailModal from '@/features/Common/Main/Notice/DetailNoticeModal';
+import EditNoticeModal from '@/features/Common/Main/Notice/EditNoticeModal';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 
 export default function Notice() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
+  const [noticeToEdit, setNoticeToEdit] = useState<DetailNoticeItem | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const user = useRecoilValue(userState);
   const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
@@ -21,6 +24,17 @@ export default function Notice() {
     loading,
     error, refetch,
   } = useNotices();
+
+  const handleStartEdit = (noticeDetail: DetailNoticeItem) => {
+    setNoticeToEdit(noticeDetail);
+    setSelectedNotice(null); // 상세 모달 닫기
+  };
+
+  const handleEditSuccess = () => {
+    setNoticeToEdit(null); // 수정 모달 닫기
+    refetch(); // 목록 새로고침
+  };
+
 
   return (
     <s.TopContainer>
@@ -73,10 +87,19 @@ export default function Notice() {
         <NoticeDetailModal
           noticeId={selectedNotice.noticeId}
           onClose={() => setSelectedNotice(null)}
+          onStartEdit={handleStartEdit}
           onSuccess={() => {
             refetch();
             setSelectedNotice(null);
           }}
+        />
+      )}
+
+      {noticeToEdit && (
+        <EditNoticeModal
+          initialData={noticeToEdit}
+          onClose={() => setNoticeToEdit(null)}
+          onSuccess={handleEditSuccess}
         />
       )}
     </s.TopContainer>

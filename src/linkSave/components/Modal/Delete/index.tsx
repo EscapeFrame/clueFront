@@ -35,7 +35,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
 
         <S.DeleteItemInfo>
             <h3>{cardToDelete.title}</h3>
-            <p>{cardToDelete.explanation}</p>
+            <p>{cardToDelete.description}</p>
         </S.DeleteItemInfo>
 
         <S.ModalFooter>

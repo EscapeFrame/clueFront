@@ -1,58 +1,30 @@
 import { useEffect, useState } from 'react';
 import { Modal } from '@/entities/UI/Modal';
 import * as s from './styles';
-import { useNoticeDetail } from '@/features/Common/Main/hooks/useNotice';
+import { useNoticeDetail, useNoticeAttachments } from '@/features/Common/Main/hooks/useNotice';
 import { noticeApi } from '@/features/Common/Main/api/useNotice';
-import { NoticeDocument } from '@/shared/types/notice';
+import { NoticeDocument, DetailNoticeItem } from '@/shared/types/notice';
 import { ButtonData } from '@/shared/types/modal';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
-import AddNoticeModal from '@/features/Common/Main/Notice/AddNoticeModal';
 
 interface NoticeDetailModalProps {
   noticeId: string;
   onClose: () => void;
   onSuccess: () => void; // 수정/삭제 성공 시 목록 새로고침을 위한 콜백
+  onStartEdit: (notice: DetailNoticeItem) => void; // 수정 시작 콜백
 }
 
 export default function NoticeDetailModal({
   noticeId,
   onClose,
   onSuccess,
+  onStartEdit,
 }: NoticeDetailModalProps) {
   const user = useRecoilValue(userState);
   const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
-  const { notice, loading, error, fetchNoticeDetail } = useNoticeDetail();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (noticeId) {
-      fetchNoticeDetail(noticeId);
-    }
-  }, [noticeId, fetchNoticeDetail]);
-
-  const handleAttachmentClick = async (document: NoticeDocument) => {
-    if (document.type === 'FILE') {
-      try {
-        await noticeApi.downloadNoticeFile(document.noticeDocumentId, document.title);
-      } catch (err) {
-        alert('파일 다운로드에 실패했습니다.');
-        console.error('File download error:', err);
-      }
-    } else if (document.type === 'LINK') {
-      try {
-        const link = await noticeApi.getNoticeLink(document.noticeDocumentId);
-        if (typeof link === 'string') {
-          window.open(link, '_blank');
-        } else {
-          alert('링크를 가져오는데 실패했습니다.');
-        }
-      } catch (err) {
-        alert('링크 열기에 실패했습니다.');
-        console.error('Link open error:', err);
-      }
-    }
-  };
+  const { notice, loading, error, fetchNoticeDetail } = useNoticeDetail(noticeId);
+  const { handleAttachmentClick, handleDeleteAttachment } = useNoticeAttachments(noticeId, () => fetchNoticeDetail(noticeId));
 
   let modalButtons: ButtonData[] = [];
 
@@ -67,12 +39,6 @@ export default function NoticeDetailModal({
       </Modal>
     );
   }
-
-  const handleEditSuccess = () => {
-    setIsEditModalOpen(false);
-    onSuccess(); // 목록 새로고침
-    onClose(); // 상세 모달 닫기
-  };
 
   const handleDelete = async () => {
     if (window.confirm('정말로 이 공지사항을 삭제하시겠습니까?')) {
@@ -95,7 +61,7 @@ export default function NoticeDetailModal({
   // isTeacher가 true일 경우 수정 및 삭제 버튼 추가
   if (isTeacher) {
     modalButtons = [
-      { text: '수정', type: 0, onClick: () => setIsEditModalOpen(true) },
+      { text: '수정', type: 0, onClick: () => notice && onStartEdit(notice) },
       { text: '삭제', type: 2, onClick: handleDelete },
     ];
   }
@@ -143,11 +109,16 @@ export default function NoticeDetailModal({
               <s.AttachmentsTitle>파일첨부</s.AttachmentsTitle>
               <s.AttachmentList>
                 {notice.noticeDocuments.map((doc) => (
-                  <s.AttachmentItem key={doc.noticeDocumentId}>
-                    <s.AttachmentLink onClick={() => handleAttachmentClick(doc)}>
-                      {doc.type === 'FILE' ? '📄 ' : '🔗 '}
-                      {doc.title}
-                    </s.AttachmentLink>
+                  <s.AttachmentItem key={doc.noticeDocumentId} $hasDelete={isTeacher}>
+                    <div>
+                      <s.AttachmentLink onClick={() => handleAttachmentClick(doc)}>
+                        {doc.type === 'FILE' ? '📄 ' : '🔗 '}
+                        {doc.title}
+                      </s.AttachmentLink>
+                    </div>
+                    {isTeacher && (
+                      <s.DeleteButton onClick={() => handleDeleteAttachment(doc.noticeDocumentId)}>&times;</s.DeleteButton>
+                    )}
                   </s.AttachmentItem>
                 ))}
               </s.AttachmentList>
@@ -155,14 +126,6 @@ export default function NoticeDetailModal({
           )}
         </s.ModalContentWrapper>
       </Modal>
-      {isEditModalOpen && (
-        <AddNoticeModal
-          isEdit
-          initialData={notice}
-          onClose={() => setIsEditModalOpen(false)}
-          onSuccess={handleEditSuccess}
-        />
-      )}
     </>
   );
 }

@@ -59,7 +59,7 @@ export default function NoticeCard({
         {notices.map((notice) => (
           <s.ListItem key={notice.noticeId} onClick={() => onSelect(notice)}>
             <s.ItemTitle>{notice.title}</s.ItemTitle>
-            <s.ItemDate>{notice.noticeId}</s.ItemDate>
+            <s.ItemDate>{notice.createdAt.slice(0, 10).replace(/-/g, '-')}</s.ItemDate>
           </s.ListItem>
         ))}
       </s.List>

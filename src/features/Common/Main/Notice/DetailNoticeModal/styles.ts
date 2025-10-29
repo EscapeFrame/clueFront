@@ -76,8 +76,13 @@ export const AttachmentList = styled.ul`
   margin: 0;
 `;
 
-export const AttachmentItem = styled.li`
+export const AttachmentItem = styled.li<{ $hasDelete?: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 8px;
+  padding: 4px 0;
+  width: 100%;
 `;
 
 export const AttachmentLink = styled.button`
@@ -93,6 +98,16 @@ export const AttachmentLink = styled.button`
   &:hover {
     color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[700]};
   }
+`;
+
+export const DeleteButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0 8px;
+  line-height: 1;
 `;
 
 export const LoadingText = styled.p`
