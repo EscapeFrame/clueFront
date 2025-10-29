@@ -1,5 +1,6 @@
-import styled from '@emotion/styled';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { fonts } from "@/shared/theme/font.styles";
+import { ThemeType } from "@/shared/theme/theme.styles";
 
 export const Form = styled.form`
   display: flex;
@@ -22,47 +23,50 @@ export const Label = styled.label`
 `;
 
 export const RadioGroup = styled.div`
-  display: flex;
-  gap: 16px;
 
-  label {
     display: flex;
+    gap: 16px;
     align-items: center;
-    gap: 6px;
-    ${fonts.P3};
-    cursor: pointer;
-  }
 
-  input[type='radio'] {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    outline: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background-color: white;
-
-    &:checked {
-      background-color: #b7daff;
-      border-color: #0077ff;
+    label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 15px;
+      color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
     }
 
-    &:checked::after {
-      content: '✔';
-      font-size: 12px;
-      font-weight: bold;
-      color: #0077ff;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      line-height: 1;
+    input[type='radio'] {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      width: 18px;
+      height: 18px;
+      border: 2px solid ${({ theme }: { theme: ThemeType }) => theme.colors.gray[300]};
+      border-radius: 4px;
+      margin-right: 8px;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:checked {
+        background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+        border-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+      }
+
+      /* 체크 표시 아이콘 */
+      &:checked::after {
+        content: '✔';
+        font-size: 14px;
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
-  }
 `;
 
 export const Input = styled.input`
@@ -94,7 +98,7 @@ export const Textarea = styled.textarea`
 `;
 
 export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
-  border: 2px dashed ${({ isDragOver }) => (isDragOver ? '#007aff' : '#d9d9d9')};
+  border: 2px dashed ${({ isDragOver }) => (isDragOver ? "#007aff" : "#d9d9d9")};
   border-radius: 8px;
   padding: 40px 20px;
   text-align: center;

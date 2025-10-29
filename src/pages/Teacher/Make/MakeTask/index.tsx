@@ -12,10 +12,12 @@ import { SendMakeTask, attachFile } from "./api";
 
 // API 첨부파일 인터페이스
 interface Attachment {
+  id: string;
   type: "file" | "link";
   name: string;
   url?: string;
   file?: File;
+  isNew?: boolean;
 }
 
 const MakeTask: React.FC = () => {
@@ -47,9 +49,11 @@ const MakeTask: React.FC = () => {
     const files = e.target.files;
     if (!files?.length) return;
     const newFiles: Attachment[] = Array.from(files).map(f => ({
+      id: crypto.randomUUID(),
       type: "file" as const,
       name: f.name,
       file: f,
+      isNew: true,
     }));
     setTempFiles(prev => [...prev, ...newFiles]);
   };
@@ -96,7 +100,7 @@ const MakeTask: React.FC = () => {
 
     setAttachments(prev => [
       ...prev,
-      { type: "link", name: url, url }
+      { id: crypto.randomUUID(), type: "link", name: url, url, isNew: true }
     ]);
 
     setLinkInput("");
@@ -197,7 +201,7 @@ const MakeTask: React.FC = () => {
             onChange={handleFileSelect}
             style={{ display: "none" }}
           />
-          {tempFiles.length > 0 && <ul>{tempFiles.map(f => <li key={f.name}>{f.name}</li>)}</ul>}
+          {tempFiles.length > 0 && <ul>{tempFiles.map(f => <li key={f.id}>{f.name}</li>)}</ul>}
         </Modal>
       )}
 
