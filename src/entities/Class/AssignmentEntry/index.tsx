@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
 import { AssignmentFile, DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
-import { getCheckStudent } from '@/entities/Class/api';
+import { getCheckStudent, getStudentSubmissionDetail } from '@/entities/Class/api';
 
 interface AssignmentEntryProps {
   assignmentId: string;
@@ -81,8 +81,21 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
     return numbers.sort((a, b) => a - b);
   };
 
-  const openModal = (student: DetailAssignmentStudent) => {
-    setSelectedStudent(student);
+  const openModal = async (student: DetailAssignmentStudent) => {
+    if (student.isSubmitted && student.contentId) {
+      try {
+        const submissionDetails = await getStudentSubmissionDetail(student.contentId);
+        const detailedStudentData = {
+          ...student,
+          files: submissionDetails.submissionAttachmentResponses.map((att: any) => ({
+            fileName: att.originalFileName,
+            url: att.value,
+            fileSize: att.size,
+          })),
+        };
+        setSelectedStudent(detailedStudentData);
+      } catch (error) { console.error('Failed to fetch submission details', error); }
+    } else { setSelectedStudent(student); }
     setModalIsOpen(true);
   };
 
