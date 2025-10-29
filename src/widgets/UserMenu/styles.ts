@@ -40,21 +40,12 @@ export const Icon = styled.div`
 export const ProfileImage = styled.img`
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-
-  @media (max-width: 768px) {
-    width: 40px;
-    height: 40px;
-  }
+  border-radius: 50%
 `;
 
 export const ProfileName = styled.div`
   ${fonts.P2}
   font-weight: 600;
-
-  @media (max-width: 768px) {
-    ${fonts.P3};
-  }
 `;
 
 export const User = styled.div`
