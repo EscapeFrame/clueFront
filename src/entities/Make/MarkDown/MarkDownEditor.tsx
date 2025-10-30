@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import * as s from './styles';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,16 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
     const [isCancelOpen, setIsCancelOpen] = useState(false);
     const [isPreviousOpen, setIsPreviousOpen] = useState(false);
     const [isEndOpen, setIsEndOpen] = useState(false);
+
+    useEffect(() => {
+        // store previous value to restore later
+        const prev = getComputedStyle(document.body).getPropertyValue('--app-top-offset');
+        document.body.style.setProperty('--app-top-offset', '0px');
+        return () => {
+            if (prev) document.body.style.setProperty('--app-top-offset', prev);
+            else document.body.style.removeProperty('--app-top-offset');
+        };
+    }, []);
 
     const endModal = () => {
         setIsEndOpen(true);
@@ -58,7 +68,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
     }
 
     return (
-        <s.Container>
+        <s.Container className="no-top-offset">
             <s.EditorSection>
                 <s.SectionTitle
                     placeholder='제목을 입력해주세요'
@@ -90,7 +100,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
             </s.EditorSection>
 
             <s.ViewerSection>
-                <s.SectionTitle placeholder='제목을 입력해주세요' value={title}></s.SectionTitle>
+                <s.SectionTitle placeholder='제목을 입력해주세요' value={title} readOnly></s.SectionTitle>
                 <s.ViewerWrapper data-color-mode="light">
                     <MDEditor.Markdown
                         source={mdContent}

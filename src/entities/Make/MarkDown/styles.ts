@@ -4,10 +4,7 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   display: flex;
-  gap: 20px;
   height: 100vh;
-  padding: 20px;
-  background-color: ${theme.colors.gray[200]};
 
   @media (max-width: 1200px) {
     gap: 16px;
@@ -20,6 +17,10 @@ export const Container = styled.div`
     gap: 12px;
     padding: 12px;
   }
+
+  &.no-top-offset {
+    --app-top-offset: 0px;
+  }
 `;
 
 export const EditorSection = styled.div`
@@ -27,10 +28,10 @@ export const EditorSection = styled.div`
   display: flex;
   flex-direction: column;
   background: ${theme.colors.white};
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  height: 95%;
+  height: 100%;
+  border-right: 1px solid ${theme.colors.gray[300]};
+
 
   @media (max-width: 768px) {
     height: auto;
@@ -44,9 +45,9 @@ export const ViewerSection = styled.div`
   flex-direction: column;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  height: 95%;
+  height: 100%;
+
 
   @media (max-width: 768px) {
     height: auto;
@@ -56,12 +57,10 @@ export const ViewerSection = styled.div`
 
 export const SectionTitle = styled.input`
   margin: 0;
-  padding: 16px 20px;
-  background: #f8f9fa;
+  padding: 24px 20px 16px 20px;
   border: none;
   outline: none;
-  border-bottom: 1px solid #e9ecef;
-  ${fonts.P2};
+  ${fonts.P5};
   font-weight: 600;
   color: #495057;
 
