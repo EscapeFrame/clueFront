@@ -6,7 +6,6 @@ import AddModal from '@/entities/UI/AddModal';
 const DAYS: DayOfWeek[] = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
 const PERIODS = [1, 2, 3, 4, 5, 6, 7];
 
-// ScheduleItem을 확장하여 grade와 class 정보를 포함
 interface ExtendedScheduleItem extends ScheduleItem {
   grade?: string;
   class?: string;

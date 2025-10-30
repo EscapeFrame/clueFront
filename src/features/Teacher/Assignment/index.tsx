@@ -12,7 +12,6 @@ interface AssignmentComponentProps {
 
 export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssignmentSelect }) => {
     const { classId, classRoomId } = useParams<{ classId?: string | undefined; classRoomId?: string | undefined }>();
-    // classId가 없으면 classRoomId를 사용
     const effectiveId = classId ?? classRoomId;
     const navigate = useNavigate();
     const [assignments, setAssignments] = useState<Assignment[]>([]);

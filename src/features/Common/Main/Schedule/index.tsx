@@ -4,10 +4,7 @@ import { useSchedule } from '../hooks/useSchedule';
 import { ScheduleItem, Response, convertToScheduleItem } from '@/shared/types/schedule';
 
 export const MySchedule = () => {
-  const grade = 1;
-  const classNumber = 1;
-
-  const { schedule: rawSchedule, loading, error } = useSchedule(grade, classNumber);
+  const { schedule: rawSchedule, loading, error } = useSchedule();
 
   const schedule: ScheduleItem[] = convertToScheduleItem((rawSchedule ?? []) as unknown as Response[]);
   const dayKeys = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'] as const;

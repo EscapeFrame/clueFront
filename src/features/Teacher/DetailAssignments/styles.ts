@@ -205,6 +205,7 @@ export const FileItem = styled.div`
   border: 1px solid ${theme.colors.gray[300]};
   border-radius: 0.5rem;
   width: 100%;
+  cursor: pointer;
 
   @media (max-width: 768px) {
     flex-direction: column;
