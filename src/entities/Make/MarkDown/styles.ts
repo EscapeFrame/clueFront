@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
-import { blue, theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { blue, theme } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   display: flex;
@@ -32,7 +32,6 @@ export const EditorSection = styled.div`
   height: 100%;
   border-right: 1px solid ${theme.colors.gray[300]};
 
-
   @media (max-width: 768px) {
     height: auto;
     min-height: 300px;
@@ -47,7 +46,6 @@ export const ViewerSection = styled.div`
   border-radius: 12px;
   overflow: hidden;
   height: 100%;
-
 
   @media (max-width: 768px) {
     height: auto;
@@ -172,23 +170,35 @@ export const ViewerWrapper = styled.div`
   overflow-y: auto;
   padding: 20px;
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-top: 24px;
     margin-bottom: 16px;
     font-weight: 600;
     line-height: 1.25;
   }
 
-  h1 { font-size: 2em; }
-  h2 { font-size: 1.5em; }
-  h3 { font-size: 1.25em; }
+  h1 {
+    font-size: 2em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  h3 {
+    font-size: 1.25em;
+  }
 
   p {
     margin-bottom: 16px;
     line-height: 1.6;
   }
 
-  ul, ol {
+  ul,
+  ol {
     margin-bottom: 16px;
     padding-left: 24px;
   }
@@ -201,7 +211,7 @@ export const ViewerWrapper = styled.div`
     background-color: #f1f3f4;
     padding: 2px 6px;
     border-radius: 4px;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
     ${fonts.P2};
   }
 
@@ -226,5 +236,38 @@ export const ViewerWrapper = styled.div`
 
   @media (max-width: 768px) {
     padding: 12px;
+  }
+`;
+
+export const ViewerHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  padding-bottom: 0;
+`;
+
+export const ToggleWrapper = styled.div`
+  display: flex;
+  border-bottom: 1px solid ${theme.colors.gray[300]};
+`;
+
+export const ToggleButton = styled.button<{ active: boolean }>`
+  padding: 8px 16px;
+  border: none;
+  background-color: transparent;
+  border-bottom: 2px solid
+    ${({ active }) => (active ? theme.colors.blue[500] : "white")};
+  color: ${({ active, theme }) =>
+    active ? theme.colors.black : theme.colors.gray[500]};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: -1px;
+  ${fonts.P2};
+
+  &:focus {
+    outline: none;
   }
 `;
