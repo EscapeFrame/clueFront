@@ -60,3 +60,17 @@ export async function getCheckStudent(assignmentId: string) {
         throw error;
     }
 }
+
+// 학생 과제 상세 정보 조회 API
+export async function getStudentSubmissionDetail(submissionId: string) {
+    try {
+        const response = await Customapi.get(`/api/submissions/assignment/${submissionId}`);
+        if (response.status !== 200) {
+            return response.status;
+        }
+        return response.data;
+    } catch (error) {
+        console.error('학생 과제 상세 정보 조회 실패:', error);
+        throw error;
+    }
+}
