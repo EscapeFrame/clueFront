@@ -121,4 +121,25 @@ export const AssignmentsApi = {
     return null;
     }
   },
+
+  // 파일 다운로드 (attachmentId로 파일 Blob을 받아옴)
+  download: async (attachmentId: string): Promise<{ blob: Blob; filename?: string } | null> => {
+    try {
+      const res = await Customapi.get(`${API_BASE_URL}/${attachmentId}/download`, { responseType: 'blob' });
+      if (res.status < 200 || res.status >= 300) {
+        console.error(`파일 다운로드 실패: status ${res.status}`);
+        return null;
+      }
+      const contentDisposition = res.headers?.['content-disposition'] as string | undefined;
+      let filename: string | undefined = undefined;
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
+        if (match) filename = decodeURIComponent(match[1] || match[2]);
+      }
+      return { blob: res.data, filename };
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      return null;
+    }
+  },
 };

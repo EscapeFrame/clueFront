@@ -325,13 +325,35 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                 {files && files.length > 0 ? (
                     files.map((file, idx) => {
                         return (
-                            <s.FileItem key={idx}>
+                            <s.FileItem
+                                key={idx}
+                                onClick={async () => {
+                                    try {
+                                        const res = await AssignmentsApi.download((file as AssignmentFileType).fileId);
+                                        if (res && res.blob) {
+                                            const url = window.URL.createObjectURL(res.blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = res.filename ?? (file as AssignmentFileType).fileName ?? 'download';
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            a.remove();
+                                            window.URL.revokeObjectURL(url);
+                                        } else {
+                                            alert('파일을 다운로드할 수 없습니다.');
+                                        }
+                                    } catch (err) {
+                                        console.error('다운로드 실패:', err);
+                                        alert('다운로드 중 오류가 발생했습니다.');
+                                    }
+                                }}
+                            >
                                 <s.FileInfo>
                                     <FaRegFile />
                                     <span>{file.fileName}</span>
                                 </s.FileInfo>
                                 {isEditing && (
-                                    <s.FileRemoveButton onClick={() => removeFile((file as AssignmentFileType).fileId)}>
+                                    <s.FileRemoveButton onClick={(e) => { e.stopPropagation(); removeFile((file as AssignmentFileType).fileId); }}>
                                         <FaXmark />
                                     </s.FileRemoveButton>
                                 )}
@@ -342,6 +364,8 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                     <s.EmptyFileMessage>파일이 없습니다</s.EmptyFileMessage>
                 )}
             </s.FileSection>
+
+
 
             {showFileModal && (
                 <Modal
@@ -394,6 +418,56 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                     </s.ModalContent>
                 </Modal>
             )}
+            <s.FileSection>
+                <s.FileSectionHeader>
+                    <s.SubTitle>할당링크</s.SubTitle>
+                    {isEditing && (
+                        <Button text='링크추가' type={0} width={'150px'} onClick={() => setShowFileModal(true)} />
+                    )}
+                </s.FileSectionHeader>
+
+                {files && files.length > 0 ? (
+                    files.map((file, idx) => {
+                        return (
+                            <s.FileItem
+                                key={idx}
+                                onClick={async () => {
+                                    try {
+                                        const res = await AssignmentsApi.download((file as AssignmentFileType).fileId);
+                                        if (res && res.blob) {
+                                            const url = window.URL.createObjectURL(res.blob);
+                                            const a = document.createElement('a');
+                                            a.href = url;
+                                            a.download = res.filename ?? (file as AssignmentFileType).fileName ?? 'download';
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            a.remove();
+                                            window.URL.revokeObjectURL(url);
+                                        } else {
+                                            alert('파일을 다운로드할 수 없습니다.');
+                                        }
+                                    } catch (err) {
+                                        console.error('다운로드 실패:', err);
+                                        alert('다운로드 중 오류가 발생했습니다.');
+                                    }
+                                }}
+                            >
+                                <s.FileInfo>
+                                    <FaRegFile />
+                                    <span>{file.fileName}</span>
+                                </s.FileInfo>
+                                {isEditing && (
+                                    <s.FileRemoveButton onClick={(e) => { e.stopPropagation(); removeFile((file as AssignmentFileType).fileId); }}>
+                                        <FaXmark />
+                                    </s.FileRemoveButton>
+                                )}
+                            </s.FileItem>
+                        );
+                    })
+                ) : (
+                    <s.EmptyFileMessage>파일이 없습니다</s.EmptyFileMessage>
+                )}
+            </s.FileSection>
             <AssignmentEntry assignmentId={assignmentId} totalCount={totalCount} />
         </s.Container>
     );
