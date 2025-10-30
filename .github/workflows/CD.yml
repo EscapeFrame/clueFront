@@ -1,7 +1,7 @@
 name: React CI/CD
 
 on:
-  push:
+  pull_request:
     branches: [ develop ]
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
 
       # 5️⃣ 배포 파일(zip) 생성
       - name: Make zip file
-        run: zip -qq -r ./$GITHUB_SHA.zip build appspec.yml scripts/
+        run: zip -qq -r ./$GITHUB_SHA.zip dist appspec.yml scripts/
 
       # 6️⃣ AWS 자격 증명 설정
       - name: Configure AWS credentials
