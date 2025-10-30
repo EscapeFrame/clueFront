@@ -1,19 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import Customapi from '@/shared/config/api';
-import { ScheduleItem } from '@/shared/types/schedule';
-import { PendingTaskItem } from '@/shared/types/task';
-import { NoticeItem } from '@/shared/types/notice';
+import { ClassResponse } from "@/shared/types/Class/classroom";
 
-export const PendingTasks = async (): Promise<PendingTaskItem[]> => {
-  const res = await Customapi.get(`/api/tasks/pending`);
-  return res.data;
+const SIX_HOURS_IN_MS = 6 * 60 * 60 * 1000;
+
+const fetchMyClasses = async (search?: string): Promise<ClassResponse[]> => {
+  const response = await Customapi.get("/api/class", {
+    params: search ? { search } : {},
+  });
+  if (response.status !== 200) {
+    throw new Error(`서버 에러: ${response.status}`);
+  }
+  return Array.isArray(response.data) ? response.data : [];
 };
 
-export const Notices = async (): Promise<NoticeItem[]> => {
-  const res = await Customapi.get(`/api/notices`);
-  return res.data;
-};
-
-export const STUSchedule = async (): Promise<ScheduleItem[]> => {
-  const res = await Customapi.get(`/api/timetable/weekly`);
-  return res.data;
+export const useMyClasses = (search?: string) => {
+  return useQuery<ClassResponse[], Error>({
+    queryKey: ["myClasses", search],
+    queryFn: () => fetchMyClasses(search),
+    staleTime: SIX_HOURS_IN_MS,
+  });
 };
