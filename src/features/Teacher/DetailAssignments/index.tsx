@@ -41,14 +41,13 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
             try {
                 const responseData = await AssignmentsApi.getById(assignmentId);
                 if (responseData) {
-                    // Map the API response to the component's Assignment type
                     const mappedData: Assignment & { submittedCount: number; totalCount: number, files: AssignmentFileType[] } = {
                         assignmentId: responseData.assignmentId,
                         title: responseData.title,
                         content: responseData.content,
-                        description: responseData.content, // Map content to description
-                        deadline: responseData.endDate,     // Map endDate to deadline
-                        endDate: responseData.endDate, // Keep endDate as is
+                        description: responseData.content,
+                        deadline: responseData.endDate,
+                        endDate: responseData.endDate,
                         files: responseData.attachmentDtos.map(att => ({ fileId: att.value ?? String(Math.random()), fileName: att.originalFileName || 'unknown', fileSize: att.size ?? 0 })),
                         isSubmitted: false,
                         submissionDate: null,
