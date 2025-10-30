@@ -1,7 +1,7 @@
 import Customapi from '@/shared/config/api';
 import {
   AssignmentResponse, AssignmentCreateRequest,
-  AssignmentUpdateRequest, AssignmentDeleteResponse
+  AssignmentDeleteResponse
 } from '@/shared/types/Class/Assignment/Assignment';
 
 const API_BASE_URL = '/api/assignments';
@@ -15,9 +15,9 @@ export const AssignmentsApi = {
         return null;
       }
       return res.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('과제 상세 정보 불러오기 실패:', error);
-      return null;
+    return null;
     }
   },
   getAll: async (classId: string): Promise<AssignmentResponse[]> => {
@@ -28,9 +28,9 @@ export const AssignmentsApi = {
         return [];
       }
       return res.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('과제 불러오기 실패:', error);
-      return [];
+    return [];
     }
   },
   create: async (assignment: AssignmentCreateRequest): Promise<AssignmentResponse | null> => {
@@ -41,12 +41,12 @@ export const AssignmentsApi = {
         return null;
       }
       return res.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('과제 생성 실패:', error);
-      return null;
+    return null;
     }
   },
-  update: async (assignmentId: string | number, changes: any): Promise<AssignmentResponse | null> => {
+  update: async (assignmentId: string | number, changes: unknown): Promise<AssignmentResponse | null> => {
     try {
       const res = await Customapi.patch<AssignmentResponse>(`${API_BASE_URL}/${assignmentId}`, changes);
       if (res.status < 200 || res.status >= 300) {
@@ -54,9 +54,9 @@ export const AssignmentsApi = {
         return null;
       }
       return res.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('과제 수정 실패:', error);
-      return null;
+    return null;
     }
   },
   delete: async (assignmentId: number): Promise<AssignmentDeleteResponse | null> => {
@@ -67,9 +67,41 @@ export const AssignmentsApi = {
         return null;
       }
       return res.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('과제 삭제 실패:', error);
-      return null;
+    return null;
+    }
+  },
+
+  // 파일 삭제
+  fileDelete: async (attachmentId: string): Promise<unknown> => {
+    try {
+      const res = await Customapi.delete(`${API_BASE_URL}/attachment/${attachmentId}`)
+      if (res.status < 200 || res.status >= 300) {
+        console.error(`파일 삭제 실패: status ${res.status}`);
+        return null;
+      }
+      return res.data;
+    } catch (error) {
+      console.error('파일 삭제 실패:', error);
+    return null;
+    }
+  },
+
+  // 파일 업로드: assignmentId에 파일들 추가
+  fileUpload: async (assignmentId: string | number, files: File[]): Promise<unknown> => {
+    try {
+      const formData = new FormData();
+      files.forEach((f) => formData.append('file', f));
+      const res = await Customapi.post(`${API_BASE_URL}/${assignmentId}/file`, formData);
+      if (res.status < 200 || res.status >= 300) {
+        console.error(`파일 업로드 실패: status ${res.status}`);
+        return null;
+      }
+      return res.data;
+    } catch (error) {
+      console.error('파일 업로드 실패:', error);
+    return null;
     }
   },
 
@@ -84,9 +116,9 @@ export const AssignmentsApi = {
         return null;
       }
       return res.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('과제 제출 여부 조회 실패:', error);
-      return null;
+    return null;
     }
   },
 };

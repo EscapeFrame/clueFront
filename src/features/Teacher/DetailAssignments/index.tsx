@@ -4,8 +4,8 @@ import { GoPencil } from "react-icons/go";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import { stateData } from './data';
-import { useEffect, useState } from 'react';
-import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
+import { useEffect, useState, useRef } from 'react';
+import { Assignment, AssignmentFileType } from '@/shared/types/Class/Assignment/Attachment';
 import DateInput from '@/entities/UI/InputBox/DateInput';
 import { Modal } from '@/entities/UI/Modal';
 import Button from '@/entities/UI/Button';
@@ -21,7 +21,7 @@ interface UploadedFile {
 }
 
 export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => void }> = ({ assignmentId, onBack }) => {
-    const [assignment, setAssignment] = useState<(Assignment & { submittedCount: number; totalCount: number }) | null>(null);
+    const [assignment, setAssignment] = useState<(Assignment & { submittedCount: number; totalCount: number, files: AssignmentFileType[] }) | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -31,7 +31,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const [showFileModal, setShowFileModal] = useState(false);
     const [tempFiles, setTempFiles] = useState<UploadedFile[]>([]);
     const [isDragOver, setIsDragOver] = useState(false);
-    let fileInputRef = useState<HTMLInputElement | null>(null)[0];
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const today = dayjs().format('YYYY-MM-DD');
 
@@ -42,18 +42,18 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                 const responseData = await AssignmentsApi.getById(assignmentId);
                 if (responseData) {
                     // Map the API response to the component's Assignment type
-                    const mappedData: Assignment & { submittedCount: number; totalCount: number } = {
+                    const mappedData: Assignment & { submittedCount: number; totalCount: number, files: AssignmentFileType[] } = {
                         assignmentId: responseData.assignmentId,
                         title: responseData.title,
                         content: responseData.content,
                         description: responseData.content, // Map content to description
                         deadline: responseData.endDate,     // Map endDate to deadline
-                        endDate: responseData.endDate,
-                        files: responseData.attachmentDtos.map(att => att.originalFileName || null), // Map attachments to file names
-                        isSubmitted: false, 
+                        endDate: responseData.endDate, // Keep endDate as is
+                        files: responseData.attachmentDtos.map(att => ({ fileId: att.value ?? String(Math.random()), fileName: att.originalFileName || 'unknown', fileSize: att.size ?? 0 })),
+                        isSubmitted: false,
                         submissionDate: null,
-                        submittedCount: (responseData as any).submittedCount || 0, 
-                        totalCount: (responseData as any).totalCount || 0,       
+                        submittedCount: (responseData as unknown as { submittedCount?: number }).submittedCount || 0,
+                        totalCount: (responseData as unknown as { totalCount?: number }).totalCount || 0,
                     };
 
                     setAssignment(mappedData);
@@ -82,10 +82,14 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const handleSaveEdit = async () => {
         if (assignment) {
             try {
+                const assignmentRecord = assignment as unknown as Record<string, unknown>;
+                const startSource: string | null = (assignmentRecord['startDate'] as string) ?? (assignmentRecord['start_date'] as string) ?? (assignmentRecord['duringDate'] as string) ?? null;
+                const startIso = startSource ? dayjs(startSource).toISOString().slice(0, 16) : dayjs().toISOString().slice(0, 16);
+
                 const updatedAssignment = await AssignmentsApi.update(assignment.assignmentId, {
                     title: editTitle,
                     content: editDescription,
-                    start_date: dayjs(assignment.duringDate).toISOString().slice(0, 16), // Assuming startDate is duringDate
+                    start_date: startIso,
                     end_date: dayjs(editEndDate).toISOString().slice(0, 16),
                 });
 
@@ -161,30 +165,57 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     };
 
     const handleFileModalComplete = () => {
-        if (assignment && tempFiles.length > 0) {
-            const currentFiles = assignment.files || [];
-            const updatedFiles = [...currentFiles];
+        (async () => {
+            if (!assignment || tempFiles.length === 0) {
+                setTempFiles([]);
+                setShowFileModal(false);
+                return;
+            }
 
-            tempFiles.forEach(tempFile => {
-                updatedFiles.push(tempFile.name);
-            });
+            // 실제 파일 객체만 추출
+            const filesToUpload = tempFiles.map(tf => tf.file).filter((f): f is File => f !== undefined && f !== null);
 
-            setAssignment({
-                ...assignment,
-                files: updatedFiles as typeof assignment.files
-            });
-        }
-        setTempFiles([]);
-        setShowFileModal(false);
+            if (filesToUpload.length === 0) {
+                setTempFiles([]);
+                setShowFileModal(false);
+                return;
+            }
+
+            try {
+                const res = await AssignmentsApi.fileUpload(assignment.assignmentId, filesToUpload);
+                if (res) {
+                    // 업로드가 성공하면 assignment를 다시 불러와 최신 파일 리스트 반영
+                    const refreshed = await AssignmentsApi.getById(String(assignment.assignmentId));
+                    if (refreshed) {
+                        const mappedFiles = refreshed.attachmentDtos.map(att => ({ fileId: att.value ?? String(Math.random()), fileName: att.originalFileName || 'unknown', fileSize: att.size ?? 0 }));
+                        setAssignment({ ...assignment, files: mappedFiles });
+                    }
+                } else {
+                    alert('파일 업로드에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('파일 업로드 중 오류:', error);
+                alert('파일 업로드 중 오류가 발생했습니다.');
+            } finally {
+                setTempFiles([]);
+                setShowFileModal(false);
+            }
+        })();
     };
 
-    const removeFile = (fileIndex: number) => {
-        if (assignment && assignment.files) {
-            const updatedFiles = assignment.files.filter((_, idx) => idx !== fileIndex);
-            setAssignment({
-                ...assignment,
-                files: updatedFiles as typeof assignment.files
-            });
+    const removeFile = async (fileId: string) => {
+        if (window.confirm('정말로 이 파일을 삭제하시겠습니까?')) {
+            try {
+                await AssignmentsApi.fileDelete(fileId);
+                if (assignment) {
+                    const updatedFiles = (assignment.files || []).filter(file => (file as AssignmentFileType).fileId !== fileId);
+                    setAssignment({ ...assignment, files: updatedFiles });
+                }
+                alert('파일이 성공적으로 삭제되었습니다.');
+            } catch (error) {
+                console.error('파일 삭제 실패:', error);
+                alert('파일 삭제 중 오류가 발생했습니다.');
+            }
         }
     };
 
@@ -196,7 +227,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     if (error) return <p>{error}</p>;
     if (!assignment) return <p>과제 정보를 찾을 수 없습니다.</p>;
 
-    const { title, description, files, endDate, isSubmitted, submissionDate, submittedCount, totalCount } = assignment;
+    const { title, description, files, endDate, submittedCount, totalCount } = assignment;
 
     const Icon0 = stateData[0].icon;
     const Icon1 = stateData[1].icon;
@@ -293,15 +324,14 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
 
                 {files && files.length > 0 ? (
                     files.map((file, idx) => {
-                        const fileName = typeof file === "string" ? file : file?.fileName ?? "unknown";
                         return (
                             <s.FileItem key={idx}>
                                 <s.FileInfo>
                                     <FaRegFile />
-                                    <span>{fileName}</span>
+                                    <span>{file.fileName}</span>
                                 </s.FileInfo>
                                 {isEditing && (
-                                    <s.FileRemoveButton onClick={() => removeFile(idx)}>
+                                    <s.FileRemoveButton onClick={() => removeFile((file as AssignmentFileType).fileId)}>
                                         <FaXmark />
                                     </s.FileRemoveButton>
                                 )}
@@ -328,14 +358,14 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
-                            onClick={() => fileInputRef?.click()}
+                            onClick={() => fileInputRef.current?.click()}
                         >
                             <s.FileIcon><MdOutlineFileUpload size={60} /></s.FileIcon>
                             <p>{isDragOver ? '여기에 파일을 놓으세요' : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}</p>
                         </s.FileUploadArea>
 
                         <input
-                            ref={(el) => { if (el) fileInputRef = el; }}
+                            ref={fileInputRef}
                             type="file"
                             multiple
                             onChange={handleFileUpload}
