@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import * as s from './styles';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { submitMarkDown } from '../api/useMarkDown';
 // 언젠가는 Modal 컴포넌트 다시 손봐야 할듯
+const AIAgentView = () => <div style={{ padding: '20px' }}>AI Agent View Placeholder</div>;
 
 export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoomId: string, directoryId: string }) {
     const defaultTemplate = '# 마크다운을 작성해보세요\n\n## 제목\n- 목록 1\n- 목록 2\n\n**굵은 글씨**와 *기울임체*도 사용할 수 있습니다.';
@@ -16,6 +17,17 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
     const [isCancelOpen, setIsCancelOpen] = useState(false);
     const [isPreviousOpen, setIsPreviousOpen] = useState(false);
     const [isEndOpen, setIsEndOpen] = useState(false);
+    const [viewerMode, setViewerMode] = useState<'preview' | 'aiAgent'>('preview');
+
+    useEffect(() => {
+        // store previous value to restore later
+        const prev = getComputedStyle(document.body).getPropertyValue('--app-top-offset');
+        document.body.style.setProperty('--app-top-offset', '0px');
+        return () => {
+            if (prev) document.body.style.setProperty('--app-top-offset', prev);
+            else document.body.style.removeProperty('--app-top-offset');
+        };
+    }, []);
 
     const endModal = () => {
         setIsEndOpen(true);
@@ -58,7 +70,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
     }
 
     return (
-        <s.Container>
+        <s.Container className="no-top-offset">
             <s.EditorSection>
                 <s.SectionTitle
                     placeholder='제목을 입력해주세요'
@@ -90,13 +102,26 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
             </s.EditorSection>
 
             <s.ViewerSection>
-                <s.SectionTitle placeholder='제목을 입력해주세요' value={title}></s.SectionTitle>
-                <s.ViewerWrapper data-color-mode="light">
-                    <MDEditor.Markdown
-                        source={mdContent}
-                        style={{ padding: '20px' }}
-                    />
-                </s.ViewerWrapper>
+                <s.ViewerHeader>
+                    <s.ToggleWrapper>
+                        <s.ToggleButton active={viewerMode === 'preview'} onClick={() => setViewerMode('preview')}>
+                            미리보기
+                        </s.ToggleButton>
+                        <s.ToggleButton active={viewerMode === 'aiAgent'} onClick={() => setViewerMode('aiAgent')}>
+                            AI Agent
+                        </s.ToggleButton>
+                    </s.ToggleWrapper>
+                </s.ViewerHeader>
+                {viewerMode === 'preview' ? (
+                    <s.ViewerWrapper data-color-mode="light">
+                        <MDEditor.Markdown
+                            source={mdContent}
+                            style={{ padding: '20px' }}
+                        />
+                    </s.ViewerWrapper>
+                ) : (
+                    <AIAgentView />
+                )}
             </s.ViewerSection>
             {/* 취소 */}
             {isCancelOpen && (
@@ -155,4 +180,3 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
         </s.Container>
     );
 }
-
