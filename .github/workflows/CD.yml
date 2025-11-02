@@ -44,9 +44,9 @@ jobs:
       - name: SCP to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }} # ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST_F }}
+          username: ${{ secrets.EC2_USER_F }} # ubuntu
+          key: ${{ secrets.EC2_SECRETKEY_F }}
           source: "deploy.zip" # .jar 대신 zip 파일
           target: /home/ubuntu/clue # Spring과 동일한 경로에 전송
 
@@ -60,9 +60,9 @@ jobs:
       - name: SSH into EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }} # ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST_F }}
+          username: ${{ secrets.EC2_USER_F }} # ubuntu
+          key: ${{ secrets.EC2_SECRETKEY_F }}
           script_stop: true
           script: |
             # 1. Spring과 동일한 작업 디렉토리로 이동
