@@ -2,88 +2,64 @@ import styled from '@emotion/styled';
 import { theme } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
-export const Container = styled.div`
+export const PageWrapper = styled.div`
   display: flex;
-  gap: 20px;
-  height: 100vh;
-  padding: 20px;
-  background-color: ${theme.colors.gray[200]};
-
-  @media (max-width: 1200px) {
-    gap: 16px;
-    padding: 16px;
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    height: auto;
-    gap: 12px;
-    padding: 12px;
-  }
+  height: calc(100vh - var(--app-top-offset, 0px));
+  background-color: #fff;
 `;
 
-export const ViewerSection = styled.div`
+export const Container = styled.div`
   flex: 1;
   display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  height: 95%;
-
-  @media (max-width: 768px) {
-    height: auto;
-    min-height: 300px;
-  }
+  justify-content: center;
+  overflow-y: auto;
+  background-color: #fff;
 `;
 
-export const SectionTitle = styled.input`
-  margin: 0;
-  padding: 16px 20px;
-  background: #f8f9fa;
-  border: none;
-  outline: none;
-  border-bottom: 1px solid #e9ecef;
-  ${fonts.P2};
-  font-weight: 600;
-  color: #495057;
+export const ViewerContainer = styled.div`
+  background: white;
+  width: 100%;
+  border-radius: 12px;
+  padding: 40px 60px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+`;
 
-  @media (max-width: 1200px) {
-    ${fonts.P2};
-    padding: 12px 16px;
-  }
+export const ViewerHeader = styled.div`
+  margin-bottom: 24px;
 
-  @media (max-width: 768px) {
-    ${fonts.P1};
-    padding: 10px 14px;
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+    border-bottom: 2px solid ${theme.colors.gray[300]};
+    padding-bottom: 12px;
   }
 `;
 
 export const ViewerWrapper = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.8;
+  color: #2c2c2c;
 
-  h1, h2, h3, h4, h5, h6 {
-    margin-top: 24px;
-    margin-bottom: 16px;
-    font-weight: 600;
-    line-height: 1.25;
+  h1, h2, h3 {
+    margin-top: 32px;
+    font-weight: 700;
+    color: #111;
   }
 
-  h1 { font-size: 2em; }
-  h2 { font-size: 1.5em; }
-  h3 { font-size: 1.25em; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 20px; color: #222; }
+  h3 { font-size: 18px; color: #333; }
 
   p {
-    margin-bottom: 16px;
-    line-height: 1.6;
+    margin-bottom: 18px;
   }
 
-  ul, ol {
+  ul {
+    margin-left: 24px;
     margin-bottom: 16px;
-    padding-left: 24px;
   }
 
   li {
@@ -91,33 +67,62 @@ export const ViewerWrapper = styled.div`
   }
 
   code {
-    background-color: #f1f3f4;
+    background-color: #f2f3f5;
     padding: 2px 6px;
     border-radius: 4px;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    ${fonts.P2};
   }
 
   pre {
-    background-color: #f6f8fa;
-    padding: 16px;
+    background-color: #f8f9fa;
+    padding: 12px;
     border-radius: 6px;
     overflow-x: auto;
-    margin-bottom: 16px;
   }
 
   blockquote {
-    border-left: 4px solid #dfe2e5;
-    margin: 0 0 16px 0;
-    padding-left: 16px;
-    color: #6a737d;
+    border-left: 4px solid ${theme.colors.gray[300]};
+    margin: 16px 0;
+    padding-left: 12px;
+    color: #555;
   }
+`;
 
-  @media (max-width: 1200px) {
-    padding: 16px;
+export const Sidebar = styled.div`
+  width: 280px;
+  background-color: #fafbfc;
+  border-right: 1px solid ${theme.colors.gray[300]};
+  padding: 24px;
+  height: 100%;
+  overflow-y: auto;
+`;
+
+export const SidebarTitle = styled.div`
+  font-weight: 700;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+export const DirectoryItem = styled.div`
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 0;
+  cursor: pointer;
+  color: #222;
+
+  &:hover {
+    color: ${theme.colors.blue[600]};
   }
+`;
 
-  @media (max-width: 768px) {
-    padding: 12px;
+export const DocumentItem = styled.div<{ active: boolean }>`
+  padding: 6px 0 6px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  color: ${({ active, theme }) => (active ? theme.colors.blue[600] : '#555')};
+  font-weight: ${({ active }) => (active ? '600' : '400')};
+
+  &:hover {
+    color: ${theme.colors.blue[700]};
   }
 `;
