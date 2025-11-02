@@ -47,6 +47,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const fetchData = async () => {
     try {
       const classInfo = await getLessonDirectories(classRoomId);
+      // 세션 스토리지에 디렉토리 정보 저장
+      if (classInfo.directoryList) {
+        sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(classInfo.directoryList));
+      }
+
       setCode(classInfo.code)
       const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
         id: dir.directoryId.toString(),

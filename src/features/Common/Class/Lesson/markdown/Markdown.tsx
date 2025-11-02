@@ -35,17 +35,36 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (classRoomId) {
-      qre(classRoomId).then((data: DirectoryResponse) => {
-        setDirectories(data.directoryList || []);
+      const cachedDirectories = sessionStorage.getItem(`lessonDirectories-${classRoomId}`);
 
-        const currentDir = data.directoryList?.find((dir) =>
-          dir.documentList?.some((doc) => String(doc.documentId) === documentId)
-        );
+      const processDirectories = (directoryList: Directory[]) => {
+        setDirectories(directoryList || []);
+        const currentDir = directoryList?.find((dir) =>
+          dir.documentList?.some((doc) => String(doc.documentId) === documentId));
 
         if (currentDir?.directoryId) {
           setOpenDirs((prev) => new Set(prev).add(currentDir.directoryId));
         }
-      });
+      };
+
+      if (cachedDirectories) {
+        try {
+          const parsedData = JSON.parse(cachedDirectories);
+          processDirectories(parsedData);
+        } catch (e) {
+          console.error("Failed to parse cached directories", e);
+          // 파싱 실패 시 API 호출
+          qre(classRoomId).then((data: DirectoryResponse) => {
+            sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(data.directoryList || []));
+            processDirectories(data.directoryList);
+          });
+        }
+      } else {
+        qre(classRoomId).then((data: DirectoryResponse) => {
+          sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(data.directoryList || []));
+          processDirectories(data.directoryList);
+        });
+      }
     }
   }, [classRoomId, documentId]);
 
