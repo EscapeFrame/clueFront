@@ -6,6 +6,10 @@ import * as s from './styles';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getMarkDown } from '../../api/class/useMarkdown';
 import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
+import { IoListOutline } from 'react-icons/io5';
+import { IoChatbubbleOutline } from 'react-icons/io5';
+import { AiOutlineQuestionCircle } from 'react-icons/ai';
+import { IoIosArrowDown } from 'react-icons/io';
 
 interface Document {
   documentId: number;
@@ -26,6 +30,7 @@ const Sidebar = () => {
   const { classRoomId, documentId } = useParams<{ classRoomId: string; documentId: string }>();
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [openDirs, setOpenDirs] = useState<Set<number>>(new Set());
+  const [activeTab, setActiveTab] = useState<'curriculum' | 'chat' | 'question'>('curriculum');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,31 +60,61 @@ const Sidebar = () => {
 
   return (
     <s.Sidebar>
-      <s.SidebarTitle>커리큘럼</s.SidebarTitle>
-      {directories.map((dir) => (
-        <div key={dir.directoryId}>
-          <s.DirectoryItem onClick={() => toggleDir(dir.directoryId)}>
-            {dir.directoryName}
-          </s.DirectoryItem>
-          {openDirs.has(dir.directoryId) && dir.documentList && (
-            <div>
-              {dir.documentList.map((doc: Document) => (
-                <s.DocumentItem
-                  key={doc.documentId}
-                  active={String(doc.documentId) === documentId}
-                  onClick={() =>
-                    navigate(`/class/${classRoomId}/${doc.documentId}`, {
-                      state: { title: doc.title },
-                    })
-                  }
-                >
-                  {doc.title}
-                </s.DocumentItem>
-              ))}
+      <s.TopTabs>
+        <s.TabButton 
+          active={activeTab === 'curriculum'} 
+          onClick={() => setActiveTab('curriculum')}
+        >
+          <IoListOutline />
+          <span>커리큘럼</span>
+        </s.TabButton>
+        <s.TabButton 
+          active={activeTab === 'chat'} 
+          onClick={() => setActiveTab('chat')}
+        >
+          <IoChatbubbleOutline />
+          <span>채팅</span>
+        </s.TabButton>
+        <s.TabButton 
+          active={activeTab === 'question'} 
+          onClick={() => setActiveTab('question')}
+        >
+          <AiOutlineQuestionCircle />
+          <span>질문</span>
+        </s.TabButton>
+      </s.TopTabs>
+
+      {activeTab === 'curriculum' && (
+        <s.NavigationSection>
+          {directories.map((dir) => (
+            <div key={dir.directoryId}>
+              <s.DirectoryItem onClick={() => toggleDir(dir.directoryId)}>
+                <span>{dir.directoryName}</span>
+                <s.ArrowIcon isOpen={openDirs.has(dir.directoryId)}>
+                  <IoIosArrowDown />
+                </s.ArrowIcon>
+              </s.DirectoryItem>
+              {openDirs.has(dir.directoryId) && dir.documentList && (
+                <s.DocumentList>
+                  {dir.documentList.map((doc: Document) => (
+                    <s.DocumentItem
+                      key={doc.documentId}
+                      active={String(doc.documentId) === documentId}
+                      onClick={() =>
+                        navigate(`/class/${classRoomId}/${doc.documentId}`, {
+                          state: { title: doc.title },
+                        })
+                      }
+                    >
+                      {doc.title}
+                    </s.DocumentItem>
+                  ))}
+                </s.DocumentList>
+              )}
             </div>
-          )}
-        </div>
-      ))}
+          ))}
+        </s.NavigationSection>
+      )}
     </s.Sidebar>
   );
 };

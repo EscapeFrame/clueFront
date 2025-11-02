@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { theme } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const PageWrapper = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ export const ViewerContainer = styled.div`
 `;
 
 export const ViewerHeader = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: 48px;
 
   h1 {
     font-size: 28px;
@@ -39,19 +39,29 @@ export const ViewerHeader = styled.div`
 `;
 
 export const ViewerWrapper = styled.div`
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   line-height: 1.8;
   color: #2c2c2c;
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     margin-top: 32px;
     font-weight: 700;
     color: #111;
   }
 
-  h1 { font-size: 24px; }
-  h2 { font-size: 20px; color: #222; }
-  h3 { font-size: 18px; color: #333; }
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+    color: #222;
+  }
+  h3 {
+    font-size: 18px;
+    color: #333;
+  }
 
   p {
     margin-bottom: 18px;
@@ -90,20 +100,63 @@ export const ViewerWrapper = styled.div`
 export const Sidebar = styled.div`
   width: 280px;
   background-color: #fafbfc;
-  border-right: 1px solid ${theme.colors.gray[300]};
-  padding: 24px;
   height: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const TopTabs = styled.div`
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-bottom: 1px solid ${theme.colors.gray[400]};
+`;
+
+export const TabButton = styled.button<{ active: boolean }>`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border: none;
+  background-color: ${({ active }) => (active ? theme.colors.gray[400] : 'transparent')};
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #333;
+
+  svg {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: ${({ active }) => (active ? theme.colors.blue[200] : theme.colors.gray[200])};
+  }
+
+  span {
+    font-size: 11px;
+    font-weight: ${({ active }) => (active ? 600 : 400)};
+    white-space: nowrap;
+  }
+`;
+
+export const NavigationSection = styled.div`
+  padding: 16px;
+  flex: 1;
 `;
 
 export const SidebarTitle = styled.div`
-  font-weight: 700;
-  font-size: 16px;
+  ${fonts.P4}
   color: #333;
   margin-bottom: 20px;
 `;
 
 export const DirectoryItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-weight: 600;
   font-size: 15px;
   padding: 10px 0;
@@ -115,14 +168,35 @@ export const DirectoryItem = styled.div`
   }
 `;
 
+export const ArrowIcon = styled.div<{ isOpen: boolean }>`
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+  transform: rotate(${({ isOpen }) => (isOpen ? '180deg' : '0deg')});
+
+  svg {
+    font-size: 16px;
+    color: #666;
+  }
+`;
+
+export const DocumentList = styled.div`
+  padding-left: 0;
+  margin-top: 4px;
+`;
+
 export const DocumentItem = styled.div<{ active: boolean }>`
-  padding: 6px 0 6px 18px;
+  padding: 8px 16px;
   font-size: 14px;
   cursor: pointer;
-  color: ${({ active, theme }) => (active ? theme.colors.blue[600] : '#555')};
-  font-weight: ${({ active }) => (active ? '600' : '400')};
+  border-radius: 4px;
+  background-color: ${({ active }) => (active ? theme.colors.blue[200] : 'transparent')};
+  color: ${({ active }) => (active ? '#111' : '#333')};
+  margin-bottom: 2px;
+  transition: background-color 0.2s;
 
   &:hover {
-    color: ${theme.colors.blue[700]};
+    background-color: ${({ active }) => (active ? theme.colors.blue[200] : theme.colors.gray[200])};
+    color: ${({ active }) => (active ? '#111' : theme.colors.blue[700])};
   }
 `;
