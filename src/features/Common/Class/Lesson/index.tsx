@@ -179,7 +179,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                 <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
                   <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
                   <s.Name>{dir.name}</s.Name>
-                  <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
+                  <s.Icon>{isExpanded ? <IoIosArrowDown size={18} /> : <IoIosArrowUp size={18} />}</s.Icon>
                   {/* 선생님일 때만 삭제 아이콘 표시 */}
                   {isTeacher && (
                     <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
