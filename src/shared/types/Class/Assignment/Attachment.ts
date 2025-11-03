@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 // 과제 첨부
 export interface AssignmentAttachment {
+  assignmentAttachmentId: string;
   contentType?: string;
   originalFileName?: string; // 과제 파일 이름
   size?: number;

@@ -48,7 +48,11 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                         description: responseData.content,
                         deadline: responseData.endDate,
                         endDate: responseData.endDate,
-                        files: responseData.attachmentDtos.map(att => ({ fileId: att.value ?? String(Math.random()), fileName: att.originalFileName || 'unknown', fileSize: att.size ?? 0 })),
+                        files: responseData.attachmentDtos.map(att => ({
+                            fileId: (att.assignmentAttachmentId ?? String(Math.random())).split('.')[0],
+                            fileName: att.originalFileName || 'unknown',
+                            fileSize: att.size ?? 0
+                        })),
                         isSubmitted: false,
                         submissionDate: null,
                         submittedCount: (responseData as unknown as { submittedCount?: number }).submittedCount || 0,
