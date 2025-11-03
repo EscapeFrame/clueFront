@@ -93,7 +93,7 @@ export default function MyClass() {
                 <s.InfoContent>
                   {cls.categoryKey || '-'} | {cls.assignedClass || '-'}
                 </s.InfoContent>
-                <s.CardDescription>{cls.description || '설명이 없습니다.'}</s.CardDescription>
+                <s.CardDescription>{cls.description}</s.CardDescription>
               </s.Card>
             ))}
           </s.Grid>
