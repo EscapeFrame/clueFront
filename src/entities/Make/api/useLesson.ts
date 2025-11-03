@@ -59,3 +59,12 @@ export const deleteDirectory = async (directoryId: string): Promise<boolean> => 
   });
   return res.status === 200;
 };
+
+export const deleteDocument = async (documentId: string): Promise<boolean> => {
+  const res = await Customapi.delete(`/api/document`, {
+    data: {
+      documentId: documentId,
+    },
+  });
+  return res.status === 200;
+};

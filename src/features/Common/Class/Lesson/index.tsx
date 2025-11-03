@@ -10,7 +10,7 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions, getClassCode } from '../api';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
-import { deleteDirectory } from '@/entities/Make/api/useLesson';
+import { deleteDirectory, deleteDocument } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/shared/model/userState';
 
@@ -147,6 +147,32 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  const handleDeleteDocument = async (docId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    // 선생님이 아니면 삭제 불가
+    if (!isTeacher) {
+      alert("선생님만 디렉토리를 삭제할 수 있습니다.");
+      return;
+    }
+
+    if (window.confirm("정말로 이 도큐먼트 삭제하시겠습니까?")) {
+      try {
+        const success = await deleteDocument(docId);
+        console.log(success);
+        if (success) {
+          setRefreshTrigger(prev => prev + 1);
+        }
+        else {
+          alert("디렉토리 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("디렉토리 삭제 실패:", error);
+        alert("디렉토리 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   const makeLesson = (dirId: string) => {
     navigate(`${dirId}/make/lesson`);
   }
@@ -197,6 +223,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                     >
                       <s.Check>{sub.isRead && <FaCircleCheck />}</s.Check>
                       <s.Name>{sub.name}</s.Name>
+                      {isTeacher && (
+                        <div onClick={(e) => handleDeleteDocument(sub.id, e)}>
+                          <IoClose size={16} />
+                        </div>
+                      )}
                     </s.SubItem>
                   ))}
                   {/* 선생님만 수업 추가 가능 */}
@@ -257,7 +288,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
             />
           </s.Section>
         </s.RightPanel>
-        <s.SettingButton onClick={() =>navigate("setting")}>정보수정하기</s.SettingButton>
+        <s.SettingButton onClick={() => navigate("setting")}>정보수정하기</s.SettingButton>
       </s.Right>
 
       {/* 모달 */}
