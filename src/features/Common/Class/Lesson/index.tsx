@@ -90,16 +90,16 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     });
   };
 
-    if (loading) {
-      return (
-        <s.Container>
-          {/* 나중에 loading style로 변경 */}
-          <div>
-            수업 정보를 불러오는 중...
-          </div>
-        </s.Container>
-      );
-    }
+  if (loading) {
+    return (
+      <s.Container>
+        {/* 나중에 loading style로 변경 */}
+        <div>
+          수업 정보를 불러오는 중...
+        </div>
+      </s.Container>
+    );
+  }
 
   const handleDirectoryClick = (dir: Directory, isSubDirectory: boolean = false) => {
     if (isSubDirectory) {
@@ -215,47 +215,50 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       </s.LeftPanel>
 
       {/* 오른쪽: 새소식 + 질문 */}
-      <s.RightPanel>
-        {isTeacher && (
+      <s.Right>
+        <s.RightPanel>
+          {isTeacher && (
+            <s.Section>
+              <NoticeCard
+                cardTitle="수업참가 코드"
+                notices={[{
+                  noticeId: 'class-code',
+                  title: code || '코드를 불러오지 못했습니다.',
+                  content: '클릭하여 수업 코드를 복사하세요.',
+                  createdAt: '클릭하여 복사',
+                  type: 'SERVICE', // NoticeItem 타입 만족을 위한 임의 값
+                }]}
+                onSelect={(item) => handleCodeSelect(item)}
+              />
+            </s.Section>
+          )}
           <s.Section>
             <NoticeCard
-              cardTitle="수업참가 코드"
-              notices={[{
-                noticeId: 'class-code',
-                title: code || '코드를 불러오지 못했습니다.',
-                content: '클릭하여 수업 코드를 복사하세요.',
-                createdAt: '클릭하여 복사',
-                type: 'SERVICE', // NoticeItem 타입 만족을 위한 임의 값
-              }]}
-              onSelect={(item) => handleCodeSelect(item)}
+              cardTitle="새소식"
+              notices={news.map(item => ({
+                ...item,
+                noticeId: item.id,
+                createdAt: item.date,
+                type: 'SCHOOL', // NoticeItem 타입 만족을 위한 임의 값
+              }))}
+              onSelect={item => setSelectedModal({ type: 'news', item: item as unknown as NewsItem })}
             />
           </s.Section>
-        )}
-        <s.Section>
-          <NoticeCard
-            cardTitle="새소식"
-            notices={news.map(item => ({
-              ...item,
-              noticeId: item.id,
-              createdAt: item.date,
-              type: 'SCHOOL', // NoticeItem 타입 만족을 위한 임의 값
-            }))}
-            onSelect={item => setSelectedModal({ type: 'news', item: item as unknown as NewsItem })}
-          />
-        </s.Section>
-        <s.Section>
-          <NoticeCard
-            cardTitle="최근 질문"
-            notices={questions.map(item => ({
-              ...item,
-              noticeId: item.id,
-              createdAt: item.date,
-              type: 'SCHEDULE', // NoticeItem 타입 만족을 위한 임의 값
-            }))}
-            onSelect={item => setSelectedModal({ type: 'question', item: item as unknown as QuestionItem })}
-          />
-        </s.Section>
-      </s.RightPanel>
+          <s.Section>
+            <NoticeCard
+              cardTitle="최근 질문"
+              notices={questions.map(item => ({
+                ...item,
+                noticeId: item.id,
+                createdAt: item.date,
+                type: 'SCHEDULE', // NoticeItem 타입 만족을 위한 임의 값
+              }))}
+              onSelect={item => setSelectedModal({ type: 'question', item: item as unknown as QuestionItem })}
+            />
+          </s.Section>
+        </s.RightPanel>
+        <s.SettingButton onClick={() =>navigate("setting")}>정보수정하기</s.SettingButton>
+      </s.Right>
 
       {/* 모달 */}
       {selectedModal && (

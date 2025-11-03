@@ -8,21 +8,38 @@ export const Container = styled.div`
   gap: 2rem;
 `;
 
-export const LeftPanel = styled.div`
-  width: 70%;
-`;
-
-export const RightPanel = styled.div`
+export const Right = styled.div`
   width: 30%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 `;
 
+
+export const LeftPanel = styled.div`
+  width: 70%;
+`;
+
+export const RightPanel = styled.div`
+  border: 1px solid ${theme.colors.gray[400]};
+  border-radius: 8px;
+  padding: 1rem;
+  padding-bottom: 2rem;
+`;
+
 export const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+`;
+
+export const SettingButton = styled.button`
+  background: ${theme.colors.blue[500]};
+  border: none;
+  cursor: pointer;
+  ${fonts.P2};
+  padding: 0.5rem;
+  border-radius: 8px;
 `;
 
 export const DirectoryWrapper = styled.div`
