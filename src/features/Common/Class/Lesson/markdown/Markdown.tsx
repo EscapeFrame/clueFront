@@ -142,7 +142,7 @@ export default function MarkDownViewerPage() {
   const { documentId } = useParams<{ documentId: string }>();
   const location = useLocation();
   const [mdContent, setMdContent] = useState('Loading...');
-  const [title] = useState(location.state?.title || '');
+  const [title, setTitle] = useState(location.state?.title || '문서');
 
   useEffect(() => {
     if (!documentId) return;
@@ -159,6 +159,10 @@ export default function MarkDownViewerPage() {
 
     fetchMdData();
   }, [documentId]);
+
+  useEffect(() => {
+    setTitle(location.state?.title || '문서');
+  }, [location.state?.title]);
 
   return (
     <s.PageWrapper>
