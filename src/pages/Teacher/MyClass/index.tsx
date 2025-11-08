@@ -74,7 +74,7 @@ export default function MyClass() {
                   {cls.sort || '-'} | {cls.target || '-'}
                 </s.InfoContent>
 
-                <s.CardDescription>{cls.description || '설명이 없습니다.'}</s.CardDescription>
+                <s.CardDescription>{cls.description}</s.CardDescription>
               </s.Card>
             ))}
           </s.Grid>

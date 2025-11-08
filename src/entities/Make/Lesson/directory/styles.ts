@@ -19,7 +19,8 @@ export const SelectBox = styled.div`
 `;
 
 export const AddButton = styled.div`
-  background-color: ${theme.colors.blue[500]};
+  background-color: ${theme.colors.gray[200]};
+  text-align: center;
   cursor: pointer;
   padding: 0.5rem 1rem;
   border: 1px solid #ddd;

@@ -10,7 +10,7 @@ import NoticeCard from '@/entities/Main/NoticeCard';
 import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories, getLessonNews, getLessonQuestions, getClassCode } from '../api';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
-import { deleteDirectory } from '@/entities/Make/api/useLesson';
+import { deleteDirectory, deleteDocument } from '@/entities/Make/api/useLesson';
 import { useRecoilState } from 'recoil';
 import { userState } from '@/shared/model/userState';
 
@@ -90,16 +90,16 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     });
   };
 
-    if (loading) {
-      return (
-        <s.Container>
-          {/* 나중에 loading style로 변경 */}
-          <div>
-            수업 정보를 불러오는 중...
-          </div>
-        </s.Container>
-      );
-    }
+  if (loading) {
+    return (
+      <s.Container>
+        {/* 나중에 loading style로 변경 */}
+        <div>
+          수업 정보를 불러오는 중...
+        </div>
+      </s.Container>
+    );
+  }
 
   const handleDirectoryClick = (dir: Directory, isSubDirectory: boolean = false) => {
     if (isSubDirectory) {
@@ -147,6 +147,32 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  const handleDeleteDocument = async (docId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    // 선생님이 아니면 삭제 불가
+    if (!isTeacher) {
+      alert("선생님만 디렉토리를 삭제할 수 있습니다.");
+      return;
+    }
+
+    if (window.confirm("정말로 이 도큐먼트 삭제하시겠습니까?")) {
+      try {
+        const success = await deleteDocument(docId);
+        console.log(success);
+        if (success) {
+          setRefreshTrigger(prev => prev + 1);
+        }
+        else {
+          alert("디렉토리 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("디렉토리 삭제 실패:", error);
+        alert("디렉토리 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   const makeLesson = (dirId: string) => {
     navigate(`${dirId}/make/lesson`);
   }
@@ -179,7 +205,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                 <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
                   <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
                   <s.Name>{dir.name}</s.Name>
-                  <s.Icon>{isExpanded ? <IoIosArrowUp size={18} /> : <IoIosArrowDown size={18} />}</s.Icon>
+                  <s.Icon>{isExpanded ? <IoIosArrowDown size={18} /> : <IoIosArrowUp size={18} />}</s.Icon>
                   {/* 선생님일 때만 삭제 아이콘 표시 */}
                   {isTeacher && (
                     <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
@@ -197,6 +223,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                     >
                       <s.Check>{sub.isRead && <FaCircleCheck />}</s.Check>
                       <s.Name>{sub.name}</s.Name>
+                      {isTeacher && (
+                        <div onClick={(e) => handleDeleteDocument(sub.id, e)}>
+                          <IoClose size={16} />
+                        </div>
+                      )}
                     </s.SubItem>
                   ))}
                   {/* 선생님만 수업 추가 가능 */}
@@ -215,47 +246,50 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       </s.LeftPanel>
 
       {/* 오른쪽: 새소식 + 질문 */}
-      <s.RightPanel>
-        {isTeacher && (
+      <s.Right>
+        <s.RightPanel>
+          {isTeacher && (
+            <s.Section>
+              <NoticeCard
+                cardTitle="수업참가 코드"
+                notices={[{
+                  noticeId: 'class-code',
+                  title: code || '코드를 불러오지 못했습니다.',
+                  content: '클릭하여 수업 코드를 복사하세요.',
+                  createdAt: '클릭하여 복사',
+                  type: 'SERVICE', // NoticeItem 타입 만족을 위한 임의 값
+                }]}
+                onSelect={(item) => handleCodeSelect(item)}
+              />
+            </s.Section>
+          )}
           <s.Section>
             <NoticeCard
-              cardTitle="수업참가 코드"
-              notices={[{
-                noticeId: 'class-code',
-                title: code || '코드를 불러오지 못했습니다.',
-                content: '클릭하여 수업 코드를 복사하세요.',
-                createdAt: '클릭하여 복사',
-                type: 'SERVICE', // NoticeItem 타입 만족을 위한 임의 값
-              }]}
-              onSelect={(item) => handleCodeSelect(item)}
+              cardTitle="새소식"
+              notices={news.map(item => ({
+                ...item,
+                noticeId: item.id,
+                createdAt: item.date,
+                type: 'SCHOOL', // NoticeItem 타입 만족을 위한 임의 값
+              }))}
+              onSelect={item => setSelectedModal({ type: 'news', item: item as unknown as NewsItem })}
             />
           </s.Section>
-        )}
-        <s.Section>
-          <NoticeCard
-            cardTitle="새소식"
-            notices={news.map(item => ({
-              ...item,
-              noticeId: item.id,
-              createdAt: item.date,
-              type: 'SCHOOL', // NoticeItem 타입 만족을 위한 임의 값
-            }))}
-            onSelect={item => setSelectedModal({ type: 'news', item: item as unknown as NewsItem })}
-          />
-        </s.Section>
-        <s.Section>
-          <NoticeCard
-            cardTitle="최근 질문"
-            notices={questions.map(item => ({
-              ...item,
-              noticeId: item.id,
-              createdAt: item.date,
-              type: 'SCHEDULE', // NoticeItem 타입 만족을 위한 임의 값
-            }))}
-            onSelect={item => setSelectedModal({ type: 'question', item: item as unknown as QuestionItem })}
-          />
-        </s.Section>
-      </s.RightPanel>
+          <s.Section>
+            <NoticeCard
+              cardTitle="최근 질문"
+              notices={questions.map(item => ({
+                ...item,
+                noticeId: item.id,
+                createdAt: item.date,
+                type: 'SCHEDULE', // NoticeItem 타입 만족을 위한 임의 값
+              }))}
+              onSelect={item => setSelectedModal({ type: 'question', item: item as unknown as QuestionItem })}
+            />
+          </s.Section>
+        </s.RightPanel>
+        <s.SettingButton onClick={() => navigate("setting")}>정보수정하기</s.SettingButton>
+      </s.Right>
 
       {/* 모달 */}
       {selectedModal && (

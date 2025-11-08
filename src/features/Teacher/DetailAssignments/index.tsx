@@ -1,11 +1,11 @@
 import * as s from './styles';
 import { IoReturnUpBackOutline } from "react-icons/io5";
 import { GoPencil } from "react-icons/go";
-import { MdOutlineFileUpload } from "react-icons/md";
+import { MdLink, MdOutlineFileUpload } from "react-icons/md";
 import { FaRegFile, FaXmark } from 'react-icons/fa6';
 import { stateData } from './data';
 import { useEffect, useState, useRef } from 'react';
-import { Assignment, AssignmentFileType } from '@/shared/types/Class/Assignment/Attachment';
+import { Assignment, AssignmentAttachment, AssignmentFileType } from '@/shared/types/Class/Assignment/Attachment';
 import DateInput from '@/entities/UI/InputBox/DateInput';
 import { Modal } from '@/entities/UI/Modal';
 import Button from '@/entities/UI/Button';
@@ -21,7 +21,7 @@ interface UploadedFile {
 }
 
 export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => void }> = ({ assignmentId, onBack }) => {
-    const [assignment, setAssignment] = useState<(Assignment & { submittedCount: number; totalCount: number, files: AssignmentFileType[] }) | null>(null);
+    const [assignment, setAssignment] = useState<(Assignment & { submittedCount: number; totalCount: number, files: AssignmentFileType[], links: AssignmentAttachment[] }) | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -29,7 +29,9 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const [editDescription, setEditDescription] = useState('');
     const [editEndDate, setEditEndDate] = useState('');
     const [showFileModal, setShowFileModal] = useState(false);
+    const [showLinkModal, setShowLinkModal] = useState(false);
     const [tempFiles, setTempFiles] = useState<UploadedFile[]>([]);
+    const [linkUrl, setLinkUrl] = useState('');
     const [isDragOver, setIsDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -41,14 +43,15 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
             try {
                 const responseData = await AssignmentsApi.getById(assignmentId);
                 if (responseData) {
-                    const mappedData: Assignment & { submittedCount: number; totalCount: number, files: AssignmentFileType[] } = {
+                    const mappedData: Assignment & { submittedCount: number; totalCount: number, files: AssignmentFileType[], links: AssignmentAttachment[] } = {
                         assignmentId: responseData.assignmentId,
                         title: responseData.title,
                         content: responseData.content,
                         description: responseData.content,
                         deadline: responseData.endDate,
                         endDate: responseData.endDate,
-                        files: responseData.attachmentDtos.map(att => ({ fileId: att.value ?? String(Math.random()), fileName: att.originalFileName || 'unknown', fileSize: att.size ?? 0 })),
+                        files: responseData.attachmentDtos.filter(att => att.type === 'FILE').map(att => ({ fileId: att.assignmentAttachmentId, fileName: att.originalFileName || 'unknown', fileSize: att.size ?? 0 })),
+                        links: responseData.attachmentDtos.filter(att => att.type === 'LINK' || att.type === 'URL'),
                         isSubmitted: false,
                         submissionDate: null,
                         submittedCount: (responseData as unknown as { submittedCount?: number }).submittedCount || 0,
@@ -226,10 +229,10 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     if (error) return <p>{error}</p>;
     if (!assignment) return <p>과제 정보를 찾을 수 없습니다.</p>;
 
-    const { title, description, files, endDate, submittedCount, totalCount } = assignment;
+    const { title, description, files, links, endDate, submittedCount, totalCount } = assignment;
 
     const Icon0 = stateData[0].icon;
-    const Icon1 = stateData[1].icon;
+    const Icon1 = stateData[1].icon; // 제출
     const Icon2 = stateData[2].icon;
     const Icon3 = stateData[3].icon;
 
@@ -353,7 +356,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                                 </s.FileInfo>
                                 {isEditing && (
                                     <s.FileRemoveButton onClick={(e) => { e.stopPropagation(); removeFile((file as AssignmentFileType).fileId); }}>
-                                        <FaXmark />
+                                        <FaXmark/>
                                     </s.FileRemoveButton>
                                 )}
                             </s.FileItem>
@@ -363,8 +366,6 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                     <s.EmptyFileMessage>파일이 없습니다</s.EmptyFileMessage>
                 )}
             </s.FileSection>
-
-
 
             {showFileModal && (
                 <Modal
@@ -420,53 +421,51 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
             <s.FileSection>
                 <s.FileSectionHeader>
                     <s.SubTitle>할당링크</s.SubTitle>
-                    {isEditing && (
-                        <Button text='링크추가' type={0} width={'150px'} onClick={() => setShowFileModal(true)} />
-                    )}
+                    {isEditing && <Button text='링크추가' type={0} width={'150px'} onClick={() => setShowLinkModal(true)} />}
                 </s.FileSectionHeader>
 
-                {files && files.length > 0 ? (
-                    files.map((file, idx) => {
-                        return (
-                            <s.FileItem
-                                key={idx}
-                                onClick={async () => {
-                                    try {
-                                        const res = await AssignmentsApi.download((file as AssignmentFileType).fileId);
-                                        if (res && res.blob) {
-                                            const url = window.URL.createObjectURL(res.blob);
-                                            const a = document.createElement('a');
-                                            a.href = url;
-                                            a.download = res.filename ?? (file as AssignmentFileType).fileName ?? 'download';
-                                            document.body.appendChild(a);
-                                            a.click();
-                                            a.remove();
-                                            window.URL.revokeObjectURL(url);
-                                        } else {
-                                            alert('파일을 다운로드할 수 없습니다.');
-                                        }
-                                    } catch (err) {
-                                        console.error('다운로드 실패:', err);
-                                        alert('다운로드 중 오류가 발생했습니다.');
-                                    }
-                                }}
-                            >
-                                <s.FileInfo>
-                                    <FaRegFile />
-                                    <span>{file.fileName}</span>
-                                </s.FileInfo>
-                                {isEditing && (
-                                    <s.FileRemoveButton onClick={(e) => { e.stopPropagation(); removeFile((file as AssignmentFileType).fileId); }}>
-                                        <FaXmark />
-                                    </s.FileRemoveButton>
-                                )}
-                            </s.FileItem>
-                        );
-                    })
+                {links && links.length > 0 ? (
+                    links.map((link) => (
+                        <s.FileItem
+                            key={link.assignmentAttachmentId}
+                            onClick={() => window.open(link.value, '_blank', 'noopener,noreferrer')}
+                        >
+                            <s.FileInfo>
+                                <MdLink />
+                                <span>{link.originalFileName || link.value}</span>
+                            </s.FileInfo>
+                            {isEditing && (
+                                <s.FileRemoveButton onClick={(e) => { e.stopPropagation(); removeFile(link.assignmentAttachmentId); }}>
+                                    <FaXmark />
+                                </s.FileRemoveButton>
+                            )}
+                        </s.FileItem>
+                    ))
                 ) : (
-                    <s.EmptyFileMessage>파일이 없습니다</s.EmptyFileMessage>
+                    <s.EmptyFileMessage>링크가 없습니다</s.EmptyFileMessage>
                 )}
             </s.FileSection>
+
+            {showLinkModal && (
+                <Modal
+                    title="링크 추가"
+                    onClose={() => setShowLinkModal(false)}
+                    buttons={[
+                        { text: '취소', type: 1, onClick: () => setShowLinkModal(false) },
+                        { text: '확인', type: 0, onClick: () => { /* TODO: 링크 추가 API 호출 */ alert("링크 추가 기능은 구현 예정입니다."); setShowLinkModal(false); } },
+                    ]}
+                >
+                    <s.ModalContent>
+                        <s.EditTitleInput
+                            type="text"
+                            value={linkUrl}
+                            onChange={(e) => setLinkUrl(e.target.value)}
+                            placeholder="https://example.com"
+                        />
+                    </s.ModalContent>
+                </Modal>
+            )}
+
             <AssignmentEntry assignmentId={assignmentId} totalCount={totalCount} />
         </s.Container>
     );
