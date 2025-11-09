@@ -53,24 +53,107 @@ export const ViewerSection = styled.div`
   }
 `;
 
+export const EditorHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid ${theme.colors.gray[300]};
+`;
+
 export const SectionTitle = styled.input`
   margin: 0;
-  padding: 24px 20px 16px 20px;
   border: none;
   outline: none;
   ${fonts.P5};
   font-weight: 600;
   color: #495057;
+  flex: 1;
 
   @media (max-width: 1200px) {
     ${fonts.P2};
-    padding: 12px 16px;
   }
 
   @media (max-width: 768px) {
     ${fonts.P1};
-    padding: 10px 14px;
   }
+`;
+
+export const HeaderButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+`;
+
+export const FileUploadWrapper = styled.div`
+  padding: 16px 20px;
+  border-bottom: 1px solid ${theme.colors.gray[300]};
+`;
+
+export const FileUploadButton = styled.div`
+  label {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: ${theme.colors.white};
+    border: 1px solid ${theme.colors.gray[300]};
+    border-radius: 6px;
+    cursor: pointer;
+    ${fonts.P2};
+    color: ${theme.colors.black};
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: ${theme.colors.gray[200]};
+    }
+  }
+`;
+
+export const BottomButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid ${theme.colors.gray[300]};
+`;
+
+export const GenerateProblemButton = styled.button`
+  padding: 12px 24px;
+  background-color: ${blue[500]};
+  color: ${theme.colors.white};
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  ${fonts.P3};
+  font-weight: 600;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${blue[600]};
+  }
+`;
+
+export const AIFeedbackButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 24px;
+  background-color: ${theme.colors.white};
+  border: 1px solid ${theme.colors.gray[300]};
+  border-radius: 6px;
+  cursor: pointer;
+  ${fonts.P3};
+  color: ${theme.colors.black};
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${theme.colors.gray[200]};
+  }
+`;
+
+export const AIFeedbackDesc = styled.span`
+  ${fonts.P1};
+  color: ${theme.colors.gray[500]};
+  margin-top: 4px;
 `;
 
 export const previousButton = styled.div`
@@ -270,4 +353,124 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   &:focus {
     outline: none;
   }
+`;
+
+// AI Agent View Styles
+export const AIAgentContainer = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const FeedbackCard = styled.div`
+  background: ${theme.colors.white};
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+`;
+
+export const SuggestionCard = styled.div`
+  background: ${theme.colors.white};
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+`;
+
+export const ReferenceCard = styled.div`
+  background: ${theme.colors.white};
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+`;
+
+export const CardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+`;
+
+export const CardIcon = styled.div<{ bgColor: string }>`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: ${({ bgColor }) => bgColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const CardTitle = styled.h3`
+  ${fonts.P3};
+  font-weight: 600;
+  color: ${theme.colors.black};
+  margin: 0;
+`;
+
+export const FeedbackList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const FeedbackItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+`;
+
+export const FeedbackIcon = styled.div`
+  flex-shrink: 0;
+`;
+
+export const FeedbackText = styled.p`
+  ${fonts.P2};
+  color: ${theme.colors.black};
+  margin: 0;
+  line-height: 1.6;
+`;
+
+export const SuggestionList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const SuggestionItem = styled.div`
+  ${fonts.P2};
+  color: ${theme.colors.black};
+  line-height: 1.6;
+`;
+
+export const ReferenceList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const ReferenceItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${theme.colors.gray[200]};
+  }
+`;
+
+export const ReferenceIcon = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const ReferenceText = styled.span`
+  ${fonts.P2};
+  color: ${theme.colors.black};
 `;
