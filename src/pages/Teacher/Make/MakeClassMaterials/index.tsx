@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as s from "./styles";
 import Step1 from "@/features/Teacher/MakeMaterials/Step1/Step1";
+import Step2 from "@/features/Teacher/MakeMaterials/Step2/Step2";
 
 export default function MakeClassMaterials() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -10,6 +11,10 @@ export default function MakeClassMaterials() {
         console.log("Step 1 Data:", data);
         setStep1Data(data);
         setCurrentStep(2); // 다음 단계로 이동
+    };
+
+    const handleNext = () => {
+        setCurrentStep(currentStep + 1);
     };
 
     return (
@@ -26,7 +31,8 @@ export default function MakeClassMaterials() {
             </s.StepBar>
 
             {currentStep === 1 && <Step1 onNext={handleNextStep1} />}
-            {/* {currentStep === 2 && <Step2 data={step1Data} onNext={...} />} */}
+            {currentStep === 2 && <Step2 onNext={handleNext}/>}
+
             {/* ... 다른 단계들 */}
         </s.Wrapper>
     );
