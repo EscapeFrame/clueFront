@@ -11,8 +11,8 @@ export interface LinkCard {
 export interface LinkFormData {
     title: string;
     link: string;
-    explanation: string;
-    subjectType: string[];
+    description: string;
+    subjectType: string;
 }
 
 export const LINK_CATEGORY_MAP = {
@@ -26,7 +26,6 @@ export type LinkCategory = keyof typeof LINK_CATEGORY_MAP;
 export type LinkCategoryKorean = typeof LINK_CATEGORY_MAP[LinkCategory];
 
 export const LINK_CATEGORY_ENGLISH_MAP: { [key in LinkCategoryKorean]?: LinkCategory } = {
-  '전체': 'Total',
   '인문과목': 'General',
   '전공과목': 'Professional',
   '방과후': 'AfterSchool',
