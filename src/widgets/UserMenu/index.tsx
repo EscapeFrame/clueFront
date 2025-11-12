@@ -25,7 +25,7 @@ export default function Dropdown({ role, name, myImage }: DropdownProps) {
   }
 
   const question = () => {
-    alert("문의 구글 폼으로 이동.");
+    window.location.href = "https://forms.gle/bbRKdV8WNegv3QSU9";
   }
 
   if (role === null) {
