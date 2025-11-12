@@ -1,38 +1,17 @@
-import styled from "@emotion/styled";
+import styled from "styled-components";
+import { theme } from '@/shared/theme/theme.styles';
 
 export const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  background: #f9fafb;
+  padding: 2rem 10rem;
+  background-color: #f9fafb;
   min-height: 100vh;
-  padding: 60px 16px 80px;
-`;
-
-export const Card = styled.div`
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  width: 100%;
-  max-width: 800px;
-  padding: 48px 56px;
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-
-  @media (max-width: 640px) {
-  padding: 24px 18px;
-  }
 `;
 
 export const StepBar = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  color: #9ca3af;
-  font-size: 14px;
-  font-weight: 500;
-  gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 2rem;
+  padding: 0 5rem;
 `;
 
 export const Step = styled.div<{ active?: boolean }>`
@@ -40,128 +19,245 @@ export const Step = styled.div<{ active?: boolean }>`
   flex-direction: column;
   align-items: center;
   position: relative;
-  flex: 1;
-
-  &:not(:last-of-type)::after {
-    content: "";
-    position: absolute;
-    top: 12px;
-    right: -50%;
-    width: 100%;
-    height: 2px;
-    background: ${({ active }) => (active ? "#2563eb" : "#e5e7eb")};
-    z-index: 0;
-  }
+  flex-grow: 1;
 
   span {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: ${({ active }) => (active ? "#2563eb" : "#e5e7eb")};
-    color: ${({ active }) => (active ? "#fff" : "#6b7280")};
-    font-weight: 600;
+    background-color: ${({ active }) => (active ? "#0b5fff" : "#e5e7eb")};
+    color: ${({ active }) => (active ? "white" : "#6b7280")};
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    font-weight: 600;
     z-index: 1;
   }
 
   label {
-  margin-top: 8px;
-  font-size: 13px;
-  color: ${({ active }) => (active ? "#2563eb" : "#6b7280")};
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: ${({ active }) => (active ? "#0b5fff" : "#6b7280")};
+    font-weight: 500;
   }
+`;
+
+export const Card = styled.div`
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 `;
 
 export const Field = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
 
   label {
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    font-size: 14px;
+    color: #374151;
   }
 
-  input,
+  input[type="text"],
   textarea {
-    padding: 12px 14px;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    font-size: 15px;
-    outline: none;
-    transition: 0.15s ease-in-out;
-
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
     &:focus {
-      border-color: #2563eb;
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
-      transform: translateY(-1px);
+      outline: 2px solid #3b82f6;
+      border-color: transparent;
     }
   }
 
   textarea {
-    resize: none;
-    min-height: 80px;
+    min-height: 120px;
+    resize: vertical;
   }
 `;
 
-export const UploadBox = styled.label`
-  border: 1px dashed #e5e7eb;
-  background: #fff;
-  padding: 12px 14px;
-  border-radius: 10px;
-  font-size: 14px;
+// label에서 div로 변경
+export const UploadBox = styled.div<{ isDragOver?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 0.5rem;
   color: #6b7280;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${({ isDragOver }) => (isDragOver ? "#e0e7ff" : "#f3f4f6")};
+  }
+
+  svg {
+    stroke: #9ca3af;
+  }
+`;
+
+export const KeywordList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+`;
+
+export const KeywordItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #e0e7ff;
+  color: #3730a3;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  button {
+    all: unset;
+    cursor: pointer;
+    font-weight: 700;
+    color: #4f46e5;
+    &:hover {
+      color: #3730a3;
+    }
+  }
+`;
+
+export const FilesList = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+export const FileItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-  transition: 0.12s;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
 
-  &:hover {
-    background: #f8fafc;
-    box-shadow: 0 2px 8px rgba(16,24,40,0.03);
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
   }
 
-  input {
-    display: none;
+  .meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .name {
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .size {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  button {
+    all: unset;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 0.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: #f3f4f6;
+      color: #4b5563;
+    }
   }
 `;
 
 export const ButtonRow = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  flex: 1;
+  border-top: 1px solid #e5e7eb;
 `;
 
-export const Button = styled.button<{ variant?: "primary" | "secondary" }>`
-  all: unset;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 10px;
-  padding: 12px 28px;
+export const Button = styled.button<{ variant: "primary" | "secondary" }>`
+  padding: 0.625rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  width: 100%;
   font-weight: 600;
-  font-size: 15px;
-  transition: 0.2s;
-  user-select: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
 
   ${({ variant }) =>
-    variant === "primary"
-      ? `
-      background: #2563eb;
-      color: #fff;
-      &:hover { background: #1d4ed8; }
+    variant === "primary" &&
     `
-      : `
-      border: 1px solid #d1d5db;
-      color: #374151;
-      &:hover { background: #f3f4f6; }
+        background-color: ${theme.colors.blue[800]};
+        color: white;
+        border-color: ${theme.colors.blue[800]};
+
+        &:hover {
+            background-color: #004ADF;
+        }
     `}
+
+  ${({ variant }) =>
+    variant === "secondary" &&
+    `
+        background-color: white;
+        color: #374151;
+        border-color: #d1d5db;
+
+        &:hover {
+            background-color: #f9fafb;
+        }
+    `}
+
+  ${({ disabled }) =>
+    disabled &&
+    `
+    background-color: #d1d5db;
+    color: #6b7280;
+    border-color: #d1d5db;
+    cursor: not-allowed;
+  `}
+`;
+
+export const SvgIcon = styled.svg`
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: #6b7280;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+`;
+
+export const FileIcon = styled.svg`
+  width: 20px;
+  height: 20px;
+  viewbox: 0 0 24 24;
+  fill: none;
+  stroke: #6b7280;
+  stroke-width: 1.5;
 `;
