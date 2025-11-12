@@ -25,8 +25,8 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   const [formData, setFormData] = useState<LinkFormData>({
     title: '',
     link: '',
-    explanation: '',
-    subjectType: [],
+    description: '',
+    subjectType: '',
   });
 
   // 공개 범위 상태
@@ -41,15 +41,17 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
       setFormData({
         title: initialData.title,
         link: initialData.link,
-        explanation: initialData.description,
-        subjectType: initialData.subjectType,
+        description: initialData.description,
+        subjectType: Array.isArray(initialData.subjectType)
+          ? initialData.subjectType[0] || ''
+          : initialData.subjectType,
       });
     } else {
       setFormData({
         title: '',
         link: '',
-        explanation: '',
-        subjectType: [],
+        description: '',
+        subjectType: '',
       });
       setVisibility({ grade: false, class: false });
     }
@@ -67,9 +69,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   const handleTagToggle = (tag: string) => {
     setFormData(prev => ({
       ...prev,
-      subjectType: prev.subjectType.includes(tag)
-        ? prev.subjectType.filter(t => t !== tag)
-        : [...prev.subjectType, tag],
+      subjectType: prev.subjectType === tag ? '' : tag,
     }));
   };
 
@@ -144,8 +144,8 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
           <FormInputGroup
             label="설명"
             type="text"
-            name="explanation"
-            value={formData.explanation}
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             placeholder="URL에 대한 설명을 간단히 적어주세요."
             isTextarea
@@ -156,14 +156,14 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
             태그 <span>*</span>
           </S.FormLabel>
           <S.TagDescription>
-            중복 선택이 가능하며, 1개 이상 선택해주세요.
+            해당 수업을 선택해주세요.
           </S.TagDescription>
           <S.TagButtonContainer>
             {ALL_TAGS.map(tag => (
               <S.TagButton
                 key={tag}
                 type="button"
-                isSelected={formData.subjectType.includes(tag)}
+                isSelected={formData.subjectType === tag}
                 onClick={() => handleTagToggle(tag)}
               >
                 {tag}
