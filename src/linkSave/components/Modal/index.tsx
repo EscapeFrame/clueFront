@@ -74,7 +74,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   };
 
   // 공개범위 토글
-  const handleVisibilityToggle = (key: 'grade' | 'class', checked: boolean) => {
+  const handleVisibilityToggle = (key: 'GRADE' | 'CLASS', checked: boolean) => {
     setVisibility(prev => ({ ...prev, [key]: checked }));
   };
 
@@ -87,10 +87,19 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
       return;
     }
 
+    let visibilityScope = 'PRIVATE';
+    if (visibility.grade && visibility.class) {
+      visibilityScope = 'PUBLIC';
+    } else if (visibility.grade) {
+      visibilityScope = 'GRADE';
+    } else if (visibility.class) {
+      visibilityScope = 'CLASS';
+    }
+
     // 제출 시 onSubmit 콜백으로 전달
     const submitData = {
       ...formData,
-      visibility,
+      authorizationType: visibilityScope,
     };
 
     onSubmit(submitData, initialData?.id);
@@ -172,13 +181,13 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
             <ToggleSwitch
               id="gradeToggle"
               checked={visibility.grade}
-              onChange={checked => handleVisibilityToggle('grade', checked)}
+              onChange={checked => handleVisibilityToggle('GRADE', checked)}
             />
             반
             <ToggleSwitch
               id="classToggle"
               checked={visibility.class}
-              onChange={checked => handleVisibilityToggle('class', checked)}
+              onChange={checked => handleVisibilityToggle('CLASS', checked)}
             />
           </S.TagButtonContainer>
 
