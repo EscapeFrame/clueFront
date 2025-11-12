@@ -10,6 +10,7 @@ interface DirectoryApiResponse {
     directoryId: number;
     directoryName: string;
     documentList: Array<{
+      type: "markdown" | "ppt" | "code" | "docs"; // 백엔드랑 명칭 맞추기
       documentId: string;
       title: string;
       createdAt: string;

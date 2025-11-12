@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal } from '@/entities/UI/Modal';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { FaCircleCheck } from 'react-icons/fa6';
-import { IoClose } from 'react-icons/io5';
+import { IoDocumentOutline } from "react-icons/io5";
+import { IoCodeSlashOutline } from "react-icons/io5";
+import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
+import { LuHash } from "react-icons/lu";
+
 import * as s from './styles';
 
 import NoticeCard from '@/entities/Main/NoticeCard';
@@ -61,6 +63,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           id: doc.documentId,
           name: doc.title,
           isRead: false,
+          type: doc.type as 'markdown' | 'ppt' | 'code' | 'docs',
         })),
       }));
       setDirectories(dirs);
@@ -194,126 +197,80 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   };
 
   return (
-    <s.Container>
-      {/* 왼쪽: 강의 디렉토리 */}
-      <s.LeftPanel>
-        <s.Section>
-          {directories.map(dir => {
-            const isExpanded = expandedIds.has(dir.id);
-            return (
-              <s.DirectoryWrapper key={dir.id}>
-                <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
-                  <s.Check>{dir.isRead && <FaCircleCheck />}</s.Check>
+     <s.Container>
+      <s.SectionHeader>
+        <s.LeftGroup>
+          <s.Description>※ 디렉토리 제목 클릭 시 수정 가능합니다.</s.Description>
+        </s.LeftGroup>
+        <s.RightGroup>
+          <s.SettingButton onClick={() => navigate("setting")}>
+            학습실 관리
+          </s.SettingButton>
+          {isTeacher && (
+            <NoticeCard
+              cardTitle="수업코드"
+              notices={[{ noticeId: 'class-code', title: code, type: 'SERVICE' }]}
+              onSelect={handleCodeSelect}
+            />
+          )}
+        </s.RightGroup>
+      </s.SectionHeader>
+
+      <s.Section>
+        {directories.map((dir) => {
+          const isExpanded = expandedIds.has(dir.id);
+          const readCount = dir.directoryList?.filter(d => d.isRead).length ?? 0;
+          const totalCount = dir.directoryList?.length ?? 0;
+          const progress = totalCount > 0 ? (readCount / totalCount) * 100 : 0;
+
+          return (
+            <s.DirectoryWrapper key={dir.id}>
+              {/* 최상위 디렉토리 Item */}
+              <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
+                <s.Left>
                   <s.Name>{dir.name}</s.Name>
-                  <s.Icon>{isExpanded ? <IoIosArrowDown size={18} /> : <IoIosArrowUp size={18} />}</s.Icon>
-                  {/* 선생님일 때만 삭제 아이콘 표시 */}
+                  <s.Progress>{readCount}/{totalCount}</s.Progress>
+                </s.Left>
+
+                <s.Right>
                   {isTeacher && (
-                    <s.DeleteIcon onClick={(e) => handleDeleteDirectory(dir.id, e)}>
-                      <IoClose size={16} />
-                    </s.DeleteIcon>
+                    <s.AddSub onClick={(e) => { e.stopPropagation(); makeLesson?.(dir.id); }}>
+                      +
+                    </s.AddSub>
                   )}
-                </s.Item>
-                {/* 서브 디렉토리 */}
-                <s.SubDirectoryList $isExpanded={isExpanded}>
-                  {dir.directoryList?.map(sub => (
-                    <s.SubItem
-                      key={sub.id}
-                      $isRead={sub.isRead}
-                      onClick={() => handleDirectoryClick(sub, true)}
-                    >
-                      <s.Check>{sub.isRead && <FaCircleCheck />}</s.Check>
-                      <s.Name>{sub.name}</s.Name>
-                      {isTeacher && (
-                        <div onClick={(e) => handleDeleteDocument(sub.id, e)}>
-                          <IoClose size={16} />
-                        </div>
-                      )}
-                    </s.SubItem>
-                  ))}
-                  {/* 선생님만 수업 추가 가능 */}
-                  {isTeacher &&
-                    <s.AddSub onClick={() => makeLesson(dir.id)}>수업 추가하기</s.AddSub>
-                  }
-                </s.SubDirectoryList>
-              </s.DirectoryWrapper>
-            );
-          })}
-          {/* 선생님일 때만 디렉토리 추가 기능 표시 */}
-          {isTeacher && (
-            <DirectorySelect classRoomId={classRoomId} onDirectoryAdded={handleDirectoryAdded} />
-          )}
-        </s.Section>
-      </s.LeftPanel>
+                  <s.Icon>{isExpanded ? <IoIosArrowUp /> : <IoIosArrowDown />}</s.Icon>
+                </s.Right>
+              </s.Item>
 
-      {/* 오른쪽: 새소식 + 질문 */}
-      <s.Right>
-        <s.RightPanel>
-          {isTeacher && (
-            <s.Section>
-              <NoticeCard
-                cardTitle="수업참가 코드"
-                notices={[{
-                  noticeId: 'class-code',
-                  title: code || '코드를 불러오지 못했습니다.',
-                  content: '클릭하여 수업 코드를 복사하세요.',
-                  createdAt: '클릭하여 복사',
-                  type: 'SERVICE', // NoticeItem 타입 만족을 위한 임의 값
-                }]}
-                onSelect={(item) => handleCodeSelect(item)}
-              />
-            </s.Section>
-          )}
-          <s.Section>
-            <NoticeCard
-              cardTitle="새소식"
-              notices={news.map(item => ({
-                ...item,
-                noticeId: item.id,
-                createdAt: item.date,
-                type: 'SCHOOL', // NoticeItem 타입 만족을 위한 임의 값
-              }))}
-              onSelect={item => setSelectedModal({ type: 'news', item: item as unknown as NewsItem })}
-            />
-          </s.Section>
-          <s.Section>
-            <NoticeCard
-              cardTitle="최근 질문"
-              notices={questions.map(item => ({
-                ...item,
-                noticeId: item.id,
-                createdAt: item.date,
-                type: 'SCHEDULE', // NoticeItem 타입 만족을 위한 임의 값
-              }))}
-              onSelect={item => setSelectedModal({ type: 'question', item: item as unknown as QuestionItem })}
-            />
-          </s.Section>
-        </s.RightPanel>
-        <s.SettingButton onClick={() => navigate("setting")}>정보수정하기</s.SettingButton>
-      </s.Right>
+              <s.ProgressBarWrapper>
+                <s.ProgressBar $progress={progress} />
+                <s.ProgressText>{Math.round(progress)}%</s.ProgressText>
+              </s.ProgressBarWrapper>
 
-      {/* 모달 */}
-      {selectedModal && (
-        <Modal
-          title={selectedModal.type === 'news' ? '새소식' : '질문'}
-          notes="default"
-          onClose={() => setSelectedModal(null)}
-          isWarning={false}
-          buttons={[{ text: '닫기', type: 1, onClick: () => setSelectedModal(null) }]}
-        >
-          <s.ModalContent>
-            <s.ModalTitle>{selectedModal.item.title}</s.ModalTitle>
-            <s.ModalText>{selectedModal.item.content}</s.ModalText>
-            {'author' in selectedModal.item && (
-              <s.ModalMeta>
-                <strong>작성자:</strong> {selectedModal.item.author}
-              </s.ModalMeta>
-            )}
-            <s.ModalMeta>
-              <strong>날짜:</strong> {selectedModal.item.date}
-            </s.ModalMeta>
-          </s.ModalContent>
-        </Modal>
-      )}
+              <s.SubDirectoryList $isExpanded={isExpanded}>
+                {dir.directoryList?.map((sub) => (
+                  <s.SubItem
+                    key={sub.id}
+                    $isRead={sub.isRead}
+                    onClick={() => handleDirectoryClick(sub, true)}
+                  >
+                    <s.Check $isRead={sub.isRead}>
+                      {/* 자료 종류별 아이콘 */}
+                      {sub.type === 'markdown' && <LuHash />}
+                      {sub.type === 'ppt' && <HiOutlineSquare3Stack3D />}
+                      {sub.type === 'code' && <IoCodeSlashOutline />}
+                      {sub.type === 'docs' && <IoDocumentOutline />}
+                    </s.Check>
+
+                    <s.Name>{sub.name}</s.Name>
+                  </s.SubItem>
+                ))}
+              </s.SubDirectoryList>
+
+            </s.DirectoryWrapper>
+          );
+        })}
+      </s.Section>
     </s.Container>
   );
 };

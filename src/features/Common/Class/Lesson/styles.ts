@@ -1,153 +1,23 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   display: flex;
+  flex-direction: column; 
   padding: 2rem 8rem;
   gap: 2rem;
 `;
 
-export const Right = styled.div`
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-
-export const LeftPanel = styled.div`
-  width: 70%;
-`;
-
-export const RightPanel = styled.div`
-  border: 1px solid ${theme.colors.gray[400]};
-  border-radius: 8px;
-  padding: 1rem;
-  padding-bottom: 2rem;
-`;
-
-export const Section = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
 export const SettingButton = styled.button`
-  background: ${theme.colors.blue[500]};
+  background: ${colors.primary};
+  color: ${colors.white};
   border: none;
   cursor: pointer;
   ${fonts.P2};
-  padding: 0.5rem;
+  width: 10rem;
+  padding: 1rem;
   border-radius: 8px;
-`;
-
-export const DirectoryWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const Item = styled.div<{ $isRead: boolean }>`
-  background-color: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[300]};
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  gap: 0.5rem;
-  position: relative;
-  padding-right: 3rem;
-`;
-
-export const SubItem = styled.div<{ $isRead: boolean }>`
-  background-color: ${theme.colors.gray[200]};
-  border: 1px solid ${theme.colors.gray[300]};
-  padding: 0.6rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-`;
-
-export const AddSub = styled.div `
-  background-color: ${theme.colors.blue[400]};
-  border: 1px solid ${theme.colors.gray[300]};
-  padding: 0.6rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-`
-
-export const Check = styled.span`
-  width: 1rem;
-  text-align: center;
-  color: ${theme.colors.blue[500]};
-`;
-
-export const Name = styled.span`
-  flex-grow: 1;
-`;
-
-export const Icon = styled.span`
-  margin-left: auto;
-`;
-
-export const DeleteIcon = styled.span`
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #ef4444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: rgba(239, 68, 68, 0.1);
-  z-index: 1;
-  
-  &:hover {
-    background-color: rgba(239, 68, 68, 0.2);
-  }
-`;
-
-export const ModalContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-`;
-
-export const ModalTitle = styled.h3`
-  ${fonts.P2}
-  font-weight: 600;
-  margin: 0;
-  padding: 0;
-`;
-
-export const ModalText = styled.p`
-  ${fonts.P2}
-  color: ${theme.colors.black};
-  margin: 0;
-  padding: 0;
-`;
-
-export const ModalMeta = styled.p`
-  ${fonts.P1}
-  color: ${theme.colors.gray[600]};
-  margin: 0;
-  padding: 0;
-`;
-
-export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
-  overflow: auto;
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '2000px' : '0')};
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
 `;
 
 export const IconGroup = styled.div`
@@ -166,5 +36,199 @@ export const PlusIcon = styled.div`
 
   &:hover {
     color: ${({ theme }) => theme.colors.blue[600]};
+  }
+`;
+
+export const Description = styled.p`
+  ${fonts.P2};
+  color: ${colors.gray[4]};
+  margin: 0; 
+  padding: 0; 
+  
+  @media (max-width: 1200px) { 
+    ${fonts.P1} 
+  } 
+
+  @media (max-width: 768px) { 
+    ${fonts.P1};
+    text-align: center; 
+  } 
+`;
+
+export const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+`;
+
+export const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 8px;
+`;
+
+export const LeftGroup = styled.div`
+ display: flex; 
+ align-items: center;
+`; 
+ 
+ export const RightGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem; 
+`;
+
+// 상위 디렉토리 (1차시, 2차시)
+export const DirectoryWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid ${colors.gray[3]};
+  border-radius: 12px;
+  background-color: ${colors.white};
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+`;
+
+export const Item = styled.div<{ $isRead: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  background-color: ${colors.white};
+  transition: background-color 0.2s ease;
+`;
+
+export const Left = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+export const Right = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+export const Name = styled.span`
+  ${fonts.P3};
+  color: ${colors.black};
+  flex-grow: 1;
+`;
+
+export const Progress = styled.span`
+  ${fonts.P2};
+  color: ${colors.gray[4]};
+  padding: 0.25rem 0.75rem;
+  border: 1px solid ${colors.gray[3]};
+  border-radius: 999px;
+  text-align: center;
+`;
+
+export const Icon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.gray[4]};
+`;
+
+export const AddSub = styled.div`
+  background-color: ${colors.primary};
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.white};
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.blue.dep1};
+  }
+`;
+
+export const ProgressBarWrapper = styled.div`
+  display: flex;           
+  align-items: center;     
+  gap: 10px;              
+  height: 1rem;
+  margin: 0 1.5rem 1.5rem 1.5rem;
+`;
+
+export const ProgressBar = styled.div<{ $progress: number }>`
+  height: 100%;
+  background: ${colors.primary};
+  border-radius: 4rem;
+  transition: width 0.5s ease;
+  width: ${({ $progress }) => $progress}%;
+`;
+
+export const ProgressText = styled.span`
+  flex-shrink: 0;          /* 텍스트가 줄어들지 않도록 고정 */
+  font-size: 0.9rem;
+  color: ${colors.primary};
+`;
+
+// 서브 디렉토리 영역
+export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
+  max-height: ${({ $isExpanded }) => ($isExpanded ? '1000px' : '0')};
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: ${({ $isExpanded }) => ($isExpanded ? '0.8rem 0' : '0')};
+  background-color: ${colors.gray[1]};
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+`;
+
+export const SubItem = styled.div<{ $isRead: boolean }>`
+  background-color: ${colors.white};
+  border: 1px solid ${colors.gray[2]};
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  margin: 0 1rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: ${colors.gray[2]};
+    transform: translateX(4px);
+  }
+`;
+
+export const Check = styled.span<{ $isRead?: boolean }>`
+  ${fonts.P3};
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 8px;
+  background-color: ${({ $isRead }) => ($isRead ? colors.blue.light2 : colors.gray[1])};
+  color: ${({ $isRead }) => ($isRead ? colors.primary : colors.gray[4])};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const DeleteIcon = styled.span`
+  margin-left: auto;
+  color: ${colors.red[3]};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border-radius: 50%;
+  padding: 2px;
+
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+    transform: scale(1.1);
   }
 `;
