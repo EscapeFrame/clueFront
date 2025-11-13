@@ -10,6 +10,17 @@ export function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
+      const handleLogin = async (token: string) => {
+        if (context) {
+          console.log("Context exists. Calling setAuthInfo...");
+          await context.setAuthInfo(token); // await로 호출하여 사용자 정보 로딩을 기다림
+          console.log("setAuthInfo finished. Redirecting to /");
+          navigate('/', { replace: true });
+        } else {
+          console.error("UserContext is not available in Login component.");
+        }
+      };
+
         console.log("Login page useEffect triggered.");
         const params = new URLSearchParams(window.location.search);
         const accessToken = params.get('access_token');
@@ -17,15 +28,7 @@ export function Login() {
         console.log("Access Token from URL:", accessToken);
 
         if (accessToken) {
-            console.log("Tokens found in URL.");
-            if (context) {
-                console.log("Context exists. Calling setAuthInfo...");
-                console.log("setAuthInfo called. Redirecting to /");
-                context.setAuthInfo(accessToken);
-                navigate('/', { replace: true });
-            } else {
-                console.error("UserContext is not available in Login component.");
-            }
+            handleLogin(accessToken);
         } else {
             console.log("Tokens not found in URL params.");
         }
