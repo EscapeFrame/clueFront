@@ -91,7 +91,7 @@ export default function MyClass() {
                   <s.CardTitle>{cls.name}</s.CardTitle>
                 </s.CardHeader>
                 <s.InfoContent>
-                  {cls.categoryKey || '-'} | {cls.assignedClass || '-'}
+                  {cls.sort || '-'} | {cls.target || '-'}
                 </s.InfoContent>
                 <s.CardDescription>{cls.description}</s.CardDescription>
               </s.Card>

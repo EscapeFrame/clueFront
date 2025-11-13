@@ -10,7 +10,6 @@ export const StepBar = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
-  padding: 0 5rem;
 `;
 
 export const Step = styled.div<{ active?: boolean }>`

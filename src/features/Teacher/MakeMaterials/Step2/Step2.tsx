@@ -8,11 +8,18 @@ export interface WorkflowNode {
     id: string;
     title: string;
     icon: WorkflowIconKey;
+    iconNumber: number;
 }
 
 export interface WorkflowEdge {
     from: string;
     to: string;
+}
+
+export interface Word {
+    priority: number;
+    index: string;
+    iconNumber: number;
 }
 
 export interface WorkflowState {
@@ -22,7 +29,8 @@ export interface WorkflowState {
 export interface Step2Props {
     initialWorkflow?: WorkflowState;
     onBack?: () => void;
-    onNext?: (payload: { nodes: WorkflowNode[]; edges: WorkflowEdge[] }) => void;
+    onNext?: (payload: { words: Word[] }) => void;
+    initialWords?: { words: Word[] };
 }
 
 const workflowIconMap: Record<WorkflowIconKey, React.ReactNode> = {
@@ -33,6 +41,15 @@ const workflowIconMap: Record<WorkflowIconKey, React.ReactNode> = {
     custom: <PiBookOpenText size={18} />,
 };
 
+const iconNumberMap: Record<number, WorkflowIconKey> = {
+    1: "theory",
+    2: "example",
+    3: "practice",
+    4: "assignment",
+};
+
+const getIconKeyFromNumber = (num: number): WorkflowIconKey => iconNumberMap[num] || "custom";
+
 const createId = () => {
     if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
         return crypto.randomUUID();
@@ -42,15 +59,32 @@ const createId = () => {
 
 const defaultWorkflow: WorkflowState = {
     nodes: [
-        { id: createId(), title: "이론", icon: "theory" },
-        { id: createId(), title: "예제코드", icon: "example" },
-        { id: createId(), title: "실습문제", icon: "practice" },
-        { id: createId(), title: "미니과제", icon: "assignment" },
+        { id: createId(), title: "이론", icon: "theory", iconNumber: 1 },
+        { id: createId(), title: "예제코드", icon: "example", iconNumber: 2 },
+        { id: createId(), title: "실습문제", icon: "practice", iconNumber: 3 },
+        { id: createId(), title: "미니과제", icon: "assignment", iconNumber: 4 },
     ],
 };
 
-export default function Step2({ initialWorkflow, onBack, onNext }: Step2Props) {
-    const [workflow, setWorkflow] = useState<WorkflowState>(initialWorkflow ?? defaultWorkflow);
+const processInitialWords = (words?: Word[]): WorkflowState => {
+    if (!words || words.length === 0) {
+        return defaultWorkflow;
+    }
+    const sortedNodes = [...words]
+        .sort((a, b) => a.priority - b.priority)
+        .map((word) => ({
+            id: createId(),
+            title: word.index,
+            icon: getIconKeyFromNumber(word.iconNumber),
+            iconNumber: word.iconNumber,
+        }));
+    return { nodes: sortedNodes };
+};
+
+export default function Step2({ initialWorkflow, onBack, onNext, initialWords }: Step2Props) {
+    const [workflow, setWorkflow] = useState<WorkflowState>(() =>
+        initialWords ? processInitialWords(initialWords.words) : initialWorkflow ?? defaultWorkflow,
+    );
     const [draggingId, setDraggingId] = useState<string | null>(null);
     const [hoverEdgeIndex, setHoverEdgeIndex] = useState<number | null>(null);
     const [hoverNodeId, setHoverNodeId] = useState<string | null>(null);
@@ -71,6 +105,7 @@ export default function Step2({ initialWorkflow, onBack, onNext }: Step2Props) {
                 id: createId(),
                 title: `새 단계 ${nextIndex}`,
                 icon: "custom",
+                iconNumber: 5, // 'custom'에 해당하는 기본값
             };
             return { ...prev, nodes: [...prev.nodes, newNode] };
         });
@@ -177,13 +212,16 @@ export default function Step2({ initialWorkflow, onBack, onNext }: Step2Props) {
     }, []);
 
     const handleNext = useCallback(() => {
-        const payload = {
-            nodes: workflow.nodes,
-            edges,
-        };
+        const wordsPayload: Word[] = workflow.nodes.map((node, index) => ({
+            priority: index + 1,
+            index: node.title,
+            iconNumber: node.iconNumber,
+        }));
+
+        const payload = { words: wordsPayload };
         console.log("[Step2] Workflow payload:", payload);
         onNext?.(payload);
-    }, [edges, onNext, workflow.nodes]);
+    }, [onNext, workflow.nodes]);
 
     return (
         <s.Container>
