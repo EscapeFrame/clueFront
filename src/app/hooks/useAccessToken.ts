@@ -3,24 +3,20 @@ import Customapi from '@/shared/config/api';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
 
-export const useAuth = () => {
+export const useAuth = (): any => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
-  const [refreshToken, setRefreshToken] = useState<string | null>(localStorage.getItem('refreshToken'));
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   // 로그인시 사용자 정보 및 토큰 세팅
-  const setAuthInfo = useCallback((accessToken: string, refreshToken: string) => {
+  const setAuthInfo = useCallback((accessToken: string) => {
     setAccessToken(accessToken);
-    setRefreshToken(refreshToken);
-    localStorage.setItem('accessToken', accessToken);
     // 쿠키 방식을 사용하므로 refreshToken은 localStorage에 저장하지 않습니다.
   }, []);
 
   // 로그아웃
   const removeAuthInfo = useCallback(() => {
     setAccessToken(null);
-    setRefreshToken(null);
     setUser({ username: "", userId: "", role: "" });
     localStorage.removeItem('accessToken');
     // 필요하다면 localStorage에서 refreshToken도 제거합니다.
@@ -55,6 +51,7 @@ export const useAuth = () => {
         const userData = res.data;
         setUser({
           userId: userData.userId,
+
           username: userData.username,
           role: userData.role,
         });
@@ -68,10 +65,11 @@ export const useAuth = () => {
       } finally {
         setLoading(false);
       }
+
     };
 
     fetchUserInfo();
   }, [accessToken, user.userId, setUser, removeAuthInfo]);
 
-  return { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo, loading };
+  return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };

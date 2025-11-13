@@ -13,18 +13,15 @@ export function Login() {
         console.log("Login page useEffect triggered.");
         const params = new URLSearchParams(window.location.search);
         const accessToken = params.get('access_token');
-        const refreshToken = params.get('refresh_token');
 
         console.log("Access Token from URL:", accessToken);
-        console.log("Refresh Token from URL:", refreshToken);
 
-        if (accessToken && refreshToken) {
+        if (accessToken) {
             console.log("Tokens found in URL.");
             if (context) {
                 console.log("Context exists. Calling setAuthInfo...");
-                context.setAuthInfo(accessToken, refreshToken);
                 console.log("setAuthInfo called. Redirecting to /");
-                // URL에서 토큰 파라미터를 제거하고 메인 페이지로 이동
+                context.setAuthInfo(accessToken);
                 navigate('/', { replace: true });
             } else {
                 console.error("UserContext is not available in Login component.");
@@ -33,7 +30,7 @@ export function Login() {
             console.log("Tokens not found in URL params.");
         }
     }, [context, navigate]); // 의존성 배열 추가로 최초 1회만 실행되도록 함
-
+    
     return (
         <S.Container>
             <S.Left>
@@ -47,5 +44,6 @@ export function Login() {
         </S.Container>
     )
 }
+
 
 export default Login

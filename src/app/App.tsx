@@ -22,7 +22,7 @@ export default function App() {
 }
 
 function AuthWrapper() {
-  const { accessToken, refreshToken, user, setAuthInfo, removeAuthInfo, loading } = useAuth();
+  const { accessToken, user, setAuthInfo, removeAuthInfo, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -38,7 +38,7 @@ function AuthWrapper() {
     location.pathname
   );
   return (
-      <UserContext.Provider value={{ accessToken, refreshToken, user, setAuthInfo, removeAuthInfo }}>
+      <UserContext.Provider value={{ accessToken, user, setAuthInfo, removeAuthInfo }}>
       {!hideNavbar && (
         <Navbar userId={Number(user?.userId) || 0} username={user?.username || ''} role={role} />
       )}
