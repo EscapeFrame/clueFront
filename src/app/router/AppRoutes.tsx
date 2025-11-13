@@ -32,7 +32,7 @@ interface AppRoutesProps {
 }
 
 export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
-  const isAuthenticated = role !== null;
+  const isAuthenticated = !!role;
 
   if (loading) {
     return <div>Loading...</div>;
@@ -50,7 +50,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
 
   return (
     <Routes>
-      <Route path="/login" element={< Login />} />
+      <Route path="/login" element={<Navigate to="/" replace />} />
       <Route path="/register" element={<Navigate to="/" replace />} />
 
       {role === 'TCH' && (

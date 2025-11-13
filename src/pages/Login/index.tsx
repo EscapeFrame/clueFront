@@ -12,34 +12,27 @@ export function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (token) {
-            console.log("로그인 페이지: 이미 인증된 사용자입니다. 홈페이지로 리디렉션합니다.");
-            navigate('/', { replace: true });
-        } else {
-            console.log("로그인 페이지: 인증되지 않은 사용자입니다. 로그인 페이지에 머무릅니다.");
-        }
-    }, [token, navigate]);
-
-    useEffect(() => {
-        console.log("로그인 페이지: URL 파라미터 확인을 시작합니다.");
         const params = new URLSearchParams(window.location.search);
-        const accessToken = params.get('access_token');
+        const urlToken = params.get('access_token');
 
-        console.log("URL에서 가져온 Access Token:", accessToken);
-
-        if (accessToken) {
-            console.log("URL에서 Access Token을 발견했습니다.");
+        if (urlToken) {
+            // Case 1: Token is in the URL (coming from OAuth). This is the highest priority.
+            console.log("로그인 페이지: URL에서 Access Token을 발견했습니다. 인증 정보를 설정하고 홈페이지로 리디렉션합니다.");
             if (context) {
-                console.log("`setAuthInfo`를 호출하고 홈페이지로 리디렉션합니다.");
-                context.setAuthInfo(accessToken);
+                context.setAuthInfo(urlToken);
                 navigate('/', { replace: true });
             } else {
                 console.error("로그인 컴포넌트에서 UserContext를 사용할 수 없습니다.");
             }
+        } else if (token) {
+            // Case 2: No token in URL, but a token exists in storage.
+            console.log("로그인 페이지: 이미 저장된 토큰으로 인증되었습니다. 홈페이지로 리디렉션합니다.");
+            navigate('/', { replace: true });
         } else {
-            console.log("URL 파라미터에 Access Token이 없습니다.");
+            // Case 3: No token anywhere.
+            console.log("로그인 페이지: 인증 토큰이 없습니다. 로그인 페이지에 머무릅니다.");
         }
-    }, [context, navigate]);
+    }, [token, context, navigate]);
     
     return (
         <S.Container>
