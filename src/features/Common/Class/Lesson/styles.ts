@@ -232,3 +232,29 @@ export const DeleteIcon = styled.span`
     transform: scale(1.1);
   }
 `;
+
+// 수업코드
+export const CardContainer = styled.div`
+  background: ${colors.white};
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  overflow-y: auto;
+  margin: 10px 0;
+  padding: 0.1rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  gap: 15px;
+`;
+
+export const CardTitle = styled.h2`
+  ${fonts.P3}
+  font-weight: 600;
+  color: ${colors.primary};
+`;
+
+export const CardText = styled.h2`
+  ${fonts.P2}
+  color: ${colors.black};
+`;

@@ -12,11 +12,13 @@ import { getClassInfo as ClassData } from '@/entities/Class/api';
 import { ClassInfoProps } from '@/shared/types/Class/classroom';
 import NotFound from '@/pages/NotFound';
 import { DetailAssignment } from '@/features/Teacher/DetailAssignments';
+import { getClassCode } from '@/features/Common/Class/api';
 
 const Classroom: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId: string }>();
-    const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
+  const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('lesson');
+  const [code, setCode] = useState<string>("");
 
   // API로 가져온 클래스 정보를 담을 state
   const [classInfo, setClassInfo] = useState<ClassInfoProps | null>(null);
@@ -41,6 +43,11 @@ const Classroom: React.FC = () => {
         setClassInfo(data); // 이제 안전하게 상태에 넣음
       })
       .catch((err) => console.error('클래스룸 정보 로딩 실패: ', err));
+
+    getClassCode(classRoomId)
+      .then((res) => setCode(res))
+      .catch((err) => console.error(err));
+
   }, [classRoomId]);
 
   const handleTabChange = (tab: string) => {
@@ -61,7 +68,7 @@ const Classroom: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'lesson':
-        return <LessonComponent classRoomId={classRoomId} />;
+        return <LessonComponent classRoomId={classRoomId} code={classInfo?.code ?? ''} />;
       case 'assignment':
         return selectedAssignment ? (
           <DetailAssignment

@@ -7,6 +7,7 @@ export interface ClassInfoProps {
   isActivation: boolean;
   createdAt: string
   teacherNames: string[];
+  code?: string;
 }
 
 // 수업조회

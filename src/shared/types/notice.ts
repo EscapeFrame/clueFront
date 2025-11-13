@@ -1,4 +1,5 @@
 export interface NoticeItem {
+  createdAt: any;
   type: "SCHEDULE" | "SCHOOL" | "SERVICE";
   noticeId: string;
   title: string;
