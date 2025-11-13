@@ -49,10 +49,6 @@ export default function NoticeCard({
         <s.List>
           <s.ErrorText>공지사항이 없습니다.</s.ErrorText>
         </s.List>
-        <s.CardHeader>
-          <s.Title>{cardTitle}</s.Title>
-        </s.CardHeader>
-        <s.ErrorText>{error}</s.ErrorText>
       </s.CardContainer>
     );
   }

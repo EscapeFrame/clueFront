@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export const NavbarWrapper = styled.div`
   position: fixed;
@@ -9,7 +9,7 @@ export const NavbarWrapper = styled.div`
   height: 50px;
   padding: 0.5rem 8rem;
   background-color: rgba(255, 255, 255, 0.8);
-  outline: 0.5px solid ${theme.colors.gray[300]};
+  outline: 0.5px solid ${colors.gray[3]};
   z-index: 1000;
 
   min-width: 665px;
@@ -36,7 +36,7 @@ export const Container = styled.div`
 export const Brand = styled.div`
   ${fonts.P4}
   text-decoration: none;
-  color: ${theme.colors.black};
+  color: ${colors.black};
   display: flex;
   align-items: center;
 `;
@@ -73,7 +73,7 @@ export const NavLinks = styled.ul`
 export const NavItem = styled.a`
   margin-right: 1.25rem;
   text-decoration: none;
-  color: ${theme.colors.black};
+  color: ${colors.black};
   ${fonts.P2}
   display: flex;
   align-items: center; /* 텍스트 세로 중앙정렬 */
@@ -81,7 +81,7 @@ export const NavItem = styled.a`
   cursor: pointer;
 
   &:hover {
-    color: ${theme.colors.blue[600]};
+    color: ${colors.blue.dep1};
   }
 
   @media (max-width: 480px) {

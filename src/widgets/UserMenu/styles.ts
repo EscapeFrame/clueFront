@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export const DropdownContainer = styled.div`
   position: relative;
@@ -19,7 +19,7 @@ export const DropdownButton = styled.button`
   border: none;
   cursor: pointer;
   ${fonts.P3}
-  color: ${theme.colors.black};
+  color: ${colors.black};
   padding: 0.5rem;
 
   @media (max-width: 768px) {
@@ -52,7 +52,8 @@ export const User = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #EBF6FF;
+  background-color: ${(props) =>
+    props.role === "teacher" ? `${colors.red[1]}` : `${colors.blue.light1}`};
   border-radius: 24px;
   padding: 6px 12px;
   item-align: center;
@@ -63,5 +64,5 @@ export const UserInfo = styled.div`
   align-items: center;
   gap: 8px;
   item-align: center;
-  color: #0077FF;
+  color: ${colors.primary};
 `;

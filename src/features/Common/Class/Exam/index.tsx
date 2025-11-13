@@ -42,11 +42,13 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
         <s.LeftGroup>
           <s.Description>※ 디렉토리 제목 클릭 시 수정 가능합니다.</s.Description>
         </s.LeftGroup>
-        <s.RightGroup>
-          <s.SettingButton onClick={() => navigate("/class/task")}> {/* 내용 변경해야하는 부분 */}
-            학습실 관리
-          </s.SettingButton>
-        </s.RightGroup>
+        {isTeacher &&
+          <s.RightGroup>
+            <s.SettingButton onClick={() => navigate("/class/task")}> {/* 내용 변경해야하는 부분 */}
+              학습실 관리
+            </s.SettingButton>
+          </s.RightGroup>
+        }
       </s.SectionHeader>
 
       {exams.length === 0 ? (

@@ -42,7 +42,7 @@ export default function Dropdown({ role, name, myImage }: DropdownProps) {
         <IoSettingsOutline onClick={setting} />
         <AiOutlineQuestionCircle onClick={question}/>
       </s.Icon>
-      <s.User>
+      <s.User role={role}>
         <s.UserInfo>
           <s.ProfileImage src={myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>

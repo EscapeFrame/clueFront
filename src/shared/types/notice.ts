@@ -1,3 +1,5 @@
+import { SetStateAction } from "react";
+
 export interface NoticeItem {
   createdAt: any;
   type: "SCHEDULE" | "SCHOOL" | "SERVICE";
@@ -12,6 +14,7 @@ export interface NoticeDocument {
 }
 
 export interface DetailNoticeItem extends NoticeItem {
+  content: SetStateAction<string>;
   noticeDocuments: NoticeDocument[];
 }
 
