@@ -5,10 +5,9 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const controllerMap = new Map<string, AbortController>();
 
 // Refresh 토큰 함수
-const refreshAccesToken = async () => {
-  const res = await axios.post(`${baseUrl}/reissue`, null, {
-    withCredentials: true,
-  });
+const refreshAccesToken = async (): Promise<string | undefined> => {
+  // withCredentials: true를 통해 브라우저가 HttpOnly 쿠키(refreshToken)를 자동으로 전송합니다.
+  const res = await axios.post(`${baseUrl}/reissue`, null, { withCredentials: true });
   return res.headers['authorization']?.replace('Bearer ', '');
 };
 
@@ -72,7 +71,7 @@ Customapi.interceptors.response.use(
         if (newToken) {
           localStorage.setItem('accessToken', newToken);
           original.headers['Authorization'] = `Bearer ${newToken}`;
-          return Customapi(original);
+          return Customapi(original); // 원래 요청 재시도
         }
       } catch (err) {
         console.error('Refresh token 실패:', err);
@@ -83,7 +82,7 @@ Customapi.interceptors.response.use(
 
     if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
       console.warn('요청이 취소됨:', error.config?.url);
-      return;
+      return Promise.resolve({ data: 'Request Canceled' }); // 에러 전파를 막고, 정상 흐름처럼 처리
     }
 
     return Promise.reject(error);
