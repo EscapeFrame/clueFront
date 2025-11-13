@@ -4,33 +4,42 @@ import { useEffect, useContext } from "react";
 import Image from '@/../public/registerImg.png';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from "@/entities/Context/LoginContext";
+import { useAuth } from "@/app/hooks/useAccessToken";
 
 export function Login() {
-
+    const { accessToken: token } = useAuth();
     const context = useContext(UserContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("Login page useEffect triggered.");
+        if (token) {
+            console.log("로그인 페이지: 이미 인증된 사용자입니다. 홈페이지로 리디렉션합니다.");
+            navigate('/', { replace: true });
+        } else {
+            console.log("로그인 페이지: 인증되지 않은 사용자입니다. 로그인 페이지에 머무릅니다.");
+        }
+    }, [token, navigate]);
+
+    useEffect(() => {
+        console.log("로그인 페이지: URL 파라미터 확인을 시작합니다.");
         const params = new URLSearchParams(window.location.search);
         const accessToken = params.get('access_token');
 
-        console.log("Access Token from URL:", accessToken);
+        console.log("URL에서 가져온 Access Token:", accessToken);
 
         if (accessToken) {
-            console.log("Tokens found in URL.");
+            console.log("URL에서 Access Token을 발견했습니다.");
             if (context) {
-
-                console.log("setAuthInfo called. Redirecting to /");
+                console.log("`setAuthInfo`를 호출하고 홈페이지로 리디렉션합니다.");
                 context.setAuthInfo(accessToken);
                 navigate('/', { replace: true });
             } else {
-                console.error("UserContext is not available in Login component.");
+                console.error("로그인 컴포넌트에서 UserContext를 사용할 수 없습니다.");
             }
         } else {
-            console.log("Tokens not found in URL params.");
+            console.log("URL 파라미터에 Access Token이 없습니다.");
         }
-    }, [context, navigate]); // 의존성 배열 추가로 최초 1회만 실행되도록 함
+    }, [context, navigate]);
     
     return (
         <S.Container>
