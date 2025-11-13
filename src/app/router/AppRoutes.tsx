@@ -28,11 +28,15 @@ import { LinkSaveRoutes } from '@/linkSave/app/Routes';
 
 interface AppRoutesProps {
   role: string | null;
+  loading: boolean;
 }
 
-export const AppRoutes = ({ role }: AppRoutesProps) => {
+export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
   const isAuthenticated = role !== null;
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!isAuthenticated) {
     return (
