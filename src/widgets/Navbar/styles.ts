@@ -33,7 +33,7 @@ export const Container = styled.div`
   padding: 0;
 `;
 
-export const Brand = styled.a`
+export const Brand = styled.div`
   ${fonts.P4}
   text-decoration: none;
   color: ${theme.colors.black};
@@ -43,6 +43,7 @@ export const Brand = styled.a`
 
 export const LogoImg = styled.img`
   margin-left: auto;
+  cursor: pointer;
 
   height: 40px;
   margin-right: 0.5rem; /* 텍스트랑 간격 */
@@ -51,6 +52,7 @@ export const LogoImg = styled.img`
 export const BrandText = styled.span`
   font-family: 'Alexandria', sans-serif;
   ${fonts.P4}
+  cursor: pointer
 `;
 
 export const NavbarNav = styled.nav`

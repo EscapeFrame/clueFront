@@ -53,8 +53,11 @@ export const LinkSaveMain = () => {
     const handleFormSubmit = useCallback(async (data: LinkFormData, cardId?: string) => {
         try {
             const englishData = {
-                ...data,
-                subjectType: data.subjectType.map(koreanCategory => LINK_CATEGORY_ENGLISH_MAP[koreanCategory as LinkCategoryKorean] || koreanCategory)
+                title: data.title,
+                description: data.description,
+                link: data.link,
+                subjectType: LINK_CATEGORY_ENGLISH_MAP[data.subjectType as LinkCategoryKorean] || data.subjectType,
+                authorizationType: (data as any).authorizationType,
             };
 
             if (cardId) {

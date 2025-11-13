@@ -1,6 +1,7 @@
-import styled from '@emotion/styled';
-import { colors } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { colors } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
+import { theme } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
   display: flex;
@@ -22,11 +23,12 @@ export const TabButton = styled.button<{ isActive: boolean }>`
   cursor: pointer;
   ${fonts.P2};
   color: ${({ isActive }) => (isActive ? colors.white : colors.gray[3])};
-  background-color: ${({ isActive }) => (isActive ? colors.primary : 'transparent')};
-  border-radius: ${({ isActive }) => (isActive ? '8rem' : '0')};
+  background-color: ${({ isActive }) =>
+    isActive ? colors.primary : "transparent"};
+  border-radius: ${({ isActive }) => (isActive ? "8rem" : "0")};
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    color: ${colors.primary};
+    color: ${theme.colors.blue[500]};
   }
 `;
