@@ -8,10 +8,27 @@ export const useAuth = (): any => {
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
-  // 로그인시 사용자 정보 및 토큰 세팅
-  const setAuthInfo = useCallback((accessToken: string) => {
+  // 로그인 시 토큰 저장 및 사용자 정보 조회
+  const setAuthInfo = useCallback(async (accessToken: string) => {
     setAccessToken(accessToken);
-    // 쿠키 방식을 사용하므로 refreshToken은 localStorage에 저장하지 않습니다.
+    localStorage.setItem('accessToken', accessToken);
+
+    // 새로운 토큰으로 사용자 정보를 즉시 조회
+    try {
+      const res = await Customapi.get('/api/user/me', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const userData = res.data;
+      setUser({
+        userId: userData.userId,
+        username: userData.username,
+        role: userData.role,
+      });
+    } catch (error) {
+      console.error('setAuthInfo에서 유저 정보 조회 실패:', error);
+      // 실패 시 토큰 및 유저 정보 초기화
+      removeAuthInfo();
+    }
   }, []);
 
   // 로그아웃
@@ -19,7 +36,6 @@ export const useAuth = (): any => {
     setAccessToken(null);
     setUser({ username: "", userId: "", role: "" });
     localStorage.removeItem('accessToken');
-    // 필요하다면 localStorage에서 refreshToken도 제거합니다.
   }, [setUser]);
   
   // 토큰은 있으나 유저 정보가 없을 경우
