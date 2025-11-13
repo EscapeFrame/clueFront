@@ -6,13 +6,13 @@ export default function MarkDown() {
     const { classRoomId } = param;
     const { directoryId } = param;
 
-    if (!classRoomId) {
-        return false
-    }
+    // if (!classRoomId) {
+    //     return false
+    // }
 
-    if (!directoryId) {
-        return false
-    }
+    // if (!directoryId) {
+    //     return false
+    // }
 
     console.log(directoryId);
     return (

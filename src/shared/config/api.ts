@@ -29,7 +29,7 @@ Customapi.interceptors.request.use(
 
 const refreshAccesToken = async () => {
   const res = await axios.post(
-    `${baseUrl}/api/auth/refresh`,
+    `${baseUrl}/refresh-token`,
     null,
     { withCredentials: true } // 쿠키에 refresh 토큰이 있을 시에만 필요
   );
