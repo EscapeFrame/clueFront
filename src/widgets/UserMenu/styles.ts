@@ -66,3 +66,51 @@ export const UserInfo = styled.div`
   item-align: center;
   color: ${colors.primary};
 `;
+
+export const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+`;
+
+export const ModalContent = styled.div`
+  background-color: ${colors.white};
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 320px;
+`;
+
+export const ModalText = styled.p`
+  ${fonts.P2}
+  margin: 0 0 1.5rem;
+  color: ${colors.black};
+`;
+
+export const ModalButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+export const ModalButton = styled.button`
+  ${fonts.P2}
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid ${colors.gray[3]};
+  background-color: ${colors.white};
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${colors.gray[1]};
+  }
+`;
