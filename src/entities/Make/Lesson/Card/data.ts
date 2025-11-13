@@ -14,13 +14,12 @@ export const lessonCards = [
     url: "/lesson/google-docs",
   },
   {
-    title: "Code",
-    desc: ["실시간 코드 실행 가능", "문법 강조 및 자동완성 지원", "인터랙티브한 학습 가능", "다양한 언어 지원"],
-    url: "code",
-  },
-  {
     title: "Google Slide",
     desc: ["강의용 프레젠테이션에 최적", "시각 자료 강조", "학생 발표/프로젝트용 활용"],
-    url: "/lesson/google-slide",
-  },
+    url: "google-slide",
+  },{
+  title: "File",
+  desc: ["PPTX", "PDF", "다양한 형식의 파일"],
+  url: "file"
+  }
 ];
