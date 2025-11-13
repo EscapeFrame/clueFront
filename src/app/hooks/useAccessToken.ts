@@ -2,33 +2,25 @@ import { useEffect, useState, useCallback } from 'react';
 import Customapi from '@/shared/config/api';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
+import { User } from '@/entities/Context/LoginContext';
 
-export const useAuth = (): any => {
+interface AuthHook {
+  accessToken: string | null;
+  user: User;
+  setAuthInfo: (accessToken: string) => void;
+  removeAuthInfo: () => void;
+  loading: boolean;
+}
+
+export const useAuth = (): AuthHook => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
-  // 로그인 시 토큰 저장 및 사용자 정보 조회
-  const setAuthInfo = useCallback(async (accessToken: string) => {
+  // 로그인 시 토큰 저장
+  const setAuthInfo = useCallback((accessToken: string) => {
     setAccessToken(accessToken);
     localStorage.setItem('accessToken', accessToken);
-
-    // 새로운 토큰으로 사용자 정보를 즉시 조회
-    try {
-      const res = await Customapi.get('/api/user/me', {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      const userData = res.data;
-      setUser({
-        userId: userData.userId,
-        username: userData.username,
-        role: userData.role,
-      });
-    } catch (error) {
-      console.error('setAuthInfo에서 유저 정보 조회 실패:', error);
-      // 실패 시 토큰 및 유저 정보 초기화
-      removeAuthInfo();
-    }
   }, []);
 
   // 로그아웃
@@ -57,13 +49,13 @@ export const useAuth = (): any => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (!accessToken || user.userId) {
+      if (!accessToken) {
         setLoading(false);
         return;
       }
 
       try {
-        const res = await Customapi.get('/api/user/me');
+        const res = await Customapi.get<{ userId: string; username: string; role: string }>('/api/user/me');
         const userData = res.data;
         setUser({
           userId: userData.userId,
@@ -71,13 +63,14 @@ export const useAuth = (): any => {
           username: userData.username,
           role: userData.role,
         });
-      } catch (error) {
-        // 401 에러가 아니고, 재시도 요청도 아닌 경우에만 로그아웃 처리
-        if (error.response?.status !== 401 && !error.config?._retry) {
-          console.error('유저 정보 조회 실패, 로그아웃 처리: ', error);
-          // 이 경우 토큰이 유효하지 않다고 판단하여 로그아웃 처리
-          removeAuthInfo();
+      } catch (error: any) {
+        // 요청이 취소된 경우는 에러로 처리하지 않음
+        if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+          console.warn('유저 정보 조회 요청이 취소되었습니다 (fetchUserInfo).');
+          return;
         }
+        console.error('유저 정보 조회 실패 (fetchUserInfo): ', error);
+        removeAuthInfo(); // 토큰이 유효하지 않을 가능성이 있으므로 로그아웃 처리
       } finally {
         setLoading(false);
       }
@@ -85,7 +78,7 @@ export const useAuth = (): any => {
     };
 
     fetchUserInfo();
-  }, [accessToken, user.userId, setUser, removeAuthInfo]);
+  }, [accessToken, setUser, removeAuthInfo]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
