@@ -5,7 +5,6 @@ import * as s from './styles';
 import { ExamApi } from '../useExam';
 import { Exam, ExamDetail } from '@/shared/types/Class/Exam';
 import { useNavigate } from 'react-router-dom';
-import { dummyExams } from '@/pages/Teacher/Class/dummy';
 
 interface ExamListProps {
   isTeacher?: boolean;
@@ -22,24 +21,19 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
   const closeModal = () => setSelectedExam(null);
 
   useEffect(() => {
-    // const loadExams = async () => {
-    //   try {
-    //     if (!classId) throw new Error('classId가 없습니다.');
-    //     const data = await ExamApi(classId);
-    //     setExams(data);
-    //   } catch (err: any) {
-    //     console.error('시험 불러오기 실패:', err);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
+    const loadExams = async () => {
+      try {
+        if (!classId) throw new Error('classId가 없습니다.');
+        const data = await ExamApi(classId);
+        setExams(data);
+      } catch (err: any) {
+        console.error('시험 불러오기 실패:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // if (classId) loadExams();
-
-    setTimeout(() => {
-      setExams(dummyExams); // 더미 데이터 연결
-      setLoading(false);
-    }, 500);
+    if (classId) loadExams();
   }, [classId]);
 
   return (

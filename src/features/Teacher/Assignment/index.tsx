@@ -6,8 +6,6 @@ import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
 import Button from '@/entities/UI/Button';
 import * as s from './styles';
 
-import { dummyAssignments } from '@/pages/Teacher/Class/dummy';
-
 interface AssignmentComponentProps {
     onAssignmentSelect: (assignmentId: string) => void;
 }
@@ -22,35 +20,28 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
 
     // 컴포넌트 마운트 시(또는 effectiveId가 바뀔 때) 과제 목록 API 호출
     useEffect(() => {
-        // if (!effectiveId) {
-        //     setLoading(false);
-        //     setAssignments([]);
-        //     return;
-        // }
-
-        // setLoading(true);
-        // AssignmentsApi.getAll(effectiveId)
-        //     .then((data) => {
-        //         // API에서 받은 AssignmentResponse[]를 Assignment[]로 강제 변환
-        //         console.log('API Response:', data); // 실제 데이터 구조 확인
-        //         console.log('Data length:', data?.length); // 데이터 개수 확인
-        //         setAssignments(data as unknown as Assignment[]);
-        //         setError(null);
-        //     })
-        //     .catch((err) => {
-        //         console.error(err);
-        //         setError("과제를 불러오는 중 오류가 발생했습니다.");
-        //     })
-        //     .finally(() => {
-        //         setLoading(false);
-        //     });
-
-        if (!effectiveId) return;
-        setLoading(true);
-        setTimeout(() => {
-            setAssignments(dummyAssignments);
+        if (!effectiveId) {
             setLoading(false);
-        }, 500);
+            setAssignments([]);
+            return;
+        }
+
+        setLoading(true);
+        AssignmentsApi.getAll(effectiveId)
+            .then((data) => {
+                // API에서 받은 AssignmentResponse[]를 Assignment[]로 강제 변환
+                console.log('API Response:', data); // 실제 데이터 구조 확인
+                console.log('Data length:', data?.length); // 데이터 개수 확인
+                setAssignments(data as unknown as Assignment[]);
+                setError(null);
+            })
+            .catch((err) => {
+                console.error(err);
+                setError("과제를 불러오는 중 오류가 발생했습니다.");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, [effectiveId]);
     const MakeTask = () => {
         if (!classRoomId) return;
