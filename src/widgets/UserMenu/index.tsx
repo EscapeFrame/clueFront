@@ -62,8 +62,8 @@ export default function Dropdown({ role, name, myImage }: DropdownProps) {
             <s.ModalContent>
               <s.ModalText>로그아웃 하시겠습니까?</s.ModalText>
               <s.ModalButtonContainer>
-                <s.ModalButton onClick={() => setIsModalOpen(false)}>취소</s.ModalButton>
                 <s.ModalButton onClick={handleLogout}>확인</s.ModalButton>
+                <s.ModalButton onClick={() => setIsModalOpen(false)}>취소</s.ModalButton>
               </s.ModalButtonContainer>
             </s.ModalContent>
           </s.Modal>
