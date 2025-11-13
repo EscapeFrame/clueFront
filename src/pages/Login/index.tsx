@@ -2,10 +2,12 @@ import LoginButton from "@/entities/Login/LoginButton"
 import * as S from './styles'
 import { useEffect, useContext } from "react";
 import Image from '@/../public/registerImg.png';
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from "@/entities/Context/LoginContext";
 
 export function Login() {
     const context = useContext(UserContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log("Login page useEffect triggered.");
@@ -22,15 +24,15 @@ export function Login() {
                 console.log("Context exists. Calling setAuthInfo...");
                 context.setAuthInfo(accessToken, refreshToken);
                 console.log("setAuthInfo called. Redirecting to /");
-                // 토큰 저장 후, 메인 페이지로 이동하며 새로고침
-                window.location.href = '/';
+                // URL에서 토큰 파라미터를 제거하고 메인 페이지로 이동
+                navigate('/', { replace: true });
             } else {
                 console.error("UserContext is not available in Login component.");
             }
         } else {
             console.log("Tokens not found in URL params.");
         }
-    });
+    }, [context, navigate]); // 의존성 배열 추가로 최초 1회만 실행되도록 함
 
     return (
         <S.Container>
