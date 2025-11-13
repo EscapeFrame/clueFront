@@ -26,10 +26,9 @@ export const useAuth = (): any => {
       });
     } catch (error) {
       console.error('setAuthInfo에서 유저 정보 조회 실패:', error);
-      // 실패 시 토큰 및 유저 정보 초기화
-      removeAuthInfo();
+      // 실패하더라도 토큰은 유지하고, useEffect에서 재시도하도록 함
     }
-  }, []);
+  }, [setUser]);
 
   // 로그아웃
   const removeAuthInfo = useCallback(() => {
@@ -72,10 +71,9 @@ export const useAuth = (): any => {
           role: userData.role,
         });
       } catch (error) {
-        // 401 에러가 아니고, 재시도 요청도 아닌 경우에만 로그아웃 처리
-        if (error.response?.status !== 401 && !error.config?._retry) {
-          console.error('유저 정보 조회 실패, 로그아웃 처리: ', error);
-          // 이 경우 토큰이 유효하지 않다고 판단하여 로그아웃 처리
+        // 401 에러인 경우에만 로그아웃 처리
+        if (error.response?.status === 401) {
+          console.error('유효하지 않은 토큰, 로그아웃 처리: ', error);
           removeAuthInfo();
         }
       } finally {
