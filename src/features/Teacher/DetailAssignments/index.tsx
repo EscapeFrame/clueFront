@@ -236,11 +236,17 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const Icon2 = stateData[2].icon;
     const Icon3 = stateData[3].icon;
 
+    const [assignments, setAssignments] = useState<Assignment[]>([]);
+    const handleDelete = (id: string) => {
+        if (window.confirm('정말 삭제하시겠습니까?')) {
+            setAssignments(prev => prev.filter(a => a.id !== id));
+        }
+    };
+
     return (
         <s.Container>
-            <s.Button onClick={onBack}><IoReturnUpBackOutline /></s.Button>
-
             <s.Content>
+                <s.Button onClick={onBack}><IoReturnUpBackOutline /></s.Button>
                 <s.TitleContainer>
                     {isEditing ? (
                         <>
@@ -302,6 +308,9 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                         </div>
                     </s.DetailState>
                 </s.State>
+                <s.DeleteButton onClick={() => handleDelete(prve.id)}>
+                    삭제
+                </s.DeleteButton>
             </s.Content>
 
             <s.SubTitle>상세설명</s.SubTitle>
@@ -356,7 +365,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                                 </s.FileInfo>
                                 {isEditing && (
                                     <s.FileRemoveButton onClick={(e) => { e.stopPropagation(); removeFile((file as AssignmentFileType).fileId); }}>
-                                        <FaXmark/>
+                                        <FaXmark />
                                     </s.FileRemoveButton>
                                 )}
                             </s.FileItem>

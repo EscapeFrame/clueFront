@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
   padding: 2rem 8rem;
-  background-color: ${theme.colors.white};
-  color: ${theme.colors.black};
+  background-color: ${colors.white};
+  color: ${colors.black};
 
   @media (max-width: 1200px) {
     padding: 2rem 4rem;
@@ -13,6 +13,16 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     padding: 1.5rem 2rem;
   }
+`;
+
+export const DeleteButton = styled.button`
+  background: ${colors.primary};
+  color: ${colors.white};
+  border: none;
+  cursor: pointer;
+  ${fonts.P2};
+  padding: 1rem;
+  border-radius: 8px;
 `;
 
 export const Button = styled.button`
@@ -26,7 +36,7 @@ export const Button = styled.button`
 
   &:hover {
     opacity: 0.8;
-    color: ${theme.colors.blue[600]};
+    color: ${colors.primary};
   }
 
   @media (max-width: 768px) {
@@ -69,8 +79,8 @@ export const DetailState = styled.div`
   ${fonts.P3};
   display: flex;
   align-items: center;
-  background-color: ${theme.colors.blue[200]};
-  border: 1px solid ${theme.colors.blue[500]};
+  background-color: ${colors.blue.light2};
+  border: 1px solid ${colors.primary};
   border-radius: 0.5rem;
   padding: 1rem;
   gap: 0.5rem;
@@ -112,9 +122,9 @@ export const Description = styled.p`
 export const File = styled.div`
   padding: 1rem;
   margin-top: 1rem;
-  border: 1px solid ${theme.colors.gray[400]};
+  border: 1px solid ${colors.gray[4]};
   border-radius: 0.5rem;
-  background-color: ${theme.colors.gray[200]};
+  background-color: ${colors.gray[2]};
 
   @media (max-width: 768px) {
     padding: 0.75rem;
@@ -137,12 +147,12 @@ export const EditTitleInput = styled.input`
   ${fonts.P3};
   font-weight: 600;
   padding: 0.5rem;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.25rem;
 
   &:focus {
-    outline: 2px solid ${theme.colors.blue[500]};
-    border-color: ${theme.colors.blue[500]};
+    outline: 2px solid ${colors.primary};
+    border-color: ${colors.primary};
   }
 
   @media (max-width: 768px) {
@@ -154,15 +164,15 @@ export const EditTextarea = styled.textarea`
   ${fonts.P2};
   line-height: 1.5;
   padding: 0.5rem;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.25rem;
   width: 100%;
   resize: vertical;
   margin-bottom: 3rem;
 
   &:focus {
-    outline: 2px solid ${theme.colors.blue[500]};
-    border-color: ${theme.colors.blue[500]};
+    outline: 2px solid ${colors.primary};
+    border-color: ${colors.primary};
   }
 
   @media (max-width: 768px) {
@@ -202,7 +212,7 @@ export const FileItem = styled.div`
   align-items: center;
   padding: 1rem;
   margin-bottom: 0.5rem;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.5rem;
   width: 100%;
   cursor: pointer;
@@ -225,21 +235,21 @@ export const FileRemoveButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: ${theme.colors.red[500]};
+  color: ${colors.red[3]};
   padding: 0.25rem;
   border-radius: 0.25rem;
 
   &:hover {
-    color: ${theme.colors.red[600]};
+    color: ${colors.red[2]};
   }
 `;
 
 export const EmptyFileMessage = styled.p`
   ${fonts.P3};
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
   text-align: center;
   padding: 2rem;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.5rem;
 `;
 
@@ -248,13 +258,13 @@ export const ModalContent = styled.div`
 `;
 
 export const FileIcon = styled.div`
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
 `;
 
 export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
   width: 100%;
   height: 150px;
-  border: 2px dashed ${props => props.isDragOver ? theme.colors.blue[500] : theme.colors.gray[400]};
+  border: 2px dashed ${props => props.isDragOver ? colors.primary : colors.gray[4]};
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -265,12 +275,12 @@ export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
   margin-bottom: 1rem;
 
   &:hover {
-    border-color: ${theme.colors.blue[500]};
+    border-color: ${colors.primary};
   }
 
   p {
     ${fonts.P3};
-    color: ${theme.colors.gray[600]};
+    color: ${colors.gray[4]};
     margin-top: 0.5rem;
     text-align: center;
   }
@@ -287,7 +297,7 @@ export const TempFileList = styled.div`
 
 export const EmptyMessage = styled.p`
   ${fonts.P3};
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
   text-align: center;
   padding: 1rem;
 `;
@@ -298,7 +308,7 @@ export const TempFileItem = styled.div`
   align-items: center;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.25rem;
   width: 100%;
 
@@ -317,7 +327,7 @@ export const TempFileInfo = styled.div`
 `;
 
 export const FileSize = styled.span`
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
   ${fonts.P2};
 `;
 
@@ -325,11 +335,11 @@ export const TempFileRemove = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
   padding: 0.25rem;
   border-radius: 0.25rem;
 
   &:hover {
-    color: ${theme.colors.red};
+    color: ${colors.red[3]};
   }
 `;
