@@ -78,7 +78,7 @@ export const useAuth = (): AuthHook => {
     };
 
     fetchUserInfo();
-  }, [accessToken, setUser, removeAuthInfo]);
+  }, [accessToken]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
