@@ -307,9 +307,6 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
                     />
                 </s.EditorWrapper>
                 <s.BottomButtons>
-                    <s.GenerateProblemButton onClick={handleGenerateProblem}>
-                        문제 생성
-                    </s.GenerateProblemButton>
                     <s.AIFeedbackButton onClick={() => setViewerMode('aiAgent')}>
                         AI 피드백
                         <s.AIFeedbackDesc>
