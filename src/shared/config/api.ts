@@ -6,7 +6,7 @@ const controllerMap = new Map<string, AbortController>();
 
 // Refresh 토큰 함수
 const refreshAccesToken = async () => {
-  const res = await axios.post(`${baseUrl}/refresh-token`, null, {
+  const res = await axios.post(`${baseUrl}/reissue`, null, {
     withCredentials: true,
   });
   return res.headers['authorization']?.replace('Bearer ', '');

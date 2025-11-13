@@ -14,7 +14,6 @@ export const useAuth = () => {
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
   }, []);
 
   // 로그아웃
@@ -23,7 +22,6 @@ export const useAuth = () => {
     setRefreshToken(null);
     setUser({ username: "", userId: "", role: "" });
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
   }, [setUser]);
   
   // 토큰은 있으나 유저 정보가 없을 경우
