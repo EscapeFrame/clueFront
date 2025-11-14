@@ -1,14 +1,12 @@
 import LoginButton from "@/entities/Login/LoginButton"
 import * as S from './styles'
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import Image from '@/../public/registerImg.png';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from "@/entities/Context/LoginContext";
 import { useAuth } from "@/app/hooks/useAccessToken";
 
 export function Login() {
-    const { accessToken: token } = useAuth();
-    const context = useContext(UserContext);
+    const { setAuthInfo } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,23 +14,15 @@ export function Login() {
         const urlToken = params.get('access_token');
 
         if (urlToken) {
-            // Case 1: Token is in the URL (coming from OAuth). This is the highest priority.
+            // Case 1: Token is in the URL (coming from OAuth).
             console.log("로그인 페이지: URL에서 Access Token을 발견했습니다. 인증 정보를 설정하고 홈페이지로 리디렉션합니다.");
-            if (context) {
-                context.setAuthInfo(urlToken);
-                navigate('/', { replace: true });
-            } else {
-                console.error("로그인 컴포넌트에서 UserContext를 사용할 수 없습니다.");
-            }
-        } else if (token) {
-            // Case 2: No token in URL, but a token exists in storage.
-            console.log("로그인 페이지: 이미 저장된 토큰으로 인증되었습니다. 홈페이지로 리디렉션합니다.");
+            setAuthInfo(urlToken);
             navigate('/', { replace: true });
         } else {
-            // Case 3: No token anywhere.
+            // Case 2: No token in URL. Stay on login page.
             console.log("로그인 페이지: 인증 토큰이 없습니다. 로그인 페이지에 머무릅니다.");
         }
-    }, [token, context, navigate]);
+    }, [setAuthInfo, navigate]);
     
     return (
         <S.Container>
