@@ -49,36 +49,43 @@ export const useAuth = (): AuthHook => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
+      console.log('useAuth: useEffect/fetchUserInfo triggered.');
+      const token = localStorage.getItem('accessToken');
+      console.log('useAuth: accessToken from localStorage:', token);
+
       if (!accessToken) {
+        console.log('useAuth: No accessToken, setting loading to false.');
         setLoading(false);
         return;
       }
 
+      console.log('useAuth: AccessToken exists, fetching user info...');
+      setLoading(true); // 명시적으로 로딩 시작을 알림
+
       try {
         const res = await Customapi.get<{ userId: string; username: string; role: string }>('/api/user/me');
         const userData = res.data;
+        console.log('useAuth: User info fetched successfully:', userData);
         setUser({
           userId: userData.userId,
-
           username: userData.username,
           role: userData.role,
         });
       } catch (error: any) {
-        // 요청이 취소된 경우는 에러로 처리하지 않음
         if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
-          console.warn('유저 정보 조회 요청이 취소되었습니다 (fetchUserInfo).');
+          console.warn('useAuth: User info fetch canceled.');
           return;
         }
-        console.error('유저 정보 조회 실패 (fetchUserInfo): ', error);
-        removeAuthInfo(); // 토큰이 유효하지 않을 가능성이 있으므로 로그아웃 처리
+        console.error('useAuth: Failed to fetch user info:', error);
+        removeAuthInfo();
       } finally {
+        console.log('useAuth: Setting loading to false.');
         setLoading(false);
       }
-
     };
 
     fetchUserInfo();
-  }, [accessToken]);
+  }, [accessToken, setUser, removeAuthInfo]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
