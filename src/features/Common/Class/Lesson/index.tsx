@@ -25,7 +25,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
-  const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
+  const isTeacher = !!user && (user.role === 'TEACHER');
   const [copiedTitle, setCopiedTitle] = useState<string>('');
   // 짧은 복사 피드백용 타이머
   useEffect(() => {
