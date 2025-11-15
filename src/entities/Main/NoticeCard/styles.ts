@@ -25,7 +25,8 @@ export const List = styled.ul`
   padding: 0;
   margin: 0;
   flex-grow: 1;
-  max-height: 250px; /* Adjust this value as needed */
+  /* Show approximately 3 items, then scroll */
+  max-height: calc(3 * 60px + 2 * 8px);
   overflow-y: auto;
 `;
 
