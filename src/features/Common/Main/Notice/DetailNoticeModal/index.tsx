@@ -22,7 +22,7 @@ export default function NoticeDetailModal({
   onStartEdit,
 }: NoticeDetailModalProps) {
   const user = useRecoilValue(userState);
-  const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
+  const isTeacher = !!user && user.role === 'TEACHER';
   const { notice, loading, error, fetchNoticeDetail } = useNoticeDetail(noticeId);
   const { handleAttachmentClick, handleDeleteAttachment } = useNoticeAttachments(noticeId, () => fetchNoticeDetail(noticeId));
 

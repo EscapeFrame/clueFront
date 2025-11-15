@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { userState } from "@/shared/model/userState";
 import * as s from "./styles";
@@ -10,11 +10,26 @@ export const UserSection: React.FC = () => {
 
     const [name, setName] = useState(user?.username || "");
     const [email] = useState<string>("");
-    const [grade, setGrade] = useState<number>(2);
-    const [classNumber, setClassNumber] = useState<number>(2);
-    const [studentNumber] = useState<number>(1);
+    const [grade, setGrade] = useState<number>();
+    const [classNumber, setClassNumber] = useState<number>();
+    const [number, setNumber] = useState<number>();
     const [description, setDescription] = useState<string>("");
     const [image, setImage] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!user) return;
+        // classCode may be 0 -> should be treated as default 1101
+        if (user.classCode !== undefined && user.classCode !== null) {
+            let code = typeof user.classCode === 'string' ? parseInt(user.classCode, 10) : user.classCode;
+            if (isNaN(code)) return;
+            if (code === 0) {
+                code = 1101;
+            }
+            setGrade(Math.floor(code / 1000));
+            setClassNumber(Math.floor((code % 1000) / 100));
+            setNumber(code % 100);
+        }
+    }, [user]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -24,12 +39,12 @@ export const UserSection: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log({ name, grade, classNumber, studentNumber, description, image });
+        console.log({ name, grade, classNumber, number, description, image });
     };
 
     // 백엔드에서 못 불러오면 받아온 사용자 반까지 표시
-    const gradeOptions: number[] = Array.from({ length: grade }, (_, i) => i + 1);
-    const classOptions: number[] = Array.from({ length: classNumber }, (_, i) => i + 1);
+    const gradeOptions: number[] = Array.from({ length: 3 }, (_, i) => i + 1);
+    const classOptions: number[] = Array.from({ length: 4 }, (_, i) => i + 1);
 
     return (
         <s.Section>
@@ -108,7 +123,7 @@ export const UserSection: React.FC = () => {
 
                 <s.FormGroup>
                     <label>번호<span>*</span></label>
-                    <input type="number" value={studentNumber} disabled />
+                    <input type="number" value={number || ''} disabled />
                 </s.FormGroup>
 
                 <s.FormGroup>

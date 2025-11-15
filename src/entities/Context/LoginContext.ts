@@ -5,6 +5,7 @@ export interface User {
   username: string;
   role: string;
   myImage?: string | null;
+  classCode?: number | string;
 }
 
 export interface UserContextType {

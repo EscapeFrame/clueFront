@@ -4,14 +4,16 @@ export interface UserState {
     username: string;
     userId: string;
     role: 'STUDENT' | 'TEACHER' | '';
+    classCode: number | string;
 }
 
-export const userState = atom({
+export const userState = atom<UserState>({
     key: 'userState',
     default: {
         username: '',
         userId: '',
         role: '',
+        classCode: 0,
     },
 });
 
