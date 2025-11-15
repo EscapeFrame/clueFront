@@ -1,18 +1,28 @@
-import { theme } from '@/shared/theme/theme.styles';
-import styled from '@emotion/styled';
+import { fonts } from "@/shared/theme/font.styles";
+import { theme } from "@/shared/theme/theme.styles";
+import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  padding: 40px 300px;
+  padding: 2rem 10rem;
   background-color: ${theme.colors.white};
-  height: 100%;
-
-  @media (max-width: 1200px) {
-    padding: 40px 200px;
-  }
 
   @media (max-width: 768px) {
-    padding: 40px 100px;
+    padding: 2rem 5rem;
   }
+`;
+
+export const ErrorMessage = styled.div`
+  color: ${theme.colors.red};
+`;
+
+export const Icon = styled.div`
+  ${fonts.P4};
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `;
 
 export const PostButton = styled.div`
@@ -22,8 +32,4 @@ export const PostButton = styled.div`
   padding: 10px 0;
   border-radius: 8px;
   text-align: center;
-`;
-
-export const ErrorMessage  = styled.input`
-  color: ${theme.colors.red};
 `;
