@@ -9,9 +9,10 @@ interface NavbarProps {
   userId: number;
   username: string;
   role: string | null;
+  classCode?: number |string;
 }
 
-export default function Navbar({ userId, username, role }: NavbarProps) {
+export default function Navbar({ classCode, username, role }: NavbarProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,6 +26,10 @@ export default function Navbar({ userId, username, role }: NavbarProps) {
 
   const isLinkSavePage = location.pathname.startsWith('/linksave');
 
+  const message = () => {
+    alert("아직 개발되지 않은 기능입니다.")
+  }
+
   return (
     <s.NavbarWrapper>
       <s.Container>
@@ -35,12 +40,12 @@ export default function Navbar({ userId, username, role }: NavbarProps) {
         <s.NavbarNav>
           <s.NavLinks>
             <li><s.NavItem href="/class">내 학습실</s.NavItem></li>
-            <li><s.NavItem href="#action1">수강신청</s.NavItem></li>
+            <li><s.NavItem onClick={() => {message()}} href="#action1">수강신청</s.NavItem></li>
             <li><s.NavItem href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca" target="_blank" rel="noopener noreferrer">서비스 소개</s.NavItem></li>
           </s.NavLinks>
           <s.UserMenuWrapper>
 
-            <Dropdown role={role} studentNumber={userId} name={username} myImage={"sample.png"} />
+            <Dropdown role={role} studentNumber={classCode} name={username} />
           </s.UserMenuWrapper>
         </s.NavbarNav>
       </s.Container>

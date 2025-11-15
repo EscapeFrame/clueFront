@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import myImage from '../../../public/sample.png';
 import * as s from './styles';
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { MdOutlineLogout } from "react-icons/md";
@@ -10,16 +11,16 @@ import { UserContext } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
 
 interface DropdownProps {
-  studentNumber: number;
+  studentNumber?: number | string;
   name: string;
-  myImage: string;
+  myImage?: string;
   role: string | null;
 }
 
-export default function Dropdown({ role, name, myImage }: DropdownProps) {
+export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
 
   const navigate = useNavigate();
-  const [_, setUser] = useRecoilState(userState);
+  const [User, setUser] = useRecoilState(userState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const context = useContext(UserContext);
   if (!context) {
@@ -42,6 +43,7 @@ export default function Dropdown({ role, name, myImage }: DropdownProps) {
       username: '',
       userId: '',
       role: '',
+      classCode: 0,
     });
     navigate('/login');
     setIsModalOpen(false);
