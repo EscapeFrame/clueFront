@@ -59,21 +59,11 @@ export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
 
   return (
     <s.DropdownContainer>
-      <s.Icon>{isModalOpen && (
-          <s.Modal>
-            <s.ModalContent>
-              <s.ModalText>로그아웃 하시겠습니까?</s.ModalText>
-              <s.ModalButtonContainer>
-                <s.ModalButton onClick={handleLogout}>확인</s.ModalButton>
-                <s.ModalButton onClick={() => setIsModalOpen(false)}>취소</s.ModalButton>
-              </s.ModalButtonContainer>
-            </s.ModalContent>
-          </s.Modal>
-        )}
-
-<IoSettingsOutline onClick={setting} />
-        <AiOutlineQuestionCircle onClick={question} /></s.Icon>
-      <s.User>
+      <s.Icon>
+        <IoSettingsOutline onClick={setting} />
+        <AiOutlineQuestionCircle onClick={question}/>
+      </s.Icon>
+      <s.User role={role}>
         <s.UserInfo>
           <s.ProfileImage src={myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>

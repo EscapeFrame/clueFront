@@ -7,7 +7,7 @@ import Button from '@/entities/UI/Button';
 import * as s from './styles';
 
 interface AssignmentComponentProps {
-  onAssignmentSelect: (assignmentId: string) => void;
+    onAssignmentSelect: (assignmentId: string) => void;
 }
 
 export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssignmentSelect }) => {
@@ -50,17 +50,23 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
 
     return (
         <s.Container>
-            <s.Header>
-                <s.AddButton>
-                    <Button text="과제 추가하기" width="10rem" type={0} onClick={MakeTask} />
-                </s.AddButton>
-            </s.Header>
+            <s.SectionHeader>
+                <s.LeftGroup>
+                    <s.Description>※ 카드를 클릭하시면 과제에 대한 세부내용을 확인하실수 있습니다. </s.Description>
+                </s.LeftGroup>
+                <s.RightGroup>
+                    <s.SettingButton>
+                        <Button text="과제추가" width="8rem" type={0} onClick={MakeTask} />
+                    </s.SettingButton>
+                </s.RightGroup>
+            </s.SectionHeader>
+
             {loading && <div>로딩 중...</div>}
-            {error && <div style={{ color: 'red', margin: '1rem 0' }}>{error}</div>}
+            {error && <s.ErrorText>{error}</s.ErrorText>}
             {!loading && !error && (
                 <s.Grid>
                     {assignments.length === 0 ? (
-                        <div>등록된 과제가 없습니다.</div>
+                        <s.ErrorText>등록된 과제가 없습니다.</s.ErrorText>
                     ) : (
                         assignments.map((a: Assignment) => (
                             <AssignmentCard

@@ -1,5 +1,6 @@
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
+import { IoCopyOutline } from 'react-icons/io5';
 
 interface NoticeCardProps {
   cardTitle: string;
@@ -20,10 +21,10 @@ export default function NoticeCard({
   if (loading) {
     return (
       <s.CardContainer>
-        <s.Title>{cardTitle}</s.Title>
-        <s.List>
-          <s.LoadingText>로딩 중...</s.LoadingText>
-        </s.List>
+        <s.CardHeader>
+          <s.Title>{cardTitle}</s.Title>
+        </s.CardHeader>
+        <s.LoadingText>로딩 중...</s.LoadingText>
       </s.CardContainer>
     );
   }
@@ -46,7 +47,7 @@ export default function NoticeCard({
       <s.CardContainer>
         <s.Title>{cardTitle}</s.Title>
         <s.List>
-          <s.EmptyText>공지사항이 없습니다.</s.EmptyText>
+          <s.ErrorText>공지사항이 없습니다.</s.ErrorText>
         </s.List>
       </s.CardContainer>
     );

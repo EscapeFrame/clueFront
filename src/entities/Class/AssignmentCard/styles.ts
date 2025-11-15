@@ -1,20 +1,21 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 // 상태 뱃지
 export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem;
   border-radius: 16px;
   ${fonts.P1}
   white-space: nowrap;
   display: inline-block;
 
-  color: ${theme.colors.black};
+  color:${({ variant }) =>
+    variant === 'completed' ? colors.primary : colors.red[3]};
   background-color: ${({ variant }) =>
-    variant === 'pending' ? theme.colors.blue[500] : theme.colors.white};
-  border: ${({ variant }) =>
-    variant === 'completed' ? `2px solid ${theme.colors.blue[400]}` : 'none'};
+    variant === 'completed' ? colors.blue.light1 : colors.red[1]};
+  border: 2px solid ${({ variant }) =>
+    variant === 'completed' ? `${colors.blue.light4}` : `${colors.red[3]}`};
 
   @media (max-width: 1200px) {
     ${fonts.P2}
@@ -27,13 +28,13 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
 
 // 카드 레이아웃
 export const CardContainer = styled.div`
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
   border-radius: 0.5rem;
-  border: 1px solid ${theme.colors.gray[200]};
+  border: 1px solid ${colors.gray[4]};
   padding: 1rem;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   transition: box-shadow 0.2s ease-in-out;
-  min-height: 270px;
+  min-height: 12rem;
   display: flex;
   flex-direction: column;
 
@@ -67,11 +68,12 @@ export const CardHeader = styled.div`
 `;
 
 export const Title = styled.div`
-  color: ${theme.colors.black};
+  color: ${colors.black};
   ${fonts.P3}
   font-weight: 600;
   margin: 0;
   word-break: break-word;
+  margin-bottom: 10px;
 
   @media (max-width: 1200px) {
     ${fonts.P2}
@@ -99,7 +101,7 @@ export const InfoItem = styled.div`
   align-items: center;
   gap: 0.5rem;
   ${fonts.P1}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
 
   svg {
     width: 1rem;
@@ -134,7 +136,7 @@ export const FileItem = styled.div`
   padding: 0.5rem;
   border-radius: 8px;
   background-color: #f5f5f5;
-  border: 1px solid ${theme.colors.gray[200]};
+  border: 1px solid ${colors.gray[2]};
 
   @media (max-width: 1200px) {
     padding: 0.4rem;
@@ -164,7 +166,7 @@ export const FileInfoContainer = styled.div`
 
 export const FileNameText = styled.div`
   ${fonts.P1}
-  color: ${theme.colors.black};
+  color: ${colors.black};
 
   @media (max-width: 1200px) {
     ${fonts.P2}
@@ -177,7 +179,7 @@ export const FileNameText = styled.div`
 
 export const FileSizeText = styled.div`
   ${fonts.P1}
-  color: ${theme.colors.gray[400]};
+  color: ${colors.gray[4]};
 
   @media (max-width: 1200px) {
     ${fonts.P2}
@@ -191,13 +193,13 @@ export const FileSizeText = styled.div`
 export const FileRemoveButton = styled.button`
   background: none;
   border: none;
-  color: ${theme.colors.gray[400]};
+  color: ${colors.gray[4]};
   cursor: pointer;
   ${fonts.P3};
   margin-left: 0.5rem;
 
   &:hover {
-    color: ${theme.colors.black};
+    color: ${colors.black};
   }
 
   @media (max-width: 768px) {
@@ -225,13 +227,14 @@ export const ChoseFile = styled.label`
   display: inline-block;
   ${fonts.P2}
   margin-top: 0.5rem;
-  background-color: ${theme.colors.gray[300]};
+  background-color: ${colors.gray[3]};
   padding: 0.3rem 0.5rem;
   border-radius: 6px;
-  color: ${theme.colors.black};
+  color: ${colors.black};
   cursor: pointer;
+
   &:hover {
-    color: ${theme.colors.blue[600]};
+    color: ${colors.primary};
   }
 
   @media (max-width: 1200px) {
@@ -255,12 +258,12 @@ export const FileList = styled.div`
 `;
 
 export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
-  border: ${({ isDragOver }) => isDragOver ? '2px solid #1976d2' : '2px dashed #ccc'};
+  border: ${({ isDragOver }) => isDragOver ? `2px solid ${colors.primary}` : `2px dashed ${colors.gray[3]}`};
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 12px;
   text-align: center;
-  background: ${({ isDragOver }) => isDragOver ? '#e3f2fd' : '#fafafa'};
+  background: ${({ isDragOver }) => isDragOver ? `${colors.blue.light1}` : `${colors.gray[1]}`};
   transition: background 0.2s, border 0.2s;
   cursor: pointer;
   user-select: none;

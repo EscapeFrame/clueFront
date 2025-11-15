@@ -35,19 +35,13 @@ export function AssignmentCard({ data, assignmentId, onAssignmentSelect }: Assig
   };
 
   return (
-    <s.CardContainer>
-      <s.InfoSection>
-        <s.Title>{data.title}</s.Title>
+    <s.CardContainer onClick={() => onAssignmentSelect(assignmentId)}>
+      <s.StatusBadge variant={isSubmitted ? 'completed' : 'pending'}> {/* 이거 활성화/비활성화로 나눠주쇼.. */}
+                  {isSubmitted ? '제출됨' : '미제출'}
+                </s.StatusBadge>
+      <s.Title>{data.title}</s.Title>
         <s.InfoItem><IoCalendarClearOutline /> 마감일: {data.endDate}</s.InfoItem>
         {renderDeadlineOrSubmission()}
-      </s.InfoSection>
-
-      {/* 제출현황 버튼 클릭 시 상세 페이지로 전환 */}
-      <Button
-        type={0}
-        text="제출현황"
-        onClick={() => onAssignmentSelect(assignmentId)}
-      />
     </s.CardContainer>
   );
 }

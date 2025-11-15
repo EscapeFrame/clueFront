@@ -1,5 +1,5 @@
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 interface StatusProps {
@@ -7,7 +7,7 @@ interface StatusProps {
 }
 
 export const Container = styled.div`
-  padding: 2rem 8rem;
+  padding: 0 8rem;
 
   @media (max-width: 1200px) {
     padding: 2rem 4rem;
@@ -33,7 +33,7 @@ export const Grid = styled.div`
 `;
 
 export const Card = styled.div`
-  background: ${theme.colors.white};
+  background: ${colors.white};
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -47,10 +47,36 @@ export const Card = styled.div`
   }
 `;
 
-export const Header = styled.div`
-  padding: 12px 16px;
+export const SectionHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+`;
+
+export const Description = styled.p`
+  ${fonts.P3};
+  color: ${colors.gray[4]};
+  margin: 0; 
+  padding: 0; 
+  
+  @media (max-width: 1200px) { 
+    ${fonts.P2} 
+  } 
+
+  @media (max-width: 768px) { 
+    ${fonts.P1};
+    text-align: center; 
+  } 
+`;
+
+export const LeftGroup = styled.div`
+ display: flex; 
+ align-items: center;
+`; 
+ 
+ export const RightGroup = styled.div`
+  display: flex;
   align-items: center;
 `;
 
@@ -58,14 +84,14 @@ export const Title = styled.h3`
   margin: 0;
   ${fonts.P4}
   font-weight: 600;
-  color: ${theme.colors.black};
+  color: ${colors.black};
 `;
 
 export const Status = styled.span<StatusProps>`
   ${fonts.P2};
   font-weight: 700;
-  color: ${({ $isSubmitted }) => ($isSubmitted ? theme.colors.blue[500] : theme.colors.red)};
-  border: 1.5px solid ${({ $isSubmitted }) => ($isSubmitted ? theme.colors.blue[500] : theme.colors.red)};
+  color: ${({ $isSubmitted }) => ($isSubmitted ? colors.primary : colors.red[3])};
+  border: 1.5px solid ${({ $isSubmitted }) => ($isSubmitted ? colors.blue.dep1 : colors.red[3])};
   padding: 2px 8px;
   border-radius: 12px;
   user-select: none;
@@ -74,7 +100,7 @@ export const Status = styled.span<StatusProps>`
 export const Body = styled.div`
   padding: 0 16px 12px 16px;
   ${fonts.P3};
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
 `;
 
 export const TimeInfo = styled.div`
@@ -83,11 +109,11 @@ export const TimeInfo = styled.div`
   font-weight: 500;
 
   .deadline {
-    color: ${theme.colors.gray[500]};
+    color: ${colors.gray[4]};
   }
 
   .remaining {
-    color: ${theme.colors.gray[600]};
+    color: ${colors.gray[4]};
   }
 `;
 
@@ -113,7 +139,7 @@ export const DetailHeading = styled.h4`
 export const DetailText = styled.p`
   margin: 4px 0;
   ${fonts.P2};
-  color: ${theme.colors.black};
+  color: ${colors.black};
 
   strong {
     font-weight: 700;
@@ -124,14 +150,16 @@ export const DetailSection = styled.div`
   padding: 8px 0;
 `;
 
-export const AddButton = styled.div`
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 10;
+export const SettingButton = styled.button`
+  background: ${colors.primary};
+  color: ${colors.white};
+  border: none;
+  cursor: pointer;
+  ${fonts.P2};
+  border-radius: 8px;
+`;
 
-  @media (max-width: 768px) {
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
+export const ErrorText = styled.p`
+  ${fonts.P3}
+  color: ${colors.red[3]};
 `;

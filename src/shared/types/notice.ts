@@ -1,9 +1,10 @@
+import { SetStateAction } from "react";
+
 export interface NoticeItem {
+  createdAt: any;
   type: "SCHEDULE" | "SCHOOL" | "SERVICE";
   noticeId: string;
-  title: string; // 공지 제목
-  content: string; // 공지 내용
-  createdAt: string; // 공지 날짜 (YYYY-MM-DD)
+  title: string;
 }
 
 export interface NoticeDocument {
@@ -13,6 +14,7 @@ export interface NoticeDocument {
 }
 
 export interface DetailNoticeItem extends NoticeItem {
+  content: SetStateAction<string>;
   noticeDocuments: NoticeDocument[];
 }
 

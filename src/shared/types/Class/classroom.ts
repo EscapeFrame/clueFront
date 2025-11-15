@@ -7,9 +7,7 @@ export interface ClassInfoProps {
   isActivation: boolean;
   createdAt: string
   teacherNames: string[];
-  progress: number;
-  maxProgress: number;
-  imageUrl: string;
+  code?: string;
 }
 
 // 수업조회

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ClassInfoProps } from '@/shared/types/Class/classroom';
-import ProgressBar from '@/entities/UI/ProgressBar';
 import { FaUserAlt } from "react-icons/fa";
 import { getClassInfo } from '../api';
 import * as s from './styles';
@@ -10,21 +9,17 @@ interface ClassDataState {
   name: string;
   teacherNames: string[];
   description: string;
-  progress: number;
-  maxProgress: number;
 }
 
 export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
-  name, teacherNames, description, progress, maxProgress
+  name, teacherNames, description,
 }) => {
-  console.log("ClassInfo props:", { name, teacherNames, description, progress, maxProgress });
+  console.log("ClassInfo props:", { name, teacherNames, description });
   const { classId } = useParams<{ classId: string }>();
   const [classData, setClassData] = useState<ClassDataState>({
     name: name || '',
     teacherNames: teacherNames || [],
     description: description || '',
-    progress: progress || 0,
-    maxProgress: maxProgress || 100,
   });
   console.log("Initial classData state:", classData);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,8 +45,6 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
           name: response.name || "",
           description: response.description || "",
           teacherNames: response.teacherNames || [],
-          progress: 0,
-          maxProgress: 100,
         });
       } else {
         console.warn('클래스 정보 조회 실패:', response);
@@ -76,17 +69,12 @@ export const ClassInfo: React.FC<Partial<ClassInfoProps>> = ({
 
   return (
     <s.Container>
-      <s.LeftSection>
         <s.Title>{classData.name}</s.Title>
-        <s.Description>{classData.description}</s.Description>
         <s.TeacherRow>
           <FaUserAlt />
-          <span>{classData.teacherNames.length > 0 ? classData.teacherNames.join(', ') : "선생"}님</span>
+          <span>{classData.teacherNames.length > 0 ? classData.teacherNames.join(', ') : " "}선생님</span>
         </s.TeacherRow>
-
-        <ProgressBar progress={classData.progress} maxProgress={classData.maxProgress} />
-      </s.LeftSection>
-      <s.Img imageUrl="/Paletto/Haeyul.png" />
+        <s.Description>{classData.description}</s.Description>
     </s.Container>
   );
 }; 
