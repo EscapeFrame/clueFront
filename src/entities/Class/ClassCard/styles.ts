@@ -6,7 +6,7 @@ export const Card = styled.div`
   border: 1px solid ${theme.colors.gray[300]};
   padding: 1rem;
   border-radius: 12px;
-  background-color: ${theme.colors.white};
+  background-color: ${theme.colors.gray[100]};
   height: 10rem;
   display: flex;
   flex-direction: column;

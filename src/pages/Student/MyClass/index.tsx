@@ -22,8 +22,8 @@ export default function MyClass() {
 
   // 탭 + 검색 필터링
   const filteredClasses = myClasses.filter((cls) => {
-    const filterValue = CATEGORY_FILTER_MAP[selectedTab as CategoryKey];
-    const tabMatch = filterValue === null ? true : cls.categoryKey === filterValue;
+  const filterValue = CATEGORY_FILTER_MAP[selectedTab as CategoryKey];
+  const tabMatch = filterValue === null ? true : cls.sort === filterValue;
     const searchMatch = cls.name.toLowerCase().includes(searchValue.toLowerCase());
     return tabMatch && searchMatch;
   });
@@ -87,7 +87,7 @@ export default function MyClass() {
             {filteredClasses.map((cls, idx) => (
               <s.Card key={cls.classRoomId || `myclass-${idx}`} onClick={() => handleViewClass(cls.classRoomId)}>
                 <s.CardHeader>
-                  <s.IconWrapper>{getIconByCategory(cls.categoryKey)}</s.IconWrapper>
+                  <s.IconWrapper>{getIconByCategory(cls.sort)}</s.IconWrapper>
                   <s.CardTitle>{cls.name}</s.CardTitle>
                 </s.CardHeader>
                 <s.InfoContent>

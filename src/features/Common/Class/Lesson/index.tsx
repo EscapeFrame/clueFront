@@ -21,7 +21,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
   // local class code (fallback to prop `code`)
   const [localCode, setLocalCode] = useState<string>(code ?? '');
   const [loading, setLoading] = useState(true);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
@@ -69,7 +68,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
     if (classRoomId) {
       fetchData();
     }
-  }, [fetchData, refreshTrigger, classRoomId]);
+  }, [fetchData, classRoomId]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -125,13 +124,14 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
           <s.Description>※ 디렉토리 제목 클릭 시 수정 가능합니다.</s.Description>
         </s.LeftGroup>
         <s.RightGroup>
-          <s.SettingButton onClick={() => navigate("setting")}>학습실 관리</s.SettingButton>
-
           {isTeacher && (
-            <s.CardContainer onClick={handleCodeSelect}>
-              <s.CardTitle>수업코드</s.CardTitle>
-              <s.CardText>{(copiedTitle || localCode || code) ?? "알 수 없음"}</s.CardText>
-            </s.CardContainer>
+            <>
+              <s.SettingButton onClick={() => navigate("setting")}>학습실 관리</s.SettingButton>
+              <s.CardContainer onClick={handleCodeSelect}>
+                <s.CardTitle>수업코드</s.CardTitle>
+                <s.CardText>{(copiedTitle || localCode || code) ?? "알 수 없음"}</s.CardText>
+              </s.CardContainer>
+            </>
           )}
         </s.RightGroup>
       </s.SectionHeader>
