@@ -9,28 +9,43 @@ export default function TaskGuide(): React.ReactNode {
   const [posts, setPosts] = useState<PendingTaskItem[]>([]);
   const today = dayjs();
 
-  useEffect(() => {
-    const getPosts = async () => {
-      try {
-        const data = await fetchPosts();
+  // useEffect(() => {
+  //   const getPosts = async () => {
+  //     try {
+  //       const data = await fetchPosts();
 
-        if (!Array.isArray(data)) {
-          console.error('fetchPosts() 결과가 배열이 아님:', data);
-          setPosts([]);
-          return;
-        }
+  //       if (!Array.isArray(data)) {
+  //         console.error('fetchPosts() 결과가 배열이 아님:', data);
+  //         setPosts([]);
+  //         return;
+  //       }
 
-        setPosts(
-          data.sort((a, b) => dayjs(a.endDate).diff(today, 'day') - dayjs(b.endDate).diff(today, 'day'))
-        );
-      } catch (error) {
-        console.error('수행평가 조회실패: ', error);
-        setPosts([]);
-      }
+  //       setPosts(
+  //         data.sort((a, b) => dayjs(a.endDate).diff(today, 'day') - dayjs(b.endDate).diff(today, 'day'))
+  //       );
+  //     } catch (error) {
+  //       console.error('수행평가 조회실패: ', error);
+  //       setPosts([]);
+  //     }
+  //   };
+
+  //   getPosts();
+  // }, []);
+
+  const getPosts = async () => {
+    try {
+      setPosts([]);
+    } catch (error) {
+      console.error('수행평가 조회실패: ', error);
+      setPosts([]);
+    }
     };
-
+  
+  useEffect(() => {
     getPosts();
   }, []);
+
+  
 
   return (
     <s.Container>
