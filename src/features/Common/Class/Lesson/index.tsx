@@ -31,6 +31,13 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
   const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
   const [copiedTitle, setCopiedTitle] = useState<string>('');
 
+  // 디버긍용
+  useEffect(() => {
+    console.log("현재 사용자 정보:", user);
+    console.log("현재 사용자 role:", user?.role);
+    console.log("isTeacher 변수 값:", isTeacher);
+  }, [user, isTeacher]);
+
   // 데이터 불러오기
   const fetchData = async () => {
     try {

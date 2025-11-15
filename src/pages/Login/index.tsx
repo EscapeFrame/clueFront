@@ -1,38 +1,28 @@
 import LoginButton from "@/entities/Login/LoginButton"
 import * as S from './styles'
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import Image from '@/../public/registerImg.png';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from "@/entities/Context/LoginContext";
+import { useAuth } from "@/app/hooks/useAccessToken";
 
 export function Login() {
-    const context = useContext(UserContext);
+    const { setAuthInfo } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-      const handleLogin = async (token: string) => {
-        if (context) {
-          console.log("Context exists. Calling setAuthInfo...");
-          await context.setAuthInfo(token); // await로 호출하여 사용자 정보 로딩을 기다림
-          console.log("setAuthInfo finished. Redirecting to /");
-          navigate('/', { replace: true });
-        } else {
-          console.error("UserContext is not available in Login component.");
-        }
-      };
-
-        console.log("Login page useEffect triggered.");
         const params = new URLSearchParams(window.location.search);
-        const accessToken = params.get('access_token');
+        const urlToken = params.get('access_token');
 
-        console.log("Access Token from URL:", accessToken);
-
-        if (accessToken) {
-            handleLogin(accessToken);
+        if (urlToken) {
+            // Case 1: Token is in the URL (coming from OAuth).
+            console.log("로그인 페이지: URL에서 Access Token을 발견했습니다. 인증 정보를 설정하고 홈페이지로 리디렉션합니다.");
+            setAuthInfo(urlToken);
+            navigate('/', { replace: true });
         } else {
-            console.log("Tokens not found in URL params.");
+            // Case 2: No token in URL. Stay on login page.
+            console.log("로그인 페이지: 인증 토큰이 없습니다. 로그인 페이지에 머무릅니다.");
         }
-    }, [context, navigate]); // 의존성 배열 추가로 최초 1회만 실행되도록 함
+    }, [setAuthInfo, navigate]);
     
     return (
         <S.Container>

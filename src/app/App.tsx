@@ -26,7 +26,7 @@ function AuthWrapper() {
   const location = useLocation();
 
   if (loading) {
-    return null; // 또는 로딩 스피너를 여기에 렌더링
+    return <div>Loading...</div>; // 또는 로딩 스피너를 여기에 렌더링
   }
 
   let role = user?.role || null;
@@ -40,9 +40,9 @@ function AuthWrapper() {
   return (
       <UserContext.Provider value={{ accessToken, user, setAuthInfo, removeAuthInfo }}>
       {!hideNavbar && (
-        <Navbar userId={Number(user?.userId) || 0} username={user?.username || ''} role={role} />
+        <Navbar userId={Number(user?.userId) || 0} username={user?.username || ''} role={role} classCode={user.classCode} />
       )}
-      <AppRoutes role={role} />
+      <AppRoutes role={role} loading={loading} />
     </UserContext.Provider>
   );
 }

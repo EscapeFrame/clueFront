@@ -28,11 +28,15 @@ import { LinkSaveRoutes } from '@/linkSave/app/Routes';
 
 interface AppRoutesProps {
   role: string | null;
+  loading: boolean;
 }
 
-export const AppRoutes = ({ role }: AppRoutesProps) => {
-  const isAuthenticated = role !== null;
+export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
+  const isAuthenticated = !!role;
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!isAuthenticated) {
     return (
@@ -46,7 +50,7 @@ export const AppRoutes = ({ role }: AppRoutesProps) => {
 
   return (
     <Routes>
-      <Route path="/login" element={< Login />} />
+      <Route path="/login" element={<Navigate to="/" replace />} />
       <Route path="/register" element={<Navigate to="/" replace />} />
 
       {role === 'TCH' && (

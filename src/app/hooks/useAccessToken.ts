@@ -2,39 +2,31 @@ import { useEffect, useState, useCallback } from 'react';
 import Customapi from '@/shared/config/api';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
+import { User } from '@/entities/Context/LoginContext';
 
-export const useAuth = (): any => {
+interface AuthHook {
+  accessToken: string | null;
+  user: User;
+  setAuthInfo: (accessToken: string) => void;
+  removeAuthInfo: () => void;
+  loading: boolean;
+}
+
+export const useAuth = (): AuthHook => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
-  // 로그인 시 토큰 저장 및 사용자 정보 조회
-  const setAuthInfo = useCallback(async (accessToken: string) => {
+  // 로그인 시 토큰 저장
+  const setAuthInfo = useCallback((accessToken: string) => {
     setAccessToken(accessToken);
     localStorage.setItem('accessToken', accessToken);
-
-    // 새로운 토큰으로 사용자 정보를 즉시 조회
-    try {
-      const res = await Customapi.get('/api/user/me', {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      const userData = res.data;
-      setUser({
-        userId: userData.userId,
-        username: userData.username,
-        role: userData.role,
-      });
-    } catch (error) {
-      console.error('setAuthInfo에서 유저 정보 조회 실패:', error);
-      // 실패 시 토큰 및 유저 정보 초기화
-      removeAuthInfo();
-    }
   }, []);
 
   // 로그아웃
   const removeAuthInfo = useCallback(() => {
     setAccessToken(null);
-    setUser({ username: "", userId: "", role: "" });
+    setUser({ username: "", userId: "", role: "", classCode: 0 });
     localStorage.removeItem('accessToken');
   }, [setUser]);
   
@@ -57,35 +49,44 @@ export const useAuth = (): any => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (!accessToken || user.userId) {
+      console.log('useAuth: useEffect/fetchUserInfo triggered.');
+      const token = localStorage.getItem('accessToken');
+      console.log('useAuth: accessToken from localStorage:', token);
+
+      if (!accessToken) {
+        console.log('useAuth: No accessToken, setting loading to false.');
         setLoading(false);
         return;
       }
 
+      console.log('useAuth: AccessToken exists, fetching user info...');
+      setLoading(true); // 명시적으로 로딩 시작을 알림
+
       try {
-        const res = await Customapi.get('/api/user/me');
+        const res = await Customapi.get<{ userId: string; username: string; role: "STUDENT" | "TEACHER", classCode: string | number }>('/api/user/me');
         const userData = res.data;
+        console.log('useAuth: User info fetched successfully:', userData);
         setUser({
           userId: userData.userId,
-
           username: userData.username,
           role: userData.role,
+          classCode: userData.classCode,
         });
-      } catch (error) {
-        // 401 에러가 아니고, 재시도 요청도 아닌 경우에만 로그아웃 처리
-        if (error.response?.status !== 401 && !error.config?._retry) {
-          console.error('유저 정보 조회 실패, 로그아웃 처리: ', error);
-          // 이 경우 토큰이 유효하지 않다고 판단하여 로그아웃 처리
+      } catch (error: any) {
+        if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+          console.warn('useAuth: User info fetch canceled.');
+        } else {
+          console.error('useAuth: Failed to fetch user info:', error);
           removeAuthInfo();
         }
       } finally {
         setLoading(false);
+        console.log('useAuth: Setting loading to false.');
       }
-
     };
 
     fetchUserInfo();
-  }, [accessToken, user.userId, setUser, removeAuthInfo]);
+  }, [accessToken, setUser, removeAuthInfo]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };

@@ -15,7 +15,7 @@ export default function Notice() {
   const [noticeToEdit, setNoticeToEdit] = useState<DetailNoticeItem | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const user = useRecoilValue(userState);
-  const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
+  const isTeacher = !!user && user.role === 'TEACHER';
 
   const {
     serviceNotices,

@@ -32,6 +32,7 @@ const onGoogleLogin = () => {
         username: '',
         userId: '',
         role: '',
+        classCode: 0,
       });
       window.location.href = "/";
     }
