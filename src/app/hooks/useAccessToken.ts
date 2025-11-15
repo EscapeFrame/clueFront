@@ -74,13 +74,13 @@ export const useAuth = (): AuthHook => {
       } catch (error: any) {
         if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
           console.warn('useAuth: User info fetch canceled.');
-          return;
+        } else {
+          console.error('useAuth: Failed to fetch user info:', error);
+          removeAuthInfo();
         }
-        console.error('useAuth: Failed to fetch user info:', error);
-        removeAuthInfo();
       } finally {
-        console.log('useAuth: Setting loading to false.');
         setLoading(false);
+        console.log('useAuth: Setting loading to false.');
       }
     };
 
