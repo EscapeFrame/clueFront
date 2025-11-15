@@ -15,6 +15,16 @@ export const StyledButton = styled.button<{
   padding: 0.6rem 1.2rem;
   transition: all 0.2s ease-in-out;
 
+  @media (max-width: 1200px) {
+    height: 40px;
+    padding: 0.5rem 1rem;
+  }
+
+  @media (max-width: 768px) {
+    height: 36px;
+    padding: 0.4rem 0.8rem;
+  }
+
   ${({ variant }) => {
     switch (variant) {
       case 0: // Primary

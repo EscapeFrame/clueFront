@@ -49,30 +49,38 @@ export const Card = styled.div`
 
 export const SectionHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin: 10px;
+  gap: 1rem;
 `;
 
-export const Description = styled.p`
+export const Description = styled.div`
   ${fonts.P3};
-  color: ${colors.gray[4]};
-  margin: 0; 
-  padding: 0; 
-  
-  @media (max-width: 1200px) { 
-    ${fonts.P2} 
-  } 
+  color: ${colors.blue.dep1};
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 12px;
+  background: ${colors.blue.light1};
+  border-radius: 8px;
+  border: 1px solid ${colors.blue.light2};
+  margin-right: 1rem;
+  @media (max-width: 1200px) {
+    ${fonts.P2}
+  }
 
-  @media (max-width: 768px) { 
+  @media (max-width: 768px) {
     ${fonts.P1};
-    text-align: center; 
-  } 
+    margin-right: 0.5rem;
+  }
 `;
 
 export const LeftGroup = styled.div`
- display: flex; 
+ display: flex;
  align-items: center;
+ flex: 1 1 auto;
+ min-width: 0;
 `; 
  
  export const RightGroup = styled.div`
