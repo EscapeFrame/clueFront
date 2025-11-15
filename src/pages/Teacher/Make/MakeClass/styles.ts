@@ -6,6 +6,13 @@ export const Container = styled.div`
   background-color: ${theme.colors.white};
   height: 100%;
 
+  @media (max-width: 1200px) {
+    padding: 40px 200px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 40px 100px;
+  }
 `;
 
 export const PostButton = styled.div`
