@@ -7,6 +7,10 @@ export const Container = styled.div`
   flex-direction: column; 
   padding: 2rem 8rem;
   gap: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
 `;
 
 export const SettingButton = styled.button`

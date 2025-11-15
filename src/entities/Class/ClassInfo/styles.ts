@@ -62,7 +62,6 @@ export const TeacherRow = styled.div`
   }
 
   @media (max-width: 768px) {
-    flex-direction: column;
     gap: 6px;
     ${fonts.P1}
   }

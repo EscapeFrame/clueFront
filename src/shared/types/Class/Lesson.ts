@@ -31,5 +31,5 @@ export interface QuestionItem {
 
 export interface LessonProps {
   classRoomId: string;
-  code: string;
+  code?: string;
 }
