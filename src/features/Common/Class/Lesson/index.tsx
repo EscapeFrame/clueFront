@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { IoDocumentOutline } from "react-icons/io5";
@@ -8,21 +8,18 @@ import { LuHash } from "react-icons/lu";
 
 import * as s from './styles';
 
-import NoticeCard from '@/entities/Main/NoticeCard';
-import { Directory, NewsItem, QuestionItem, LessonProps } from '@/shared/types/Class/Lesson';
-import { getLessonDirectories, getLessonNews, getLessonQuestions } from '../api';
-import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
-import { deleteDirectory, deleteDocument } from '@/entities/Make/api/useLesson';
-import { useRecoilState } from 'recoil';
+import { Directory, LessonProps } from '@/shared/types/Class/Lesson';
+import { getLessonDirectories } from '../api';
+import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
   const navigate = useNavigate();
-  const [user] = useRecoilState(userState);
+  const user = useRecoilValue(userState);
 
   const [directories, setDirectories] = useState<Directory[]>([]);
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [questions, setQuestions] = useState<QuestionItem[]>([]);
+  // local class code (fallback to prop `code`)
+  const [localCode, setLocalCode] = useState<string>(code ?? '');
   const [loading, setLoading] = useState(true);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -30,16 +27,15 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
 
   const isTeacher = !!user && (user.role === 'TCH' || user.role === 'TEACHER');
   const [copiedTitle, setCopiedTitle] = useState<string>('');
-
-  // 디버긍용
+  // 짧은 복사 피드백용 타이머
   useEffect(() => {
-    console.log("현재 사용자 정보:", user);
-    console.log("현재 사용자 role:", user?.role);
-    console.log("isTeacher 변수 값:", isTeacher);
-  }, [user, isTeacher]);
+    if (!copiedTitle) return;
+    const t = setTimeout(() => setCopiedTitle(''), 1500);
+    return () => clearTimeout(t);
+  }, [copiedTitle]);
 
   // 데이터 불러오기
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const classInfo = await getLessonDirectories(classRoomId);
       if (classInfo.directoryList) {
@@ -58,23 +54,31 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
         })),
       }));
       setDirectories(dirs);
-      setNews(await getLessonNews(classRoomId));
-      setQuestions(await getLessonQuestions(classRoomId));
+      // API may return a class code; prefer that if prop `code` is not provided
+      if (classInfo.code) {
+        setLocalCode(classInfo.code);
+      }
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [classRoomId]);
 
   useEffect(() => {
-    if (classRoomId) fetchData();
-  }, [classRoomId, refreshTrigger]);
+    if (classRoomId) {
+      fetchData();
+    }
+  }, [fetchData, refreshTrigger, classRoomId]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
       const newSet = new Set(prev);
-      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
       return newSet;
     });
   };
@@ -100,9 +104,10 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
   };
 
   const handleCodeSelect = () => {
-    navigator.clipboard.writeText(code ?? '')
+    const copyText = localCode || code || '';
+    navigator.clipboard.writeText(copyText)
       .then(() => {
-        setCopiedTitle(code ?? '');
+        setCopiedTitle(copyText);
         alert('수업 코드가 클립보드에 복사되었습니다.');
       })
       .catch(err => {
@@ -125,7 +130,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
           {isTeacher && (
             <s.CardContainer onClick={handleCodeSelect}>
               <s.CardTitle>수업코드</s.CardTitle>
-              <s.CardText>{(copiedTitle || code) ?? "알 수 없음"}</s.CardText>
+              <s.CardText>{(copiedTitle || localCode || code) ?? "알 수 없음"}</s.CardText>
             </s.CardContainer>
           )}
         </s.RightGroup>

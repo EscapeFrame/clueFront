@@ -246,6 +246,7 @@ export const CardContainer = styled.div`
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   gap: 15px;
+  cursor: pointer;
 `;
 
 export const CardTitle = styled.h2`
