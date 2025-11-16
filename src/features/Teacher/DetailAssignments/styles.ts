@@ -59,6 +59,8 @@ export const Content = styled.div`
 export const Title = styled.p`
   ${fonts.P4};
   font-weight: 600;
+  text-align: left;
+  margin-left: 0.5rem;
 
   @media (max-width: 1200px) {
     ${fonts.P3};
@@ -135,11 +137,23 @@ export const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 1 1 auto;
 
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+`;
+
+export const RightArea = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
   }
 `;
 
