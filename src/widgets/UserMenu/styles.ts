@@ -114,3 +114,7 @@ export const ModalButton = styled.button`
     background-color: ${colors.gray[1]};
   }
 `;
+
+export const pointer = styled.div`
+  cursor: pointer;
+`;
