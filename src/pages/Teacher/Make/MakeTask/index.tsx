@@ -167,7 +167,7 @@ const MakeTask: React.FC = () => {
         attachments={attachments}
         setAttachments={setAttachments}
         openUploadModal={() => setIsFileModalOpen(true)}
-        openLinkModal={platform => { setLinkPlatform(platform); setIsLinkModalOpen(true); }}
+        openLinkModal={platform => { setLinkPlatform(platform ?? null); setIsLinkModalOpen(true); }}
       />
 
       <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
