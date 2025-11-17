@@ -5,20 +5,23 @@ import { IoDocumentOutline } from "react-icons/io5";
 import { IoCodeSlashOutline } from "react-icons/io5";
 import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
 import { LuHash } from "react-icons/lu";
+import { IoClose } from "react-icons/io5";
 
 import * as s from './styles';
 
 import { Directory, LessonProps } from '@/shared/types/Class/Lesson';
-import { getLessonDirectories } from '../api';
+import { getLessonDirectories, getClassCode } from '../api';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
+import { deleteDirectory, deleteDocument } from '@/entities/Make/api/useLesson';
 
-const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
+const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
 
   const [directories, setDirectories] = useState<Directory[]>([]);
+  const [code, setCode] = useState("코드를 불러오지 못했습니다.")
   // local class code (fallback to prop `code`)
   const [localCode, setLocalCode] = useState<string>(code ?? '');
   const [loading, setLoading] = useState(true);
@@ -44,6 +47,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
         sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(classInfo.directoryList));
       }
 
+      setCode(classInfo.code)
       const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
         id: dir.directoryId.toString(),
         name: dir.directoryName,
@@ -60,6 +64,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
       if (classInfo.code) {
         setLocalCode(classInfo.code);
       }
+      setCode(await getClassCode(classRoomId));
     } catch (err) {
       console.error(err);
     } finally {
@@ -124,6 +129,54 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
 
   if (loading) return <s.Container>수업 정보를 불러오는 중...</s.Container>;
 
+  const handleDeleteDirectory = async (dirId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    // 선생님이 아니면 삭제 불가
+    if (!isTeacher) {
+      alert("선생님만 디렉토리를 삭제할 수 있습니다.");
+      return;
+    }
+    if (window.confirm("정말로 이 디렉토리를 삭제하시겠습니까?")) {
+      try {
+        const success = await deleteDirectory(dirId);
+        console.log(success);
+        if (success) {
+          setRefreshTrigger(prev => prev + 1);
+        }
+        else {
+          alert("디렉토리 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("디렉토리 삭제 실패:", error);
+        alert("디렉토리 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  const handleDeleteDocument = async (docId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    // 선생님이 아니면 삭제 불가
+    if (!isTeacher) {
+      alert("선생님만 문서를 삭제할 수 있습니다.");
+      return;
+    }
+    if (window.confirm("정말로 이 문서 삭제하시겠습니까?")) {
+      try {
+        const success = await deleteDocument(docId);
+        console.log(success);
+        if (success) {
+          setRefreshTrigger(prev => prev + 1);
+        }
+        else {
+          alert("문서 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("문서 삭제 실패:", error);
+        alert("문서 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   return (
     <s.Container>
       <s.SectionHeader>
@@ -143,12 +196,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
         </s.RightGroup>
       </s.SectionHeader>
 
-      {isTeacher && directories.length === 0 && (
-        <s.AddButton onClick={() => setOpenDirModal(true)}>
-          + 새 디렉토리 만들기
-        </s.AddButton>
-      )}
-
       <s.Section>
         {directories.map((dir) => {
           const isExpanded = expandedIds.has(dir.id);
@@ -165,7 +212,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
                 </s.Left>
                 <s.Right>
                   {isTeacher && (
-                    <s.AddSub onClick={(e) => { e.stopPropagation(); navigate(`${dir.id}/make/lesson`); }}>+</s.AddSub>
+                    <>
+                      <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDirectory(dir.id, e); }}>
+                        <IoClose size={16} />
+                      </s.DeleteIcon>
+                      <s.AddSub onClick={(e) => { e.stopPropagation(); navigate(`${dir.id}/make/lesson`); }}>+</s.AddSub>
+                    </>
                   )}
                   <s.Icon>{isExpanded ? <IoIosArrowUp /> : <IoIosArrowDown />}</s.Icon>
                 </s.Right>
@@ -188,12 +240,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
                     <s.Name>{sub.name}</s.Name>
                   </s.SubItem>
                 ))}
-                {/* 선생님만 디렉토리 추가 가능 */}
-                {isTeacher && (
-                  <s.AddButton onClick={() => setOpenDirModal(true)}>
-                    + 새 디렉토리 만들기
-                  </s.AddButton>
-                )}
               </s.SubDirectoryList>
             </s.DirectoryWrapper>
           );
@@ -208,6 +254,28 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
           }}
         />
       )}
+
+      {/* 선생님만 디렉토리 추가 가능 */}
+      {isTeacher && (
+        <s.AddButton onClick={() => setOpenDirModal(true)}>
+          + 새 디렉토리 만들기
+        </s.AddButton>
+      )}
+
+      {isTeacher && openDirModal && (
+        <s.ModalOverlay onClick={() => setOpenDirModal(false)}>
+          <s.ModalContent onClick={(e) => e.stopPropagation()}>
+            <DirectorySelect
+              classRoomId={classRoomId}
+              onDirectoryAdded={() => {
+                handleDirectoryAdded();
+                setOpenDirModal(false);
+              }}
+            />
+          </s.ModalContent>
+        </s.ModalOverlay>
+      )}
+
     </s.Container>
   );
 };
