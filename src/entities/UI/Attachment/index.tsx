@@ -17,7 +17,8 @@ interface Props {
   attachments: Attachment[];
   setAttachments: React.Dispatch<React.SetStateAction<Attachment[]>>;
   openUploadModal: () => void;
-  openLinkModal: (platform: "drive" | "youtube" | "notion" | "link") => void;
+  openLinkModal: (platform?: "drive" | "youtube" | "notion" | "link") => void;
+  isSubmitted?: boolean;
 }
 
 const AttachmentBox: React.FC<Props> = ({
@@ -36,10 +37,10 @@ const AttachmentBox: React.FC<Props> = ({
     onClick: () => void;
     icon: ReactNode;
   }[] = [
-      { label: "Drive", platform: "drive", onClick: () => openLinkModal("drive"), icon: <FaGoogleDrive /> },
-      { label: "YouTube", platform: "youtube", onClick: () => openLinkModal("youtube"), icon: <FaYoutube /> },
-      { label: "Notion", platform: "notion", onClick: () => openLinkModal("notion"), icon: <SiNotion /> },
-      { label: "link", platform: "link", onClick: () => openLinkModal("link"), icon: <FaLink /> },
+      { label: "Drive", platform: "drive", onClick: () => openLinkModal?.("drive"), icon: <FaGoogleDrive /> },
+      { label: "YouTube", platform: "youtube", onClick: () => openLinkModal?.("youtube"), icon: <FaYoutube /> },
+      { label: "Notion", platform: "notion", onClick: () => openLinkModal?.("notion"), icon: <SiNotion /> },
+      { label: "link", platform: "link", onClick: () => openLinkModal?.("link"), icon: <FaLink /> },
       { label: "Upload", onClick: openUploadModal, icon: <FiUpload /> },
     ];
 

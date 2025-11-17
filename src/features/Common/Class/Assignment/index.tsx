@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AssignmentCard } from '@/entities/Class/AssignmentCard/Student';
-import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
-import { AssignmentsApi } from '@/features/Common/Class/api/useAssignment';
+import { SubmissionsApi } from '../api/useSubmissions';
+import { StudentSubmission } from '@/shared/types/submission';
 import * as s from './styles';
 
 export const AssignmentComponent: React.FC = () => {
   const { classId, classRoomId } = useParams<{ classId?: string; classRoomId?: string }>();
   const effectiveId = classId ?? classRoomId;
-  const [assignmentList, setAssignmentList] = useState<Assignment[]>([]);
+import { StudentAssignmentData, SubmissionAttachmentResponse } from '@/entities/Class/AssignmentCard/Student'; // Import necessary types
+
+  const [assignmentList, setAssignmentList] = useState<StudentAssignmentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,9 +23,25 @@ export const AssignmentComponent: React.FC = () => {
     }
 
     setLoading(true);
-    AssignmentsApi.getAll(effectiveId)
-      .then((data) => {
-        setAssignmentList(data as unknown as Assignment[]);
+    SubmissionsApi.getAllForStudent(effectiveId)
+      .then((data: StudentSubmission[]) => {
+        const assignments: StudentAssignmentData[] = data.map(s => ({
+          assignmentId: s.submissionId, // Use s.submissionId directly (it's already string)
+          title: s.title,
+          content: s.content,
+          startDate: s.startDate, // Use s.startDate directly
+          endDate: s.endDate,
+          submissionId: s.submissionId, // Use s.submissionId directly (it's already string)
+          IsSubmitted: s.IsSubmitted,
+          submittedAt: s.submittedAt,
+          submissionAttachmentResponses: s.submissionAttachmentResponses.map(f => ({
+            submissionAttachmentId: f.submissionAttachmentId,
+            type: f.type === 'FILE' ? 'FILE' : 'LINK', // Ensure type is 'FILE' or 'LINK'
+            value: f.value,
+            originalFileName: f.originalFileName,
+          })),
+        }));
+        setAssignmentList(assignments);
         setError(null);
       })
       .catch((err) => {
@@ -36,7 +54,7 @@ export const AssignmentComponent: React.FC = () => {
   }, [effectiveId]);
 
   // 특정 과제 수정 함수
-  const updateAssignment = (id: string | number, changes: Partial<Assignment>) => {
+  const updateAssignment = (id: string, changes: Partial<StudentAssignmentData>) => { // Changed id type to string and changes type to Partial<StudentAssignmentData>
     setAssignmentList(prev =>
       prev.map(a => (a.assignmentId === id ? { ...a, ...changes } : a))
     );
