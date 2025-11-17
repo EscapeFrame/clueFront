@@ -42,8 +42,14 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
     setUser({
       username: '',
       userId: '',
+      email: '',
       role: '',
       classCode: 0,
+      grade: 0,
+      classNo: 0,
+      number: 0,
+      description: '',
+      myImage: null,
     });
     navigate('/login');
     setIsModalOpen(false);

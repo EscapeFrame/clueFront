@@ -51,7 +51,7 @@ export default function Navbar() {
             <li><s.NavItem href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca" target="_blank" rel="noopener noreferrer">서비스 소개</s.NavItem></li>
           </s.NavLinks>
           <s.UserMenuWrapper>
-            <Dropdown role={user.role} studentNumber={studentNumber} name={user.username} myImage={user.myImage} />
+            <Dropdown role={user.role} studentNumber={studentNumber} name={user.username} myImage={user.myImage ?? undefined} />
           </s.UserMenuWrapper>
         </s.NavbarNav>
       </s.Container>
