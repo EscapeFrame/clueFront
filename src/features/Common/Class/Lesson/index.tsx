@@ -12,6 +12,7 @@ import { Directory, LessonProps } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories } from '../api';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
+import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
   // local class code (fallback to prop `code`)
   const [localCode, setLocalCode] = useState<string>(code ?? '');
   const [loading, setLoading] = useState(true);
+  const [openDirModal, setOpenDirModal] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // 리로드 트리거
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
@@ -115,6 +118,10 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
       });
   };
 
+  const handleDirectoryAdded = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   if (loading) return <s.Container>수업 정보를 불러오는 중...</s.Container>;
 
   return (
@@ -135,6 +142,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
           )}
         </s.RightGroup>
       </s.SectionHeader>
+
+      {isTeacher && directories.length === 0 && (
+        <s.AddButton onClick={() => setOpenDirModal(true)}>
+          + 새 디렉토리 만들기
+        </s.AddButton>
+      )}
 
       <s.Section>
         {directories.map((dir) => {
@@ -175,11 +188,26 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
                     <s.Name>{sub.name}</s.Name>
                   </s.SubItem>
                 ))}
+                {/* 선생님만 디렉토리 추가 가능 */}
+                {isTeacher && (
+                  <s.AddButton onClick={() => setOpenDirModal(true)}>
+                    + 새 디렉토리 만들기
+                  </s.AddButton>
+                )}
               </s.SubDirectoryList>
             </s.DirectoryWrapper>
           );
         })}
       </s.Section>
+      {isTeacher && openDirModal && (
+        <DirectorySelect
+          classRoomId={classRoomId}
+          onDirectoryAdded={() => {
+            handleDirectoryAdded();
+            setOpenDirModal(false);
+          }}
+        />
+      )}
     </s.Container>
   );
 };

@@ -24,6 +24,22 @@ export const SettingButton = styled.button`
   border-radius: 8px;
 `;
 
+export const AddButton = styled.button`
+  background: ${colors.gray[3]};
+  color: ${colors.black};
+  border: none;
+  cursor: pointer;
+  ${fonts.P2};
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 8px;
+
+  &:hover {
+    background: ${colors.blue.light4};
+    color: ${colors.white};
+  }
+`;
+
 export const IconGroup = styled.div`
   display: flex;
   align-items: center;
