@@ -4,11 +4,11 @@ import { AssignmentCard } from '@/entities/Class/AssignmentCard/Student';
 import { SubmissionsApi } from '../api/useSubmissions';
 import { StudentSubmission } from '@/shared/types/submission';
 import * as s from './styles';
+import { StudentAssignmentData, SubmissionAttachmentResponse } from '@/entities/Class/AssignmentCard/Student'; // Import necessary types
 
 export const AssignmentComponent: React.FC = () => {
   const { classId, classRoomId } = useParams<{ classId?: string; classRoomId?: string }>();
   const effectiveId = classId ?? classRoomId;
-import { StudentAssignmentData, SubmissionAttachmentResponse } from '@/entities/Class/AssignmentCard/Student'; // Import necessary types
 
   const [assignmentList, setAssignmentList] = useState<StudentAssignmentData[]>([]);
   const [loading, setLoading] = useState(true);

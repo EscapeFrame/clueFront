@@ -23,14 +23,14 @@ interface Attachment {
   isNew?: boolean;
 }
 
-interface SubmissionAttachmentResponse {
+export interface SubmissionAttachmentResponse {
   submissionAttachmentId: string;
   type: 'FILE' | 'LINK';
   value: string;
   originalFileName: string;
 }
 
-interface StudentAssignmentData {
+export interface StudentAssignmentData {
   assignmentId: string;
   title: string;
   content: string;
