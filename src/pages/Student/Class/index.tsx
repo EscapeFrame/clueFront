@@ -53,7 +53,7 @@ const Classroom: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'lesson':
-        return <LessonComponent classRoomId={classRoomId} />;
+        return <LessonComponent classRoomId={classRoomId} code={classInfo?.code} />;
       case 'assignment':
         return <AssignmentComponent />;
       case 'exam':

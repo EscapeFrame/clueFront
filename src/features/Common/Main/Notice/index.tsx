@@ -25,6 +25,12 @@ export default function Notice() {
     error, refetch,
   } = useNotices();
 
+  // sort notices by createdAt desc (newest first)
+  const sortDesc = (a: NoticeItem, b: NoticeItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  const sortedService = [...(serviceNotices || [])].sort(sortDesc);
+  const sortedSchool = [...(schoolNotices || [])].sort(sortDesc);
+  const sortedSchedule = [...(scheduleNotices || [])].sort(sortDesc);
+
   const handleStartEdit = (noticeDetail: DetailNoticeItem) => {
     setNoticeToEdit(noticeDetail);
     setSelectedNotice(null); // 상세 모달 닫기
@@ -51,21 +57,21 @@ export default function Notice() {
         <s.Row>
           <NoticeCard
             cardTitle="서비스공지"
-            notices={serviceNotices}
+            notices={sortedService}
             loading={loading}
             error={error}
             onSelect={setSelectedNotice}
           />
           <NoticeCard
             cardTitle="학교공지"
-            notices={schoolNotices}
+            notices={sortedSchool}
             loading={loading}
             error={error}
             onSelect={setSelectedNotice}
           />
           <NoticeCard
             cardTitle="일정안내"
-            notices={scheduleNotices}
+            notices={sortedSchedule}
             loading={loading}
             error={error}
             onSelect={setSelectedNotice}

@@ -4,6 +4,8 @@ import { AssignmentsApi } from '@/features/Common/Class/api/useAssignment';
 import { AssignmentCard } from '@/entities/Class/AssignmentCard/teacher';
 import { Assignment } from '@/shared/types/Class/Assignment/Attachment';
 import Button from '@/entities/UI/Button';
+import { useRecoilValue } from 'recoil';
+import { userState } from '@/shared/model/userState';
 import * as s from './styles';
 
 interface AssignmentComponentProps {
@@ -17,6 +19,8 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
     const [assignments, setAssignments] = useState<Assignment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const user = useRecoilValue(userState);
+    const isTeacher = !!user && user.role === 'TEACHER';
 
     // 컴포넌트 마운트 시(또는 effectiveId가 바뀔 때) 과제 목록 API 호출
     useEffect(() => {
@@ -55,9 +59,11 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
                     <s.Description>※ 카드를 클릭하시면 과제에 대한 세부내용을 확인하실수 있습니다. </s.Description>
                 </s.LeftGroup>
                 <s.RightGroup>
-                    <s.SettingButton>
-                        <Button text="과제추가" width="8rem" type={0} onClick={MakeTask} />
-                    </s.SettingButton>
+                    {isTeacher && (
+                        <s.SettingButton>
+                            <Button text="과제추가" width="8rem" type={0} onClick={MakeTask} />
+                        </s.SettingButton>
+                    )}
                 </s.RightGroup>
             </s.SectionHeader>
 

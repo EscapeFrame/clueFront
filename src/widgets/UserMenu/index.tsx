@@ -61,15 +61,30 @@ export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
     <s.DropdownContainer>
       <s.Icon>
         <IoSettingsOutline onClick={setting} />
-        <AiOutlineQuestionCircle onClick={question}/>
+        <AiOutlineQuestionCircle onClick={question} />
       </s.Icon>
       <s.User role={role}>
         <s.UserInfo>
           <s.ProfileImage src={myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>
         </s.UserInfo>
-        <MdOutlineLogout onClick={() => setIsModalOpen(true)} />
+        <s.pointer onClick={() => setIsModalOpen(true)}>
+          <MdOutlineLogout />
+        </s.pointer>
       </s.User>
+
+      {/* 로그아웃 확인 모달 */}
+      {isModalOpen && (
+        <s.Modal onClick={() => setIsModalOpen(false)}>
+          <s.ModalContent onClick={(e) => e.stopPropagation()}>
+            <s.ModalText>로그아웃 하시겠습니까?</s.ModalText>
+            <s.ModalButtonContainer>
+              <s.ModalButton onClick={handleLogout}>확인</s.ModalButton>
+              <s.ModalButton onClick={() => setIsModalOpen(false)}>취소</s.ModalButton>
+            </s.ModalButtonContainer>
+          </s.ModalContent>
+        </s.Modal>
+      )}
     </s.DropdownContainer>
   );
 }

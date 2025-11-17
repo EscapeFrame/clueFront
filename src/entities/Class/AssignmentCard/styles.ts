@@ -28,7 +28,7 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
 
 // 카드 레이아웃
 export const CardContainer = styled.div`
-  background-color: ${colors.white};
+  background-color: ${colors.gray[1]};
   border-radius: 0.5rem;
   border: 1px solid ${colors.gray[4]};
   padding: 1rem;

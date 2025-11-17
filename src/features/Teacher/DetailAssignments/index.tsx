@@ -236,12 +236,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const Icon2 = stateData[2].icon;
     const Icon3 = stateData[3].icon;
 
-    const [assignments, setAssignments] = useState<Assignment[]>([]);
-    const handleDelete = (id: string) => {
-        if (window.confirm('정말 삭제하시겠습니까?')) {
-            setAssignments(prev => prev.filter(a => a.id !== id));
-        }
-    };
+    // removed unused assignments state and handleDelete
 
     return (
         <s.Container>
@@ -265,7 +260,8 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                     )}
                 </s.TitleContainer>
 
-                <s.State>
+                <s.RightArea>
+                    <s.State>
                     {isEditing ? (
                         <DateInput
                             label="마감일"
@@ -308,9 +304,8 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                         </div>
                     </s.DetailState>
                 </s.State>
-                <s.DeleteButton onClick={() => handleDelete(prve.id)}>
-                    삭제
-                </s.DeleteButton>
+                </s.RightArea>
+                {/* 삭제 버튼은 관리자 기능으로 추후 구현하세요 */}
             </s.Content>
 
             <s.SubTitle>상세설명</s.SubTitle>
