@@ -32,6 +32,20 @@ export async function cancelSubmission(submissionId: string) {
     return Customapi.patch(`/api/submissions/${submissionId}/cancel`);
 }
 
+// 과제에 할당된 첨부파일 조회 API
+export async function getAssignmentAttachments(assignmentId: string) {
+    try {
+        const response = await Customapi.get(`/api/assignments/${assignmentId}/attachment`);
+        if (response.status !== 200) {
+            return response.status;
+        }
+        return response.data;
+    } catch (error) {
+        console.error('과제 첨부파일 조회 실패:', error);
+        throw error;
+    }
+}
+
 
 //<--ClassInfo-->
 // 클래스 정보 조회 API

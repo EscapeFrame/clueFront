@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as s from './styles';
 import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
-import { FaRegFile } from 'react-icons/fa6';
+import { FaRegFile, FaLink } from 'react-icons/fa6';
 import { differenceInDays, parseISO } from 'date-fns';
 import { Modal } from '@/entities/UI/Modal';
 import {
@@ -10,6 +10,7 @@ import {
   submitLink,
   finalizeSubmission,
   cancelSubmission,
+  getAssignmentAttachments,
 } from '../api';
 import AttachmentBox from '@/entities/UI/Attachment';
 import AddModal from '@/entities/UI/AddModal';
@@ -21,6 +22,12 @@ interface Attachment {
   url?: string;
   file?: File;
   isNew?: boolean;
+}
+
+interface TeacherAttachment {
+  type: 'FILE' | 'LINK';
+  value: string;
+  originalFileName?: string;
 }
 
 export interface SubmissionAttachmentResponse {
@@ -61,6 +68,14 @@ export function AssignmentCard({
   const [linkUrl, setLinkUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [teacherAttachments, setTeacherAttachments] = useState<
+    TeacherAttachment[]
+  >([]);
+  const [
+    isFetchingTeacherAttachments,
+    setIsFetchingTeacherAttachments,
+  ] = useState(false);
 
   useEffect(() => {
     if (data.submissionAttachmentResponses) {
@@ -173,7 +188,21 @@ export function AssignmentCard({
     );
   };
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = async () => {
+    setIsModalOpen(true);
+    setIsFetchingTeacherAttachments(true);
+    try {
+      const attachments = await getAssignmentAttachments(data.assignmentId);
+      if (Array.isArray(attachments)) {
+        setTeacherAttachments(attachments);
+      }
+    } catch (error) {
+      console.error('Failed to fetch teacher attachments:', error);
+      // Optionally, show an error message to the user
+    } finally {
+      setIsFetchingTeacherAttachments(false);
+    }
+  };
   const closeModal = () => setIsModalOpen(false);
 
   const openUploadModal = () => {
@@ -226,23 +255,23 @@ export function AssignmentCard({
           buttons={
             isSubmitted
               ? [
-                { text: '닫기', type: 0, onClick: closeModal },
-                {
-                  text: '제출 취소하기',
-                  type: 1,
-                  onClick: handleCancelSubmission,
-                  disabled: isSubmitting,
-                },
-              ]
+                  { text: '닫기', type: 0, onClick: closeModal },
+                  {
+                    text: '제출 취소하기',
+                    type: 1,
+                    onClick: handleCancelSubmission,
+                    disabled: isSubmitting,
+                  },
+                ]
               : [
-                { text: '닫기', type: 0, onClick: closeModal },
-                {
-                  text: '과제 제출하기',
-                  type: 1,
-                  onClick: handleSubmit,
-                  disabled: isSubmitting,
-                },
-              ]
+                  { text: '닫기', type: 0, onClick: closeModal },
+                  {
+                    text: '과제 제출하기',
+                    type: 1,
+                    onClick: handleSubmit,
+                    disabled: isSubmitting,
+                  },
+                ]
           }
         >
           <div style={{ lineHeight: 1.6, marginBottom: '20px' }}>
@@ -253,6 +282,43 @@ export function AssignmentCard({
               <strong>마감일:</strong> {data.endDate}
             </p>
           </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ marginBottom: '10px', fontWeight: 'bold' }}>
+              제공된 자료
+            </h4>
+            {isFetchingTeacherAttachments ? (
+              <p>자료를 불러오는 중...</p>
+            ) : teacherAttachments.length > 0 ? (
+              <s.FileListSection>
+                {teacherAttachments.map((att, index) => (
+                  <a
+                    key={index}
+                    href={att.value}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <s.FileItem>
+                      <s.FileInfoContainer>
+                        {att.type === 'FILE' ? <FaRegFile /> : <FaLink />}
+                        <div>
+                          <s.FileNameText>
+                            {att.type === 'FILE'
+                              ? att.originalFileName
+                              : att.value}
+                          </s.FileNameText>
+                        </div>
+                      </s.FileInfoContainer>
+                    </s.FileItem>
+                  </a>
+                ))}
+              </s.FileListSection>
+            ) : (
+              <p>제공된 자료가 없습니다.</p>
+            )}
+          </div>
+
           <AttachmentBox
             attachments={attachments}
             setAttachments={setAttachments}
