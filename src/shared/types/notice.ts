@@ -14,7 +14,7 @@ export interface NoticeDocument {
 }
 
 export interface DetailNoticeItem extends NoticeItem {
-  content: SetStateAction<string>;
+  content: string;
   noticeDocuments: NoticeDocument[];
 }
 
