@@ -68,6 +68,11 @@ function RegisterPage() {
     }
   };
 
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setRegisterData((prev) => (prev ? { ...prev, username: value } : null));
+  };
+
   //신규 사용자의 폼
   const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -213,6 +218,17 @@ function RegisterPage() {
                 onChange={handleStudentInfoChange}
                 readOnly={!!registerData?.email}
                 required={!registerData?.email}
+              />
+            </s.InputGroup>
+            <s.InputGroup>
+              <label htmlFor="username">이름:</label>
+              <input
+                id="username"
+                name="username"
+                value={registerData.username}
+                placeholder='이름을 입력해주세요.'
+                onChange={handleUsernameChange}
+                required
               />
             </s.InputGroup>
             <s.InputGroup>

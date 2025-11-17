@@ -40,7 +40,7 @@ function AuthWrapper() {
   return (
       <UserContext.Provider value={{ accessToken, user, setAuthInfo, removeAuthInfo }}>
       {!hideNavbar && (
-        <Navbar userId={Number(user?.userId) || 0} username={user?.username || ''} role={role} classCode={user.classCode} />
+        <Navbar />
       )}
       <AppRoutes role={role} loading={loading} />
     </UserContext.Provider>

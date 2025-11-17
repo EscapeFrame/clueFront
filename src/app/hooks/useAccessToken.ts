@@ -26,7 +26,18 @@ export const useAuth = (): AuthHook => {
   // 로그아웃
   const removeAuthInfo = useCallback(() => {
     setAccessToken(null);
-    setUser({ username: "", userId: "", role: "", classCode: 0 });
+    setUser({
+        username: '',
+        userId: '',
+        email: '',
+        role: '',
+        classCode: 0,
+        grade: 0,
+        classNo: 0,
+        number: 0,
+        description: '',
+        myImage: null,
+    });
     localStorage.removeItem('accessToken');
   }, [setUser]);
   
@@ -63,14 +74,20 @@ export const useAuth = (): AuthHook => {
       setLoading(true); // 명시적으로 로딩 시작을 알림
 
       try {
-        const res = await Customapi.get<{ userId: string; username: string; role: "STUDENT" | "TEACHER", classCode: string | number }>('/api/user/me');
+        const res = await Customapi.get<User>('/api/user/me');
         const userData = res.data;
         console.log('useAuth: User info fetched successfully:', userData);
         setUser({
-          userId: userData.userId,
-          username: userData.username,
-          role: userData.role,
-          classCode: userData.classCode,
+          userId: userData.userId || '',
+          username: userData.username || '',
+          email: userData.email || '',
+          role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
+          classCode: userData.classCode || '',
+          grade: userData.grade || 0,
+          classNo: userData.classNo || 0,
+          number: userData.number || 0,
+          description: userData.description || '',
+          myImage: userData.myImage || null,
         });
       } catch (error: any) {
         if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
