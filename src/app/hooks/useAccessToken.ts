@@ -63,14 +63,11 @@ export const useAuth = (): AuthHook => {
       setLoading(true); // 명시적으로 로딩 시작을 알림
 
       try {
-        const res = await Customapi.get<{ userId: string; username: string; role: "STUDENT" | "TEACHER", classCode: string | number }>('/api/user/me');
+        const res = await Customapi.get<User>('/api/user/me');
         const userData = res.data;
         console.log('useAuth: User info fetched successfully:', userData);
         setUser({
-          userId: userData.userId,
-          username: userData.username,
-          role: userData.role,
-          classCode: userData.classCode,
+          ...userData
         });
       } catch (error: any) {
         if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {

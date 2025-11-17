@@ -4,8 +4,14 @@ export interface User {
   userId: string;
   username: string;
   role: string;
-  myImage?: string | null;
+  myImage?: string | null; // Assuming 'image' maps to 'myImage'
   classCode?: number | string;
+  email?: string;
+  description?: string;
+  grade?: number;
+  classNo?: number;
+  number?: number;
+  createdAt?: string;
 }
 
 export interface UserContextType {

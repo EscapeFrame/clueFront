@@ -48,6 +48,11 @@ export const ProfileName = styled.div`
   font-weight: 600;
 `;
 
+export const StudentNumber = styled.div`
+  ${fonts.P2}
+  font-weight: 400;
+`;
+
 export const User = styled.div`
   display: flex;
   align-items: center;

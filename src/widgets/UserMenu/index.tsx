@@ -17,7 +17,7 @@ interface DropdownProps {
   role: string | null;
 }
 
-export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
+export default function Dropdown({ role, name, studentNumber, myImage: userProfileImage }: DropdownProps) {
 
   const navigate = useNavigate();
   const [User, setUser] = useRecoilState(userState);
@@ -65,8 +65,9 @@ export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
       </s.Icon>
       <s.User role={role}>
         <s.UserInfo>
-          <s.ProfileImage src={myImage} alt="프로필" />
+          <s.ProfileImage src={userProfileImage || myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>
+          {studentNumber && <s.StudentNumber>{studentNumber}</s.StudentNumber>}
         </s.UserInfo>
         <s.pointer onClick={() => setIsModalOpen(true)}>
           <MdOutlineLogout />

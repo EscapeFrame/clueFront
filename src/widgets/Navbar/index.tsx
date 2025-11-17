@@ -3,18 +3,13 @@ import * as s from './styles';
 import Dropdown from '@/widgets/UserMenu/index';
 import clueLogo from '../../../public/clueLogo.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/app/hooks/useAccessToken'; // Import useAuth hook
 
 
-interface NavbarProps {
-  userId: number;
-  username: string;
-  role: string | null;
-  classCode?: number |string;
-}
-
-export default function Navbar({ classCode, username, role }: NavbarProps) {
+export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth(); // Get user from useAuth hook
 
   const Main = () => {
     navigate("/");
@@ -30,6 +25,18 @@ export default function Navbar({ classCode, username, role }: NavbarProps) {
     alert("아직 개발되지 않은 기능입니다.")
   }
 
+  const formatStudentNumber = (grade?: number, classNo?: number, number?: number): string => {
+    if (grade === undefined || classNo === undefined || number === undefined) {
+      return '';
+    }
+    // Ensure two digits for classNo and number
+    const formattedClassNo = classNo < 10 ? `0${classNo}` : `${classNo}`;
+    const formattedNumber = number < 10 ? `0${number}` : `${number}`;
+    return `${grade}${formattedClassNo}${formattedNumber}`;
+  };
+
+  const studentNumber = formatStudentNumber(user.grade, user.classNo, user.number);
+
   return (
     <s.NavbarWrapper>
       <s.Container>
@@ -44,7 +51,7 @@ export default function Navbar({ classCode, username, role }: NavbarProps) {
             <li><s.NavItem href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca" target="_blank" rel="noopener noreferrer">서비스 소개</s.NavItem></li>
           </s.NavLinks>
           <s.UserMenuWrapper>
-            <Dropdown role={role} studentNumber={classCode} name={username} />
+            <Dropdown role={user.role} studentNumber={studentNumber} name={user.username} myImage={user.myImage} />
           </s.UserMenuWrapper>
         </s.NavbarNav>
       </s.Container>
