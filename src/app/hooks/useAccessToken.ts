@@ -66,26 +66,26 @@ export const useAuth = (): AuthHook => {
   }, []);
 
   useEffect(() => {
-    let isMounted = true;
-
     const fetchUserInfo = async () => {
-      if (user.userId || !isMounted) return;
+      console.log('useAuth: useEffect/fetchUserInfo triggered.');
 
+      // 앱 초기화 시 accessToken이 없거나 만료된 경우 서버에 refresh 요청을 보내 새 accessToken을 발급받아 저장
+      // Customapi의 인터셉터는 401에서 자동 리프레시를 처리하지만, 페이지 로드 시 초기 요청이 없으면 자동 갱신이 일어나지 않습니다.
       setLoading(true);
+
       try {
-        let currentToken = localStorage.getItem('accessToken');
-        if (!currentToken) {
+        // 만약 accessToken이 없다면, reissue 엔드포인트를 직접 호출해 본다.
+        if (!accessToken) {
+          console.log('useAuth: No accessToken in state, attempting to reissue via server.');
           try {
             const res = await Customapi.post('/reissue', null, { withCredentials: true });
             const newToken = res.headers['authorization']?.replace('Bearer ', '') || res.data?.accessToken;
-            if (newToken && isMounted) {
+            if (newToken) {
               localStorage.setItem('accessToken', newToken);
-              currentToken = newToken; // Update currentToken for the next step
               setAccessToken(newToken);
             }
-          } catch (reissueError) {
-            // Reissue failed, no need to proceed
-            throw reissueError;
+          } catch (reErr) {
+            console.warn('useAuth: Reissue attempt failed or no refresh token present:', reErr);
           }
         }
 
@@ -153,20 +153,14 @@ export const useAuth = (): AuthHook => {
           console.error('useAuth: Failed to fetch user info:', error);
           if (!justLoggedInRef.current) removeAuthInfo();
         }
-      } catch (error) {
-        removeAuthInfo();
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setLoading(false);
+        console.log('useAuth: Setting loading to false.');
       }
     };
-    fetchUserInfo();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [user.userId, setUser, removeAuthInfo]);
+    fetchUserInfo();
+  }, [accessToken, setUser, removeAuthInfo]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
