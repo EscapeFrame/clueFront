@@ -76,11 +76,9 @@ export const useAuth = (): AuthHook => {
             if (newToken) {
               localStorage.setItem('accessToken', newToken);
               setAccessToken(newToken);
-              console.log('useAuth: Reissued accessToken and saved to localStorage.');
             }
           } catch (reErr) {
             console.warn('useAuth: Reissue attempt failed or no refresh token present:', reErr);
-            // reissue 실패해도 아래에서 유저정보 요청시 에러로 로그아웃 처리됨
           }
         }
 
