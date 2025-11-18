@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import Customapi from '@/shared/config/api';
-import { userState } from '@/shared/model/userState';
-import { useRecoilState } from 'recoil';
-import { User } from '@/entities/Context/LoginContext';
+import { useEffect, useState, useCallback, useRef } from "react";
+import Customapi from "@/shared/config/api";
+import { userState } from "@/shared/model/userState";
+import { useRecoilState } from "recoil";
+import { User } from "@/entities/Context/LoginContext";
 
 interface AuthHook {
   accessToken: string | null;
@@ -13,92 +13,171 @@ interface AuthHook {
 }
 
 export const useAuth = (): AuthHook => {
-  const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
+  const [accessToken, setAccessToken] = useState<string | null>(
+    localStorage.getItem("accessToken"),
+  );
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const justLoggedInRef = useRef(false);
 
   // 로그인 시 토큰 저장
   const setAuthInfo = useCallback((accessToken: string) => {
     setAccessToken(accessToken);
-    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem("accessToken", accessToken);
+    // mark that we just logged in to avoid immediate logout race
+    justLoggedInRef.current = true;
+    // give it a short grace period for other effects to settle
+    setTimeout(() => {
+      justLoggedInRef.current = false;
+    }, 1500);
   }, []);
 
   // 로그아웃
   const removeAuthInfo = useCallback(() => {
     setAccessToken(null);
     setUser({
-        username: '',
-        userId: '',
-        email: '',
-        role: '',
-        classCode: 0,
-        grade: 0,
-        classNo: 0,
-        number: 0,
-        description: '',
-        myImage: null,
+      username: "",
+      userId: "",
+      email: "",
+      role: "",
+      classCode: 0,
+      grade: 0,
+      classNo: 0,
+      number: 0,
+      description: "",
+      myImage: null,
     });
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem("accessToken");
   }, [setUser]);
-  
+
   // 토큰은 있으나 유저 정보가 없을 경우
   useEffect(() => {
     // localStorage의 accessToken 변경을 감지하는 이벤트 리스너
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'accessToken') {
+      if (event.key === "accessToken") {
         setAccessToken(event.newValue);
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      console.log('useAuth: useEffect/fetchUserInfo triggered.');
-      const token = localStorage.getItem('accessToken');
-      console.log('useAuth: accessToken from localStorage:', token);
+      console.log("useAuth: useEffect/fetchUserInfo triggered.");
 
-      if (!accessToken) {
-        console.log('useAuth: No accessToken, setting loading to false.');
-        setLoading(false);
-        return;
-      }
-
-      console.log('useAuth: AccessToken exists, fetching user info...');
-      setLoading(true); // 명시적으로 로딩 시작을 알림
+      // 앱 초기화 시 accessToken이 없거나 만료된 경우 서버에 refresh 요청을 보내 새 accessToken을 발급받아 저장
+      // Customapi의 인터셉터는 401에서 자동 리프레시를 처리하지만, 페이지 로드 시 초기 요청이 없으면 자동 갱신이 일어나지 않습니다.
+      setLoading(true);
 
       try {
-        const res = await Customapi.get<User>('/api/user/me');
+        // 만약 accessToken이 없다면, reissue 엔드포인트를 직접 호출해 본다.
+        if (!accessToken) {
+          console.log(
+            "useAuth: No accessToken in state, attempting to reissue via server.",
+          );
+          try {
+            const res = await Customapi.post("/reissue", null, {
+              withCredentials: true,
+            });
+            const newToken =
+              res.headers["authorization"]?.replace("Bearer ", "") ||
+              res.data?.accessToken;
+            if (newToken) {
+              localStorage.setItem("accessToken", newToken);
+              setAccessToken(newToken);
+            }
+          } catch (reErr) {
+            console.warn(
+              "useAuth: Reissue attempt failed or no refresh token present:",
+              reErr,
+            );
+          }
+        }
+
+        // 이제 accessToken이 있으면 사용자 정보 요청
+        const tokenNow = localStorage.getItem("accessToken");
+        if (!tokenNow) {
+          console.log("useAuth: Still no accessToken after reissue attempt.");
+          setLoading(false);
+          return;
+        }
+
+        console.log("useAuth: AccessToken exists, fetching user info...");
+
+        const res = await Customapi.get<User>("/api/user/me");
         const userData = res.data;
-        console.log('useAuth: User info fetched successfully:', userData);
+        console.log("useAuth: User info fetched successfully:", userData);
         setUser({
-          userId: userData.userId || '',
-          username: userData.username || '',
-          email: userData.email || '',
-          role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
-          classCode: userData.classCode || '',
+          userId: userData.userId || "",
+          username: userData.username || "",
+          email: userData.email || "",
+          role: (userData.role as "STUDENT" | "TEACHER" | "") || "",
+          classCode: userData.classCode || "",
           grade: userData.grade || 0,
           classNo: userData.classNo || 0,
           number: userData.number || 0,
-          description: userData.description || '',
+          description: userData.description || "",
           myImage: userData.myImage || null,
         });
-      } catch (error: any) {
-        if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
-          console.warn('useAuth: User info fetch canceled.');
+      } catch (error: unknown) {
+        const err = error as
+          | { response?: { status?: number }; name?: string; code?: string }
+          | undefined;
+        if (
+          err &&
+          (err.name === "CanceledError" || err.code === "ERR_CANCELED")
+        ) {
+          console.warn("useAuth: User info fetch canceled.");
+        } else if (err && err.response && err.response.status === 401) {
+          console.warn(
+            "useAuth: 401 when fetching user, attempting single reissue then retrying...",
+          );
+          try {
+            const res = await Customapi.post("/reissue", null, {
+              withCredentials: true,
+            });
+            const newToken =
+              res.headers["authorization"]?.replace("Bearer ", "") ||
+              res.data?.accessToken;
+            if (newToken) {
+              localStorage.setItem("accessToken", newToken);
+              setAccessToken(newToken);
+
+              const retryRes = await Customapi.get<User>("/api/user/me");
+              const retryData = retryRes.data;
+              setUser({
+                userId: retryData.userId || "",
+                username: retryData.username || "",
+                email: retryData.email || "",
+                role: (retryData.role as "STUDENT" | "TEACHER" | "") || "",
+                classCode: retryData.classCode || "",
+                grade: retryData.grade || 0,
+                classNo: retryData.classNo || 0,
+                number: retryData.number || 0,
+                description: retryData.description || "",
+                myImage: retryData.myImage || null,
+              });
+            } else {
+              // if reissue didn't return token, fall through to logout handling below
+              if (!justLoggedInRef.current) removeAuthInfo();
+            }
+          } catch (reErr) {
+            console.error("useAuth: Reissue on 401 failed:", reErr);
+            if (!justLoggedInRef.current) removeAuthInfo();
+          }
         } else {
-          console.error('useAuth: Failed to fetch user info:', error);
-          removeAuthInfo();
+          console.error("useAuth: Failed to fetch user info:", error);
+          if (!justLoggedInRef.current) removeAuthInfo();
         }
       } finally {
         setLoading(false);
-        console.log('useAuth: Setting loading to false.');
+        console.log("useAuth: Setting loading to false.");
       }
     };
 
