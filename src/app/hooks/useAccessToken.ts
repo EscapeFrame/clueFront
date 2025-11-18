@@ -17,6 +17,9 @@ let globalFetchPromise: Promise<void> | null = null;
 let globalFetched = false;
 // Ensure we don't spam reissue requests when the user is not logged in.
 let reissueAttempted = false;
+// Time-based cooldown: timestamp of last reissue attempt (ms)
+let lastReissueAt: number | null = null;
+const REISSUE_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
 export const useAuth = (): AuthHook => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
@@ -29,6 +32,7 @@ export const useAuth = (): AuthHook => {
     localStorage.setItem('accessToken', accessToken);
   // allow reissue attempts again after manual login
   reissueAttempted = false;
+  lastReissueAt = null;
   }, []);
 
   // 로그아웃
@@ -50,8 +54,6 @@ export const useAuth = (): AuthHook => {
   // reset module-level flags so future hook instances can fetch again
   globalFetched = false;
   globalFetchPromise = null;
-  // reset reissueAttempted so next session can try reissue
-  reissueAttempted = false;
   }, [setUser]);
   
 
@@ -102,7 +104,10 @@ export const useAuth = (): AuthHook => {
         setLoading(true);
         try {
           // 액세스 토큰이 없을 경우 reissue 시도
-          if (!accessToken && !reissueAttempted) {
+          // check cooldown before attempting reissue
+          const now = Date.now();
+          const inCooldown = lastReissueAt ? now - lastReissueAt < REISSUE_COOLDOWN_MS : false;
+          if (!accessToken && !reissueAttempted && !inCooldown) {
             console.log('useAuth: No accessToken in state, attempting to reissue via server.');
             try {
               const res = await Customapi.post('/reissue', null, { withCredentials: true });
@@ -118,6 +123,7 @@ export const useAuth = (): AuthHook => {
             } finally {
               // mark that we've attempted reissue so we don't continuously retry when not logged in
               reissueAttempted = true;
+              lastReissueAt = Date.now();
             }
           }
 
