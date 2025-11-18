@@ -60,28 +60,29 @@ export const useAuth = (): AuthHook => {
 
   useEffect(() => {
     let isMounted = true;
+
     const fetchUserInfo = async () => {
-      if (user.userId) {
-        setLoading(false);
-        return;
-      }
+      if (user.userId || !isMounted) return;
+
       setLoading(true);
       try {
-        const currentToken = localStorage.getItem('accessToken');
+        let currentToken = localStorage.getItem('accessToken');
         if (!currentToken) {
           try {
             const res = await Customapi.post('/reissue', null, { withCredentials: true });
             const newToken = res.headers['authorization']?.replace('Bearer ', '') || res.data?.accessToken;
             if (newToken && isMounted) {
               localStorage.setItem('accessToken', newToken);
+              currentToken = newToken; // Update currentToken for the next step
               setAccessToken(newToken);
             }
-          } catch (reErr) {
+          } catch (reissueError) {
+            // Reissue failed, no need to proceed
+            throw reissueError;
           }
         }
 
-        const tokenNow = localStorage.getItem('accessToken');
-        if (tokenNow) {
+        if (currentToken) {
           const res = await Customapi.get<User>('/api/user/me');
           if (isMounted) {
             const userData = res.data;
@@ -99,7 +100,7 @@ export const useAuth = (): AuthHook => {
             });
           }
         }
-      } catch (error: unknown) {
+      } catch (error) {
         removeAuthInfo();
       } finally {
         if (isMounted) {
@@ -108,10 +109,11 @@ export const useAuth = (): AuthHook => {
       }
     };
     fetchUserInfo();
+
     return () => {
       isMounted = false;
     };
-  }, [setUser, removeAuthInfo]);
+  }, [user.userId, setUser, removeAuthInfo]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
