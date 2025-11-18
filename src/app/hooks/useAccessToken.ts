@@ -15,6 +15,8 @@ interface AuthHook {
 // Module-level guards so multiple hook instances don't trigger duplicate fetches
 let globalFetchPromise: Promise<void> | null = null;
 let globalFetched = false;
+// Ensure we don't spam reissue requests when the user is not logged in.
+let reissueAttempted = false;
 
 export const useAuth = (): AuthHook => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
@@ -25,6 +27,8 @@ export const useAuth = (): AuthHook => {
   const setAuthInfo = useCallback((accessToken: string) => {
     setAccessToken(accessToken);
     localStorage.setItem('accessToken', accessToken);
+  // allow reissue attempts again after manual login
+  reissueAttempted = false;
   }, []);
 
   // 로그아웃
@@ -46,6 +50,8 @@ export const useAuth = (): AuthHook => {
   // reset module-level flags so future hook instances can fetch again
   globalFetched = false;
   globalFetchPromise = null;
+  // reset reissueAttempted so next session can try reissue
+  reissueAttempted = false;
   }, [setUser]);
   
 
@@ -96,7 +102,7 @@ export const useAuth = (): AuthHook => {
         setLoading(true);
         try {
           // 액세스 토큰이 없을 경우 reissue 시도
-          if (!accessToken) {
+          if (!accessToken && !reissueAttempted) {
             console.log('useAuth: No accessToken in state, attempting to reissue via server.');
             try {
               const res = await Customapi.post('/reissue', null, { withCredentials: true });
@@ -109,6 +115,9 @@ export const useAuth = (): AuthHook => {
               }
             } catch (reErr) {
               console.warn('useAuth: Reissue attempt failed or no refresh token present:', reErr);
+            } finally {
+              // mark that we've attempted reissue so we don't continuously retry when not logged in
+              reissueAttempted = true;
             }
           }
 
