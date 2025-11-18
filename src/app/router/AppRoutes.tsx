@@ -8,6 +8,7 @@ import Setting from '@/pages/Common/Setting/Setting';
 import STUHome from '@/pages/Student/Main/index';
 import STUMyClass from '@/pages/Student/MyClass';
 import STUClass from '@/pages/Student/Class';
+import STUQuiz from '@/pages/Student/Quiz';
 
 import TCHHome from '@/pages/Teacher/Main/index';
 import TCHMyClass from '@/pages/Teacher/MyClass';
@@ -79,6 +80,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class" element={<STUMyClass />} />
           <Route path="/class/:classRoomId" element={<STUClass />} />
           <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
+          <Route path="/quiz" element={<STUQuiz />} />
         </>
       )}
 

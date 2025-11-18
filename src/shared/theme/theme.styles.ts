@@ -54,4 +54,19 @@ export const colors = {
     2: '#EBA8A8',
     3: '#FF6D6D',
   },
+
+  npc: {
+    owl1: '#FFDEC8',
+    owl2: '#FF9E5E',
+    haeyul1: '#EBF6FF',
+    haeyul2: '#86C1FF',
+    panda1: '#FFDCF1',
+    panda2: '#E491BF',
+    ferret1: '#F7F7F7',
+    ferret2: '#D9D9D9',
+    I1: '#F4EBFF',
+    I2: '#B77FFF',
+    koala1: '#FFF8D2',
+    koala2: '#F3E17E',
+  },
 };
