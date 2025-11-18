@@ -61,19 +61,39 @@ export const useAuth = (): AuthHook => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       console.log('useAuth: useEffect/fetchUserInfo triggered.');
-      const token = localStorage.getItem('accessToken');
-      console.log('useAuth: accessToken from localStorage:', token);
 
-      if (!accessToken) {
-        console.log('useAuth: No accessToken, setting loading to false.');
-        setLoading(false);
-        return;
-      }
-
-      console.log('useAuth: AccessToken exists, fetching user info...');
-      setLoading(true); // 명시적으로 로딩 시작을 알림
+      // 앱 초기화 시 accessToken이 없거나 만료된 경우 서버에 refresh 요청을 보내 새 accessToken을 발급받아 저장
+      // Customapi의 인터셉터는 401에서 자동 리프레시를 처리하지만, 페이지 로드 시 초기 요청이 없으면 자동 갱신이 일어나지 않습니다.
+      setLoading(true);
 
       try {
+        // 만약 accessToken이 없다면, reissue 엔드포인트를 직접 호출해 본다.
+        if (!accessToken) {
+          console.log('useAuth: No accessToken in state, attempting to reissue via server.');
+          try {
+            const res = await Customapi.post('/reissue', null, { withCredentials: true });
+            const newToken = res.headers['authorization']?.replace('Bearer ', '') || res.data?.accessToken;
+            if (newToken) {
+              localStorage.setItem('accessToken', newToken);
+              setAccessToken(newToken);
+              console.log('useAuth: Reissued accessToken and saved to localStorage.');
+            }
+          } catch (reErr) {
+            console.warn('useAuth: Reissue attempt failed or no refresh token present:', reErr);
+            // reissue 실패해도 아래에서 유저정보 요청시 에러로 로그아웃 처리됨
+          }
+        }
+
+        // 이제 accessToken이 있으면 사용자 정보 요청
+        const tokenNow = localStorage.getItem('accessToken');
+        if (!tokenNow) {
+          console.log('useAuth: Still no accessToken after reissue attempt.');
+          setLoading(false);
+          return;
+        }
+
+        console.log('useAuth: AccessToken exists, fetching user info...');
+
         const res = await Customapi.get<User>('/api/user/me');
         const userData = res.data;
         console.log('useAuth: User info fetched successfully:', userData);
@@ -89,8 +109,9 @@ export const useAuth = (): AuthHook => {
           description: userData.description || '',
           myImage: userData.myImage || null,
         });
-      } catch (error: any) {
-        if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+      } catch (error: unknown) {
+        const err = error as { name?: string; code?: string } | undefined;
+        if (err && (err.name === 'CanceledError' || err.code === 'ERR_CANCELED')) {
           console.warn('useAuth: User info fetch canceled.');
         } else {
           console.error('useAuth: Failed to fetch user info:', error);
