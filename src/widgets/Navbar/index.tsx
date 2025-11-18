@@ -29,8 +29,8 @@ export default function Navbar() {
     if (grade === undefined || classNo === undefined || number === undefined) {
       return '';
     }
-    // Ensure two digits for classNo and number
-    const formattedClassNo = classNo < 10 ? `0${classNo}` : `${classNo}`;
+    // Ensure classNo is a single digit and number is two digits
+    const formattedClassNo = `${classNo}`;
     const formattedNumber = number < 10 ? `0${number}` : `${number}`;
     return `${grade}${formattedClassNo}${formattedNumber}`;
   };
