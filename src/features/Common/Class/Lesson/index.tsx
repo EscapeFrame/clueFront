@@ -14,7 +14,7 @@ import { getLessonDirectories, getClassCode } from '../api';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
-import { deleteDirectory, deleteDocument } from '@/entities/Make/api/useLesson';
+import { deleteDirectory, deleteDocument, Directory as ApiDirectory } from '@/entities/Make/api/useLesson';
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -25,7 +25,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   // local class code (fallback to prop `code`)
   const [localCode, setLocalCode] = useState<string>(code ?? '');
   const [loading, setLoading] = useState(true);
-  const [openDirModal, setOpenDirModal] = useState(false);
+  // inline add flow: show DirectorySelect inline when true
+  const [isAddingDir, setIsAddingDir] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0); // retained for delete/document refresh
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -123,14 +124,14 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       });
   };
 
-  const handleDirectoryAdded = (newDir?: any) => {
+  const handleDirectoryAdded = (newDir?: ApiDirectory | null) => {
     if (newDir) {
       // API의 응답 형태에 따라 변환
       const dir = {
-        id: String(newDir.directoryId ?? newDir.id ?? ''),
-        name: newDir.directoryName ?? newDir.name ?? '새 디렉토리',
+        id: String((newDir as any).directoryId ?? (newDir as any).id ?? (newDir.id ?? '')),
+        name: (newDir as any).directoryName ?? (newDir as any).name ?? (newDir.name ?? '새 디렉토리'),
         isRead: false,
-        directoryList: newDir.documentList?.map((doc: any) => ({
+        directoryList: (newDir as any).documentList?.map((doc: any) => ({
           id: String(doc.documentId ?? doc.id),
           name: doc.title ?? doc.name,
           isRead: false,
@@ -261,35 +262,26 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           );
         })}
       </s.Section>
-      {isTeacher && openDirModal && (
-        <DirectorySelect
-          classRoomId={classRoomId}
-          onDirectoryAdded={(newDir) => {
-            handleDirectoryAdded(newDir);
-            setOpenDirModal(false);
-          }}
-        />
-      )}
-
-      {/* 선생님만 디렉토리 추가 가능 */}
+      {/* 선생님만 디렉토리 추가 가능: 인라인으로 DirectorySelect 사용 */}
       {isTeacher && (
-        <s.AddButton onClick={() => setOpenDirModal(true)}>
-          + 새 디렉토리 만들기
-        </s.AddButton>
-      )}
+        <>
+          {!isAddingDir && (
+            <s.AddButton onClick={() => setIsAddingDir(true)}>
+              + 새 디렉토리 만들기
+            </s.AddButton>
+          )}
 
-      {isTeacher && openDirModal && (
-        <s.ModalOverlay onClick={() => setOpenDirModal(false)}>
-          <s.ModalContent onClick={(e) => e.stopPropagation()}>
+          {isAddingDir && (
             <DirectorySelect
               classRoomId={classRoomId}
+              initialOpen={true}
               onDirectoryAdded={(newDir) => {
                 handleDirectoryAdded(newDir);
-                setOpenDirModal(false);
+                setIsAddingDir(false);
               }}
             />
-          </s.ModalContent>
-        </s.ModalOverlay>
+          )}
+        </>
       )}
 
     </s.Container>
