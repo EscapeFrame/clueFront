@@ -1,49 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRecoilValue, useRecoilState } from "recoil"; // Added useRecoilState
 import { userState } from "@/shared/model/userState";
 import * as s from "./styles";
 import Button from "@/entities/UI/Button";
 import { IoCameraOutline } from "react-icons/io5";
 import Customapi from '@/shared/config/api'; // Import Customapi
+import { useProfileImage } from '@/shared/model/profileImageState';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export const UserSection: React.FC = () => {
     const currentUser = useRecoilValue(userState); // Renamed to avoid conflict with setter
-    const [user, setUser] = useRecoilState(userState); // For updating global state
+    const [, setUser] = useRecoilState(userState); // For updating global state
     const navigate = useNavigate(); // Initialize useNavigate
 
-    const [fetchedProfileImageUrl, setFetchedProfileImageUrl] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchProfileImage = async () => {
-            try {
-                const response = await Customapi.get('/api/user/me/image', {
-                    responseType: 'blob',
-                });
-                const imageUrl = URL.createObjectURL(response.data);
-                setFetchedProfileImageUrl(imageUrl);
-            } catch (error) {
-                console.error('Failed to fetch profile image:', error);
-                setFetchedProfileImageUrl(null);
-            }
-        };
-
-        // Only fetch if currentUser is available and has a userId
-        if (currentUser && currentUser.userId) {
-            fetchProfileImage();
-        }
-
-        return () => {
-            if (fetchedProfileImageUrl) {
-                URL.revokeObjectURL(fetchedProfileImageUrl);
-            }
-        };
-    }, [fetchedProfileImageUrl, currentUser]); // Add currentUser to dependency array
+    const [fetchedProfileImageUrl] = useProfileImage();
 
     // If currentUser is not yet loaded, return null or a loading indicator
 
     const [name, setName] = useState(currentUser?.username || "");
-    const [email, setEmail] = useState(currentUser?.email || "");
+    const [email] = useState(currentUser?.email || "");
     const [grade, setGrade] = useState(currentUser?.grade || "");
     const [classNumber, setClassNumber] = useState(currentUser?.classNo || "");
     const [number, setNumber] = useState(currentUser?.number || "");
@@ -99,7 +74,7 @@ export const UserSection: React.FC = () => {
         }
 
         // 2. Handle User Information Update
-        const userDataToUpdate: { [key: string]: any } = {};
+    const userDataToUpdate: Record<string, unknown> = {};
         if (name !== currentUser?.username) userDataToUpdate.username = name;
         if (grade !== currentUser?.grade) userDataToUpdate.grade = grade;
         if (classNumber !== currentUser?.classNo) userDataToUpdate.classNo = classNumber;
