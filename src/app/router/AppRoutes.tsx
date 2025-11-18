@@ -20,6 +20,7 @@ import TCHClass from '@/pages/Teacher/Class';
 import TCHMakeLesson from '@/pages/Teacher/Make/MakeLesson';
 import ClassSetting from '@/pages/Teacher/ClassSetting';
 import TCHMakeSlide from '@/pages/Teacher/Make/MakeSlide';
+import TCHMakeFile from '@/pages/Teacher/Make/MakeFile';
 import MarkDownViewerPage from '@/features/Common/Class/Lesson/markdown/Markdown';
 import GenerateProblem from '@/pages/Teacher/Make/GenerateProblem';
 import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
@@ -67,7 +68,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/markdown/problem" element={<GenerateProblem />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson" element={<TCHMakeLesson />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/google-slide" element={<TCHMakeSlide/>} />
-          <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeSlide/>} />
+          <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile/>} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
           <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />
         </>
