@@ -79,6 +79,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class" element={<STUMyClass />} />
           <Route path="/class/:classRoomId" element={<STUClass />} />
           <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
+          <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />
         </>
       )}
 
