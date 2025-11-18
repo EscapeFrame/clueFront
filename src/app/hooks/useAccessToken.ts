@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Customapi from '@/shared/config/api';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
@@ -11,6 +11,10 @@ interface AuthHook {
   removeAuthInfo: () => void;
   loading: boolean;
 }
+
+// Module-level guards so multiple hook instances don't trigger duplicate fetches
+let globalFetchPromise: Promise<void> | null = null;
+let globalFetched = false;
 
 export const useAuth = (): AuthHook => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
@@ -39,9 +43,18 @@ export const useAuth = (): AuthHook => {
         myImage: null,
     });
     localStorage.removeItem('accessToken');
+  // reset module-level flags so future hook instances can fetch again
+  globalFetched = false;
+  globalFetchPromise = null;
   }, [setUser]);
   
-  // 토큰은 있으나 유저 정보가 없을 경우
+
+  const isMountedRef = useRef(false);
+  const reissueCountRef = useRef(0);
+  // module-level guard so multiple hook instances don't trigger parallel fetches
+  // and so user info is fetched globally only once unless reset.
+  // Note: kept at module scope across hook instances.
+
   useEffect(() => {
     // localStorage의 accessToken 변경을 감지하는 이벤트 리스너
     const handleStorageChange = (event: StorageEvent) => {
@@ -52,79 +65,106 @@ export const useAuth = (): AuthHook => {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      console.log('useAuth: useEffect/fetchUserInfo triggered.');
+    const fetchUserInfo = async (forceFetch = false) => {
+      console.log('useAuth: fetchUserInfo called. forceFetch=', forceFetch, ' currentRecoilUserId=', user?.userId);
 
-      // 앱 초기화 시 accessToken이 없거나 만료된 경우 서버에 refresh 요청을 보내 새 accessToken을 발급받아 저장
-      // Customapi의 인터셉터는 401에서 자동 리프레시를 처리하지만, 페이지 로드 시 초기 요청이 없으면 자동 갱신이 일어나지 않습니다.
-      setLoading(true);
+      // If already fetched globally and no forceFetch, use existing Recoil state
+      if (globalFetched && !forceFetch && user && user.userId) {
+        console.log('useAuth: globalFetched and Recoil user exists, skipping fetch.');
+        return;
+      }
+
+      // If another instance is currently fetching, wait for it
+      if (globalFetchPromise) {
+        console.log('useAuth: Another instance is fetching, awaiting globalFetchPromise');
+        try {
+          await globalFetchPromise;
+        } catch {
+          // swallow, other instance handled errors
+        }
+        return;
+      }
+
+      // create global fetch promise so other instances await this
+      globalFetchPromise = (async () => {
+        setLoading(true);
+        try {
+          // 액세스 토큰이 없을 경우 reissue 시도
+          if (!accessToken) {
+            console.log('useAuth: No accessToken in state, attempting to reissue via server.');
+            try {
+              const res = await Customapi.post('/reissue', null, { withCredentials: true });
+              const newToken = res.headers['authorization']?.replace('Bearer ', '') || res.data?.accessToken;
+              if (newToken) {
+                localStorage.setItem('accessToken', newToken);
+                setAccessToken(newToken);
+                reissueCountRef.current += 1; // reissue 발생 표시
+                console.log('useAuth: Reissued accessToken and saved to localStorage.');
+              }
+            } catch (reErr) {
+              console.warn('useAuth: Reissue attempt failed or no refresh token present:', reErr);
+            }
+          }
+
+          const tokenNow = localStorage.getItem('accessToken');
+          if (!tokenNow) {
+            console.log('useAuth: Still no accessToken after reissue attempt.');
+            return;
+          }
+
+          console.log('useAuth: AccessToken exists, fetching user info...');
+          const res = await Customapi.get<User>('/api/user/me');
+          const userData = res.data;
+          console.log('useAuth: User info fetched successfully:', userData);
+          setUser({
+            userId: userData.userId || '',
+            username: userData.username || '',
+            email: userData.email || '',
+            role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
+            classCode: userData.classCode || '',
+            grade: userData.grade || 0,
+            classNo: userData.classNo || 0,
+            number: userData.number || 0,
+            description: userData.description || '',
+            myImage: userData.myImage || null,
+          });
+          globalFetched = true;
+        } catch (error: unknown) {
+          const err = error as { name?: string; code?: string } | undefined;
+          if (err && (err.name === 'CanceledError' || err.code === 'ERR_CANCELED')) {
+            console.warn('useAuth: User info fetch canceled.');
+          } else {
+            console.error('useAuth: Failed to fetch user info:', error);
+            removeAuthInfo();
+          }
+        } finally {
+          setLoading(false);
+          console.log('useAuth: Setting loading to false.');
+          isMountedRef.current = true; // 최초 호출 완료 표시
+          // clear the promise so future fetches can start if needed
+          globalFetchPromise = null;
+        }
+      })();
 
       try {
-        // 만약 accessToken이 없다면, reissue 엔드포인트를 직접 호출해 본다.
-        if (!accessToken) {
-          console.log('useAuth: No accessToken in state, attempting to reissue via server.');
-          try {
-            const res = await Customapi.post('/reissue', null, { withCredentials: true });
-            const newToken = res.headers['authorization']?.replace('Bearer ', '') || res.data?.accessToken;
-            if (newToken) {
-              localStorage.setItem('accessToken', newToken);
-              setAccessToken(newToken);
-              console.log('useAuth: Reissued accessToken and saved to localStorage.');
-            }
-          } catch (reErr) {
-            console.warn('useAuth: Reissue attempt failed or no refresh token present:', reErr);
-            // reissue 실패해도 아래에서 유저정보 요청시 에러로 로그아웃 처리됨
-          }
-        }
-
-        // 이제 accessToken이 있으면 사용자 정보 요청
-        const tokenNow = localStorage.getItem('accessToken');
-        if (!tokenNow) {
-          console.log('useAuth: Still no accessToken after reissue attempt.');
-          setLoading(false);
-          return;
-        }
-
-        console.log('useAuth: AccessToken exists, fetching user info...');
-
-        const res = await Customapi.get<User>('/api/user/me');
-        const userData = res.data;
-        console.log('useAuth: User info fetched successfully:', userData);
-        setUser({
-          userId: userData.userId || '',
-          username: userData.username || '',
-          email: userData.email || '',
-          role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
-          classCode: userData.classCode || '',
-          grade: userData.grade || 0,
-          classNo: userData.classNo || 0,
-          number: userData.number || 0,
-          description: userData.description || '',
-          myImage: userData.myImage || null,
-        });
-      } catch (error: unknown) {
-        const err = error as { name?: string; code?: string } | undefined;
-        if (err && (err.name === 'CanceledError' || err.code === 'ERR_CANCELED')) {
-          console.warn('useAuth: User info fetch canceled.');
-        } else {
-          console.error('useAuth: Failed to fetch user info:', error);
-          removeAuthInfo();
-        }
-      } finally {
-        setLoading(false);
-        console.log('useAuth: Setting loading to false.');
+        await globalFetchPromise;
+      } catch {
+        // already handled in promise
       }
     };
 
-    fetchUserInfo();
-  }, [accessToken, setUser, removeAuthInfo]);
+    // reissueCountRef 가 올라갈 때만 강제 fetch
+  const shouldForceFetch = reissueCountRef.current > 0 && isMountedRef.current;
+  fetchUserInfo(shouldForceFetch);
+    // 의존성은 accessToken이 변하더라도 자동으로 fetch를 막기 위해 최소화함
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setUser, removeAuthInfo]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
