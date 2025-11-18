@@ -108,7 +108,6 @@ export const useAuth = (): AuthHook => {
         }
       }
     };
-
     fetchUserInfo();
 
     return () => {
