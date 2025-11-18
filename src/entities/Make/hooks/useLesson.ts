@@ -74,11 +74,14 @@ export const useDirectories = (classRoomId: string) => {
       };
       const response = await createDirectory(request);
       if (response) {
-        // 200 응답이 오면 리로드
-        await loadDirectories();
+        // 반환된 새 디렉토리 객체을 반환하여 호출자(parent)가 로컬 상태에 반영하도록 함
+        return response as Directory;
       }
-    } catch {
+      return null;
+    } catch (err) {
+      console.error(err);
       setError("새 디렉토리를 추가하는 중 오류가 발생했습니다.");
+      return null;
     }
     // finally 블록에서 setIsAdding(false) 제거
   };

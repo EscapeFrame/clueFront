@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import * as s from "./styles";
 import { useDirectories } from "@/entities/Make/hooks/useLesson";
+import { Directory } from '@/entities/Make/api/useLesson';
 import { IoClose } from "react-icons/io5";
 
 interface Props {
   classRoomId: string;
-  onDirectoryAdded?: () => void;
+  // onDirectoryAdded에게 새로 생성된 디렉토리 객체를 전달합니다
+  onDirectoryAdded?: (newDirectory?: Directory | null) => void;
 }
 
 const DirectorySelect: React.FC<Props> = ({ classRoomId, onDirectoryAdded }) => {
@@ -28,10 +30,11 @@ const DirectorySelect: React.FC<Props> = ({ classRoomId, onDirectoryAdded }) => 
 
     setIsSubmitting(true);
     try {
-      await addDirectory(name);
-      setNewDirName("");
-      setIsAdding(false);
-      onDirectoryAdded?.();
+  const created = await addDirectory(name);
+  // createDirectory가 Directory 객체를 반환하면 부모에 전달
+  setNewDirName("");
+  setIsAdding(false);
+  onDirectoryAdded?.(created ?? undefined);
     } finally {
       setIsSubmitting(false);
     }

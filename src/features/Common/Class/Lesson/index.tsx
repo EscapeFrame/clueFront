@@ -26,7 +26,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const [localCode, setLocalCode] = useState<string>(code ?? '');
   const [loading, setLoading] = useState(true);
   const [openDirModal, setOpenDirModal] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(0); // 리로드 트리거
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // retained for delete/document refresh
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
@@ -76,7 +76,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     if (classRoomId) {
       fetchData();
     }
-  }, [fetchData, classRoomId]);
+  }, [fetchData, classRoomId, refreshTrigger]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -123,8 +123,24 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       });
   };
 
-  const handleDirectoryAdded = () => {
-    setRefreshTrigger(prev => prev + 1);
+  const handleDirectoryAdded = (newDir?: any) => {
+    if (newDir) {
+      // API의 응답 형태에 따라 변환
+      const dir = {
+        id: String(newDir.directoryId ?? newDir.id ?? ''),
+        name: newDir.directoryName ?? newDir.name ?? '새 디렉토리',
+        isRead: false,
+        directoryList: newDir.documentList?.map((doc: any) => ({
+          id: String(doc.documentId ?? doc.id),
+          name: doc.title ?? doc.name,
+          isRead: false,
+          type: doc.type as 'markdown' | 'ppt' | 'code' | 'docs',
+        })) ?? [],
+      };
+      setDirectories(prev => [dir, ...prev]);
+    } else {
+      setRefreshTrigger(prev => prev + 1);
+    }
   };
 
   if (loading) return <s.Container>수업 정보를 불러오는 중...</s.Container>;
@@ -248,8 +264,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       {isTeacher && openDirModal && (
         <DirectorySelect
           classRoomId={classRoomId}
-          onDirectoryAdded={() => {
-            handleDirectoryAdded();
+          onDirectoryAdded={(newDir) => {
+            handleDirectoryAdded(newDir);
             setOpenDirModal(false);
           }}
         />
@@ -267,8 +283,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           <s.ModalContent onClick={(e) => e.stopPropagation()}>
             <DirectorySelect
               classRoomId={classRoomId}
-              onDirectoryAdded={() => {
-                handleDirectoryAdded();
+              onDirectoryAdded={(newDir) => {
+                handleDirectoryAdded(newDir);
                 setOpenDirModal(false);
               }}
             />
