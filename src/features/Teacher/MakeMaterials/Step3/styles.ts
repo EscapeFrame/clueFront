@@ -1,10 +1,11 @@
 import styled from "styled-components";
+import { colors } from "@/shared/theme/theme.styles";
 
 export const Container = styled.div`
   display: flex;
   gap: 32px;
   width: 100%;
-  background: #f7f8fa; /* 전체 페이지 배경 */
+  background: #f7f8fa;
   padding: 24px 0;
 `;
 
@@ -14,13 +15,10 @@ export const Sidebar = styled.aside`
 `;
 
 export const SideBox = styled.div`
-  background: #f9fafb; /* 피그마 스타일 */
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb; /* 연한 회색 border */
+  background: #f9fafb;
 `;
 
-export const SideTitle = styled.h4`
+export const SideTitle = styled.div`
   margin: 0 0 12px 0;
   font-size: 18px;
   font-weight: 700;
@@ -43,12 +41,32 @@ export const MenuList = styled.ul`
   }
 `;
 
+export const MenuButton = styled.button<{ active?: boolean }>`
+  background: ${({ active }) => (active ? colors.primary : "transparent")};
+  color: ${({ active }) => (active ? "white" : "#6B7280")};
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  text-align: left;
+  width: 100%;
+  text-align: center;
+
+  &:hover {
+  background: ${({ active }) => (active ? colors.primary : colors.blue.light1)};
+  color: ${({ active }) => (active ? 'white' : '#111827')};
+  }
+`;
+
 export const Content = styled.div`
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
   flex: 1;
 `;
 
 export const PageTitle = styled.h2`
-  margin: 0 0 24px 0;
   font-size: 22px;
   font-weight: 700;
   color: #111827; /* 제목 텍스트 */
@@ -58,6 +76,8 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 32px;
+  flex: 1;
+  min-height: 0;
 `;
 
 export const Field = styled.div`
@@ -86,24 +106,37 @@ export const Field = styled.div`
   }
 `;
 
-export const TextAreaBox = styled.div`
-  white-space: pre-wrap;
+export const TextAreaBox = styled.textarea`
   background: white;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
   border-radius: 6px;
-  min-height: 400px;
+  border: none;
+  outline: none;
+
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 6rem;
+  max-height: 28rem;
   font-size: 15px;
   line-height: 1.6;
   color: #1f2937;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
 `;
 
 export const ButtonRow = styled.div`
   display: flex;
-  justify-content: flex-end;
   gap: 12px;
   border-top: 1px solid #e5e7eb;
   padding-top: 24px;
+  margin-top: auto; /* push to bottom */
+  align-items: center;
+  align-self: stretch;
 `;
 
 export const Button = styled.button<{ variant: "primary" | "secondary" }>`
@@ -113,7 +146,7 @@ export const Button = styled.button<{ variant: "primary" | "secondary" }>`
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  width: 110px;
+  flex: 1; /* expand to fill available width */
   transition: background 0.2s ease;
 
   ${({ variant }) =>

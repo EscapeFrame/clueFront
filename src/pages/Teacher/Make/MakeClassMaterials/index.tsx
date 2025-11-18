@@ -21,11 +21,11 @@ export default function MakeClassMaterials() {
     return (
         <s.Wrapper>
             <s.StepBar>
-                {[1, 2, 3, 4].map((num) => (
+                {[1, 2, 3].map((num) => (
                     <s.Step key={num} active={num === currentStep}>
                         <span>{num}</span>
                         <label>
-                            {["수업자료 입력", "Workflow", "문서생성", "Graph 생성"][num - 1]}
+                            {["수업자료 입력", "Workflow", "문서생성"][num - 1]}
                         </label>
                     </s.Step>
                 ))}
@@ -34,7 +34,6 @@ export default function MakeClassMaterials() {
             {currentStep === 1 && <Step1 onNext={handleNextStep1} />}
             {currentStep === 2 && <Step2 onNext={handleNext}/>}
             {currentStep === 3 && <Step3 onNext={handleNext} />}
-            {currentStep === 4 && <div>Step 4 Content</div>}
 
             {/* ... 다른 단계들 */}
         </s.Wrapper>
