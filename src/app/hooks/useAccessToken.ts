@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import Customapi from '@/shared/config/api';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
@@ -24,6 +25,7 @@ const REISSUE_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 export const useAuth = (): AuthHook => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
   const [user, setUser] = useRecoilState(userState);
+  const location = useLocation();
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   // 로그인 시 토큰 저장
@@ -107,7 +109,9 @@ export const useAuth = (): AuthHook => {
           // check cooldown before attempting reissue
           const now = Date.now();
           const inCooldown = lastReissueAt ? now - lastReissueAt < REISSUE_COOLDOWN_MS : false;
-          if (!accessToken && !reissueAttempted && !inCooldown) {
+          // do not attempt reissue on login page
+          const isLoginRoute = location && typeof location.pathname === 'string' && location.pathname.startsWith('/login');
+          if (!accessToken && !reissueAttempted && !inCooldown && !isLoginRoute) {
             console.log('useAuth: No accessToken in state, attempting to reissue via server.');
             try {
               const res = await Customapi.post('/reissue', null, { withCredentials: true });
@@ -156,7 +160,10 @@ export const useAuth = (): AuthHook => {
             console.warn('useAuth: User info fetch canceled.');
           } else {
             console.error('useAuth: Failed to fetch user info:', error);
-            removeAuthInfo();
+            // Prevent infinite reload/loop: don't force logout here.
+            // Instead mark reissue as attempted and set cooldown so we don't retry immediately.
+            reissueAttempted = true;
+            lastReissueAt = Date.now();
           }
         } finally {
           setLoading(false);
