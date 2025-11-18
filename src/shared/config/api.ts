@@ -43,17 +43,17 @@ Customapi.interceptors.response.use(
     const original = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const isExpired = error.response?.status === 401;
 
-    if (isExpired && !original._retry) {
+    if (isExpired && !original._retry && original.url !== '/reissue') {
       original._retry = true;
       try {
         const newToken = await refreshAccesToken();
         if (newToken) {
           localStorage.setItem('accessToken', newToken);
           original.headers['Authorization'] = `Bearer ${newToken}`;
-          return Customapi(original); // 원래 요청 재시도
+          return Customapi(original);
         }
       } catch (err) {
-        console.error('Refresh token 실패:', err);
+        localStorage.removeItem('accessToken');
         window.location.href = '/login';
         return Promise.reject(err);
       }
