@@ -19,7 +19,7 @@ import TCHMarkDown from '@/pages/Teacher/Make/MarkDownEditor';
 import TCHClass from '@/pages/Teacher/Class';
 import TCHMakeLesson from '@/pages/Teacher/Make/MakeLesson';
 import ClassSetting from '@/pages/Teacher/ClassSetting';
-import TCHMakeSlide from '@/pages/Teacher/Make/MakeFile';
+import TCHMakeSlide from '@/pages/Teacher/Make/MakeSlide';
 import TCHMakeFile from '@/pages/Teacher/Make/MakeFile';
 import MarkDownViewerPage from '@/features/Common/Class/Lesson/markdown/Markdown';
 import GenerateProblem from '@/pages/Teacher/Make/GenerateProblem';
@@ -42,7 +42,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<TCHMakeFile />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
