@@ -35,6 +35,11 @@ export const useAuth = (): AuthHook => {
   // allow reissue attempts again after manual login
   reissueAttempted = false;
   lastReissueAt = null;
+  try {
+    window.dispatchEvent(new CustomEvent('paletto:auth-changed', { detail: { accessToken } }));
+  } catch {
+    /* ignore non-browser */
+  }
   }, []);
 
   // 로그아웃
@@ -56,6 +61,11 @@ export const useAuth = (): AuthHook => {
   // reset module-level flags so future hook instances can fetch again
   globalFetched = false;
   globalFetchPromise = null;
+  try {
+    window.dispatchEvent(new CustomEvent('paletto:auth-changed', { detail: { accessToken: null } }));
+  } catch {
+    /* ignore */
+  }
   }, [setUser]);
   
 
@@ -73,10 +83,23 @@ export const useAuth = (): AuthHook => {
       }
     };
 
+    // same-window auth change events (dispatched when setAuthInfo/removeAuthInfo called)
+    const handleAuthChanged = (ev: Event) => {
+      try {
+        const custom = ev as CustomEvent;
+        const token = custom?.detail?.accessToken ?? localStorage.getItem('accessToken');
+        setAccessToken(token);
+      } catch {
+        // ignore
+      }
+    };
+
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('paletto:auth-changed', handleAuthChanged as EventListener);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('paletto:auth-changed', handleAuthChanged as EventListener);
     };
   }, []);
 
