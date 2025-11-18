@@ -12,7 +12,7 @@ export const NavbarWrapper = styled.div`
   outline: 0.5px solid ${colors.gray[3]};
   z-index: 1000;
 
-  min-width: 665px;
+  min-width: 690px;
 
   display: flex;
   align-items: center;
