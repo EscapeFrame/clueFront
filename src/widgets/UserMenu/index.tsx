@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import myImage from '../../../public/sample.png';
 import * as s from './styles';
@@ -9,7 +9,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { useRecoilState } from 'recoil';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
-import Customapi from '@/shared/config/api';
+// Customapi is not required here because profile image is provided by useProfileImage
+import { useProfileImage } from '@/shared/model/profileImageState';
 
 interface DropdownProps {
   studentNumber?: number | string;
@@ -21,35 +22,10 @@ interface DropdownProps {
 export default function Dropdown({ role, name, studentNumber, myImage: userProfileImage }: DropdownProps) {
 
   const navigate = useNavigate();
-  const [User, setUser] = useRecoilState(userState);
+  const [, setUser] = useRecoilState(userState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const context = useContext(UserContext);
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProfileImage = async () => {
-      try {
-        const response = await Customapi.get('/api/user/me/image', {
-          responseType: 'blob', // Important for image data
-        });
-        const imageUrl = URL.createObjectURL(response.data);
-        setProfileImageUrl(imageUrl);
-      } catch (error) {
-        console.error('Failed to fetch profile image:', error);
-        setProfileImageUrl(null); // Fallback to default or handle error
-      }
-    };
-
-    if (role !== null) { // Only fetch if user is logged in
-      fetchProfileImage();
-    }
-
-    return () => {
-      if (profileImageUrl) {
-        URL.revokeObjectURL(profileImageUrl); // Clean up the object URL
-      }
-    };
-  }, [role, profileImageUrl]);
+  const [profileImageUrl] = useProfileImage();
 
   if (!context) {
     throw new Error("Dropdown은 UserContext.Provider 안에서 사용되어야 합니다.");
