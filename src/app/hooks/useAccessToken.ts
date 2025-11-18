@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Customapi from '@/shared/config/api';
 import { userState } from '@/shared/model/userState';
 import { useRecoilState } from 'recoil';
@@ -16,11 +16,18 @@ export const useAuth = (): AuthHook => {
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const justLoggedInRef = useRef(false);
 
   // 로그인 시 토큰 저장
   const setAuthInfo = useCallback((accessToken: string) => {
     setAccessToken(accessToken);
     localStorage.setItem('accessToken', accessToken);
+    // mark that we just logged in to avoid immediate logout race
+    justLoggedInRef.current = true;
+    // give it a short grace period for other effects to settle
+    setTimeout(() => {
+      justLoggedInRef.current = false;
+    }, 1500);
   }, []);
 
   // 로그아웃
@@ -82,23 +89,69 @@ export const useAuth = (): AuthHook => {
           }
         }
 
-        if (currentToken) {
-          const res = await Customapi.get<User>('/api/user/me');
-          if (isMounted) {
-            const userData = res.data;
-            setUser({
-              userId: userData.userId || '',
-              username: userData.username || '',
-              email: userData.email || '',
-              role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
-              classCode: userData.classCode || '',
-              grade: userData.grade || 0,
-              classNo: userData.classNo || 0,
-              number: userData.number || 0,
-              description: userData.description || '',
-              myImage: userData.myImage || null,
-            });
+        // 이제 accessToken이 있으면 사용자 정보 요청
+        const tokenNow = localStorage.getItem('accessToken');
+        if (!tokenNow) {
+          console.log('useAuth: Still no accessToken after reissue attempt.');
+          setLoading(false);
+          return;
+        }
+
+        console.log('useAuth: AccessToken exists, fetching user info...');
+
+        const res = await Customapi.get<User>('/api/user/me');
+        const userData = res.data;
+        console.log('useAuth: User info fetched successfully:', userData);
+        setUser({
+          userId: userData.userId || '',
+          username: userData.username || '',
+          email: userData.email || '',
+          role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
+          classCode: userData.classCode || '',
+          grade: userData.grade || 0,
+          classNo: userData.classNo || 0,
+          number: userData.number || 0,
+          description: userData.description || '',
+          myImage: userData.myImage || null,
+        });
+      } catch (error: unknown) {
+        const err = error as { response?: { status?: number }; name?: string; code?: string } | undefined;
+        if (err && (err.name === 'CanceledError' || err.code === 'ERR_CANCELED')) {
+          console.warn('useAuth: User info fetch canceled.');
+        } else if (err && err.response && err.response.status === 401) {
+          console.warn('useAuth: 401 when fetching user, attempting single reissue then retrying...');
+          try {
+            const res = await Customapi.post('/reissue', null, { withCredentials: true });
+            const newToken = res.headers['authorization']?.replace('Bearer ', '') || res.data?.accessToken;
+            if (newToken) {
+              localStorage.setItem('accessToken', newToken);
+              setAccessToken(newToken);
+              // retry once
+              const retryRes = await Customapi.get<User>('/api/user/me');
+              const retryData = retryRes.data;
+              setUser({
+                userId: retryData.userId || '',
+                username: retryData.username || '',
+                email: retryData.email || '',
+                role: (retryData.role as 'STUDENT' | 'TEACHER' | '') || '',
+                classCode: retryData.classCode || '',
+                grade: retryData.grade || 0,
+                classNo: retryData.classNo || 0,
+                number: retryData.number || 0,
+                description: retryData.description || '',
+                myImage: retryData.myImage || null,
+              });
+            } else {
+              // if reissue didn't return token, fall through to logout handling below
+              if (!justLoggedInRef.current) removeAuthInfo();
+            }
+          } catch (reErr) {
+            console.error('useAuth: Reissue on 401 failed:', reErr);
+            if (!justLoggedInRef.current) removeAuthInfo();
           }
+        } else {
+          console.error('useAuth: Failed to fetch user info:', error);
+          if (!justLoggedInRef.current) removeAuthInfo();
         }
       } catch (error) {
         removeAuthInfo();
