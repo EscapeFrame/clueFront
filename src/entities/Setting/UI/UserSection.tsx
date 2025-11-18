@@ -5,10 +5,40 @@ import * as s from "./styles";
 import Button from "@/entities/UI/Button";
 import { IoCameraOutline } from "react-icons/io5";
 import Customapi from '@/shared/config/api'; // Import Customapi
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export const UserSection: React.FC = () => {
     const currentUser = useRecoilValue(userState); // Renamed to avoid conflict with setter
     const [user, setUser] = useRecoilState(userState); // For updating global state
+    const navigate = useNavigate(); // Initialize useNavigate
+
+    const [fetchedProfileImageUrl, setFetchedProfileImageUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchProfileImage = async () => {
+            try {
+                const response = await Customapi.get('/api/user/me/image', {
+                    responseType: 'blob',
+                });
+                const imageUrl = URL.createObjectURL(response.data);
+                setFetchedProfileImageUrl(imageUrl);
+            } catch (error) {
+                console.error('Failed to fetch profile image:', error);
+                setFetchedProfileImageUrl(null);
+            }
+        };
+
+        // Only fetch if currentUser is available and has a userId
+        if (currentUser && currentUser.userId) {
+            fetchProfileImage();
+        }
+
+        return () => {
+            if (fetchedProfileImageUrl) {
+                URL.revokeObjectURL(fetchedProfileImageUrl);
+            }
+        };
+    }, [fetchedProfileImageUrl, currentUser]); // Add currentUser to dependency array
 
     // If currentUser is not yet loaded, return null or a loading indicator
 
@@ -22,7 +52,15 @@ export const UserSection: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null); // To store the actual file for upload
 
     if (!currentUser || !currentUser.userId) { // Check for userId to ensure it's a valid user object
-        return <div>사용자 정보를 불러오는 중...</div>; // Or a loading spinner
+        return (
+            <s.Section>
+                <s.Wrapper>
+                    <s.SectionTitle>로그인이 필요합니다</s.SectionTitle>
+                    <s.SectionExplan>로그인하여 프로필 정보를 확인하고 관리하세요.</s.SectionExplan>
+                </s.Wrapper>
+                <Button text={"로그인하기"} width={'150px'} type={0} onClick={() => navigate('/login')} />
+            </s.Section>
+        );
     }
     
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +138,7 @@ export const UserSection: React.FC = () => {
             </s.Wrapper>
 
             <s.AvatarArea>
-                {image ? <s.Avatar src={image} alt="User avatar" /> : <s.AvatarFallback />}
+                <s.Avatar src={image || fetchedProfileImageUrl || currentUser?.myImage || undefined} alt="User avatar" />
                 <s.AvatarRight>
                     <label>
                         <input type="file" accept="image/*" onChange={handleImageChange} hidden />
@@ -125,10 +163,7 @@ export const UserSection: React.FC = () => {
 
                     <s.FormGroup>
                         <label>이메일<span>*</span></label>
-                        <input type="email" value={email} onChange={(e) => {
-                            console.log("Email onChange fired, new value:", e.target.value);
-                            setEmail(e.target.value);
-                        }} />
+                        <input type="email" value={email} readOnly/>
                     </s.FormGroup>
                 </s.FormRow>
 
