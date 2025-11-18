@@ -59,70 +59,59 @@ export const useAuth = (): AuthHook => {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchUserInfo = async () => {
-      console.log('useAuth: useEffect/fetchUserInfo triggered.');
-
-      // 앱 초기화 시 accessToken이 없거나 만료된 경우 서버에 refresh 요청을 보내 새 accessToken을 발급받아 저장
-      // Customapi의 인터셉터는 401에서 자동 리프레시를 처리하지만, 페이지 로드 시 초기 요청이 없으면 자동 갱신이 일어나지 않습니다.
+      if (user.userId) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
-
       try {
-        // 만약 accessToken이 없다면, reissue 엔드포인트를 직접 호출해 본다.
-        if (!accessToken) {
-          console.log('useAuth: No accessToken in state, attempting to reissue via server.');
+        const currentToken = localStorage.getItem('accessToken');
+        if (!currentToken) {
           try {
             const res = await Customapi.post('/reissue', null, { withCredentials: true });
             const newToken = res.headers['authorization']?.replace('Bearer ', '') || res.data?.accessToken;
-            if (newToken) {
+            if (newToken && isMounted) {
               localStorage.setItem('accessToken', newToken);
               setAccessToken(newToken);
             }
           } catch (reErr) {
-            console.warn('useAuth: Reissue attempt failed or no refresh token present:', reErr);
           }
         }
 
-        // 이제 accessToken이 있으면 사용자 정보 요청
         const tokenNow = localStorage.getItem('accessToken');
-        if (!tokenNow) {
-          console.log('useAuth: Still no accessToken after reissue attempt.');
-          setLoading(false);
-          return;
+        if (tokenNow) {
+          const res = await Customapi.get<User>('/api/user/me');
+          if (isMounted) {
+            const userData = res.data;
+            setUser({
+              userId: userData.userId || '',
+              username: userData.username || '',
+              email: userData.email || '',
+              role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
+              classCode: userData.classCode || '',
+              grade: userData.grade || 0,
+              classNo: userData.classNo || 0,
+              number: userData.number || 0,
+              description: userData.description || '',
+              myImage: userData.myImage || null,
+            });
+          }
         }
-
-        console.log('useAuth: AccessToken exists, fetching user info...');
-
-        const res = await Customapi.get<User>('/api/user/me');
-        const userData = res.data;
-        console.log('useAuth: User info fetched successfully:', userData);
-        setUser({
-          userId: userData.userId || '',
-          username: userData.username || '',
-          email: userData.email || '',
-          role: (userData.role as 'STUDENT' | 'TEACHER' | '') || '',
-          classCode: userData.classCode || '',
-          grade: userData.grade || 0,
-          classNo: userData.classNo || 0,
-          number: userData.number || 0,
-          description: userData.description || '',
-          myImage: userData.myImage || null,
-        });
       } catch (error: unknown) {
-        const err = error as { name?: string; code?: string } | undefined;
-        if (err && (err.name === 'CanceledError' || err.code === 'ERR_CANCELED')) {
-          console.warn('useAuth: User info fetch canceled.');
-        } else {
-          console.error('useAuth: Failed to fetch user info:', error);
-          removeAuthInfo();
-        }
+        removeAuthInfo();
       } finally {
-        setLoading(false);
-        console.log('useAuth: Setting loading to false.');
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
-
     fetchUserInfo();
-  }, [accessToken, setUser, removeAuthInfo]);
+    return () => {
+      isMounted = false;
+    };
+  }, [setUser, removeAuthInfo]);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
