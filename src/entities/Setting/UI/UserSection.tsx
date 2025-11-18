@@ -74,27 +74,43 @@ export const UserSection: React.FC = () => {
         }
 
         // 2. Handle User Information Update
-    const userDataToUpdate: Record<string, unknown> = {};
-        if (name !== currentUser?.username) userDataToUpdate.username = name;
-        if (grade !== currentUser?.grade) userDataToUpdate.grade = grade;
-        if (classNumber !== currentUser?.classNo) userDataToUpdate.classNo = classNumber;
-        if (number !== currentUser?.number) userDataToUpdate.number = number;
-        if (description !== currentUser?.description) userDataToUpdate.description = description;
-        // Email is not editable in the example, but if it were, it would be added here.
+        // Always send the full payload expected by backend to avoid errors when only one field (like description) changes.
+        const fullUserPayload = {
+            username: name,
+            description: description,
+            grade: Number(grade) || 0,
+            classNo: Number(classNumber) || 0,
+            number: Number(number) || 0,
+        } as {
+            username: string;
+            description: string;
+            grade: number;
+            classNo: number;
+            number: number;
+        };
 
-        if (Object.keys(userDataToUpdate).length > 0) {
-            try {
-                const userRes = await Customapi.patch('/api/user', userDataToUpdate);
-                updatedUser = { ...updatedUser, ...userRes.data }; // Assuming API returns updated user data
-                alert('사용자 정보가 성공적으로 업데이트되었습니다.');
-            } catch (error) {
-                console.error('사용자 정보 업데이트 실패:', error);
-                alert('사용자 정보 업데이트에 실패했습니다.');
-                return; // Stop if user info update fails
-            }
-        } else if (!selectedFile) {
+        // If nothing changed and no image selected, notify and stop
+        const isSameAsCurrent = (
+            fullUserPayload.username === currentUser.username &&
+            fullUserPayload.description === currentUser.description &&
+            fullUserPayload.grade === currentUser.grade &&
+            fullUserPayload.classNo === currentUser.classNo &&
+            fullUserPayload.number === currentUser.number
+        );
+
+        if (isSameAsCurrent && !selectedFile) {
             alert('변경할 내용이 없습니다.');
             return;
+        }
+
+        try {
+            const userRes = await Customapi.patch('/api/user', fullUserPayload);
+            updatedUser = { ...updatedUser, ...userRes.data }; // Assuming API returns updated user data
+            alert('사용자 정보가 성공적으로 업데이트되었습니다.');
+        } catch (error) {
+            console.error('사용자 정보 업데이트 실패:', error);
+            alert('사용자 정보 업데이트에 실패했습니다.');
+            return; // Stop if user info update fails
         }
 
         // Update global user state with the new data
