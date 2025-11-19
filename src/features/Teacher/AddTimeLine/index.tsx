@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ScheduleTable } from '@/features/Common/Main/Schedule/ScheduleTable';
 import { ScheduleItem, DayOfWeek } from '@/shared/types/schedule';
-import AddModal from '@/entities/UI/AddModal';
+import ScheduleAddModal from './components/ScheduleAddModal';
 
 const DAYS: DayOfWeek[] = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
 const PERIODS = [1, 2, 3, 4, 5, 6, 7];
@@ -64,7 +64,7 @@ export default function TimeLine() {
         editable={false}
       />
       
-      <AddModal
+      <ScheduleAddModal
         isOpen={isModalOpen}
         onClose={handleModalClose}
         onConfirm={handleModalConfirm}

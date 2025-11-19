@@ -1,36 +1,51 @@
 import Customapi from "@/shared/config/api";
 
 // <--Class-->
-// 과제 제출 API
-export async function SubmitAssignment(assignmentId: string, file: File) {
+// 과제 파일 제출 API
+export async function submitFile(submissionId: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return Customapi.post(`/api/submissions/${submissionId}/file`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+}
+
+// 과제 링크 제출 API
+export async function submitLink(submissionId: string, link: string) {
+    return Customapi.post(`/api/submissions/${submissionId}/link`, { value: link });
+}
+
+// 과제 최종 제출 API
+export async function finalizeSubmission(submissionId: string) {
+    const submissionData = {
+        submissionId: submissionId,
+        IsSubmitted: true,
+        submittedAt: new Date().toISOString(),
+    };
+    return Customapi.patch(`/api/submissions/${submissionId}/submit`, submissionData);
+}
+
+// 과제 제출 취소 API
+export async function cancelSubmission(submissionId: string) {
+    return Customapi.patch(`/api/submissions/${submissionId}/cancel`);
+}
+
+// 과제에 할당된 첨부파일 조회 API
+export async function getAssignmentAttachments(assignmentId: string) {
     try {
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        const response = await Customapi.post(`/api/assignments/submit/${assignmentId}`, formData);
+        const response = await Customapi.get(`/api/assignments/${assignmentId}/attachment`);
         if (response.status !== 200) {
             return response.status;
         }
         return response.data;
     } catch (error) {
-        console.error('과제 제출 실패:', error);
+        console.error('과제 첨부파일 조회 실패:', error);
         throw error;
     }
 }
 
-// 과제 제출 취소 API
-export async function DeleteAssignment(assignmentId: string) {
-    try {
-        const response = await Customapi.delete(`/api/assignments/submit/${assignmentId}`);
-        if (response.status !== 200) {
-            return response.status;
-        }
-        return response.data;
-    } catch(error) {
-        console.error('과제 제출 취소 실패:', error);
-        throw error
-    }
-}
 
 //<--ClassInfo-->
 // 클래스 정보 조회 API
