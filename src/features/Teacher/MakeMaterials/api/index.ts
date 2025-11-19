@@ -49,7 +49,31 @@ const postAgentFlow = async (agentId: string): Promise<AgentFlowResponse> => {
 };
 
 
-// ================= Orchestrator =================
+// ================= Step 3: POST /api/v1/agents/{agent_id}/doc =================
+
+export interface Doc {
+  index: string;
+  content: string;
+}
+
+export interface AgentDocResponse {
+  data: {
+    status: string;
+    doc: {
+      docs: Doc[];
+    };
+    agent_id: string;
+  };
+  message: string;
+}
+
+export const postAgentDoc = async (agentId: string, words: Word[]): Promise<AgentDocResponse> => {
+  const response = await Customapi.post(`/api/v1/agents/${agentId}/doc`, { words });
+  return response.data;
+};
+
+
+// ================= Orchestrator for Step 1 & 2 =================
 
 export const createAgentAndGetFlow = async (data: PostMaterialsRequest): Promise<AgentFlowResponse> => {
   // Step 1: Create the agent and get the ID

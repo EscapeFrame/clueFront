@@ -1,53 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import * as s from "./styles";
-import Customapi from "@/shared/config/api";
+import { Doc } from "../../api"; // Import Doc type
 
-interface StepProps {
-    onNext: (data: { title: string; goal: string; keywords: string[]; files: File[] }) => void;
+interface Step3Props {
+    docs: Doc[];
+    isGenerating: boolean;
+    onNext: () => void;
+    onBack?: () => void;
 }
 
-export default function Step3({ onNext }: StepProps) {
-    const [serverText, setServerText] = useState("");
-    const [activeSection, setActiveSection] = useState<'theory' | 'example' | 'practice' | 'mini'>('theory');
-    const [loading, setLoading] = useState(false);
+export default function Step3({ docs, isGenerating, onNext, onBack }: Step3Props) {
+    const [selectedDocIndex, setSelectedDocIndex] = useState<number>(0);
+    const [currentContent, setCurrentContent] = useState<string>("");
 
-    const isFormValid = serverText.trim() !== "";
+    useEffect(() => {
+        if (docs.length > 0) {
+            setCurrentContent(docs[selectedDocIndex].content);
+        } else {
+            setCurrentContent("");
+        }
+    }, [docs, selectedDocIndex]);
 
-    const textRef = useRef<HTMLTextAreaElement | null>(null);
-
-    const autosize = () => {
-        const el = textRef.current;
-        if (!el) return;
-        el.style.height = 'auto';
-        const maxPx = 28 * parseFloat(getComputedStyle(document.documentElement).fontSize || '16'); // 28rem in px (approx)
-        const newHeight = Math.min(el.scrollHeight, maxPx);
-        el.style.height = `${newHeight}px`;
+    const handleDocSelect = (index: number) => {
+        setSelectedDocIndex(index);
     };
-
-    useEffect(() => {
-        let mounted = true;
-        const fetchText = async (section: string) => {
-            setLoading(true);
-            try {
-                const res = await Customapi.get<{ text: string }>(`/api/materials/section/${section}`);
-                if (mounted) setServerText(res.data?.text || "");
-            } catch (err) {
-                console.error("Step3: 서버 텍스트 로드 실패", err);
-                if (mounted) setServerText('서버에서 내용을 불러오지 못했습니다.');
-            } finally {
-                if (mounted) setLoading(false);
-            }
-        };
-        fetchText(activeSection);
-        return () => {
-            mounted = false;
-        };
-    }, [activeSection]);
-
-    useEffect(() => {
-        // adjust height after serverText updates
-        autosize();
-    }, [serverText, loading]);
 
     return (
         <s.Container>
@@ -55,18 +31,16 @@ export default function Step3({ onNext }: StepProps) {
             <s.Sidebar>
                 <s.SideBox>
                     <s.MenuList>
-                        <li>
-                            <s.MenuButton active={activeSection === 'example'} onClick={() => setActiveSection('example')}>예제코드</s.MenuButton>
-                        </li>
-                        <li>
-                            <s.MenuButton active={activeSection === 'practice'} onClick={() => setActiveSection('practice')}>실습문제</s.MenuButton>
-                        </li>
-                        <li>
-                            <s.MenuButton active={activeSection === 'mini'} onClick={() => setActiveSection('mini')}>미니과제</s.MenuButton>
-                        </li>
-                        <li>
-                            <s.MenuButton active={activeSection === 'theory'} onClick={() => setActiveSection('theory')}>이론</s.MenuButton>
-                        </li>
+                        {docs.map((doc, index) => (
+                            <li key={index}>
+                                <s.MenuButton
+                                    active={selectedDocIndex === index}
+                                    onClick={() => handleDocSelect(index)}
+                                >
+                                    {doc.index}
+                                </s.MenuButton>
+                            </li>
+                        ))}
                     </s.MenuList>
                 </s.SideBox>
             </s.Sidebar>
@@ -74,26 +48,31 @@ export default function Step3({ onNext }: StepProps) {
             {/* 메인 컨텐츠 */}
             <s.Content>
                 <s.PageTitle>수업 자료 편집</s.PageTitle>
-                <s.Form>
-                    <s.Field>
-                        <s.TextAreaBox
-                            ref={textRef}
-                            value={serverText}
-                            onChange={(e) => { setServerText(e.target.value); autosize(); }}
-                            disabled={loading}
-                            aria-label="서버 텍스트 편집"
-                        />
-                    </s.Field>
+                {isGenerating ? (
+                    <s.LoadingBox>
+                        <p>문서 생성 중...</p>
+                    </s.LoadingBox>
+                ) : (
+                    <s.Form>
+                        <s.Field>
+                            <s.TextAreaBox
+                                value={currentContent}
+                                onChange={(e) => setCurrentContent(e.target.value)}
+                                disabled={isGenerating || docs.length === 0}
+                                aria-label="문서 내용 편집"
+                            />
+                        </s.Field>
 
-                    <s.ButtonRow>
-                        <s.Button variant="secondary" type="button">
-                            재요청
-                        </s.Button>
-                        <s.Button variant="primary" type="button" disabled={!isFormValid}>
-                            내용 전송
-                        </s.Button>
-                    </s.ButtonRow>
-                </s.Form>
+                        <s.ButtonRow>
+                            <s.Button variant="secondary" type="button" onClick={onBack}>
+                                이전
+                            </s.Button>
+                            <s.Button variant="primary" type="button" onClick={onNext} disabled={isGenerating || docs.length === 0}>
+                                다음
+                            </s.Button>
+                        </s.ButtonRow>
+                    </s.Form>
+                )}
             </s.Content>
         </s.Container>
     );
