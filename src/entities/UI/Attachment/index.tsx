@@ -19,6 +19,7 @@ interface Props {
   openUploadModal: () => void;
   openLinkModal: (platform?: "drive" | "youtube" | "notion" | "link") => void;
   isSubmitted?: boolean;
+  onDeleteAttachment: (id: string, isNew: boolean) => void; // Added this line
 }
 
 const AttachmentBox: React.FC<Props> = ({
@@ -26,9 +27,10 @@ const AttachmentBox: React.FC<Props> = ({
   setAttachments,
   openUploadModal,
   openLinkModal,
+  onDeleteAttachment, // Added this line
 }) => {
-  const handleRemove = (index: number) => {
-    setAttachments(prev => prev.filter((_, i) => i !== index));
+  const handleRemove = (item: Attachment) => { // Modified parameter
+    onDeleteAttachment(item.id, item.isNew || false); // Modified call
   };
 
   const buttons: {
@@ -56,15 +58,14 @@ const AttachmentBox: React.FC<Props> = ({
         ))}
       </s.Buttons>
 
-      <s.List>
-        {attachments.map((item, index) => (
-          <s.Item key={index}>
-            {item.name}
-            <s.Remove onClick={() => handleRemove(index)}>✕</s.Remove>
-          </s.Item>
-        ))}
-      </s.List>
-    </s.Container>
+              <s.List>
+                {attachments.map((item, index) => (
+                  <s.Item key={index}>
+                    {item.name}
+                    <s.Remove onClick={() => handleRemove(item)}>✕</s.Remove>
+                  </s.Item>
+                ))}
+              </s.List>    </s.Container>
   );
 };
 

@@ -4,7 +4,7 @@ import Customapi from "@/shared/config/api";
 // 과제 파일 제출 API
 export async function submitFile(submissionId: string, file: File) {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('files', file);
     return Customapi.post(`/api/submissions/${submissionId}/file`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -14,7 +14,7 @@ export async function submitFile(submissionId: string, file: File) {
 
 // 과제 링크 제출 API
 export async function submitLink(submissionId: string, link: string) {
-    return Customapi.post(`/api/submissions/${submissionId}/link`, { value: link });
+    return Customapi.post(`/api/submissions/${submissionId}/link`, { url: link });
 }
 
 // 과제 최종 제출 API
@@ -30,6 +30,11 @@ export async function finalizeSubmission(submissionId: string) {
 // 과제 제출 취소 API
 export async function cancelSubmission(submissionId: string) {
     return Customapi.patch(`/api/submissions/${submissionId}/cancel`);
+}
+
+// 과제 첨부파일 삭제 API
+export async function deleteSubmissionAttachment(submissionAttachmentId: string) {
+    return Customapi.delete(`/api/submissions/${submissionAttachmentId}`);
 }
 
 // 과제에 할당된 첨부파일 조회 API

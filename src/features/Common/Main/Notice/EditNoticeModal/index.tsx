@@ -181,6 +181,13 @@ export default function EditNoticeModal({
     setLinkInput('');
   };
 
+  const handleDeleteAttachment = (id: string, isNew: boolean) => {
+    if (!isNew) {
+      setDeletedAttachmentIds((prev) => [...prev, id]);
+    }
+    setAttachments((prev) => prev.filter((att) => att.id !== id));
+  };
+
   return (
     <Modal
       title="공지/안내 내용 수정"
@@ -220,7 +227,13 @@ export default function EditNoticeModal({
           <s.Textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="내용을 입력하세요" />
         </s.FormRow>
         <s.FormRow>
-          <AttachmentBox attachments={attachments} setAttachments={handleSetAttachments} openUploadModal={() => setIsFileModalOpen(true)} openLinkModal={() => {setIsLinkModalOpen(true)}} />
+          <AttachmentBox
+            attachments={attachments}
+            setAttachments={handleSetAttachments}
+            openUploadModal={() => setIsFileModalOpen(true)}
+            openLinkModal={() => setIsLinkModalOpen(true)}
+            onDeleteAttachment={handleDeleteAttachment}
+          />
         </s.FormRow>
       </s.Form>
       {isFileModalOpen && (

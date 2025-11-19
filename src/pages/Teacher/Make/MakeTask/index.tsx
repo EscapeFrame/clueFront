@@ -110,6 +110,10 @@ const MakeTask: React.FC = () => {
     setIsLinkModalOpen(false);
   };
 
+  const handleDeleteAttachment = (id: string) => {
+    setAttachments((prev) => prev.filter((att) => att.id !== id));
+  };
+
   // 과제 생성
   const handleMakeTask = async () => {
     if (!isFormValid || isSubmitting) return;
@@ -173,6 +177,7 @@ const MakeTask: React.FC = () => {
         setAttachments={setAttachments}
         openUploadModal={() => setIsFileModalOpen(true)}
         openLinkModal={platform => { setLinkPlatform(platform ?? null); setIsLinkModalOpen(true); }}
+        onDeleteAttachment={handleDeleteAttachment}
       />
 
       <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
