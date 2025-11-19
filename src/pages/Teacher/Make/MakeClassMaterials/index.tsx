@@ -6,13 +6,6 @@ import Step3 from "@/features/Teacher/MakeMaterials/Step3/Step3";
 
 export default function MakeClassMaterials() {
     const [currentStep, setCurrentStep] = useState(1);
-    const [step1Data, setStep1Data] = useState<any>(null);
-
-    const handleNextStep1 = (data: { title: string; goal: string; keywords: string[]; files: File[] }) => {
-        console.log("Step 1 Data:", data);
-        setStep1Data(data);
-        setCurrentStep(2); // 다음 단계로 이동
-    };
 
     const handleNext = () => {
         setCurrentStep(currentStep + 1);
@@ -31,11 +24,9 @@ export default function MakeClassMaterials() {
                 ))}
             </s.StepBar>
 
-            {currentStep === 1 && <Step1 onNext={handleNextStep1} />}
+            {currentStep === 1 && <Step1 onNext={handleNext} />}
             {currentStep === 2 && <Step2 onNext={handleNext}/>}
             {currentStep === 3 && <Step3 onNext={handleNext} />}
-
-            {/* ... 다른 단계들 */}
         </s.Wrapper>
     );
 }
