@@ -15,10 +15,16 @@ export interface WorkflowState {
     nodes: WorkflowNode[];
 }
 
+export interface Word {
+    priority: number;
+    index: string;
+    iconNumber: number;
+}
+
 export interface Step2Props {
-    words: string[];
+    words: Word[];
     onBack?: () => void;
-    onNext?: (payload: { words: { priority: number; index: string; iconNumber: number }[] }) => void;
+    onNext?: (payload: { words: Word[] }) => void;
 }
 
 const workflowIconMap: Record<WorkflowIconKey, React.ReactNode> = {
@@ -54,21 +60,23 @@ const defaultWorkflow: WorkflowState = {
     ],
 };
 
-const createWorkflowFromWords = (words: string[]): WorkflowState => {
+const processInitialWords = (words: Word[]): WorkflowState => {
     if (!words || words.length === 0) {
         return defaultWorkflow;
     }
-    const nodes: WorkflowNode[] = words.map((wordTitle, index) => ({
-        id: createId(),
-        title: wordTitle,
-        icon: getIconKeyFromNumber((index % 4) + 1),
-        iconNumber: (index % 4) + 1,
-    }));
-    return { nodes };
+    const sortedNodes = [...words]
+        .sort((a, b) => a.priority - b.priority)
+        .map((word) => ({
+            id: createId(),
+            title: word.index,
+            icon: getIconKeyFromNumber(word.iconNumber),
+            iconNumber: word.iconNumber,
+        }));
+    return { nodes: sortedNodes };
 };
 
 export default function Step2({ words, onBack, onNext }: Step2Props) {
-    const [workflow, setWorkflow] = useState<WorkflowState>(() => createWorkflowFromWords(words));
+    const [workflow, setWorkflow] = useState<WorkflowState>(() => processInitialWords(words));
     const [draggingId, setDraggingId] = useState<string | null>(null);
     const [hoverEdgeIndex, setHoverEdgeIndex] = useState<number | null>(null);
     const [hoverNodeId, setHoverNodeId] = useState<string | null>(null);
@@ -196,7 +204,7 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
     }, []);
 
     const handleNext = useCallback(() => {
-        const wordsPayload = workflow.nodes.map((node, index) => ({
+        const wordsPayload: Word[] = workflow.nodes.map((node, index) => ({
             priority: index + 1,
             index: node.title,
             iconNumber: node.iconNumber,

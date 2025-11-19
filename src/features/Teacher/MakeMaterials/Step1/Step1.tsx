@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from "react";
 import * as s from "./styles";
-import { usePostMaterials } from "../hooks/useMaterials";
+import { usePostMaterials } from "../../hooks/useMaterials";
 import { MdAdd, MdRemove } from "react-icons/md";
+import { AgentFlowResponse } from "../../api";
 
 interface Step1Props {
-    onNext: (data: { words: string[] }) => void;
+    onNext: (response: AgentFlowResponse) => void;
 }
 
 export default function Step1({ onNext }: Step1Props) {

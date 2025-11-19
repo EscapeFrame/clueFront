@@ -3,14 +3,15 @@ import * as s from "./styles";
 import Step1 from "@/features/Teacher/MakeMaterials/Step1/Step1";
 import Step2 from "@/features/Teacher/MakeMaterials/Step2/Step2";
 import Step3 from "@/features/Teacher/MakeMaterials/Step3/Step3";
+import { Word } from "@/features/Teacher/MakeMaterials/api"; // Import Word type
 
 export default function MakeClassMaterials() {
     const [currentStep, setCurrentStep] = useState(1);
-    const [flowChartWords, setFlowChartWords] = useState<string[]>([]);
+    const [flowChartWords, setFlowChartWords] = useState<Word[]>([]);
 
-    const handleNext = (data?: { words: string[] }) => {
-        if (data && data.words) {
-            setFlowChartWords(data.words);
+    const handleNext = (response?: { data: { flow: { words: Word[] } } }) => {
+        if (response && response.data && response.data.flow && response.data.flow.words) {
+            setFlowChartWords(response.data.flow.words);
         }
         setCurrentStep(currentStep + 1);
     };
