@@ -1,7 +1,6 @@
 // 디렉토리 생성
 export interface DirectoryCreateRequest {
     classRoomId: string;
-    directoryOrder: number;
     name: string;
 }
 
