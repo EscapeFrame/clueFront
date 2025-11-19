@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as s from './styles';
 import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
-import { FaRegFile, FaLink } from 'react-icons/fa6';
+import { FaRegFile, FaLink, FaXmark } from 'react-icons/fa6';
 import { differenceInDays, parseISO } from 'date-fns';
 import { Modal } from '@/entities/UI/Modal';
 import {
@@ -11,6 +11,7 @@ import {
   finalizeSubmission,
   cancelSubmission,
   getAssignmentAttachments,
+  deleteSubmissionAttachment, // Add this line
 } from '../api';
 import AttachmentBox from '@/entities/UI/Attachment';
 import AddModal from '@/entities/UI/AddModal';
@@ -165,6 +166,23 @@ export function AssignmentCard({
     }
   };
 
+  const handleDeleteAttachment = async (id: string, isNew: boolean) => {
+    if (confirm('정말로 첨부파일을 삭제하시겠습니까?')) {
+        try {
+            if (!isNew) {
+                // If it's an existing attachment, call the API
+                await deleteSubmissionAttachment(id);
+            }
+            // Update the state to remove the file from the UI
+            setAttachments((prev) => prev.filter((att) => att.id !== id));
+            alert('첨부파일이 삭제되었습니다.');
+        } catch (error) {
+            console.error('첨부파일 삭제 실패:', error);
+            alert('첨부파일 삭제에 실패했습니다.');
+        }
+    }
+};
+
   const renderDeadlineOrSubmission = () => {
     if (isSubmitted) {
       return (
@@ -234,15 +252,20 @@ export function AssignmentCard({
 
         <s.FileListSection>
           {attachments
-            .filter((att) => !att.isNew)
+            .filter((att) => !att.isNew) // Filter for existing attachments in the card view
             .map((file) => (
               <s.FileItem key={file.id}>
                 <s.FileInfoContainer>
-                  <FaRegFile />
+                  {file.type === 'file' ? <FaRegFile /> : <FaLink />}
                   <div>
                     <s.FileNameText>{file.name}</s.FileNameText>
                   </div>
                 </s.FileInfoContainer>
+                {!isSubmitted && ( // Show delete button only if not submitted
+                    <s.FileRemoveButton onClick={() => handleDeleteAttachment(file.id, file.isNew || false)}>
+                        <FaXmark />
+                    </s.FileRemoveButton>
+                )}
               </s.FileItem>
             ))}
         </s.FileListSection>
@@ -325,6 +348,7 @@ export function AssignmentCard({
             openUploadModal={openUploadModal}
             openLinkModal={openLinkModal}
             isSubmitted={isSubmitted}
+            onDeleteAttachment={handleDeleteAttachment}
           />
           <input
             ref={fileInputRef}
