@@ -7,7 +7,11 @@ export interface PostMaterialsRequest {
   link: string[];
 }
 
-export const postMaterials = async (data: PostMaterialsRequest) => {
+export interface PostMaterialsResponse {
+  words: string[];
+}
+
+export const postMaterials = async (data: PostMaterialsRequest): Promise<PostMaterialsResponse> => {
   const response = await Customapi.post('/api/v1/agents', data);
   return response.data;
 };

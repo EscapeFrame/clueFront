@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import { postMaterials, PostMaterialsRequest } from '../api';
+import { postMaterials, PostMaterialsRequest, PostMaterialsResponse } from '../api';
 
-type UsePostMaterialsOptions = Omit<UseMutationOptions<unknown, Error, PostMaterialsRequest>, 'mutationFn'>;
+type UsePostMaterialsOptions = Omit<UseMutationOptions<PostMaterialsResponse, Error, PostMaterialsRequest>, 'mutationFn'>;
 
 export const usePostMaterials = (options?: UsePostMaterialsOptions) => {
   return useMutation({

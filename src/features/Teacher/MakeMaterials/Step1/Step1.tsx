@@ -4,7 +4,7 @@ import { usePostMaterials } from "../hooks/useMaterials";
 import { MdAdd, MdRemove } from "react-icons/md";
 
 interface Step1Props {
-    onNext: () => void;
+    onNext: (data: { words: string[] }) => void;
 }
 
 export default function Step1({ onNext }: Step1Props) {
@@ -15,8 +15,8 @@ export default function Step1({ onNext }: Step1Props) {
     const [links, setLinks] = useState<string[]>([""]);
 
     const { mutate, isPending } = usePostMaterials({
-        onSuccess: () => {
-            onNext();
+        onSuccess: (response) => {
+            onNext(response);
         },
         onError: (error) => {
             alert(`자료 생성에 실패했습니다: ${error.message}`);

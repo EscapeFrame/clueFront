@@ -11,26 +11,14 @@ export interface WorkflowNode {
     iconNumber: number;
 }
 
-export interface WorkflowEdge {
-    from: string;
-    to: string;
-}
-
-export interface Word {
-    priority: number;
-    index: string;
-    iconNumber: number;
-}
-
 export interface WorkflowState {
     nodes: WorkflowNode[];
 }
 
 export interface Step2Props {
-    initialWorkflow?: WorkflowState;
+    words: string[];
     onBack?: () => void;
-    onNext?: (payload: { words: Word[] }) => void;
-    initialWords?: { words: Word[] };
+    onNext?: (payload: { words: { priority: number; index: string; iconNumber: number }[] }) => void;
 }
 
 const workflowIconMap: Record<WorkflowIconKey, React.ReactNode> = {
@@ -66,32 +54,28 @@ const defaultWorkflow: WorkflowState = {
     ],
 };
 
-const processInitialWords = (words?: Word[]): WorkflowState => {
+const createWorkflowFromWords = (words: string[]): WorkflowState => {
     if (!words || words.length === 0) {
         return defaultWorkflow;
     }
-    const sortedNodes = [...words]
-        .sort((a, b) => a.priority - b.priority)
-        .map((word) => ({
-            id: createId(),
-            title: word.index,
-            icon: getIconKeyFromNumber(word.iconNumber),
-            iconNumber: word.iconNumber,
-        }));
-    return { nodes: sortedNodes };
+    const nodes: WorkflowNode[] = words.map((wordTitle, index) => ({
+        id: createId(),
+        title: wordTitle,
+        icon: getIconKeyFromNumber((index % 4) + 1),
+        iconNumber: (index % 4) + 1,
+    }));
+    return { nodes };
 };
 
-export default function Step2({ initialWorkflow, onBack, onNext, initialWords }: Step2Props) {
-    const [workflow, setWorkflow] = useState<WorkflowState>(() =>
-        initialWords ? processInitialWords(initialWords.words) : initialWorkflow ?? defaultWorkflow,
-    );
+export default function Step2({ words, onBack, onNext }: Step2Props) {
+    const [workflow, setWorkflow] = useState<WorkflowState>(() => createWorkflowFromWords(words));
     const [draggingId, setDraggingId] = useState<string | null>(null);
     const [hoverEdgeIndex, setHoverEdgeIndex] = useState<number | null>(null);
     const [hoverNodeId, setHoverNodeId] = useState<string | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [draftTitle, setDraftTitle] = useState<string>("");
 
-    const edges = useMemo<WorkflowEdge[]>(() => {
+    const edges = useMemo(() => {
         return workflow.nodes.slice(1).map((node, index) => ({
             from: workflow.nodes[index].id,
             to: node.id,
@@ -212,7 +196,7 @@ export default function Step2({ initialWorkflow, onBack, onNext, initialWords }:
     }, []);
 
     const handleNext = useCallback(() => {
-        const wordsPayload: Word[] = workflow.nodes.map((node, index) => ({
+        const wordsPayload = workflow.nodes.map((node, index) => ({
             priority: index + 1,
             index: node.title,
             iconNumber: node.iconNumber,

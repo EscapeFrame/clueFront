@@ -6,8 +6,12 @@ import Step3 from "@/features/Teacher/MakeMaterials/Step3/Step3";
 
 export default function MakeClassMaterials() {
     const [currentStep, setCurrentStep] = useState(1);
+    const [flowChartWords, setFlowChartWords] = useState<string[]>([]);
 
-    const handleNext = () => {
+    const handleNext = (data?: { words: string[] }) => {
+        if (data && data.words) {
+            setFlowChartWords(data.words);
+        }
         setCurrentStep(currentStep + 1);
     };
 
@@ -25,7 +29,7 @@ export default function MakeClassMaterials() {
             </s.StepBar>
 
             {currentStep === 1 && <Step1 onNext={handleNext} />}
-            {currentStep === 2 && <Step2 onNext={handleNext}/>}
+            {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} />}
             {currentStep === 3 && <Step3 onNext={handleNext} />}
         </s.Wrapper>
     );
