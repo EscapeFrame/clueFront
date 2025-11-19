@@ -24,6 +24,22 @@ export const SettingButton = styled.button`
   border-radius: 8px;
 `;
 
+export const AddButton = styled.button`
+  background: ${colors.gray[3]};
+  color: ${colors.black};
+  border: none;
+  cursor: pointer;
+  ${fonts.P2};
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 8px;
+
+  &:hover {
+    background: ${colors.blue.light4};
+    color: ${colors.white};
+  }
+`;
+
 export const IconGroup = styled.div`
   display: flex;
   align-items: center;
@@ -262,4 +278,26 @@ export const CardTitle = styled.h2`
 export const CardText = styled.h2`
   ${fonts.P2}
   color: ${colors.black};
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
 `;

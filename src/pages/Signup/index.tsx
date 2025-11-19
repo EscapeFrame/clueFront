@@ -10,12 +10,14 @@ interface RegisterData {
   email: string;
   classCode: string;
   role: string;
+  image?: File;
 }
 
 function RegisterPage() {
   const [registerData, setRegisterData] = useState<RegisterData | null>(null);
   const [loadingRegisterInfo, setLoadingRegisterInfo] = useState(true);
   const [studentInfo, setStudentInfo] = useState({ grade: '', classNum: '', studentNum: '', studentMail: '' });
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
   const mailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -58,6 +60,19 @@ function RegisterPage() {
     setStudentInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
+    } else {
+      setSelectedImage(null);
+    }
+  };
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setRegisterData((prev) => (prev ? { ...prev, username: value } : null));
+  };
+
   //신규 사용자의 폼
   const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,11 +97,27 @@ function RegisterPage() {
       return;
     }
 
+    const formData = new FormData();
+
+    const userData = {
+      grade: grade,
+      classNo: classNum,
+      number: studentNum,
+      email: mail,
+      username: registerData.username,
+      role: registerData.role,
+    };
+
+    formData.append('user', JSON.stringify(userData));
+    if (selectedImage) {
+      formData.append('image', selectedImage);
+    }
+
     try {
-      await Customapi.post('/register', {
-        grade: grade,
-        classNo: classNum,
-        number: studentNum,
+      await Customapi.post('/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       alert('회원가입 완료! 메인 페이지로 이동합니다.');
       navigate('/');
@@ -188,6 +219,30 @@ function RegisterPage() {
                 readOnly={!!registerData?.email}
                 required={!registerData?.email}
               />
+            </s.InputGroup>
+            <s.InputGroup>
+              <label htmlFor="username">이름:</label>
+              <input
+                id="username"
+                name="username"
+                value={registerData.username}
+                placeholder='이름을 입력해주세요.'
+                onChange={handleUsernameChange}
+                required
+              />
+            </s.InputGroup>
+            <s.InputGroup>
+              <label htmlFor="profileImage">프로필 이미지:</label>
+              <input
+                type="file"
+                id="profileImage"
+                name="profileImage"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {selectedImage && (
+                <img src={URL.createObjectURL(selectedImage)} alt="Profile Preview" style={{ width: '100px', height: '100px', borderRadius: '50%', marginTop: '10px' }} />
+              )}
             </s.InputGroup>
             <s.SubmitButton type="submit" disabled={!isFormValid}>
               회원가입 완료

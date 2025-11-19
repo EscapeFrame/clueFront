@@ -9,6 +9,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { useRecoilState } from 'recoil';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
+// Customapi is not required here because profile image is provided by useProfileImage
+import { useProfileImage } from '@/shared/model/profileImageState';
 
 interface DropdownProps {
   studentNumber?: number | string;
@@ -17,12 +19,14 @@ interface DropdownProps {
   role: string | null;
 }
 
-export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
+export default function Dropdown({ role, name, studentNumber, myImage: userProfileImage }: DropdownProps) {
 
   const navigate = useNavigate();
-  const [User, setUser] = useRecoilState(userState);
+  const [, setUser] = useRecoilState(userState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const context = useContext(UserContext);
+  const [profileImageUrl] = useProfileImage();
+
   if (!context) {
     throw new Error("Dropdown은 UserContext.Provider 안에서 사용되어야 합니다.");
   }
@@ -42,14 +46,20 @@ export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
     setUser({
       username: '',
       userId: '',
+      email: '',
       role: '',
       classCode: 0,
+      grade: 0,
+      classNo: 0,
+      number: 0,
+      description: '',
+      myImage: null,
     });
     navigate('/login');
     setIsModalOpen(false);
   };
 
-  if (role === null) {
+  if (!role) {
     return (
       <s.DropdownContainer>
         <s.DropdownButton onClick={() => { navigate("/login") }}>로그인하기</s.DropdownButton>
@@ -65,8 +75,9 @@ export default function Dropdown({ role, name, studentNumber }: DropdownProps) {
       </s.Icon>
       <s.User role={role}>
         <s.UserInfo>
-          <s.ProfileImage src={myImage} alt="프로필" />
+          <s.ProfileImage src={profileImageUrl || userProfileImage || myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>
+          {studentNumber && <s.StudentNumber>{studentNumber}</s.StudentNumber>}
         </s.UserInfo>
         <s.pointer onClick={() => setIsModalOpen(true)}>
           <MdOutlineLogout />

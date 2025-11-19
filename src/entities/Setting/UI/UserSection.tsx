@@ -1,45 +1,120 @@
-import React, { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import React, { useState } from "react";
+import { useRecoilValue, useRecoilState } from "recoil"; // Added useRecoilState
 import { userState } from "@/shared/model/userState";
 import * as s from "./styles";
 import Button from "@/entities/UI/Button";
 import { IoCameraOutline } from "react-icons/io5";
+import Customapi from '@/shared/config/api'; // Import Customapi
+import { useProfileImage } from '@/shared/model/profileImageState';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export const UserSection: React.FC = () => {
-    const user = useRecoilValue(userState);
+    const currentUser = useRecoilValue(userState); // Renamed to avoid conflict with setter
+    const [, setUser] = useRecoilState(userState); // For updating global state
+    const navigate = useNavigate(); // Initialize useNavigate
 
-    const [name, setName] = useState(user?.username || "");
-    const [email] = useState<string>("");
-    const [grade, setGrade] = useState<number>();
-    const [classNumber, setClassNumber] = useState<number>();
-    const [number, setNumber] = useState<number>();
-    const [description, setDescription] = useState<string>("");
-    const [image, setImage] = useState<string | null>(null);
+    const [fetchedProfileImageUrl] = useProfileImage();
 
-    useEffect(() => {
-        if (!user) return;
-        // classCode may be 0 -> should be treated as default 1101
-        if (user.classCode !== undefined && user.classCode !== null) {
-            let code = typeof user.classCode === 'string' ? parseInt(user.classCode, 10) : user.classCode;
-            if (isNaN(code)) return;
-            if (code === 0) {
-                code = 1101;
-            }
-            setGrade(Math.floor(code / 1000));
-            setClassNumber(Math.floor((code % 1000) / 100));
-            setNumber(code % 100);
-        }
-    }, [user]);
+    // If currentUser is not yet loaded, return null or a loading indicator
 
+    const [name, setName] = useState(currentUser?.username || "");
+    const [email] = useState(currentUser?.email || "");
+    const [grade, setGrade] = useState(currentUser?.grade || "");
+    const [classNumber, setClassNumber] = useState(currentUser?.classNo || "");
+    const [number, setNumber] = useState(currentUser?.number || "");
+    const [description, setDescription] = useState(currentUser?.description || "");
+    const [image, setImage] = useState<string | null>(currentUser?.myImage || null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null); // To store the actual file for upload
+
+    if (!currentUser || !currentUser.userId) { // Check for userId to ensure it's a valid user object
+        return (
+            <s.Section>
+                <s.Wrapper>
+                    <s.SectionTitle>로그인이 필요합니다</s.SectionTitle>
+                    <s.SectionExplan>로그인하여 프로필 정보를 확인하고 관리하세요.</s.SectionExplan>
+                </s.Wrapper>
+                <Button text={"로그인하기"} width={'150px'} type={0} onClick={() => navigate('/login')} />
+            </s.Section>
+        );
+    }
+    
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setImage(URL.createObjectURL(e.target.files[0]));
+            const file = e.target.files[0];
+            setSelectedFile(file);
+            setImage(URL.createObjectURL(file));
+        } else {
+            setSelectedFile(null);
+            setImage(currentUser?.myImage || null); // Revert to current user image if no file selected
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log({ name, grade, classNumber, number, description, image });
+
+        let updatedUser = { ...currentUser }; // Start with current user data
+
+        // 1. Handle Image Update
+        if (selectedFile) {
+            const imageFormData = new FormData();
+            imageFormData.append('image', selectedFile);
+            try {
+                const imageRes = await Customapi.put('/api/user/me/image', imageFormData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                updatedUser = { ...updatedUser, myImage: imageRes.data.myImage }; // Assuming API returns updated image URL
+                alert('프로필 이미지가 성공적으로 업데이트되었습니다.');
+            } catch (error) {
+                console.error('프로필 이미지 업데이트 실패:', error);
+                alert('프로필 이미지 업데이트에 실패했습니다.');
+                return; // Stop if image update fails
+            }
+        }
+
+        // 2. Handle User Information Update
+        // Always send the full payload expected by backend to avoid errors when only one field (like description) changes.
+        const fullUserPayload = {
+            username: name,
+            description: description,
+            grade: Number(grade) || 0,
+            classNo: Number(classNumber) || 0,
+            number: Number(number) || 0,
+        } as {
+            username: string;
+            description: string;
+            grade: number;
+            classNo: number;
+            number: number;
+        };
+
+        // If nothing changed and no image selected, notify and stop
+        const isSameAsCurrent = (
+            fullUserPayload.username === currentUser.username &&
+            fullUserPayload.description === currentUser.description &&
+            fullUserPayload.grade === currentUser.grade &&
+            fullUserPayload.classNo === currentUser.classNo &&
+            fullUserPayload.number === currentUser.number
+        );
+
+        if (isSameAsCurrent && !selectedFile) {
+            alert('변경할 내용이 없습니다.');
+            return;
+        }
+
+        try {
+            const userRes = await Customapi.patch('/api/user', fullUserPayload);
+            updatedUser = { ...updatedUser, ...userRes.data }; // Assuming API returns updated user data
+            alert('사용자 정보가 성공적으로 업데이트되었습니다.');
+        } catch (error) {
+            console.error('사용자 정보 업데이트 실패:', error);
+            alert('사용자 정보 업데이트에 실패했습니다.');
+            return; // Stop if user info update fails
+        }
+
+        // Update global user state with the new data
+        setUser(updatedUser);
     };
 
     // 백엔드에서 못 불러오면 받아온 사용자 반까지 표시
@@ -54,7 +129,7 @@ export const UserSection: React.FC = () => {
             </s.Wrapper>
 
             <s.AvatarArea>
-                {image ? <s.Avatar src={image} alt="User avatar" /> : <s.AvatarFallback />}
+                <s.Avatar src={image || fetchedProfileImageUrl || currentUser?.myImage || undefined} alt="User avatar" />
                 <s.AvatarRight>
                     <label>
                         <input type="file" accept="image/*" onChange={handleImageChange} hidden />
@@ -79,7 +154,7 @@ export const UserSection: React.FC = () => {
 
                     <s.FormGroup>
                         <label>이메일<span>*</span></label>
-                        <input type="email" value={email} disabled />
+                        <input type="email" value={email} readOnly/>
                     </s.FormGroup>
                 </s.FormRow>
 
@@ -94,7 +169,7 @@ export const UserSection: React.FC = () => {
                                         name="grade"
                                         value={g}
                                         checked={grade === g}
-                                        disabled
+                                        onChange={(e) => setGrade(parseInt(e.target.value))}
                                     />
                                     {g}학년
                                 </label>
@@ -112,7 +187,7 @@ export const UserSection: React.FC = () => {
                                         name="class"
                                         value={c}
                                         checked={classNumber === c}
-                                        disabled
+                                        onChange={(e) => setClassNumber(parseInt(e.target.value))}
                                     />
                                     {c}반
                                 </label>
@@ -123,7 +198,7 @@ export const UserSection: React.FC = () => {
 
                 <s.FormGroup>
                     <label>번호<span>*</span></label>
-                    <input type="number" value={number || ''} disabled />
+                    <input type="number" value={number || ''} onChange={(e) => setNumber(parseInt(e.target.value))} />
                 </s.FormGroup>
 
                 <s.FormGroup>

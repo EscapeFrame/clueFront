@@ -5,22 +5,29 @@ import { IoDocumentOutline } from "react-icons/io5";
 import { IoCodeSlashOutline } from "react-icons/io5";
 import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
 import { LuHash } from "react-icons/lu";
+import { IoClose } from "react-icons/io5";
 
 import * as s from './styles';
 
 import { Directory, LessonProps } from '@/shared/types/Class/Lesson';
-import { getLessonDirectories } from '../api';
+import { getLessonDirectories, getClassCode } from '../api';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
+import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
+import { deleteDirectory, deleteDocument, Directory as ApiDirectory } from '@/entities/Make/api/useLesson';
 
-const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
+const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
 
   const [directories, setDirectories] = useState<Directory[]>([]);
+  const [code, setCode] = useState("코드를 불러오지 못했습니다.")
   // local class code (fallback to prop `code`)
   const [localCode, setLocalCode] = useState<string>(code ?? '');
   const [loading, setLoading] = useState(true);
+  // inline add flow: show DirectorySelect inline when true
+  const [isAddingDir, setIsAddingDir] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // retained for delete/document refresh
 
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
@@ -41,6 +48,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
         sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(classInfo.directoryList));
       }
 
+      setCode(classInfo.code)
       const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
         id: dir.directoryId.toString(),
         name: dir.directoryName,
@@ -57,6 +65,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
       if (classInfo.code) {
         setLocalCode(classInfo.code);
       }
+      setCode(await getClassCode(classRoomId));
     } catch (err) {
       console.error(err);
     } finally {
@@ -68,7 +77,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
     if (classRoomId) {
       fetchData();
     }
-  }, [fetchData, classRoomId]);
+  }, [fetchData, classRoomId, refreshTrigger]);
 
   const toggleDirectory = (id: string) => {
     setExpandedIds(prev => {
@@ -115,7 +124,75 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
       });
   };
 
+  const handleDirectoryAdded = (newDir?: ApiDirectory | null) => {
+    if (newDir) {
+      // API의 응답 형태에 따라 변환
+      const dir = {
+        id: String((newDir as any).directoryId ?? (newDir as any).id ?? (newDir.id ?? '')),
+        name: (newDir as any).directoryName ?? (newDir as any).name ?? (newDir.name ?? '새 디렉토리'),
+        isRead: false,
+        directoryList: (newDir as any).documentList?.map((doc: any) => ({
+          id: String(doc.documentId ?? doc.id),
+          name: doc.title ?? doc.name,
+          isRead: false,
+          type: doc.type as 'markdown' | 'ppt' | 'code' | 'docs',
+        })) ?? [],
+      };
+      setDirectories(prev => [dir, ...prev]);
+    } else {
+      setRefreshTrigger(prev => prev + 1);
+    }
+  };
+
   if (loading) return <s.Container>수업 정보를 불러오는 중...</s.Container>;
+
+  const handleDeleteDirectory = async (dirId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    // 선생님이 아니면 삭제 불가
+    if (!isTeacher) {
+      alert("선생님만 디렉토리를 삭제할 수 있습니다.");
+      return;
+    }
+    if (window.confirm("정말로 이 디렉토리를 삭제하시겠습니까?")) {
+      try {
+        const success = await deleteDirectory(dirId);
+        console.log(success);
+        if (success) {
+          setRefreshTrigger(prev => prev + 1);
+        }
+        else {
+          alert("디렉토리 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("디렉토리 삭제 실패:", error);
+        alert("디렉토리 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  const handleDeleteDocument = async (docId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    // 선생님이 아니면 삭제 불가
+    if (!isTeacher) {
+      alert("선생님만 문서를 삭제할 수 있습니다.");
+      return;
+    }
+    if (window.confirm("정말로 이 문서 삭제하시겠습니까?")) {
+      try {
+        const success = await deleteDocument(docId);
+        console.log(success);
+        if (success) {
+          setRefreshTrigger(prev => prev + 1);
+        }
+        else {
+          alert("문서 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("문서 삭제 실패:", error);
+        alert("문서 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
 
   return (
     <s.Container>
@@ -152,7 +229,12 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
                 </s.Left>
                 <s.Right>
                   {isTeacher && (
-                    <s.AddSub onClick={(e) => { e.stopPropagation(); navigate(`${dir.id}/make/lesson`); }}>+</s.AddSub>
+                    <>
+                      <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDirectory(dir.id, e); }}>
+                        <IoClose size={16} />
+                      </s.DeleteIcon>
+                      <s.AddSub onClick={(e) => { e.stopPropagation(); navigate(`${dir.id}/make/lesson`); }}>+</s.AddSub>
+                    </>
                   )}
                   <s.Icon>{isExpanded ? <IoIosArrowUp /> : <IoIosArrowDown />}</s.Icon>
                 </s.Right>
@@ -180,6 +262,28 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId, code }) => {
           );
         })}
       </s.Section>
+      {/* 선생님만 디렉토리 추가 가능: 인라인으로 DirectorySelect 사용 */}
+      {isTeacher && (
+        <>
+          {!isAddingDir && (
+            <s.AddButton onClick={() => setIsAddingDir(true)}>
+              + 새 디렉토리 만들기
+            </s.AddButton>
+          )}
+
+          {isAddingDir && (
+            <DirectorySelect
+              classRoomId={classRoomId}
+              initialOpen={true}
+              onDirectoryAdded={(newDir) => {
+                handleDirectoryAdded(newDir);
+                setIsAddingDir(false);
+              }}
+            />
+          )}
+        </>
+      )}
+
     </s.Container>
   );
 };
