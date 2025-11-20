@@ -129,6 +129,15 @@ export const TextAreaBox = styled.textarea`
   }
 `;
 
+export const LoadingBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 1.2rem;
+  color: #6b7280;
+`;
+
 export const ButtonRow = styled.div`
   display: flex;
   gap: 12px;

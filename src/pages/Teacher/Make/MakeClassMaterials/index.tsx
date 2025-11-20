@@ -3,19 +3,40 @@ import * as s from "./styles";
 import Step1 from "@/features/Teacher/MakeMaterials/Step1/Step1";
 import Step2 from "@/features/Teacher/MakeMaterials/Step2/Step2";
 import Step3 from "@/features/Teacher/MakeMaterials/Step3/Step3";
+import { Word, AgentFlowResponse, Doc } from "@/features/Teacher/MakeMaterials/api";
+import { usePostAgentDoc } from "@/features/Teacher/MakeMaterials/hooks/useAgentDoc";
 
 export default function MakeClassMaterials() {
     const [currentStep, setCurrentStep] = useState(1);
-    const [step1Data, setStep1Data] = useState<any>(null);
+    const [agentId, setAgentId] = useState<string | null>(null);
+    const [flowChartWords, setFlowChartWords] = useState<Word[]>([]);
+    const [docs, setDocs] = useState<Doc[]>([]);
 
-    const handleNextStep1 = (data: { title: string; goal: string; keywords: string[]; files: File[] }) => {
-        console.log("Step 1 Data:", data);
-        setStep1Data(data);
-        setCurrentStep(2); // 다음 단계로 이동
-    };
+    const { mutate: postDocMutate, isPending: isDocPosting } = usePostAgentDoc({
+        onSuccess: (response) => {
+            if (response && response.data && response.data.doc && response.data.doc.docs) {
+                setDocs(response.data.doc.docs);
+            }
+            setCurrentStep(currentStep + 1); // Move to Step3
+        },
+        onError: (error) => {
+            alert(`문서 생성에 실패했습니다: ${error.message}`);
+        }
+    });
 
-    const handleNext = () => {
-        setCurrentStep(currentStep + 1);
+    const handleNext = (payload: AgentFlowResponse | { words: Word[] }) => {
+        if ("data" in payload && payload.data && payload.data.flow && payload.data.flow.words) {
+            // From Step1 (AgentFlowResponse)
+            setFlowChartWords(payload.data.flow.words);
+            setAgentId(payload.data.agentId);
+            setCurrentStep(currentStep + 1); // Move to Step2
+        } else if ("words" in payload && agentId) {
+            // From Step2 (words payload)
+            postDocMutate({ agentId, words: payload.words });
+        } else {
+            // General next (e.g., from Step3)
+            setCurrentStep(currentStep + 1);
+        }
     };
 
     return (
@@ -31,11 +52,9 @@ export default function MakeClassMaterials() {
                 ))}
             </s.StepBar>
 
-            {currentStep === 1 && <Step1 onNext={handleNextStep1} />}
-            {currentStep === 2 && <Step2 onNext={handleNext}/>}
-            {currentStep === 3 && <Step3 onNext={handleNext} />}
-
-            {/* ... 다른 단계들 */}
+            {currentStep === 1 && <Step1 onNext={handleNext} />}
+            {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} />}
+            {currentStep === 3 && <Step3 onNext={handleNext} docs={docs} isGenerating={isDocPosting} />}
         </s.Wrapper>
     );
 }
