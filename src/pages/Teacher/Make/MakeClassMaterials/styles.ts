@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   padding: 2rem 10rem;
   background-color: #f9fafb;
-  min-height: 100vh;
+  height: calc(125vh - 50px);
 `;
 
 export const StepBar = styled.div`
