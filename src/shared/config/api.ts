@@ -4,7 +4,6 @@ import qs from 'qs';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const controllerMap = new Map<string, AbortController>();
 
-// Refresh 토큰 함수
 const refreshAccesToken = async (): Promise<string | undefined> => {
   // withCredentials: true를 통해 브라우저가 HttpOnly 쿠키(refreshToken)를 자동으로 전송합니다.
   const res = await axios.post(`${baseUrl}/reissue`, null, { withCredentials: true });
@@ -43,17 +42,17 @@ Customapi.interceptors.response.use(
     const original = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const isExpired = error.response?.status === 401;
 
-    if (isExpired && !original._retry) {
+    if (isExpired && !original._retry && original.url !== '/reissue') {
       original._retry = true;
       try {
         const newToken = await refreshAccesToken();
         if (newToken) {
           localStorage.setItem('accessToken', newToken);
           original.headers['Authorization'] = `Bearer ${newToken}`;
-          return Customapi(original); // 원래 요청 재시도
+          return Customapi(original);
         }
       } catch (err) {
-        console.error('Refresh token 실패:', err);
+        localStorage.removeItem('accessToken');
         window.location.href = '/login';
         return Promise.reject(err);
       }
