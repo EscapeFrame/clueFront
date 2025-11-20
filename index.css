@@ -1,9 +1,5 @@
 html {
-  transform: scale(0.8);
-  transform-origin: top left;
-  width: 125%;
-  height: 125%;
-  overflow: auto; /* Allow scrolling if content overflows */
+  zoom: 0.8; /* Non-standard property for global scaling */
 }
 
 body {
@@ -11,5 +7,5 @@ body {
     margin: 0;
     padding: 0;
     display: block;
-    height: 100%; /* Ensure body takes full height of html */
+    height: 100vh;
 }
