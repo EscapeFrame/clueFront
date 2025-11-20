@@ -22,6 +22,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   initialData,
   onSubmit,
 }) => {
+  console.log('LinkFormModal rendered, isOpen:', isOpen);
   const [formData, setFormData] = useState<LinkFormData>({
     title: '',
     link: '',
