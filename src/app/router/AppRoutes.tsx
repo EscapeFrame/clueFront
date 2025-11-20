@@ -27,6 +27,7 @@ import GenerateProblem from '@/pages/Teacher/Make/GenerateProblem';
 import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
 
 import { LinkSaveRoutes } from '@/linkSave/app/Routes';
+import TCHQuiz from '@/pages/Teacher/Quiz';
 
 interface AppRoutesProps {
   role: string | null;
@@ -72,6 +73,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile/>} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
           <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />
+          <Route path="/quiz" element={<TCHQuiz />} />
         </>
       )}
       {role === 'STU' && (

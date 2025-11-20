@@ -2,7 +2,7 @@ import * as s from "./styles";
 
 type Character =
     | "owl"
-    | "Haeyul"
+    | "haeyul"
     | "panda"
     | "ferret"
     | "I"

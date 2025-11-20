@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as s from '../styles';
 import { colors } from "@/shared/theme/theme.styles";
 
-type OptionKeys = "Haeyul" | "panda" | "ferret" | "koala";
+type OptionKeys = "haeyul" | "panda" | "ferret" | "koala";
 
 type RouletteProps = {
   options: [string, string, string, string];
@@ -11,15 +11,15 @@ type RouletteProps = {
 };
 
 const npcColors: Record<OptionKeys, { bg: string; border: string }> = {
-  Haeyul: { bg: "#FFC0CB", border: "#FF69B4" },
-  panda: { bg: "#E0F2FE", border: "#0EA5E9" },
-  ferret: { bg: "#FEF3C7", border: "#F59E0B" },
-  koala: { bg: "#F3F4F6", border: "#9CA3AF" },
+    haeyul: { bg: colors.npc.haeyul[0], border: colors.npc.haeyul[1] },
+    panda: { bg: colors.npc.panda[0], border: colors.npc.panda[1] },
+    ferret: { bg: colors.npc.ferret[0], border: colors.npc.ferret[1] },
+    koala: { bg: colors.npc.koala[0], border: colors.npc.koala[1] },
 };
 
 export default function RouletteOptions({
   options = ["해율", "판다", "페럿", "코알라"],
-  optionKeys = ["Haeyul", "panda", "ferret", "koala"],
+  optionKeys = ["haeyul", "panda", "ferret", "koala"],
   onSelect = () => { }
 }: Partial<RouletteProps>) {
   const [rotation, setRotation] = useState(0);

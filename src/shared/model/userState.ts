@@ -29,13 +29,13 @@ export const userState = atom<UserState>({
     },
 });
 
-// // 개발시 활성화
+// 개발시 활성화
 // export const userState = atom({
 //    key: 'userState',
 //    default: {
 //        username: '공덕현',
 //        userId: '2201',
-//        role: 'STUDENT', //TEACHER
+//        role: 'TEACHER', 
 //        classCode: 0,
 //    },
 // });
