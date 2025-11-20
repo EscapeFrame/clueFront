@@ -22,7 +22,7 @@ const onGoogleLogin = () => {
 
   const onLogout = async () => {
     try {
-      await Customapi.get("/logout");
+      await Customapi.post("/logout");
     } catch (err) {
       console.error("로그아웃 중 오류:", err);
     } finally {
