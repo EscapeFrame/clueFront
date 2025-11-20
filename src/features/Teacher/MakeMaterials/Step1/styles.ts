@@ -43,28 +43,6 @@ export const Field = styled.div`
   }
 `;
 
-export const UploadBox = styled.div<{ isDragOver?: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  cursor: pointer;
-  flex-direction: column;
-  gap: 0.5rem;
-  color: #6b7280;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: ${({ isDragOver }) => (isDragOver ? "#e0e7ff" : "#f3f4f6")};
-  }
-
-  svg {
-    stroke: #9ca3af;
-  }
-`;
-
 export const KeywordList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -94,56 +72,41 @@ export const KeywordItem = styled.div`
   }
 `;
 
-export const FilesList = styled.div`
-  margin-top: 1rem;
+export const LinkInputWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 `;
 
-export const FileItem = styled.div`
+export const LinkButton = styled.button`
+  all: unset;
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 50%;
+  color: #9ca3af;
 
-  .left {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+  &:hover {
+    background-color: #f3f4f6;
+    color: #4b5563;
   }
+`;
 
-  .meta {
-    display: flex;
-    flex-direction: column;
-  }
+export const AddLinkButton = styled.button`
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: ${theme.colors.blue[800]};
+  margin-top: 0.5rem;
 
-  .name {
-    font-weight: 500;
-    color: #374151;
-  }
-
-  .size {
-    font-size: 0.875rem;
-    color: #6b7280;
-  }
-
-  button {
-    all: unset;
-    cursor: pointer;
-    color: #9ca3af;
-    padding: 0.25rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-      background-color: #f3f4f6;
-      color: #4b5563;
-    }
+  &:hover {
+    color: #004ADF;
   }
 `;
 
@@ -199,14 +162,5 @@ export const Button = styled.button<{ variant: "primary" | "secondary" }>`
     border-color: #d1d5db;
     cursor: not-allowed;
   `}
-`;
-
-export const FileIcon = styled.svg`
-  width: 20px;
-  height: 20px;
-  viewbox: 0 0 24 24;
-  fill: none;
-  stroke: #6b7280;
-  stroke-width: 1.5;
 `;
 

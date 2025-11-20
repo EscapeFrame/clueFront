@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
+
 import * as s from './styles';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/entities/UI/Modal';
 import { submitMarkDown } from '../api/useMarkDown';
 import { useSetRecoilState } from 'recoil';
@@ -35,7 +36,6 @@ interface AIFeedback {
 // AI 피드백 컴포넌트 (백엔드 연결 전 임시 데이터)
 const AIAgentView = ({ mdContent }: { mdContent: string }) => {
   const [feedback, setFeedback] = useState<AIFeedback | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // TODO: 백엔드 API 연결
@@ -72,9 +72,7 @@ const AIAgentView = ({ mdContent }: { mdContent: string }) => {
     });
   }, [mdContent]);
 
-  if (loading) {
-    return <div style={{ padding: '20px' }}>로딩 중...</div>;
-  }
+  // 로딩 상태는 현재 사용되지 않음
 
   if (!feedback) {
     return <div style={{ padding: '20px' }}>피드백이 없습니다.</div>;
@@ -144,11 +142,23 @@ const AIAgentView = ({ mdContent }: { mdContent: string }) => {
 };
 
 export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoomId: string, directoryId: string }) {
-    const defaultTemplate = '# 마크다운을 작성해보세요\n\n## 제목\n- 목록 1\n- 목록 2\n\n**굵은 글씨**와 *기울임체*도 사용할 수 있습니다.';
-    const [mdContent, setMdContent] = useState(defaultTemplate);
+  const defaultTemplate = '# 마크다운을 작성해보세요\n\n## 제목\n- 목록 1\n- 목록 2\n\n**굵은 글씨**와 *기울임체*도 사용할 수 있습니다.';
+
+  // 문자열에 리터럴 "\\n"이 들어있는 경우 실제 개행으로 변환
+  const normalizeContent = (raw: string) => {
+    if (!raw) return raw;
+    // 이미 실제 줄바꿈이 포함되어 있으면 그대로 반환
+    if (raw.includes('\n') && !raw.includes('\\n')) return raw;
+    // 리터럴 "\\n" -> 실제 개행
+    return raw.replace(/\\n/g, '\n');
+  };
+
+  const [mdContent, setMdContent] = useState(() => normalizeContent(defaultTemplate));
     const navigate = useNavigate();
     const [title, setTitle] = useState("")
-    const setMarkdownSections = useSetRecoilState(markdownSectionsState);
+  // setMarkdownSections은 문제 생성 기능과 연결될 예정입니다.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setMarkdownSections = useSetRecoilState(markdownSectionsState);
 
     // 모달 상태
     const [isCancelOpen, setIsCancelOpen] = useState(false);
@@ -157,7 +167,8 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
     const [viewerMode, setViewerMode] = useState<'preview' | 'aiAgent'>('preview');
 
     // 마크다운에서 #으로 시작하는 대제목 파싱
-    const parseMarkdownSections = (content: string): MarkdownSection[] => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const parseMarkdownSections = (content: string): MarkdownSection[] => {
         const sections: MarkdownSection[] = [];
         const lines = content.split('\n');
         let currentSection: MarkdownSection | null = null;
@@ -190,16 +201,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
         return sections;
     };
 
-    // 문제 생성 페이지로 이동
-    const handleGenerateProblem = () => {
-        const sections = parseMarkdownSections(mdContent);
-        if (sections.length === 0) {
-            alert('마크다운에 #으로 시작하는 대제목이 없습니다.');
-            return;
-        }
-        setMarkdownSections(sections);
-        navigate(`/class/${classRoomId}/${directoryId}/make/lesson/markdown/problem`);
-    };
+  // (문제 생성 기능은 현재 사용되지 않음)
 
     // 파일 업로드 핸들러
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -209,7 +211,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
         const reader = new FileReader();
         reader.onload = (e) => {
             const content = e.target?.result as string;
-            setMdContent(content);
+            setMdContent(normalizeContent(content));
         };
         reader.readAsText(file);
     };
@@ -233,10 +235,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
         setIsCancelOpen(true);
     }
 
-    // 이전
-    const previous = () => {
-        setIsPreviousOpen(true);
-    }
+  // 이전 핸들러는 모달 내부에서 직접 navigate를 사용하므로 별도 함수가 필요하지 않습니다.
 
     // 완료
     const end = async () => {
@@ -297,14 +296,14 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
                     </s.FileUploadButton>
                 </s.FileUploadWrapper>
                 <s.EditorWrapper data-color-mode="light">
-                    <MDEditor
-                        height="100%"
-                        value={mdContent}
-                        autoFocus={true}
-                        style={{ whiteSpace: 'pre-wrap' }}
-                        onChange={(value: string | undefined) => setMdContent(value || '')}
-                        preview="edit"
-                    />
+          <MDEditor
+            height="100%"
+            value={mdContent}
+            autoFocus={true}
+            style={{ whiteSpace: 'pre-wrap' }}
+            onChange={(value: string | undefined) => setMdContent(normalizeContent(value || ''))}
+            preview="edit"
+          />
                 </s.EditorWrapper>
                 <s.BottomButtons>
                     <s.AIFeedbackButton onClick={() => setViewerMode('aiAgent')}>

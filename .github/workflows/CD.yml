@@ -1,4 +1,3 @@
-# CLUE CD Template (React Version)
 name: React Deploy to EC2
 
 on:
@@ -15,40 +14,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1. Node.js 18 버전 설정 (Java 대신)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
           
-      # 2. .env.production 파일 설정 (application.properties 대신)
-      # GitHub Secret에 'ENV_PRODUCTION'이라는 이름으로 .env 파일 내용을 등록해야 합니다.
       - name: Create .env.production file
         run: |
           echo "${{ secrets.ENV_PRODUCTION }}" > ./.env.production
 
-      # 3. 의존성 설치 (Gradle 대신 npm)
       - name: Install dependencies
         run: npm ci
 
-      # 4. React 앱 빌드 (Gradle 대신 npm)
       - name: Build React app
         run: npm run build
 
-      # 5. 빌드된 파일 압축하기 (.jar 대신 'build' 폴더를 zip)
-      # 'build' 폴더 안의 내용물을 'deploy.zip'으로 압축합니다.
       - name: Make zip file
         run: cd build && zip -r ../deploy.zip .
 
-      # 6. SCP로 EC2에 빌드된 파일(zip) 전송하기
       - name: SCP to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST_F }}
-          username: ${{ secrets.EC2_USER_F }} # ubuntu
+          username: ${{ secrets.EC2_USER_F }}
           key: ${{ secrets.EC2_SECRETKEY_F }}
-          source: "deploy.zip" # .jar 대신 zip 파일
-          target: /home/ubuntu/clue # Spring과 동일한 경로에 전송
+          source: "deploy.zip" 
+          target: /home/ubuntu/clue 
 
   deploy:
     needs: build
@@ -56,27 +47,20 @@ jobs:
 
     steps:
 
-      # 7. SSH로 EC2에 접속하여 배포 스크립트 실행
       - name: SSH into EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST_F }}
-          username: ${{ secrets.EC2_USER_F }} # ubuntu
+          username: ${{ secrets.EC2_USER_F }}
           key: ${{ secrets.EC2_SECRETKEY_F }}
           script_stop: true
           script: |
-            # 1. Spring과 동일한 작업 디렉토리로 이동
             cd /home/ubuntu/clue
             
-            # 2. Nginx가 서빙하는 React 앱의 기존 파일 삭제
-            #    (경로는 EC2의 Nginx 설정에 따라 다릅니다. 예: /var/www/clue)
             sudo rm -rf /var/www/clue/*
             
-            # 3. 새 'deploy.zip' 파일의 압축을 Nginx 서빙 경로에 풀기
             sudo unzip -o deploy.zip -d /var/www/clue
             
-            # 4. Nginx 재시작 (java -jar 대신)
             sudo systemctl restart nginx
             
-            # 5. 전송된 zip 파일 삭제
             rm deploy.zip

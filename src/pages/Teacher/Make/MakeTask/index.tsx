@@ -42,6 +42,8 @@ const MakeTask: React.FC = () => {
   const [linkPlatform, setLinkPlatform] = useState<"drive" | "youtube" | "notion" | "link" | null>(null);
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const isFormValid = !!subject && !!dueDate && !!classRoomId;
 
   // 파일 선택
@@ -108,9 +110,13 @@ const MakeTask: React.FC = () => {
     setIsLinkModalOpen(false);
   };
 
+  const handleDeleteAttachment = (id: string) => {
+    setAttachments((prev) => prev.filter((att) => att.id !== id));
+  };
+
   // 과제 생성
   const handleMakeTask = async () => {
-    if (!isFormValid) return;
+    if (!isFormValid || isSubmitting) return;
 
     // 날짜 유효성 검사
     if (startDate && dueDate && startDate > dueDate) {
@@ -118,6 +124,7 @@ const MakeTask: React.FC = () => {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       console.log("과제 생성 API 호출 중...");
       const response = await SendMakeTask({
@@ -150,6 +157,8 @@ const MakeTask: React.FC = () => {
       console.error("과제 생성 또는 첨부파일 업로드 실패:", error);
       const msg = error instanceof Error ? error.message : "알 수 없는 오류";
       alert("과제 생성에 실패했습니다: " + msg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -167,13 +176,14 @@ const MakeTask: React.FC = () => {
         attachments={attachments}
         setAttachments={setAttachments}
         openUploadModal={() => setIsFileModalOpen(true)}
-        openLinkModal={platform => { setLinkPlatform(platform); setIsLinkModalOpen(true); }}
+        openLinkModal={platform => { setLinkPlatform(platform ?? null); setIsLinkModalOpen(true); }}
+        onDeleteAttachment={handleDeleteAttachment}
       />
 
       <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
       <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} />
 
-      <Button text="완료" disabled={!isFormValid} onClick={handleMakeTask} />
+      <Button text="완료" disabled={!isFormValid || isSubmitting} onClick={handleMakeTask} />
 
       {/* 파일 업로드 모달 */}
       {isFileModalOpen && (

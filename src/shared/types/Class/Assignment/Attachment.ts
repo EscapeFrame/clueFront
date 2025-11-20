@@ -96,12 +96,14 @@ export interface AssignmentComponentProps {
 // DetailAssignment에 필요한 학생 제출 현황 타입
 export interface DetailAssignmentStudent {
   userName: string;          // 학생 이름
-  classNumberGrade: number;  // 학생 학번
+  grade: number;             // 학년
+  classNo: number;           // 반
+  number: number;            // 번호
   isSubmitted: boolean;      // 제출 여부
-  contentId: string;         // 과제 아이디
+  submissionId: string;      // 제출 아이디 (API의 submissionId에 해당)
   files?: AssignmentFile[];
-  userImg?: string | null; // 이미지 URL
-  userSubmitDate?: string | null; // yyyy-mm-dd 형식
+  userImg?: string | null;   // 이미지 URL
+  submittedAt?: string | null; // 제출일 (API의 submittedAt에 해당)
 }
 
 // DetailAssignment API/컴포넌트 전체 타입

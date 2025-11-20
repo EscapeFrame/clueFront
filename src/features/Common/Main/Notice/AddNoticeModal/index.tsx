@@ -173,6 +173,10 @@ export default function AddNoticeModal({
     setLinkInput('');
   };
 
+  const handleDeleteAttachment = (id: string) => {
+    setAttachments((prev) => prev.filter((att) => att.id !== id));
+  };
+
   return (
     <Modal
       title={isEdit ? "공지/안내 내용 수정" : "공지/안내 내용 작성"}
@@ -244,6 +248,7 @@ export default function AddNoticeModal({
             setAttachments={setAttachments}
             openUploadModal={() => setIsFileModalOpen(true)}
             openLinkModal={() => setIsLinkModalOpen(true)}
+            onDeleteAttachment={handleDeleteAttachment}
           />
         </s.FormRow>
       </s.Form>

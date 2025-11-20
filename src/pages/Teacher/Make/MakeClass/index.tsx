@@ -106,6 +106,7 @@ export default function MakeClass() {
         width="100%"
         type={0}
         onClick={handleSubmit}
+        disabled={loading}
       />
     </s.Container>
   );

@@ -11,9 +11,8 @@ export interface WorkflowNode {
     iconNumber: number;
 }
 
-export interface WorkflowEdge {
-    from: string;
-    to: string;
+export interface WorkflowState {
+    nodes: WorkflowNode[];
 }
 
 export interface Word {
@@ -22,15 +21,10 @@ export interface Word {
     iconNumber: number;
 }
 
-export interface WorkflowState {
-    nodes: WorkflowNode[];
-}
-
 export interface Step2Props {
-    initialWorkflow?: WorkflowState;
+    words: Word[];
     onBack?: () => void;
     onNext?: (payload: { words: Word[] }) => void;
-    initialWords?: { words: Word[] };
 }
 
 const workflowIconMap: Record<WorkflowIconKey, React.ReactNode> = {
@@ -66,7 +60,7 @@ const defaultWorkflow: WorkflowState = {
     ],
 };
 
-const processInitialWords = (words?: Word[]): WorkflowState => {
+const processInitialWords = (words: Word[]): WorkflowState => {
     if (!words || words.length === 0) {
         return defaultWorkflow;
     }
@@ -81,17 +75,15 @@ const processInitialWords = (words?: Word[]): WorkflowState => {
     return { nodes: sortedNodes };
 };
 
-export default function Step2({ initialWorkflow, onBack, onNext, initialWords }: Step2Props) {
-    const [workflow, setWorkflow] = useState<WorkflowState>(() =>
-        initialWords ? processInitialWords(initialWords.words) : initialWorkflow ?? defaultWorkflow,
-    );
+export default function Step2({ words, onBack, onNext }: Step2Props) {
+    const [workflow, setWorkflow] = useState<WorkflowState>(() => processInitialWords(words));
     const [draggingId, setDraggingId] = useState<string | null>(null);
     const [hoverEdgeIndex, setHoverEdgeIndex] = useState<number | null>(null);
     const [hoverNodeId, setHoverNodeId] = useState<string | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [draftTitle, setDraftTitle] = useState<string>("");
 
-    const edges = useMemo<WorkflowEdge[]>(() => {
+    const edges = useMemo(() => {
         return workflow.nodes.slice(1).map((node, index) => ({
             from: workflow.nodes[index].id,
             to: node.id,
