@@ -24,13 +24,13 @@ export default function MakeClassMaterials() {
         }
     });
 
-    const handleNext = (payload: AgentFlowResponse | { words: Word[] }) => {
-        if ("data" in payload && payload.data && payload.data.flow && payload.data.flow.words) {
+    const handleNext = (payload?: AgentFlowResponse | { words: Word[] }) => {
+        if (payload && "data" in payload && payload.data && payload.data.flow && payload.data.flow.words) {
             // From Step1 (AgentFlowResponse)
             setFlowChartWords(payload.data.flow.words);
             setAgentId(payload.data.agentId);
             setCurrentStep(currentStep + 1); // Move to Step2
-        } else if ("words" in payload && agentId) {
+        } else if (payload && "words" in payload && agentId) {
             // From Step2 (words payload)
             postDocMutate({ agentId, words: payload.words });
         } else {
@@ -51,6 +51,7 @@ export default function MakeClassMaterials() {
                     </s.Step>
                 ))}
             </s.StepBar>
+
 
             {currentStep === 1 && <Step1 onNext={handleNext} />}
             {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} />}
