@@ -5,7 +5,7 @@ import { colors } from '@/shared/theme/theme.styles';
 export const NavbarWrapper = styled.div`
   position: fixed;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 50px;
   padding: 0.5rem 8rem;
   background-color: rgba(255, 255, 255, 0.8);
