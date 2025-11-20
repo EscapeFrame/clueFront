@@ -5,9 +5,8 @@ import { fonts } from '@/shared/theme/font.styles';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(125vh - 50px);
   background-color: ${colors.gray[1]};
-  overflow: hidden;
 `;
 
 export const HeaderSection = styled.div`

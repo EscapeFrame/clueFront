@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as s from "./styles";
-import { Doc } from "../../api"; // Import Doc type
+import { Doc } from "../api"; // Import Doc type
 
 interface Step3Props {
     docs: Doc[];
