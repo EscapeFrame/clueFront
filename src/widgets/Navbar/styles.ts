@@ -6,7 +6,7 @@ export const NavbarWrapper = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  height: 50px;
+  height: 55px;
   padding: 0.5rem 8rem;
   background-color: rgba(255, 255, 255, 0.8);
   outline: 0.5px solid ${colors.gray[3]};
@@ -45,8 +45,11 @@ export const LogoImg = styled.img`
   margin-left: auto;
   cursor: pointer;
 
-  height: 40px;
+  height: 44px;
   margin-right: 0.5rem; /* 텍스트랑 간격 */
+  @media (max-width: 480px) {
+    height: 36px;
+  }
 `;
 
 export const BrandText = styled.span`
@@ -74,7 +77,7 @@ export const NavItem = styled.a`
   margin-right: 1.25rem;
   text-decoration: none;
   color: ${colors.black};
-  ${fonts.P2}
+  ${fonts.P3}
   display: flex;
   align-items: center; /* 텍스트 세로 중앙정렬 */
   height: 100%; /* 높이 꽉 채워서 정렬 안정화 */
