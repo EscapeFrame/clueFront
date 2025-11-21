@@ -8,8 +8,8 @@ export const NavbarWrapper = styled.div`
   width: 100%;
   height: 55px;
   padding: 0.5rem 8rem;
-  background-color: rgba(255, 255, 255, 0.8);
-  outline: 0.5px solid ${colors.gray[3]};
+  background-color: ${colors.white};
+  border-bottom: 1px solid ${colors.gray[2]};
   z-index: 1000;
 
   min-width: 690px;
