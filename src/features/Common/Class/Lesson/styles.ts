@@ -25,7 +25,7 @@ export const SettingButton = styled.button`
 `;
 
 export const AddButton = styled.button`
-  background: ${colors.gray[3]};
+  background: ${colors.gray[2]};
   color: ${colors.black};
   border: none;
   cursor: pointer;
@@ -33,10 +33,13 @@ export const AddButton = styled.button`
   width: 100%;
   padding: 0.5rem;
   border-radius: 8px;
+  transition: background 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
 
   &:hover {
-    background: ${colors.blue.light4};
-    color: ${colors.white};
+    background: ${colors.gray[4]};
+    color: ${colors.black};
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(18, 36, 63, 0.08);
   }
 `;
 
