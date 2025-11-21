@@ -4,8 +4,7 @@ import { theme } from "@/shared/theme/theme.styles";
 
 export const Wrapper = styled.div`
   position: fixed;
-  width: 125vh;
-  min-height: 125vh;
+  width: 100%;
+  min-height: 100%;
   background-color: ${theme.colors.gray[200]};
-  z-index: 1000;
 `;

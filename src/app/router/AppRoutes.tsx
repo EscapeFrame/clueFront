@@ -24,6 +24,7 @@ import TCHMakeFile from '@/pages/Teacher/Make/MakeFile';
 import MarkDownViewerPage from '@/features/Common/Class/Lesson/markdown/Markdown';
 import GenerateProblem from '@/pages/Teacher/Make/GenerateProblem';
 import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
+import LinkSaveMain from '@/linkSave/pages/Main';
 
 import { LinkSaveRoutes } from '@/linkSave/app/Routes';
 
@@ -42,7 +43,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LinkSaveMain />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
