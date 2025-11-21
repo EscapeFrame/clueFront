@@ -255,6 +255,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                       {sub.type === 'docs' && <IoDocumentOutline />}
                     </s.Check>
                     <s.Name>{sub.name}</s.Name>
+                    {isTeacher && (
+                      <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDocument(sub.id, e); }}>
+                        <IoClose size={14} />
+                      </s.DeleteIcon>
+                    )}
                   </s.SubItem>
                 ))}
               </s.SubDirectoryList>
