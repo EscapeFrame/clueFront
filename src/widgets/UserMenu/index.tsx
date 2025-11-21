@@ -42,7 +42,7 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
   }
 
   const handleLogout = async () => {
-    await Customapi.post("/logout");
+    await Customapi.post("/api/logout");
     localStorage.removeItem("accessToken");
     removeAuthInfo();
     setUser({
