@@ -24,6 +24,7 @@ import TCHMakeFile from '@/pages/Teacher/Make/MakeFile';
 import MarkDownViewerPage from '@/features/Common/Class/Lesson/markdown/Markdown';
 import GenerateProblem from '@/pages/Teacher/Make/GenerateProblem';
 import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
+import LinkSaveMain from '@/linkSave/pages/Main';
 
 import { LinkSaveRoutes } from '@/linkSave/app/Routes';
 
@@ -67,8 +68,8 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/markdown" element={<TCHMarkDown />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/markdown/problem" element={<GenerateProblem />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson" element={<TCHMakeLesson />} />
-          <Route path="/class/:classRoomId/:directoryId/make/lesson/google-slide" element={<TCHMakeSlide/>} />
-          <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile/>} />
+          <Route path="/class/:classRoomId/:directoryId/make/lesson/google-slide" element={<TCHMakeSlide />} />
+          <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile />} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
           <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />
         </>
@@ -79,13 +80,13 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class" element={<STUMyClass />} />
           <Route path="/class/:classRoomId" element={<STUClass />} />
           <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
+          <Route path="/linksave/*" element={<LinkSaveRoutes />} />
         </>
       )}
 
       {isAuthenticated && (
         <>
           <Route path="/setting" element={<Setting />} />
-          <Route path="/linksave/*" element={<LinkSaveRoutes />} />
           <Route path="/register" element={<RegisterPage />} />
         </>
       )}

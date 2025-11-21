@@ -5,25 +5,30 @@ import clueLogo from '../../../public/clueLogo.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/hooks/useAccessToken'; // Import useAuth hook
 
-
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth(); // Get user from useAuth hook
 
+  // CLUE 메인 페이지로 이동
   const Main = () => {
-    navigate("/");
-  }
+    navigate("/"); // CLUE 메인 페이지 경로로 이동
+  };
 
+  // LinkSave 메인 페이지로 이동
   const LinkSave = () => {
-    navigate("/linksave");
-  }
+    navigate("/linksave"); // LinkSave 메인 페이지 경로로 이동
+  };
 
   const isLinkSavePage = location.pathname.startsWith('/linksave');
 
-  const message = () => {
-    alert("아직 개발되지 않은 기능입니다.")
-  }
+  const handleLinkSaveClick = () => {
+    if (isLinkSavePage) {
+      Main(); // 현재 페이지가 /linksave라면 CLUE 메인 페이지로 이동
+    } else {
+      LinkSave(); // 그렇지 않으면 LinkSave 메인 페이지로 이동
+    }
+  };
 
   const formatStudentNumber = (grade?: number, classNo?: number, number?: number): string => {
     if (grade === undefined || classNo === undefined || number === undefined) {
@@ -52,8 +57,8 @@ export default function Navbar() {
                   <s.NavItem href="/class">내 학습실</s.NavItem>
                 </li>
                 <li>
-                  <s.NavItem onClick={() => message()} href="#action1">
-                    수강신청
+                  <s.NavItem onClick={handleLinkSaveClick}>
+                    {isLinkSavePage ? 'CLUE 이동' : 'LinkSave 이동'}
                   </s.NavItem>
                 </li>
               </>
