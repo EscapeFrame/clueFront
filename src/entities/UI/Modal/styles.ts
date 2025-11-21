@@ -58,18 +58,23 @@ export const CloseBtn = styled.button`
 
 export const Notes = styled.p`
   margin-top: 8px;
+  margin-bottom: 6px;
   color: ${theme.colors.gray[500]};
   ${fonts.P2};
 `;
 
 export const Content = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 `;
 
 export const Footer = styled.footer`
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 8px;
 `;
 
 export const DropZone = styled.label<{ $isDragOver: boolean }>`
