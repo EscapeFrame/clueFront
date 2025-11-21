@@ -149,14 +149,27 @@ export default function EditNoticeModal({
     };
 
     try {
-      const result = await noticeApi.patchNotice({ noticeId: initialData.noticeId, metadata, files: filesToUpload});
+      // 2. 메타데이터만 업데이트
+      const result = await noticeApi.patchNotice({ noticeId: initialData.noticeId, metadata });
 
       if (typeof result === 'number' && result >= 400) {
         alert(`공지사항 수정에 실패했습니다. (에러코드: ${result})`);
-      } else {
-        alert(`공지사항이 성공적으로 수정되었습니다.`);
-        onSuccess();
+        setIsSubmitting(false);
+        return;
       }
+
+      // 3. 새 파일이나 링크가 있으면 backend 계약에 따라 POST /api/notice/{id} (metadata + files)
+      if (filesToUpload.length > 0 || urlsToUpload.length > 0) {
+        const postStatus = await noticeApi.postNoticeForUpdate(initialData.noticeId, metadata, filesToUpload);
+        if (typeof postStatus === 'number' && postStatus >= 400) {
+          alert(`첨부파일/링크 추가에 실패했습니다. (에러코드: ${postStatus})`);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      alert(`공지사항이 성공적으로 수정되었습니다.`);
+      onSuccess();
     } catch (error) {
       console.error('공지사항 수정 오류:', error);
       alert(`공지사항 수정 중 오류가 발생했습니다.`);

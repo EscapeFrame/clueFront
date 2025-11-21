@@ -1,5 +1,5 @@
 import CustomApi from "@/shared/config/api";
-import { NoticeItem, PostNoticeItem, DetailNoticeItem, NoticeDocument } from "@/shared/types/notice";
+import { NoticeItem, PostNoticeItem, DetailNoticeItem } from "@/shared/types/notice";
 import { AxiosError } from "axios";
 
 // 아직 적힌거 없음
@@ -46,23 +46,17 @@ export const noticeApi = {
   patchNotice: async (data: {
     noticeId: string;
     metadata: PostNoticeItem['metadata'];
-    files: File[];
+    files?: File[];
   }) => {
-    const formData = new FormData();
-    formData.append(
-      "metadata",
-      new Blob([JSON.stringify(data.metadata)], { type: "application/json" }),
-    );
-
-    if (data.files && data.files.length > 0) {
-      data.files.forEach((file) => {
-        formData.append("files", file);
-      });
-    }
+    const payload = {
+      type: data.metadata.type,
+      title: data.metadata.title,
+      content: data.metadata.content,
+    };
 
     try {
-      const response = await CustomApi.patch(`/api/notice/${data.noticeId}`, formData, {
-        headers: { 'Content-Type': undefined },
+      const response = await CustomApi.patch(`/api/notice/${data.noticeId}`, payload, {
+        headers: { 'Content-Type': 'application/json' },
       });
       return response.data;
     } catch (error) {
@@ -102,7 +96,7 @@ export const noticeApi = {
     noticeData: Partial<NoticeItem>,
   ): Promise<NoticeItem | number> => {
     try {
-      const res = await CustomApi.put(`/api/notice/${noticeId}`, noticeData);
+      const res = await CustomApi.patch(`/api/notice/${noticeId}`, noticeData);
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (error) {
@@ -142,6 +136,38 @@ export const noticeApi = {
       return res.status;
     } catch (error) {
       console.error("공지사항 첨부파일 삭제 실패:", error);
+      const axiosError = error as AxiosError;
+      return axiosError.response?.status || 500;
+    }
+  },
+
+  // 공지사항 수정 시 metadata + files 전송 (파일 또는 링크 추가 시 사용)
+  postNoticeForUpdate: async (
+    noticeId: string,
+    metadata: PostNoticeItem['metadata'],
+    files: File[],
+  ): Promise<number> => {
+    try {
+      const formData = new FormData();
+
+      // metadata JSON을 metadata 필드로 첨부
+      formData.append(
+        'metadata',
+        new Blob([JSON.stringify({ fileInfo: metadata.fileInfo || [], urls: metadata.urls || [] })], { type: 'application/json' }),
+      );
+
+      if (files && files.length > 0) {
+        files.forEach((file) => formData.append('files', file));
+      } else {
+        formData.append('files', new Blob([]), '');
+      }
+
+      const res = await CustomApi.post(`/api/notice/${noticeId}`, formData, {
+        headers: { 'Content-Type': undefined },
+      });
+      return res.status;
+    } catch (error) {
+      console.error('공지사항 수정용 첨부파일 업로드 실패:', error);
       const axiosError = error as AxiosError;
       return axiosError.response?.status || 500;
     }
