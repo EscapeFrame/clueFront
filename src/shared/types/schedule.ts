@@ -16,16 +16,25 @@ export interface ScheduleItem {
 }
 
 export function convertToScheduleItem(responses: Response[]): ScheduleItem[] {
+  const normalizeSubject = (s: string | undefined) => {
+    if (!s) return '';
+    // 앞에 붙은 '*' 또는 공백을 제거
+    return s.replace(/^\s*\*+\s*/, '').trim();
+  };
+
   return responses
     .map(item => {
       const mappedDay = dayMap[item.dayOfWeek];
       if (!mappedDay) return null; // 매핑 안 되면 버림
 
       const periodNum = Number(item.period);
+      const rawSubject = item.subject;
+      const subject = periodNum === 0 ? '점심시간' : normalizeSubject(rawSubject);
+
       return {
         day: mappedDay,
         period: periodNum,
-        subject: periodNum === 0 ? '점심시간' : item.subject, // 0교시 = 점심시간
+        subject,
       };
     })
     .filter((item): item is ScheduleItem => item !== null); // null 제거

@@ -50,7 +50,6 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
       userId: '',
       email: '',
       role: '',
-      classCode: 0,
       grade: 0,
       classNo: 0,
       number: 0,

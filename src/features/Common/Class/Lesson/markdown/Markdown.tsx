@@ -7,8 +7,8 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { getMarkDown } from '../../api/class/useMarkdown';
 import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
-import { IoChatbubbleOutline } from 'react-icons/io5';
-import { AiOutlineQuestionCircle } from 'react-icons/ai';
+// import { IoChatbubbleOutline } from 'react-icons/io5';
+// import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import { IoIosArrowDown } from 'react-icons/io';
 
 interface Document {
@@ -87,7 +87,7 @@ const Sidebar = () => {
           <IoListOutline />
           <span>커리큘럼</span>
         </s.TabButton>
-        <s.TabButton 
+        {/* <s.TabButton 
           active={activeTab === 'chat'} 
           onClick={() => setActiveTab('chat')}
         >
@@ -100,7 +100,7 @@ const Sidebar = () => {
         >
           <AiOutlineQuestionCircle />
           <span>질문</span>
-        </s.TabButton>
+        </s.TabButton> */}
       </s.TopTabs>
 
       {activeTab === 'curriculum' && (

@@ -8,7 +8,6 @@ import * as s from './styles';
 interface RegisterData {
   username: string;
   email: string;
-  classCode: string;
   role: string;
   image?: File;
 }
@@ -41,7 +40,6 @@ function RegisterPage() {
           setRegisterData({
             username: data.username,
             email: data.email,
-            classCode: '',
             role: data.role,
           });
           if (data.email) {

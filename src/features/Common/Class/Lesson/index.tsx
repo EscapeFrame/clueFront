@@ -10,7 +10,7 @@ import { IoClose } from "react-icons/io5";
 import * as s from './styles';
 
 import { Directory, LessonProps } from '@/shared/types/Class/Lesson';
-import { getLessonDirectories, getClassCode } from '../api';
+import { getLessonDirectories } from '../api';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
@@ -65,7 +65,6 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       if (classInfo.code) {
         setLocalCode(classInfo.code);
       }
-      setCode(await getClassCode(classRoomId));
     } catch (err) {
       console.error(err);
     } finally {
@@ -255,6 +254,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                       {sub.type === 'docs' && <IoDocumentOutline />}
                     </s.Check>
                     <s.Name>{sub.name}</s.Name>
+                    {isTeacher && (
+                      <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDocument(sub.id, e); }}>
+                        <IoClose size={14} />
+                      </s.DeleteIcon>
+                    )}
                   </s.SubItem>
                 ))}
               </s.SubDirectoryList>

@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import * as s from './styles';
-import { FaGoogleDrive, FaYoutube, FaLink } from "react-icons/fa";
-import { SiNotion } from "react-icons/si";
+import { FaLink } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
 
 interface Attachment {
@@ -39,11 +38,8 @@ const AttachmentBox: React.FC<Props> = ({
     onClick: () => void;
     icon: ReactNode;
   }[] = [
-      { label: "Drive", platform: "drive", onClick: () => openLinkModal?.("drive"), icon: <FaGoogleDrive /> },
-      { label: "YouTube", platform: "youtube", onClick: () => openLinkModal?.("youtube"), icon: <FaYoutube /> },
-      { label: "Notion", platform: "notion", onClick: () => openLinkModal?.("notion"), icon: <SiNotion /> },
-      { label: "link", platform: "link", onClick: () => openLinkModal?.("link"), icon: <FaLink /> },
-      { label: "Upload", onClick: openUploadModal, icon: <FiUpload /> },
+  { label: "link", platform: "link", onClick: () => openLinkModal?.("link"), icon: <FaLink /> },
+  { label: "Upload", onClick: openUploadModal, icon: <FiUpload /> },
     ];
 
   return (
