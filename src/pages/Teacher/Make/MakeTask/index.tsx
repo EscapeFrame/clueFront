@@ -23,12 +23,12 @@ interface Attachment {
 const MakeTask: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId?: string }>();
   const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
+  const todayLocal = dayjs().format('YYYY-MM-DDTHH:mm');
 
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(today);
-  const [dueDate, setDueDate] = useState("");
+  const [startDate, setStartDate] = useState<string>(todayLocal);
+  const [dueDate, setDueDate] = useState<string>('');
   const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   // 파일 업로드 모달
@@ -118,9 +118,9 @@ const MakeTask: React.FC = () => {
   const handleMakeTask = async () => {
     if (!isFormValid || isSubmitting) return;
 
-    // 날짜 유효성 검사
-    if (startDate && dueDate && startDate > dueDate) {
-      alert('시작일이 마감일보다 느립니다.');
+    // 날짜 유효성 검사 (시간 포함)
+    if (startDate && dueDate && dayjs(startDate).isAfter(dayjs(dueDate))) {
+      alert('시작일이 마감일보다 늦습니다.');
       return;
     }
 
@@ -131,8 +131,8 @@ const MakeTask: React.FC = () => {
         classId: classRoomId!,
         title: subject,
         content: description,
-        start_date: dayjs(startDate).toISOString().slice(0, 16),
-        end_date: dayjs(dueDate).toISOString().slice(0, 16),
+  start_date: dayjs(startDate).toISOString(),
+  end_date: dayjs(dueDate).toISOString(),
       });
       
       const assignmentId = response;
@@ -180,8 +180,8 @@ const MakeTask: React.FC = () => {
         onDeleteAttachment={handleDeleteAttachment}
       />
 
-      <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
-      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} />
+  <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} showTime />
+  <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} showTime />
 
       <Button text="완료" disabled={!isFormValid || isSubmitting} onClick={handleMakeTask} />
 

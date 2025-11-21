@@ -4,7 +4,7 @@ import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   background-color: ${theme.colors.white};
-  padding: 2rem 16rem;
+  padding: 2rem 30rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

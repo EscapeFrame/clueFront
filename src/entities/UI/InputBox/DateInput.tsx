@@ -8,10 +8,12 @@ export interface DateInputProps {
   id?: string; 
   required?: boolean; 
   min?: string;
+  showTime?: boolean;
 }
 
 export default function DateInput({
   label,value,onChange,id,required, min
+  , showTime = false
 }: DateInputProps) {
   return (
     <s.Wrapper>
@@ -20,7 +22,8 @@ export default function DateInput({
       </s.Label>
       <s.InputWrapper>
         <s.Input
-          type="date" id={id} value={value} onChange={onChange} required={required} min={min}
+          type={showTime ? 'datetime-local' : 'date'}
+          id={id} value={value} onChange={onChange} required={required} min={min}
         />
       </s.InputWrapper>
     </s.Wrapper>
