@@ -58,7 +58,7 @@ export default function Navbar() {
                 </li>
                 <li>
                   <s.NavItem onClick={handleLinkSaveClick}>
-                    {isLinkSavePage ? 'CLUE 이동' : 'LinkSave 이동'}
+                    {isLinkSavePage ? 'CLUE' : 'LinkSave'}
                   </s.NavItem>
                 </li>
               </>
