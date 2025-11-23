@@ -105,6 +105,23 @@ export const AssignmentsApi = {
     }
   },
 
+  // 링크 추가: assignmentId에 링크(들) 추가
+  linkUpload: async (assignmentId: string | number, links: { url: string }[] | { url: string }): Promise<unknown> => {
+    try {
+      // 서버는 여러 링크를 배열로 받을 수 있으므로 배열 또는 단일 객체를 허용
+      const payload = Array.isArray(links) ? links : [links];
+      const res = await Customapi.post(`${API_BASE_URL}/${assignmentId}/link`, payload);
+      if (res.status < 200 || res.status >= 300) {
+        console.error(`링크 업로드 실패: status ${res.status}`);
+        return null;
+      }
+      return res.data;
+    } catch (error) {
+      console.error('링크 업로드 실패:', error);
+    return null;
+    }
+  },
+
   // 과제 제출 여부 조회
   checkSubmission: async (
     assignmentId: string | number

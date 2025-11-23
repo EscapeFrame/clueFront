@@ -202,6 +202,44 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
         })();
     };
 
+    // 링크 추가 처리 함수
+    const handleAddLink = async () => {
+        if (!linkUrl || linkUrl.trim() === '') {
+            alert('링크를 입력해주세요.');
+            return;
+        }
+
+        // 간단한 URL 형식 검사
+        try {
+            new URL(linkUrl);
+        } catch (e) {
+            alert('유효한 URL을 입력해주세요. 예: https://example.com');
+            return;
+        }
+
+        if (!assignment) {
+            alert('과제 정보가 없습니다.');
+            setShowLinkModal(false);
+            return;
+        }
+
+        try {
+            const res = await AssignmentsApi.linkUpload(assignment.assignmentId, { url: linkUrl });
+            if (res) {
+                // 성공적으로 추가되었을 가능성이 있으므로 최신 과제 정보를 다시 불러옵니다.
+                await fetchAndSetAssignment();
+                setLinkUrl('');
+                setShowLinkModal(false);
+                alert('링크가 추가되었습니다.');
+            } else {
+                alert('링크 추가에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('링크 추가 중 오류:', error);
+            alert('링크 추가 중 오류가 발생했습니다.');
+        }
+    };
+
     const removeFile = async (fileId: string) => {
         if (window.confirm('정말로 이 파일을 삭제하시겠습니까?')) {
             try {
@@ -453,7 +491,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                     onClose={() => setShowLinkModal(false)}
                     buttons={[
                         { text: '취소', type: 1, onClick: () => setShowLinkModal(false) },
-                        { text: '확인', type: 0, onClick: () => { /* TODO: 링크 추가 API 호출 */ alert("링크 추가 기능은 구현 예정입니다."); setShowLinkModal(false); } },
+                        { text: '확인', type: 0, onClick: handleAddLink },
                     ]}
                 >
                     <s.ModalContent>
