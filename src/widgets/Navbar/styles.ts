@@ -7,7 +7,7 @@ export const NavbarWrapper = styled.div`
   top: 0;
   width: 100%;
   height: 55px;
-  padding: 0.5rem 8rem;
+  padding: 0.5rem 14rem;
   background-color: ${colors.white};
   border-bottom: 1px solid ${colors.gray[2]};
   z-index: 1000;

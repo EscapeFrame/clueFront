@@ -5,7 +5,7 @@ import { fonts } from '@/shared/theme/font.styles';
 export const Container = styled.div`
   display: flex;
   flex-direction: column; 
-  padding: 2rem 8rem;
+  padding: 2rem 14rem;
   gap: 2rem;
 
   @media (max-width: 768px) {

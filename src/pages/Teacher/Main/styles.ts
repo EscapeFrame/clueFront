@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   min-height: 100vh;
   background-color: #f7f7f7;
-  padding: 1rem 8rem;
+  padding: 1rem 14rem;
   gap: 24px;
   overflow-y: auto;
 

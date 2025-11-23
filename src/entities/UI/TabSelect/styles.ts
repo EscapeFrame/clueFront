@@ -8,7 +8,7 @@ interface TabButtonProps {
 
 export const TabSelector = styled.div`
   background-color: ${colors.white};
-  padding: 0 8rem;
+  padding: 0 14rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;

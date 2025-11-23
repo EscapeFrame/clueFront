@@ -16,13 +16,13 @@ const LessonCreator: React.FC = () => {
     navigate(url);
   };
 
-  if (!classRoomId) {
-    return false;
-  }
+  // if (!classRoomId) {
+  //   return false;
+  // }
 
-  if(!directoryId) {
-    return false;
-  }
+  // if(!directoryId) {
+  //   return false;
+  // }
 
   return (
     <s.Container>

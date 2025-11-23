@@ -13,7 +13,7 @@ export const HeaderSection = styled.div`
   position: sticky;
   top: 0;
   background-color: ${colors.white};
-  padding: 2rem 8rem 0 8rem;
+  padding: 2rem 14rem 0 14rem;
   z-index: 10;
   flex-shrink: 0;
 `;
@@ -21,7 +21,7 @@ export const HeaderSection = styled.div`
 export const CardArea = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 2rem 8rem 8rem 8rem;
+  padding: 2rem 14rem 8rem 14rem;
 `;
 
 export const HeaderContent = styled.div`

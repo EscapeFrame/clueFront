@@ -5,7 +5,7 @@ import { fonts } from '@/shared/theme/font.styles';
 const cellWidth = '160px';
 
 export const Container = styled.div`
-  padding: 2rem 8rem;
+  padding: 2rem 14rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

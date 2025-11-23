@@ -98,7 +98,7 @@ export const ViewerWrapper = styled.div`
 `;
 
 export const Sidebar = styled.div`
-  width: 280px;
+  width: 16rem;
   background-color: #fafbfc;
   height: 100%;
   overflow-y: auto;

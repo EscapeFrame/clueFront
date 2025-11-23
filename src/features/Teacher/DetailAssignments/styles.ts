@@ -3,7 +3,7 @@ import { fonts } from '@/shared/theme/font.styles';
 import { colors } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
-  padding: 2rem 8rem;
+  padding: 2rem 14rem;
   background-color: ${colors.white};
   color: ${colors.black};
 
