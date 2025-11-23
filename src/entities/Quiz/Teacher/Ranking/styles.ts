@@ -5,9 +5,16 @@ import { colors } from "@/shared/theme/theme.styles";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem 16rem;
+  padding: 2rem 4rem;
   min-height: 100vh;
   background-color: ${colors.gray[1]};
+  @media (max-width: 1024px) {
+    padding: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+  }
 `;
 
 export const Title = styled.div`
@@ -23,6 +30,12 @@ export const PodiumContainer = styled.div`
   align-items: flex-end;
   justify-content: center;
   margin: 10px;
+  gap: 12px;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const PodiumItem = styled.div<{ rank: number }>`
@@ -48,8 +61,15 @@ export const PodiumBox = styled.div<{
   align-items: center;
   justify-content: center;
   width: 200px;
+  max-width: 100%;
   height: ${(p) => p.height}px;
   transition: all 0.3s ease;
+
+  @media (max-width: 720px) {
+    padding: 1rem;
+    width: 160px;
+    height: ${(p) => Math.min(p.height, 260)}px;
+  }
 `;
 
 export const RankBadge = styled.div`

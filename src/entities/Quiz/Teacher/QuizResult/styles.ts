@@ -5,10 +5,18 @@ import { colors } from "@/shared/theme/theme.styles";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem 20rem;
+  padding: 2rem 4rem;
   min-height: 100vh;
   text-align: center;
   background-color: ${colors.gray[1]};
+
+  @media (max-width: 1024px) {
+    padding: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+  }
 `;
 
 export const Question = styled.h2`
@@ -36,6 +44,11 @@ export const Card = styled.div`
   border-radius: 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
   min-height: 400px;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 export const OptionColumn = styled.div`
@@ -58,6 +71,11 @@ export const OptionBox = styled.div<{ bgColor: string; borderColor: string; heig
   width: 100%;
   height: ${(p) => p.height}px;
   transition: height 0.3s ease;
+
+  @media (max-width: 720px) {
+    padding: 1rem;
+    height: ${(p) => Math.min(p.height, 220)}px;
+  }
 `;
 
 export const CountNumber = styled.div`

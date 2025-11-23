@@ -3,13 +3,21 @@ import { colors } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-    background-color: ${colors.gray[1]};
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
+        background-color: ${colors.gray[1]};
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 4rem;
+
+        @media (max-width: 1024px) {
+            padding: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            padding: 1rem;
+        }
 `;
 
 export const Card = styled.div`
