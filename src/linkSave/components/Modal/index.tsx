@@ -111,7 +111,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
       authorizationType: visibilityScope,
     };
 
-    onSubmit(submitData, initialData?.id);
+  onSubmit(submitData, initialData?.id ? String(initialData.id) : undefined);
     onClose();
   };
 

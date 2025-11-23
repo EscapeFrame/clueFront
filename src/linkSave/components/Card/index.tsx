@@ -26,10 +26,12 @@ const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) =
     onDelete();
   };
 
+  const subjectTypes = Array.isArray(card.subjectType) ? card.subjectType : (card.subjectType ? [card.subjectType] : []);
+
   return (
     <S.CardContainer onClick={handleCardClick}>
       <S.CardHeader>
-        <S.CardDate>{card.date}</S.CardDate>
+        <S.CardDate>{card.date || ''}</S.CardDate>
         <S.CardActions>
           <S.EditButton onClick={handleEditClick}><HiOutlinePencilSquare /></S.EditButton>
           <S.DeleteButton onClick={handleDeleteClick}><GoTrash /></S.DeleteButton>
@@ -42,7 +44,7 @@ const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) =
       </S.CardContent>
 
       <S.CardTagContainer>
-        {card.subjectType.map((subjectType, i) => <S.CardTag key={i}>{subjectType}</S.CardTag>)}
+        {subjectTypes.map((subjectType, i) => <S.CardTag key={i}>{subjectType}</S.CardTag>)}
       </S.CardTagContainer>
     </S.CardContainer>
   );
