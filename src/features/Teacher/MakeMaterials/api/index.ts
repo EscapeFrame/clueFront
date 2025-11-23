@@ -79,6 +79,13 @@ export const postAgentDoc = async (agentId: string, words: Word[]): Promise<Agen
 };
 
 
+// ================= PATCH /api/v1/agents/{agent_id}/doc =================
+export const patchAgentDoc = async (agentId: string, docs: Doc[]): Promise<AgentDocResponse> => {
+  const response = await Customapi.patch(`/api/v1/agents/${agentId}/doc`, { docs });
+  return response.data;
+};
+
+
 // ================= Orchestrator for Step 1 & 2 =================
 
 export const createAgentAndGetFlow = async (data: PostMaterialsRequest): Promise<AgentFlowResponse> => {

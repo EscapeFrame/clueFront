@@ -63,8 +63,8 @@ export default function MakeClassMaterials() {
 
 
             {currentStep === 1 && <Step1 onNext={handleNext} />}
-            {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} />}
-            {currentStep === 3 && <Step3 onNext={handleNext} docs={docs} isGenerating={isDocPosting} />}
+            {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} agentId={agentId ?? undefined} />}
+            {currentStep === 3 && <Step3 onNext={handleNext} docs={docs} isGenerating={isDocPosting} agentId={agentId ?? undefined} />}
         </s.Wrapper>
     );
 }
