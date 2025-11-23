@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
-import { LinkCard, LinkFormData, LINK_CATEGORY_MAP } from '@/linkSave/types/card';
+import { LinkCard, LinkFormData, LINK_CATEGORY_MAP, LINK_CATEGORY_ENGLISH_MAP } from '@/linkSave/types/card';
 import { FormInputGroup } from './Input';
 import ToggleSwitch from '../UI/ToggleSwitch';
 
@@ -39,14 +39,35 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   // 수정 모드 진입 시 데이터 초기화
   useEffect(() => {
     if (initialData) {
+      const initLink = initialData.link ?? '';
+      const initDescription = initialData.description ?? '';
+      console.debug('LinkFormModal initialData loaded:', { id: initialData.id, link: initLink, description: initDescription });
+      const rawSubject = Array.isArray(initialData.subjectType)
+        ? String(initialData.subjectType[0] || '')
+        : String(initialData.subjectType ?? '');
+
+      const koreanTag = Object.keys(LINK_CATEGORY_ENGLISH_MAP).find(k => {
+        const key = k as unknown as keyof typeof LINK_CATEGORY_ENGLISH_MAP;
+        const eng = LINK_CATEGORY_ENGLISH_MAP[key];
+        return eng === rawSubject;
+      }) as string | undefined;
+
       setFormData({
-        title: initialData.title,
-        link: initialData.link,
-        description: initialData.description,
-        subjectType: Array.isArray(initialData.subjectType)
-          ? initialData.subjectType[0] || ''
-          : initialData.subjectType,
+        title: String(initialData.title ?? ''),
+        link: String(initLink),
+        description: String(initDescription),
+        subjectType: koreanTag ?? rawSubject,
       });
+
+      // authorizationType에 따라 visibility 초기화
+      const auth = String(initialData.authorizationType ?? '').toUpperCase();
+      if (auth === 'PUBLIC') {
+        setVisibility({ grade: true, class: false });
+      } else if (auth === 'CLASS_ONLY') {
+        setVisibility({ grade: false, class: true });
+      } else {
+        setVisibility({ grade: false, class: false });
+      }
     } else {
       setFormData({
         title: '',
