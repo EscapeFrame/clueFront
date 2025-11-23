@@ -24,7 +24,7 @@ export default function AnswerResult({
 
     return (
         <s.Container>
-            <s.Section>
+            <s.HeaderWrapper>
                 <s.QuitButton>
                     <IoIosArrowBack /> 퀴즈 나가기
                 </s.QuitButton>
@@ -32,18 +32,22 @@ export default function AnswerResult({
                 <s.QuestionCount>
                     문제 {current} / {total}
                 </s.QuestionCount>
-            </s.Section>
+            </s.HeaderWrapper>
 
             <s.Card $isWrong={isWrong}>
                 {isWrong ? (
                     <>
-                        <HiMiniXMark />
+                        <s.ResultIcon>
+                            <HiMiniXMark />
+                        </s.ResultIcon>
                         <s.CardTitle $isWrong={isWrong}>오답입니다</s.CardTitle>
                         <s.Explanation>괜찮아요! 다음 문제도 힘내봐요.</s.Explanation>
                     </>
                 ) : (
                     <>
-                        <FaCheck />
+                        <s.ResultIcon>
+                            <FaCheck />
+                        </s.ResultIcon>
                         <s.CardTitle $isWrong={isWrong}>정답입니다!</s.CardTitle>
                         <s.Explanation>좋아요! 계속 도전해요!</s.Explanation>
                     </>

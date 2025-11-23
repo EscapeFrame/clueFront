@@ -3,13 +3,21 @@ import { colors } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-    background-color: ${colors.gray[1]};
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20rem;
+        background-color: ${colors.gray[1]};
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 4rem;
+
+        @media (max-width: 1024px) {
+            padding: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            padding: 1rem;
+        }
 `;
 
 export const Card = styled.div`
@@ -42,13 +50,23 @@ export const OptionLarge = styled.div<{ bgColor: string; borderColor: string }>`
     background-color: ${(p) => p.bgColor};
     border: 2px solid ${(p) => p.borderColor};
     border-radius: 15px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-weight: 600;
-    font-size: 1.2rem;
-    gap: 1rem;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-weight: 600;
+        font-size: 1.2rem;
+        gap: 1rem;
+
+        @media (max-width: 720px) {
+            padding: 1rem;
+            font-size: 1rem;
+            border-radius: 12px;
+        }
+        @media (max-width: 420px) {
+            font-size: 0.95rem;
+            padding: 0.8rem;
+        }
 `;
 
 export const Question = styled.div`

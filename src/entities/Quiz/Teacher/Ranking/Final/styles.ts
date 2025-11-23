@@ -4,17 +4,6 @@ import { keyframes } from "@emotion/react";
 import { fonts } from "@/shared/theme/font.styles";
 import { colors } from "@/shared/theme/theme.styles";
 
-const fadeInSlideUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-`;
-
 const fadeInSlideLeft = keyframes`
   from {
     opacity: 0;
@@ -26,23 +15,19 @@ const fadeInSlideLeft = keyframes`
   }
 `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem 16rem;
+  padding: 2rem 4rem;
   min-height: 100vh;
   background-color: ${colors.gray[1]};
+  @media (max-width: 1024px) {
+    padding: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+  }
 `;
 
 export const Title = styled.div`
@@ -60,6 +45,11 @@ export const PodiumContainer = styled.div`
   justify-content: center;
   margin: 10px;
   gap: 8px;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const PodiumItem = styled.div<{ rank: number }>`
@@ -91,6 +81,11 @@ export const PodiumBox = styled.div<{
   opacity: ${(p) => p.isVisible ? 1 : 0};
   transform: ${(p) => p.isVisible ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.8)'};
   transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  @media (max-width: 720px) {
+    padding: 1rem;
+    width: 160px;
+    height: ${(p) => Math.min(p.height, 260)}px;
+  }
 `;
 
 export const RankBadge = styled.div`

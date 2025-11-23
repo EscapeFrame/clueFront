@@ -9,12 +9,20 @@ export const Container = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 4rem 8rem;
+    padding: 2rem 4rem;
+
+    @media (max-width: 1024px) {
+      padding: 2rem;
+    }
+
+    @media (max-width: 640px) {
+      padding: 1rem;
+    }
 `;
 
 export const Card = styled.div`
-    width: 700px; 
-    max-width: 100%;
+  width: 700px;
+  max-width: 100%;
     padding: 24px;
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
@@ -75,12 +83,17 @@ export const OptionNumber = styled.div`
 // moving 옵션
 export const MovingBox = styled.div`
   position: relative;
-  width: 650px;
+  width: 100%;
+  max-width: 650px;
   height: 300px;
-  background-color: ${colors.npc.I[0]}; 
+  background-color: ${colors.npc.I[0]};
   border: 1px solid ${colors.npc.I[1]};
   border-radius: 16px;
   overflow: hidden;
+
+  @media (max-width: 640px) {
+    height: 220px;
+  }
 `;
 
 export const MovingOption = styled.div<{

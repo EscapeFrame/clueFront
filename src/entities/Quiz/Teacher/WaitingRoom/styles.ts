@@ -7,7 +7,15 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 2rem 6rem;
+  padding: 2rem 4rem;
+
+  @media (max-width: 1024px) {
+    padding: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+  }
 `;
 
 export const Header = styled.div`
@@ -36,6 +44,11 @@ export const Body = styled.div`
   display: flex;
   gap: 1rem;
   margin: 0 2rem;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    margin: 0;
+  }
 `;
 
 export const Left = styled.div`
@@ -45,6 +58,7 @@ export const Left = styled.div`
   border-radius: 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
   text-align: center;
+  min-width: 0;
 `;
 
 export const MemberList = styled.div`
