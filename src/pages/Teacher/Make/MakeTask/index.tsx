@@ -127,12 +127,16 @@ const MakeTask: React.FC = () => {
     setIsSubmitting(true);
     try {
       console.log("과제 생성 API 호출 중...");
+      // 서버에는 'YYYY-MM-DDTHH:mm' 형식으로 전송
+      const startTime = startDate ? dayjs(startDate).format('YYYY-MM-DDTHH:mm') : '';
+      const endTime = dueDate ? dayjs(dueDate).format('YYYY-MM-DDTHH:mm') : '';
+
       const response = await SendMakeTask({
         classId: classRoomId!,
         title: subject,
         content: description,
-  start_date: dayjs(startDate).toISOString(),
-  end_date: dayjs(dueDate).toISOString(),
+        start_date: startTime,
+        end_date: endTime,
       });
       
       const assignmentId = response;
