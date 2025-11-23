@@ -6,7 +6,7 @@ interface StatusProps {
 }
 
 export const Container = styled.div`
-  padding: 2rem 8rem;
+  padding: 2rem 14rem;
 `;
 
 export const Grid = styled.div`

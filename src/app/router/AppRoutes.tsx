@@ -42,7 +42,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LinkSaveRoutes />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
@@ -70,7 +70,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/google-slide" element={<TCHMakeSlide />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile />} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
-          <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />e
+          <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />
         </>
       )}
       {role === 'STU' && (

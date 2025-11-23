@@ -8,7 +8,7 @@ export const Container = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   background-color: ${colors.white};
-  padding: 2rem 8rem;
+  padding: 2rem 14rem;
   overflow: hidden;
   width: 100%;
   gap: 5px;

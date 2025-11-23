@@ -3,7 +3,7 @@ import { theme } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
-  padding: 2rem 8rem;
+  padding: 2rem 14rem;
   width: 100%;
 
   @media (max-width: 1200px) {
