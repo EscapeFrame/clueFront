@@ -5,6 +5,8 @@ import LinkFormModal from '@/linkSave/components/Modal';
 import DeleteConfirmModal from '@/linkSave/components/Modal/Delete';
 import * as S from './styles';
 import { LinkCard, LinkFormData, LINK_CATEGORY_ENGLISH_MAP, LinkCategoryKorean } from '@/linkSave/types/card';
+import { useContext } from 'react';
+import { UserContext } from '@/entities/Context/LoginContext';
 import { useGetAlllinks, useAddLink, useDeleteLink, useUpdateLink } from '@/linkSave/hooks/useLinkSave';
 
 export const LinkSaveMain = () => {
@@ -50,6 +52,8 @@ export const LinkSaveMain = () => {
 
 
     // 4. 추가/수정 폼 제출 (LinkFormModal에서 호출)
+    const { user } = useContext(UserContext) || { user: null };
+
     const handleFormSubmit = useCallback(async (data: LinkFormData, cardId?: string) => {
         try {
             const englishData = {
@@ -58,6 +62,9 @@ export const LinkSaveMain = () => {
                 link: data.link,
                 subjectType: LINK_CATEGORY_ENGLISH_MAP[data.subjectType as LinkCategoryKorean] || data.subjectType,
                 authorizationType: (data as any).authorizationType,
+                // include grade/class if available from logged-in user
+                ...(user?.grade ? { grade: String(user.grade) } : {}),
+                ...(user?.classNo ? { clas: String(user.classNo) } : {}),
             };
 
             if (cardId) {
@@ -77,7 +84,7 @@ export const LinkSaveMain = () => {
             console.error('폼 제출 중 에러:', error);
             alert(modalMode === '추가' ? '링크 추가에 실패했습니다.' : '링크 수정에 실패했습니다.');
         }
-    }, [addLinkMutation, updateLinkMutation, modalMode]);
+    }, [addLinkMutation, updateLinkMutation, modalMode, user?.grade, user?.classNo]);
 
 
     // 5. 삭제 확인 (DeleteConfirmModal에서 호출)

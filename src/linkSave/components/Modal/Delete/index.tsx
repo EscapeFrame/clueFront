@@ -21,7 +21,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
   if (!isOpen || !cardToDelete) return null;
 
   const handleConfirm = () => {
-    onConfirm(cardToDelete.id);
+  onConfirm(String(cardToDelete.id));
     onClose();
   };
 
