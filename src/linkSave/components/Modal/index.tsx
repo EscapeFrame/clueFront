@@ -39,13 +39,18 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   // 수정 모드 진입 시 데이터 초기화
   useEffect(() => {
     if (initialData) {
+      // 방어적: 초기값의 타입을 명확히 문자열로 변환하여 swap 가능성 축소
+      const initLink = initialData.link ?? '';
+      const initDescription = initialData.description ?? '';
+      console.debug('LinkFormModal initialData loaded:', { id: initialData.id, link: initLink, description: initDescription });
+
       setFormData({
-        title: initialData.title,
-        link: initialData.link,
-        description: initialData.description,
+        title: String(initialData.title ?? ''),
+        link: String(initLink),
+        description: String(initDescription),
         subjectType: Array.isArray(initialData.subjectType)
-          ? initialData.subjectType[0] || ''
-          : initialData.subjectType,
+          ? String(initialData.subjectType[0] || '')
+          : String(initialData.subjectType ?? ''),
       });
     } else {
       setFormData({

@@ -19,7 +19,7 @@ export const FormInputGroup: React.FC<FormInputGroupProps> = ({ label, type, nam
     </S.FormLabel>
     {isTextarea ? (
       <S.FormTextarea
-        name={name}
+        name={String(name)}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
@@ -28,7 +28,7 @@ export const FormInputGroup: React.FC<FormInputGroupProps> = ({ label, type, nam
     ) : (
       <S.FormInput
         type={type}
-        name={name}
+        name={String(name)}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
