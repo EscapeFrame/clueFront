@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import useQuizSocket from "@/app/hooks/useQuizSocket";
 
 import CreateQuiz from "@/entities/Quiz/Teacher/CreateQuiz";
 import WaitingRoom from "@/entities/Quiz/Teacher/WaitingRoom";
 import QuizPlaying from "@/entities/Quiz/Teacher/QuizPlaying";
 import QuizResult from "@/entities/Quiz/Teacher/QuizResult";
-// 최종 결과 화면이 따로 있다면 import 변경
 
 import { dummyQuestions, dummyStudentAnswers, dummyStudents } from "./dummy";
 import FinalRanking from "@/entities/Quiz/Teacher/Ranking/Final";
@@ -37,12 +37,54 @@ export default function TCHQuiz() {
         questions.map(() => []) // 문제마다 학생 답 배열 초기화
     );
 
+    const { connected, send, subscribe } = useQuizSocket();
+
+    type CreatePayload = {
+        title: string;
+        maxParticipants?: number;
+        questionCount?: number;
+        timePerQuestion?: number;
+        classRoomId?: string;
+        documentId?: string;
+    };
+
+    // subscribe to created room notifications
+    useState(() => {});
+
+    // subscribe -> useEffect to manage lifecycle
+    useEffect(() => {
+        if (!subscribe) return;
+        const sub = subscribe('/topic/quiz/rooms', (msg: any) => {
+            if (msg?.roomCode) setRoomCode(msg.roomCode);
+        });
+        const cleanup = () => {
+            if (sub) sub.unsubscribe();
+        };
+        return cleanup;
+    }, [subscribe]);
+
     return (
         <>
             {/* 퀴즈 생성 */}
             {step === "create" && (
                 <CreateQuiz
-                    onCreate={(qs) => {
+                    onCreate={(qs: CreatePayload) => {
+                        // send create room via websocket if available
+                        if (send) {
+                            const payload = {
+                                title: qs.title,
+                                topic: qs.title,
+                                maxParticipants: qs.maxParticipants ?? 30,
+                                questionCount: qs.questionCount ?? 10,
+                                timePerQuestion: qs.timePerQuestion ?? 30,
+                                classRoomId: qs.classRoomId,
+                                documentId: qs.documentId,
+                            };
+
+                            // server expects connect to /ws-quiz then app destination /app/quiz/create
+                            send("/app/quiz/create", payload);
+                        }
+
                         setQuestions(dummyQuestions);
                         setCurrentIndex(0);
                         setStep("waiting");
