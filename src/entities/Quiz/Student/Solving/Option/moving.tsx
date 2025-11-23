@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as s from "../styles";
 import { colors } from "@/shared/theme/theme.styles";
 
-type OptionKeys = "Haeyul" | "panda" | "ferret" | "koala";
+type OptionKeys = "haeyul" | "panda" | "ferret" | "koala";
 
 type Props = {
   options: string[];
@@ -64,11 +64,15 @@ export default function MovingOptions({ options, optionKeys, onSelect }: Props) 
     };
   }, [selected]);
 
-  const npcColors: Record<OptionKeys, { bg: string; border: string }> = {
-    Haeyul: { bg: colors.npc.haeyul1, border: colors.npc.haeyul2 },
-    panda: { bg: colors.npc.panda1, border: colors.npc.panda2 },
-    ferret: { bg: colors.npc.ferret1, border: colors.npc.ferret2 },
-    koala: { bg: colors.npc.koala1, border: colors.npc.koala2 },
+  type CharacterKey = "owl" | "haeyul" | "panda" | "ferret" | "I" | "koala";
+
+  const npcColors: Record<CharacterKey, { bg: string; border: string }> = {
+    owl: { bg: colors.npc.owl[0], border: colors.npc.owl[1] },
+    haeyul: { bg: colors.npc.haeyul[0], border: colors.npc.haeyul[1] },
+    panda: { bg: colors.npc.panda[0], border: colors.npc.panda[1] },
+    ferret: { bg: colors.npc.ferret[0], border: colors.npc.ferret[1] },
+    I: { bg: colors.npc.I[0], border: colors.npc.I[1] },
+    koala: { bg: colors.npc.koala[0], border: colors.npc.koala[1] },
   };
 
   const handleSubmit = () => {

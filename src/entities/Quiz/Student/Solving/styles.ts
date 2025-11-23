@@ -77,8 +77,8 @@ export const MovingBox = styled.div`
   position: relative;
   width: 650px;
   height: 300px;
-  background-color: ${colors.npc.I1}; 
-  border: 1px solid ${colors.npc.I2};
+  background-color: ${colors.npc.I[0]}; 
+  border: 1px solid ${colors.npc.I[1]};
   border-radius: 16px;
   overflow: hidden;
 `;

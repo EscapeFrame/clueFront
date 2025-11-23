@@ -7,16 +7,18 @@ type OptionProps = {
     optionKeys: Array<"owl" | "haeyul" | "panda" | "ferret" | "I" | "koala">; // npc 키 순서
     onSelect: (index: number) => void;
 };
+type CharacterKey = "owl" | "haeyul" | "panda" | "ferret" | "I" | "koala";
 
-// npc 색상 매핑 객체 (타입 안정성 보장)
-const npcColors: Record<NonNullable<OptionProps["optionKeys"][number]>, { bg: string; border: string }> = {
-    owl: { bg: colors.npc.owl1, border: colors.npc.owl2 },
-    haeyul: { bg: colors.npc.haeyul1, border: colors.npc.haeyul2 },
-    panda: { bg: colors.npc.panda1, border: colors.npc.panda2 },
-    ferret: { bg: colors.npc.ferret1, border: colors.npc.ferret2 },
-    I: { bg: colors.npc.I1, border: colors.npc.I2 },
-    koala: { bg: colors.npc.koala1, border: colors.npc.koala2 },
+const npcColors: Record<CharacterKey, { bg: string; border: string }> = {
+    owl: { bg: colors.npc.owl[0], border: colors.npc.owl[1] },
+    haeyul: { bg: colors.npc.haeyul[0], border: colors.npc.haeyul[1] },
+    panda: { bg: colors.npc.panda[0], border: colors.npc.panda[1] },
+    ferret: { bg: colors.npc.ferret[0], border: colors.npc.ferret[1] },
+    I: { bg: colors.npc.I[0], border: colors.npc.I[1] },
+    koala: { bg: colors.npc.koala[0], border: colors.npc.koala[1] },
 };
+
+const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "ferret", "koala"];
 
 export default function MultipleOptions({ options, optionKeys, onSelect }: OptionProps) {
     const [selected, setSelected] = useState<number | null>(null);

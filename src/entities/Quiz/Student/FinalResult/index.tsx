@@ -6,7 +6,7 @@ import { colors } from "@/shared/theme/theme.styles";
 
 type Character =
     | "owl"
-    | "Haeyul"
+    | "haeyul"
     | "panda"
     | "ferret"
     | "I"
@@ -14,7 +14,7 @@ type Character =
 
 const CHARACTERS: Character[] = [
     "owl",
-    "Haeyul",
+    "haeyul",
     "panda",
     "ferret",
     "I",

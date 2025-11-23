@@ -13,7 +13,7 @@ type StudentStep =
     | "result"
     | "finish";
 
-type Character = "owl" | "Haeyul" | "panda" | "ferret" | "I" | "koala";
+type Character = "owl" | "haeyul" | "panda" | "ferret" | "I" | "koala";
 
 export default function STUQuiz() {
     const [step, setStep] = useState<StudentStep>("joinQuiz");

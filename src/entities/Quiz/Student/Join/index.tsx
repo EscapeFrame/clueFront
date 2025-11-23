@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as s from "./styles";
 import { CharacterSelector } from "@/widgets/Quiz/CharacterSelector";
 
-type Character = "owl" | "Haeyul" | "panda" | "ferret" | "I" | "koala";
+type Character = "owl" | "haeyul" | "panda" | "ferret" | "I" | "koala";
 
 type Props = {
     character: Character | null;
