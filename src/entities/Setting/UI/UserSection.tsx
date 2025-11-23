@@ -59,7 +59,7 @@ export const UserSection: React.FC = () => {
             const imageFormData = new FormData();
             imageFormData.append('image', selectedFile);
             try {
-                const imageRes = await Customapi.put('/api/user/me/image', imageFormData, {
+                const imageRes = await Customapi.patch('/api/user/me/image', imageFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

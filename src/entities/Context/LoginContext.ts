@@ -5,7 +5,6 @@ export interface User {
   username: string;
   role: string;
   myImage?: string | null; // Assuming 'image' maps to 'myImage'
-  classCode?: number | string;
   email?: string;
   description?: string;
   grade?: number;

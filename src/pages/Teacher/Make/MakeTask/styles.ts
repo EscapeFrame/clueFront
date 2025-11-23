@@ -4,13 +4,13 @@ import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   background-color: ${theme.colors.white};
-  padding: 2rem 16rem;
+  padding: 2rem 30rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 
   @media (max-width: 1200px) {
-    padding: 2rem 8rem;
+  padding: 2rem 14rem;
   }
 
   @media (max-width: 768px) {

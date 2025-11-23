@@ -135,10 +135,18 @@ export default function AddNoticeModal({
     try {
       let result;
       if (isEdit && initialData) {
-        // In edit mode, we only send newly added files.
-        // The API should handle keeping old files if they are not in the new file list.
-        // This part might need adjustment based on backend implementation for file updates.
-        result = await noticeApi.patchNotice({ noticeId: initialData.noticeId, metadata, files: filesToUpload });
+        // 1) 기본 메타 업데이트
+        const patchResult = await noticeApi.patchNotice({ noticeId: initialData.noticeId, metadata });
+        if (typeof patchResult === 'number' && patchResult >= 400) {
+          result = patchResult;
+        } else {
+          // 2) 파일/링크 추가가 있으면 backend 계약에 따라 POST /api/notice/{id}
+          if (filesToUpload.length > 0 || urlsToUpload.length > 0) {
+            result = await noticeApi.postNoticeForUpdate(initialData.noticeId, metadata, filesToUpload);
+          } else {
+            result = patchResult;
+          }
+        }
       } else {
         result = await noticeApi.postNotice({ metadata, files: filesToUpload });
       }
@@ -171,6 +179,10 @@ export default function AddNoticeModal({
     setAttachments((prev) => [...prev, { id: crypto.randomUUID(), type: 'link', name: url, url, isNew: true }]);
     setIsLinkModalOpen(false);
     setLinkInput('');
+  };
+
+  const handleDeleteAttachment = (id: string) => {
+    setAttachments((prev) => prev.filter((att) => att.id !== id));
   };
 
   return (
@@ -244,6 +256,7 @@ export default function AddNoticeModal({
             setAttachments={setAttachments}
             openUploadModal={() => setIsFileModalOpen(true)}
             openLinkModal={() => setIsLinkModalOpen(true)}
+            onDeleteAttachment={handleDeleteAttachment}
           />
         </s.FormRow>
       </s.Form>

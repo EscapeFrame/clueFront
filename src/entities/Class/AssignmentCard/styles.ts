@@ -28,18 +28,16 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
 
 // 카드 레이아웃
 export const CardContainer = styled.div`
-  background-color: ${colors.gray[1]};
   border-radius: 0.5rem;
-  border: 1px solid ${colors.gray[4]};
+  border: 1px solid ${colors.gray[3]};
   padding: 1rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   transition: box-shadow 0.2s ease-in-out;
   min-height: 12rem;
   display: flex;
   flex-direction: column;
 
   &:hover {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
 
   @media (max-width: 1200px) {

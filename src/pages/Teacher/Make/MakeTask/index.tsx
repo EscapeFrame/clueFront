@@ -23,12 +23,12 @@ interface Attachment {
 const MakeTask: React.FC = () => {
   const { classRoomId } = useParams<{ classRoomId?: string }>();
   const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
+  const todayLocal = dayjs().format('YYYY-MM-DDTHH:mm');
 
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(today);
-  const [dueDate, setDueDate] = useState("");
+  const [startDate, setStartDate] = useState<string>(todayLocal);
+  const [dueDate, setDueDate] = useState<string>('');
   const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   // 파일 업로드 모달
@@ -41,6 +41,8 @@ const MakeTask: React.FC = () => {
   const [linkInput, setLinkInput] = useState("");
   const [linkPlatform, setLinkPlatform] = useState<"drive" | "youtube" | "notion" | "link" | null>(null);
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isFormValid = !!subject && !!dueDate && !!classRoomId;
 
@@ -108,24 +110,33 @@ const MakeTask: React.FC = () => {
     setIsLinkModalOpen(false);
   };
 
+  const handleDeleteAttachment = (id: string) => {
+    setAttachments((prev) => prev.filter((att) => att.id !== id));
+  };
+
   // 과제 생성
   const handleMakeTask = async () => {
-    if (!isFormValid) return;
+    if (!isFormValid || isSubmitting) return;
 
-    // 날짜 유효성 검사
-    if (startDate && dueDate && startDate > dueDate) {
-      alert('시작일이 마감일보다 느립니다.');
+    // 날짜 유효성 검사 (시간 포함)
+    if (startDate && dueDate && dayjs(startDate).isAfter(dayjs(dueDate))) {
+      alert('시작일이 마감일보다 늦습니다.');
       return;
     }
 
+    setIsSubmitting(true);
     try {
       console.log("과제 생성 API 호출 중...");
+      // 서버에는 'YYYY-MM-DDTHH:mm' 형식으로 전송
+      const startTime = startDate ? dayjs(startDate).format('YYYY-MM-DDTHH:mm') : '';
+      const endTime = dueDate ? dayjs(dueDate).format('YYYY-MM-DDTHH:mm') : '';
+
       const response = await SendMakeTask({
         classId: classRoomId!,
         title: subject,
         content: description,
-        start_date: dayjs(startDate).toISOString().slice(0, 16),
-        end_date: dayjs(dueDate).toISOString().slice(0, 16),
+        start_date: startTime,
+        end_date: endTime,
       });
       
       const assignmentId = response;
@@ -150,6 +161,8 @@ const MakeTask: React.FC = () => {
       console.error("과제 생성 또는 첨부파일 업로드 실패:", error);
       const msg = error instanceof Error ? error.message : "알 수 없는 오류";
       alert("과제 생성에 실패했습니다: " + msg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -167,13 +180,14 @@ const MakeTask: React.FC = () => {
         attachments={attachments}
         setAttachments={setAttachments}
         openUploadModal={() => setIsFileModalOpen(true)}
-        openLinkModal={platform => { setLinkPlatform(platform); setIsLinkModalOpen(true); }}
+        openLinkModal={platform => { setLinkPlatform(platform ?? null); setIsLinkModalOpen(true); }}
+        onDeleteAttachment={handleDeleteAttachment}
       />
 
-      <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} />
-      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} />
+  <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} showTime />
+  <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} showTime />
 
-      <Button text="완료" disabled={!isFormValid} onClick={handleMakeTask} />
+      <Button text="완료" disabled={!isFormValid || isSubmitting} onClick={handleMakeTask} />
 
       {/* 파일 업로드 모달 */}
       {isFileModalOpen && (

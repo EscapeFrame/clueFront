@@ -5,25 +5,30 @@ import clueLogo from '../../../public/clueLogo.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/hooks/useAccessToken'; // Import useAuth hook
 
-
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth(); // Get user from useAuth hook
 
+  // CLUE 메인 페이지로 이동
   const Main = () => {
-    navigate("/");
-  }
+    navigate("/"); // CLUE 메인 페이지 경로로 이동
+  };
 
+  // LinkSave 메인 페이지로 이동
   const LinkSave = () => {
-    navigate("/linksave");
-  }
+    navigate("/linksave"); // LinkSave 메인 페이지 경로로 이동
+  };
 
   const isLinkSavePage = location.pathname.startsWith('/linksave');
 
-  const message = () => {
-    alert("아직 개발되지 않은 기능입니다.")
-  }
+  const handleLinkSaveClick = () => {
+    if (isLinkSavePage) {
+      Main(); // 현재 페이지가 /linksave라면 CLUE 메인 페이지로 이동
+    } else {
+      LinkSave(); // 그렇지 않으면 LinkSave 메인 페이지로 이동
+    }
+  };
 
   const formatStudentNumber = (grade?: number, classNo?: number, number?: number): string => {
     if (grade === undefined || classNo === undefined || number === undefined) {
@@ -46,9 +51,27 @@ export default function Navbar() {
         </s.Brand>
         <s.NavbarNav>
           <s.NavLinks>
-            <li><s.NavItem href="/class">내 학습실</s.NavItem></li>
-            <li><s.NavItem onClick={() => {message()}} href="#action1">수강신청</s.NavItem></li>
-            <li><s.NavItem href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca" target="_blank" rel="noopener noreferrer">서비스 소개</s.NavItem></li>
+            {!isLinkSavePage && (
+              <>
+                <li>
+                  <s.NavItem href="/class">내 학습실</s.NavItem>
+                </li>
+                <li>
+                  <s.NavItem onClick={handleLinkSaveClick}>
+                    {isLinkSavePage ? 'CLUE' : 'LinkSave'}
+                  </s.NavItem>
+                </li>
+              </>
+            )}
+            <li>
+              <s.NavItem
+                href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                서비스 소개
+              </s.NavItem>
+            </li>
           </s.NavLinks>
           <s.UserMenuWrapper>
             <Dropdown role={user.role} studentNumber={studentNumber} name={user.username} myImage={user.myImage ?? undefined} />

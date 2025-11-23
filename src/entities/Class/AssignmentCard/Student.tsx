@@ -1,276 +1,375 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import * as s from './styles';
+import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
-import { FaRegFile, FaXmark } from 'react-icons/fa6';
-import { AssignmentCardProps, AssignmentFileType } from '@/shared/types/Class/Assignment/Attachment';
+import { FaRegFile, FaLink, FaXmark } from 'react-icons/fa6';
 import { differenceInDays, parseISO } from 'date-fns';
-import Button from '@/entities/UI/Button';
 import { Modal } from '@/entities/UI/Modal';
-import { SubmitAssignment, DeleteAssignment } from '../api';
-import { SlidePanel } from '@/entities/UI/SlidePanel';
-import { MdOutlineFileUpload } from 'react-icons/md';
+import {
+  submitFile,
+  submitLink,
+  finalizeSubmission,
+  cancelSubmission,
+  getAssignmentAttachments,
+  deleteSubmissionAttachment, // Add this line
+} from '../api';
+import AttachmentBox from '@/entities/UI/Attachment';
+import AddModal from '@/entities/UI/AddModal';
 
-interface UploadedFile {
+interface Attachment {
   id: string;
+  type: 'file' | 'link';
   name: string;
-  size: string;
+  url?: string;
   file?: File;
+  isNew?: boolean;
 }
 
-function isAssignmentFileType(f: any): f is AssignmentFileType {
-  return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
+interface TeacherAttachment {
+  type: 'FILE' | 'LINK';
+  value: string;
+  originalFileName?: string;
 }
 
-export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) {
-  const [isSubmitted, setIsSubmitted] = useState(data.isSubmitted);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>(
-    (data.files ?? []).map(f =>
-      isAssignmentFileType(f)
-        ? { id: String(f.fileId), name: f.fileName, size: `${f.fileSize} MB` }
-        : { id: crypto.randomUUID(), name: String(f), size: '' }
-    )
-  );
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [showDetailsPanel, setShowDetailsPanel] = useState(false);
-  const [tempFiles, setTempFiles] = useState<UploadedFile[]>([]);
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+export interface SubmissionAttachmentResponse {
+  submissionAttachmentId: string;
+  type: 'FILE' | 'LINK';
+  value: string;
+  originalFileName: string;
+}
+
+export interface StudentAssignmentData {
+  assignmentId: string;
+  title: string;
+  content: string;
+  startDate: string;
+  endDate: string;
+  submissionId: string;
+  IsSubmitted: boolean;
+  submittedAt: string | null;
+  submissionAttachmentResponses: SubmissionAttachmentResponse[];
+}
+
+interface StudentAssignmentCardProps {
+  data: StudentAssignmentData;
+  updateAssignment: (
+    assignmentId: string,
+    updatedAssignment: Partial<StudentAssignmentData>,
+  ) => void;
+}
+
+export function AssignmentCard({
+  data,
+  updateAssignment,
+}: StudentAssignmentCardProps) {
+  const [isSubmitted, setIsSubmitted] = useState(data.IsSubmitted);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isResubmitting, setIsResubmitting] = useState(false);
-  const [isDragOver, setIsDragOver] = useState(false);
 
-  // 파일 업로드
+  const [teacherAttachments, setTeacherAttachments] = useState<
+    TeacherAttachment[]
+  >([]);
+  const [
+    isFetchingTeacherAttachments,
+    setIsFetchingTeacherAttachments,
+  ] = useState(false);
+
+  useEffect(() => {
+    if (data.submissionAttachmentResponses) {
+      const existingAttachments = data.submissionAttachmentResponses.map(
+        (att) => ({
+          id: att.submissionAttachmentId,
+          type: att.type === 'FILE' ? 'file' : 'link',
+          name: att.type === 'FILE' ? att.originalFileName : att.value,
+          url: att.type === 'LINK' ? att.value : undefined,
+          isNew: false,
+        }),
+      ) as Attachment[];
+      setAttachments(existingAttachments);
+    }
+  }, [data.submissionAttachmentResponses]);
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files?.length) return;
-    const newFiles: UploadedFile[] = Array.from(files).map(file => ({
+    const newFiles: Attachment[] = Array.from(files).map((file) => ({
       id: crypto.randomUUID(),
+      type: 'file',
       name: file.name,
-      size: `${(file.size / 1024).toFixed(1)} KB`,
-      file,
+      file: file,
+      isNew: true,
     }));
-    if (newFiles.length) setTempFiles(prev => [...prev, ...newFiles]);
+    setAttachments((prev) => [...prev, ...newFiles]);
   };
 
-  const handleSubmit = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // 버블링 방지
-    if (!uploadedFiles.length || !uploadedFiles[0].file) return alert('업로드된 파일이 없습니다.');
+  const handleAddLink = () => {
+    if (!linkUrl) return;
+    const newLink: Attachment = {
+      id: crypto.randomUUID(),
+      type: 'link',
+      name: linkUrl,
+      url: linkUrl,
+      isNew: true,
+    };
+    setAttachments((prev) => [...prev, newLink]);
+    setLinkUrl('');
+    setIsLinkModalOpen(false);
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
-      setIsSubmitting(true);
-      await SubmitAssignment(String(data.assignmentId), uploadedFiles[0].file);
+      const newAttachments = attachments.filter((att) => att.isNew);
+      for (const attachment of newAttachments) {
+        if (attachment.type === 'file' && attachment.file) {
+          await submitFile(data.submissionId, attachment.file);
+        } else if (attachment.type === 'link' && attachment.url) {
+          await submitLink(data.submissionId, attachment.url);
+        }
+      }
+
+      await finalizeSubmission(data.submissionId);
+
       setIsSubmitted(true);
-      updateAssignment(data.assignmentId, { isSubmitted: true });
+      updateAssignment(data.assignmentId, {
+        ...data,
+        IsSubmitted: true,
+        submittedAt: new Date().toISOString(),
+      });
       alert('과제 제출 완료');
-      setShowUploadModal(false);
+      setIsModalOpen(false);
     } catch (err) {
       console.error('과제 제출 실패:', err);
+      alert('과제 제출에 실패했습니다.');
     } finally {
-      setIsSubmitting(false); // 재제출(취소) 처리 후 버튼 비활성 복구
+      setIsSubmitting(false);
     }
   };
 
-  const handleResubmit = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // 버블링 방지
+  const handleCancelSubmission = async () => {
+    setIsSubmitting(true);
     try {
-      setIsResubmitting(true);
-      await DeleteAssignment(String(data.assignmentId));
+      await cancelSubmission(data.submissionId);
       setIsSubmitted(false);
-      updateAssignment(data.assignmentId, { isSubmitted: false });
+      updateAssignment(data.assignmentId, { ...data, IsSubmitted: false });
       alert('제출 취소 완료');
+      setIsModalOpen(false);
     } catch (e) {
       alert('제출 취소 실패');
       console.error(e);
     } finally {
-      setIsResubmitting(false);
+      setIsSubmitting(false);
     }
   };
+
+  const handleDeleteAttachment = async (id: string, isNew: boolean) => {
+    if (confirm('정말로 첨부파일을 삭제하시겠습니까?')) {
+        try {
+            if (!isNew) {
+                // If it's an existing attachment, call the API
+                await deleteSubmissionAttachment(id);
+            }
+            // Update the state to remove the file from the UI
+            setAttachments((prev) => prev.filter((att) => att.id !== id));
+            alert('첨부파일이 삭제되었습니다.');
+        } catch (error) {
+            console.error('첨부파일 삭제 실패:', error);
+            alert('첨부파일 삭제에 실패했습니다.');
+        }
+    }
+};
 
   const renderDeadlineOrSubmission = () => {
-      if (isSubmitted)
-    return (
-      <s.InfoItem>
-        <LuClock4 /> 제출 시간: {data.submissionDate ?? '없음'}
-      </s.InfoItem>
-    );
-  if (!data.deadline) {
-    return (
-      <s.InfoItem>
-        <LuClock4 /> 마감일 정보 없음
-      </s.InfoItem>
-    );
-  }
-  const daysLeft = differenceInDays(parseISO(data.deadline), new Date());
-  return (
-    <s.InfoItem>
-      <LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일
-    </s.InfoItem>
-  );
-  }
-
-  // 파일 업로드 모달 닫기
-  const handleUploadModalClose = () => {
-    setTempFiles([]);
-    setShowUploadModal(false);
-  };
-
-  // 파일 업로드 모달 완료
-  const handleUploadModalComplete = () => {
-    setUploadedFiles(tempFiles);
-    setShowUploadModal(false);
-  };
-
-  // 드래그 앤 드롭 핸들러
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  };
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      handleFileUpload({ target: { files } } as React.ChangeEvent<HTMLInputElement>);
+    if (isSubmitted) {
+      return (
+        <s.InfoItem>
+          <LuClock4 /> 제출 시간: {data.submittedAt ?? '없음'}
+        </s.InfoItem>
+      );
     }
+    if (!data.endDate) {
+      return (
+        <s.InfoItem>
+          <LuClock4 /> 마감일 정보 없음
+        </s.InfoItem>
+      );
+    }
+    const daysLeft = differenceInDays(parseISO(data.endDate), new Date());
+    return (
+      <s.InfoItem>
+        <LuClock4 /> 마감까지 남은 일수: {daysLeft > 0 ? daysLeft : 0}일
+      </s.InfoItem>
+    );
+  };
+
+  const openModal = async () => {
+    setIsModalOpen(true);
+    setIsFetchingTeacherAttachments(true);
+    try {
+      const attachments = await getAssignmentAttachments(data.assignmentId);
+      if (Array.isArray(attachments)) {
+        setTeacherAttachments(attachments);
+      }
+    } catch (error) {
+      console.error('Failed to fetch teacher attachments:', error);
+      // Optionally, show an error message to the user
+    } finally {
+      setIsFetchingTeacherAttachments(false);
+    }
+  };
+  const closeModal = () => setIsModalOpen(false);
+
+  const openUploadModal = () => {
+    if (isSubmitted) return;
+    fileInputRef.current?.click();
+  };
+
+  const openLinkModal = () => {
+    if (isSubmitted) return;
+    setIsLinkModalOpen(true);
   };
 
   return (
     <>
-      <s.CardContainer onClick={() => setShowDetailsPanel(true)}>
-        <s.FileListSection>
-          {uploadedFiles.map(file => (
-            <s.FileItem
-              key={file.id}
-              onClick={(e) => {
-                e.stopPropagation(); // 파일 클릭시 상세패널 막기
-                if (!isSubmitted) alert(`파일명: ${file.name}\n크기: ${file.size}`);
-              }}
-            >
-              <s.FileInfoContainer>
-                <FaRegFile />
-                <div>
-                  <s.FileNameText>{file.name}</s.FileNameText>
-                  {file.size && <s.FileSizeText>{file.size}</s.FileSizeText>}
-                </div>
-              </s.FileInfoContainer>
-              {!isSubmitted && (
-                <s.FileRemoveButton
-                  onClick={e => {
-                    e.stopPropagation();
-                    setUploadedFiles(prev => prev.filter(f => f.id !== file.id));
-                  }}
-                >
-                  <FaXmark />
-                </s.FileRemoveButton>
-              )}
-            </s.FileItem>
-          ))}
-        </s.FileListSection>
+      <s.CardContainer onClick={openModal}>
+        <s.CardHeader>
+          <s.Title>{data.title}</s.Title>
+          <s.StatusBadge variant={isSubmitted ? 'completed' : 'pending'}>
+            {isSubmitted ? '제출됨' : '미제출'}
+          </s.StatusBadge>
+        </s.CardHeader>
 
-        <s.ButtonSection>
-          {isSubmitted ? (
-            <Button
-              type={1}
-              text="다시 제출하기"
-              onClick={handleResubmit}
-              disabled={isResubmitting}
-            />
-          ) : (
-            <>
-              <Button type={0} text="파일 업로드" onClick={() => setShowUploadModal(true)} />
-              <Button type={1} text="과제 제출하기" onClick={handleSubmit} disabled={isSubmitting} />
-            </>
-          )}
-        </s.ButtonSection>
+        <s.InfoSection>
+          <s.InfoItem>
+            <IoCalendarClearOutline /> 마감일: {data.endDate}
+          </s.InfoItem>
+          {renderDeadlineOrSubmission()}
+        </s.InfoSection>
+
+        <s.FileListSection>
+          {attachments
+            .filter((att) => !att.isNew) // Filter for existing attachments in the card view
+            .map((file) => (
+              <s.FileItem key={file.id}>
+                <s.FileInfoContainer>
+                  {file.type === 'file' ? <FaRegFile /> : <FaLink />}
+                  <div>
+                    <s.FileNameText>{file.name}</s.FileNameText>
+                  </div>
+                </s.FileInfoContainer>
+                {!isSubmitted && ( // Show delete button only if not submitted
+                    <s.FileRemoveButton onClick={() => handleDeleteAttachment(file.id, file.isNew || false)}>
+                        <FaXmark />
+                    </s.FileRemoveButton>
+                )}
+              </s.FileItem>
+            ))}
+        </s.FileListSection>
       </s.CardContainer>
 
-      {showUploadModal && (
+      {isModalOpen && (
         <Modal
-          title="파일 업로드"
-          onClose={handleUploadModalClose}
-          buttons={[
-            { text: '닫기', type: 0, onClick: handleUploadModalClose },
-            { text: '완료', type: 1, onClick: handleUploadModalComplete },
-          ]}
+          title={data.title}
+          onClose={closeModal}
+          buttons={
+            isSubmitted
+              ? [
+                  { text: '닫기', type: 0, onClick: closeModal },
+                  {
+                    text: '제출 취소하기',
+                    type: 1,
+                    onClick: handleCancelSubmission,
+                    disabled: isSubmitting,
+                  },
+                ]
+              : [
+                  { text: '닫기', type: 0, onClick: closeModal },
+                  {
+                    text: '과제 제출하기',
+                    type: 1,
+                    onClick: handleSubmit,
+                    disabled: isSubmitting,
+                  },
+                ]
+          }
         >
-          <div>
-            <s.FileUploadArea
-              isDragOver={isDragOver}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <MdOutlineFileUpload size={60} /> <br />
-              {isDragOver ? '여기에 파일을 놓으세요!' : '파일을 끌어다 놓거나 클릭하여 업로드하세요.'}
-            </s.FileUploadArea>
-            <input
-              ref={fileInputRef}
-              id="fileUpload"
-              type="file"
-              multiple
-              onChange={handleFileUpload}
-              accept="*"
-              style={{ display: 'none' }}
-            />
-            <s.FileList>
-              {tempFiles.length === 0 ? (
-                <p>업로드할 파일을 선택해주세요</p>
-              ) : (
-                <ul>
-                  {tempFiles.map(file => (
-                    <li key={file.id}>{file.name}</li>
-                  ))}
-                </ul>
-              )}
-            </s.FileList>
+          <div style={{ lineHeight: 1.6, marginBottom: '20px' }}>
+            <p>
+              <strong>설명:</strong> {data.content}
+            </p>
+            <p>
+              <strong>마감일:</strong> {data.endDate}
+            </p>
           </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ marginBottom: '10px', fontWeight: 'bold' }}>
+              제공된 자료
+            </h4>
+            {isFetchingTeacherAttachments ? (
+              <p>자료를 불러오는 중...</p>
+            ) : teacherAttachments.length > 0 ? (
+              <s.FileListSection>
+                {teacherAttachments.map((att, index) => (
+                  <a
+                    key={index}
+                    href={att.value}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <s.FileItem>
+                      <s.FileInfoContainer>
+                        {att.type === 'FILE' ? <FaRegFile /> : <FaLink />}
+                        <div>
+                          <s.FileNameText>
+                            {att.type === 'FILE'
+                              ? att.originalFileName
+                              : att.value}
+                          </s.FileNameText>
+                        </div>
+                      </s.FileInfoContainer>
+                    </s.FileItem>
+                  </a>
+                ))}
+              </s.FileListSection>
+            ) : (
+              <p>제공된 자료가 없습니다.</p>
+            )}
+          </div>
+
+          <AttachmentBox
+            attachments={attachments}
+            setAttachments={setAttachments}
+            openUploadModal={openUploadModal}
+            openLinkModal={openLinkModal}
+            isSubmitted={isSubmitted}
+            onDeleteAttachment={handleDeleteAttachment}
+          />
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileUpload}
+            style={{ display: 'none' }}
+            disabled={isSubmitted}
+          />
         </Modal>
       )}
 
-      {showDetailsPanel && (
-        <SlidePanel
-          isOpen={showDetailsPanel}
-          onClose={() => setShowDetailsPanel(false)}
-          title={data.title}
-        >
-          <div style={{ lineHeight: 1.6 }}>
-            <p>
-              <strong>설명:</strong> {data.description}
-            </p>
-            <p>
-              <strong>마감일:</strong> {data.deadline}
-            </p>
-            <p>
-              <strong>진행 기간:</strong> {data.duringDate} ~ {data.endDate}
-            </p>
-            <p>
-              <strong>남은 시간:</strong> {data.remainingTime}
-            </p>
-            <p>
-              <strong>제출 여부:</strong>{' '}
-              {isSubmitted
-                ? `제출함 (제출일: ${data.submissionDate ?? '없음'})`
-                : '미제출'}
-            </p>
-            {uploadedFiles.length > 0 && (
-              <>
-                <strong>업로드한 파일 목록:</strong>
-                <ul>
-                  {uploadedFiles.map(f => (
-                    <li key={f.id}>
-                      {f.name} {f.size && `(${f.size})`}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )} : (
-              <p><strong>업로드된 파일:</strong> 없음</p>
-            )
-          </div>
-        </SlidePanel>
+      {isLinkModalOpen && (
+        <AddModal
+          title="링크 추가"
+          onClose={() => setIsLinkModalOpen(false)}
+          onAdd={handleAddLink}
+          value={linkUrl}
+          onChange={(e) => setLinkUrl(e.target.value)}
+          placeholder="https://..."
+        />
       )}
     </>
   );

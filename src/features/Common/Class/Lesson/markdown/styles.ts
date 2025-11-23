@@ -98,7 +98,7 @@ export const ViewerWrapper = styled.div`
 `;
 
 export const Sidebar = styled.div`
-  width: 280px;
+  width: 16rem;
   background-color: #fafbfc;
   height: 100%;
   overflow-y: auto;
@@ -121,9 +121,9 @@ export const TabButton = styled.button<{ active: boolean }>`
   gap: 4px;
   padding: 10px 8px;
   border: none;
-  background-color: ${({ active }) => (active ? theme.colors.gray[400] : 'transparent')};
+  // background-color: ${({ active }) => (active ? theme.colors.gray[400] : 'transparent')};
   border-radius: 6px;
-  cursor: pointer;
+  // cursor: pointer;
   transition: background-color 0.2s;
   color: #333;
 
@@ -131,9 +131,9 @@ export const TabButton = styled.button<{ active: boolean }>`
     font-size: 20px;
   }
 
-  &:hover {
-    background-color: ${({ active }) => (active ? theme.colors.blue[200] : theme.colors.gray[200])};
-  }
+  // &:hover {
+  //   background-color: ${({ active }) => (active ? theme.colors.blue[200] : theme.colors.gray[200])};
+  // }
 
   span {
     font-size: 11px;

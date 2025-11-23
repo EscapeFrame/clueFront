@@ -4,7 +4,7 @@ import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   display: flex;
-  height: 100vh;
+  height: calc(125vh);
 
   @media (max-width: 1200px) {
     gap: 16px;
@@ -24,6 +24,7 @@ export const Container = styled.div`
 `;
 
 export const EditorSection = styled.div`
+  padding: 0 20px;
   flex: 1;
   display: flex;
   flex-direction: column;

@@ -5,7 +5,6 @@ export interface UserState {
     userId: string;
     email: string;
     role: 'STUDENT' | 'TEACHER' | '';
-    classCode: number | string;
     grade: number;
     classNo: number;
     number: number;
@@ -20,7 +19,6 @@ export const userState = atom<UserState>({
         userId: '',
         email: '',
         role: '',
-        classCode: 0,
         grade: 0,
         classNo: 0,
         number: 0,

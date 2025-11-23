@@ -20,29 +20,30 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
   const [selectedStudent, setSelectedStudent] = useState<DetailAssignmentStudent | null>(null);
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const data = await getCheckStudent(assignmentId);
-        setStudents(data || []);
-      } catch (error) {
-        console.error('학생 제출 현황 조회 실패:', error);
-        setStudents([]);
-      }
-    };
-    fetchStudents();
+                    const fetchStudents = async () => {
+                        try {
+                            const responseData = await getCheckStudent(assignmentId);
+                            const mappedStudents: DetailAssignmentStudent[] = responseData.map((item: any) => ({
+                                userName: item.userName,
+                                grade: item.grade,
+                                classNo: item.classNo,
+                                number: item.number,
+                                isSubmitted: item.isSubmitted,
+                                submissionId: item.submissionId,
+                                files: [], // Initialize as empty array
+                                userImg: null, // Not provided by API, default to null
+                                submittedAt: item.submittedAt || null,
+                            }));
+                            setStudents(mappedStudents || []);
+                        } catch (error) {
+                            console.error('학생 제출 현황 조회 실패:', error);
+                            setStudents([]);
+                        }
+                    };    fetchStudents();
 
     console.log("assignmentId:", assignmentId);
     console.log("students:", students);
   }, [assignmentId]);
-
-  const parseStudentNumber = (num: number) => {
-    const str = num.toString().padStart(4, '0');
-    return {
-      grade: Number(str[0]),
-      class: Number(str[1]),
-      number: Number(str.slice(2)),
-    };
-  };
 
   useEffect(() => {
     let filtered = [...students];
@@ -52,13 +53,13 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
 
     if (selectedClass !== 'all') {
       filtered = filtered.filter(
-        s => parseStudentNumber(s.classNumberGrade).class.toString() === selectedClass
+        s => s.classNo.toString() === selectedClass
       );
     }
 
     if (selectedNumber !== 'all') {
       filtered = filtered.filter(
-        s => parseStudentNumber(s.classNumberGrade).number === Number(selectedNumber)
+        s => s.number.toString() === selectedNumber
       );
     }
 
@@ -72,19 +73,19 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
   }, [students, selectedStatus, selectedClass, selectedNumber, searchTerm]);
 
   const getClassOptions = () => {
-    const classes = Array.from(new Set(students.map(s => parseStudentNumber(s.classNumberGrade).class)));
+    const classes = Array.from(new Set(students.map(s => s.classNo)));
     return classes.sort((a, b) => a - b);
   };
 
   const getNumberOptions = () => {
-    const numbers = Array.from(new Set(students.map(s => parseStudentNumber(s.classNumberGrade).number)));
+    const numbers = Array.from(new Set(students.map(s => s.number)));
     return numbers.sort((a, b) => a - b);
   };
 
   const openModal = async (student: DetailAssignmentStudent) => {
-    if (student.isSubmitted && student.contentId) {
+    if (student.isSubmitted && student.submissionId) {
       try {
-        const submissionDetails = await getStudentSubmissionDetail(student.contentId);
+        const submissionDetails = await getStudentSubmissionDetail(student.submissionId);
         const detailedStudentData = {
           ...student,
           files: submissionDetails.submissionAttachmentResponses.map((att: any) => ({
@@ -160,15 +161,15 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
           </s.EmptyMessage>
         ) : (
           filteredStudents.map(student => (
-            <div key={`${student.contentId}-${student.classNumberGrade}`} onClick={() => openModal(student)}>
+            <div key={student.submissionId || `${student.grade}-${student.classNo}-${student.number}`} onClick={() => openModal(student)}>
               <s.StudentRow>
                 <s.UserAvatar imgUrl={student.userImg} />
                 <s.UserSection>
                   <s.UserInfo>
                     <s.UserName>{student.userName}</s.UserName>
-                    <s.UserNumber>{student.classNumberGrade}</s.UserNumber>
+                    <s.UserNumber>{student.grade}학년 {student.classNo}반 {student.number}번</s.UserNumber>
                   </s.UserInfo>
-                  <s.SubmitDate>제출일: {student.userSubmitDate || '-'}</s.SubmitDate>
+                  <s.SubmitDate>제출일: {student.submittedAt || '-'}</s.SubmitDate>
                 </s.UserSection>
                 <s.StatusBadge isSubmitted={student.isSubmitted}>
                   {student.isSubmitted ? '제출완료' : '미제출'}
@@ -188,10 +189,10 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
               <s.UserSection>
                 <s.UserInfo>
                   <s.UserName>{selectedStudent.userName}</s.UserName>
-                  <s.UserNumber>{selectedStudent.classNumberGrade}</s.UserNumber>
+                  <s.UserNumber>{selectedStudent.grade}학년 {selectedStudent.classNo}반 {selectedStudent.number}번</s.UserNumber>
                 </s.UserInfo>
                 <s.SubmitDate>
-                  제출일: {selectedStudent.userSubmitDate || '-'}
+                  제출일: {selectedStudent.submittedAt || '-'}
                 </s.SubmitDate>
               </s.UserSection>
               <s.StatusBadge isSubmitted={selectedStudent.isSubmitted}>

@@ -68,8 +68,8 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/markdown" element={<TCHMarkDown />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/markdown/problem" element={<GenerateProblem />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson" element={<TCHMakeLesson />} />
-          <Route path="/class/:classRoomId/:directoryId/make/lesson/google-slide" element={<TCHMakeSlide/>} />
-          <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile/>} />
+          <Route path="/class/:classRoomId/:directoryId/make/lesson/google-slide" element={<TCHMakeSlide />} />
+          <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile />} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
           <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />
         </>
@@ -81,13 +81,13 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId" element={<STUClass />} />
           <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
           <Route path="/quiz" element={<STUQuiz />} />
+          <Route path="/linksave/*" element={<LinkSaveRoutes />} />
         </>
       )}
 
       {isAuthenticated && (
         <>
           <Route path="/setting" element={<Setting />} />
-          <Route path="/linksave/*" element={<LinkSaveRoutes />} />
           <Route path="/register" element={<RegisterPage />} />
         </>
       )}

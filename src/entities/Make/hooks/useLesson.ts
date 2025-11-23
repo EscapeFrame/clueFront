@@ -64,12 +64,9 @@ export const useDirectories = (classRoomId: string) => {
     // setIsAdding(true) 제거 - DirectorySelect에서 관리
     setError(null);
     try {
-      const nextDirectory = directories.length
-        ? Math.max(...directories.map((d) => d.directoryOrder)) + 1
-        : 1;
+
       const request: DirectoryCreateRequest = {
         classRoomId,
-        directoryOrder: nextDirectory,
         name: trimName,
       };
       const response = await createDirectory(request);

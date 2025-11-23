@@ -14,8 +14,8 @@ export const SendMakeTask = async (p: {
   classId: string | number;
   title: string;
   content: string;
-  start_date: string; // 'YYYY-MM-DD'
-  end_date: string; // 'YYYY-MM-DD'
+  start_date: string;
+  end_date: string;
 }) => {
   const payload = {
     class_id: String(p.classId),

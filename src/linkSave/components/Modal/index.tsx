@@ -22,6 +22,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   initialData,
   onSubmit,
 }) => {
+  console.log('LinkFormModal rendered, isOpen:', isOpen);
   const [formData, setFormData] = useState<LinkFormData>({
     title: '',
     link: '',
@@ -74,8 +75,18 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
   };
 
   // 공개범위 토글
-  const handleVisibilityToggle = (key: 'GRADE' | 'CLASS', checked: boolean) => {
-    setVisibility(prev => ({ ...prev, [key]: checked }));
+  const handleVisibilityToggle = (key: 'grade' | 'class', checked: boolean) => {
+    if (checked) {
+      if (key === 'grade') {
+        setVisibility({ grade: true, class: false });
+      } else {
+        // key === 'class'
+        setVisibility({ grade: false, class: true });
+      }
+    } else {
+      // When unchecking, just set that specific key to false.
+      setVisibility(prev => ({ ...prev, [key]: false }));
+    }
   };
 
   // 제출
@@ -87,13 +98,11 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
       return;
     }
 
-    let visibilityScope = 'PRIVATE';
-    if (visibility.grade && visibility.class) {
+    let visibilityScope = 'PRIVATE'; 
+    if (visibility.grade) {
       visibilityScope = 'PUBLIC';
-    } else if (visibility.grade) {
-      visibilityScope = 'GRADE';
     } else if (visibility.class) {
-      visibilityScope = 'CLASS';
+      visibilityScope = 'CLASS_ONLY';
     }
 
     // 제출 시 onSubmit 콜백으로 전달
@@ -181,13 +190,13 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
             <ToggleSwitch
               id="gradeToggle"
               checked={visibility.grade}
-              onChange={checked => handleVisibilityToggle('GRADE', checked)}
+              onChange={checked => handleVisibilityToggle('grade', checked)}
             />
             반
             <ToggleSwitch
               id="classToggle"
               checked={visibility.class}
-              onChange={checked => handleVisibilityToggle('CLASS', checked)}
+              onChange={checked => handleVisibilityToggle('class', checked)}
             />
           </S.TagButtonContainer>
 

@@ -63,7 +63,9 @@ export const LogoBox = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 20%;
     display: block;
+    transition: transform 160ms ease, object-position 160ms ease;
   }
 
   &::after {
@@ -73,7 +75,6 @@ export const LogoBox = styled.div`
     bottom: 0;
     width: 100%;
     height: 50%;
-    background: linear-gradient(to top, rgba(135, 135, 135, 0.7), transparent);
     pointer-events: none;
   }
 `;
@@ -81,9 +82,10 @@ export const LogoBox = styled.div`
 export const TextOverImage = styled.div`
   position: absolute;
   bottom: 16px;
-  left: 16px;
+  right: 16px;
   z-index: 1;
   ${fonts.P2}
+  color: black;
 `;
 
 export const Title = styled.div`

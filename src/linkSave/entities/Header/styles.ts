@@ -8,13 +8,12 @@ export const HeaderContainer = styled.div`
   width: 100%;
   background-color: white;
   padding-bottom: 1rem;
-
 `;
 
 export const TopRow = styled.div`
   display: flex;
   justify-content: flex-end;
-  padding: 0 8rem;
+  padding: 0 14rem;
   margin-bottom: 0.5rem;
 
   @media (max-width: 768px) {
@@ -29,7 +28,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 8rem;
+  padding: 0 14rem;
 
   @media (max-width: 768px) {
     padding: 0 1.5rem;

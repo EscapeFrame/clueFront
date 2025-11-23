@@ -53,11 +53,6 @@ export const getLessonDirectories = async (classRoomId: string): Promise<Directo
   return res.data;
 };
 
-export const getClassCode = async (classRoomId:string) => {
-  const res = await Customapi.get(`api/code/${classRoomId}`);
-  return res.data
-}
-
 // 새소식 조회(없음)
 export const getLessonNews = async (classRoomId: string): Promise<NewsItem[]> => {
   const res = await Customapi.get(`/api/lessons/${classRoomId}/news`);

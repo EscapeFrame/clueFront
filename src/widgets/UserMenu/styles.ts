@@ -46,6 +46,10 @@ export const ProfileImage = styled.img`
 export const ProfileName = styled.div`
   ${fonts.P2}
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 5em;
 `;
 
 export const StudentNumber = styled.div`

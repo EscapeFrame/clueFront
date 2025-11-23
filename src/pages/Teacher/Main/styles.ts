@@ -4,16 +4,17 @@ export const Container = styled.div`
   display: flex;
   min-height: 100vh;
   background-color: #f7f7f7;
-  padding: 16px 4rem;
+  padding: 1rem 14rem;
   gap: 24px;
   overflow-y: auto;
 
-  @media (max-width: 1200px) {
-    padding: 16px 2rem;
+  /* 반응형 패딩: 네브바와 동일한 기준 사용 */
+  @media (max-width: 868px) {
+    padding: 1rem 1.5rem;
   }
 
-  @media (max-width: 768px) {
-    padding: 16px 1rem;
+  @media (max-width: 480px) {
+    padding: 1rem 1rem;
     display: block;
   }
 `;

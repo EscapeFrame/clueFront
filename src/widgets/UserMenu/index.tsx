@@ -9,6 +9,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { useRecoilState } from 'recoil';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { userState } from '@/shared/model/userState';
+import Customapi from '@/shared/config/api'; // Add this line
 // Customapi is not required here because profile image is provided by useProfileImage
 import { useProfileImage } from '@/shared/model/profileImageState';
 
@@ -40,7 +41,8 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
     window.location.href = "https://forms.gle/bbRKdV8WNegv3QSU9";
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await Customapi.post("/api/logout");
     localStorage.removeItem("accessToken");
     removeAuthInfo();
     setUser({
@@ -48,7 +50,6 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
       userId: '',
       email: '',
       role: '',
-      classCode: 0,
       grade: 0,
       classNo: 0,
       number: 0,

@@ -7,7 +7,8 @@ interface StatusProps {
 }
 
 export const Container = styled.div`
-  padding: 0 8rem;
+  padding: 0 14rem;
+  height: 100vh;
 
   @media (max-width: 1200px) {
     padding: 2rem 4rem;

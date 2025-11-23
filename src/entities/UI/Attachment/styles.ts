@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import { theme } from "@/shared/theme/theme.styles";
-import { fonts } from "@/shared/theme/font.styles";
+import styled from '@emotion/styled';
+import { theme } from '@/shared/theme/theme.styles';
+import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   margin-top: 1rem;
@@ -39,6 +39,12 @@ export const Button = styled.button`
 
   &:hover {
     background: ${theme.colors.gray[100]};
+  }
+
+  &:disabled {
+    background-color: ${theme.colors.gray[100]};
+    color: ${theme.colors.gray[400]};
+    cursor: not-allowed;
   }
 
   @media (max-width: 768px) {
@@ -86,5 +92,10 @@ export const Remove = styled.button`
 
   &:hover {
     color: ${theme.colors.red};
+  }
+
+  &:disabled {
+    color: ${theme.colors.gray[400]};
+    cursor: not-allowed;
   }
 `;

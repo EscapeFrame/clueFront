@@ -4,7 +4,7 @@ import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   display: flex;
-  height: calc(100vh - 80px);
+  height: calc(100% - 80px);
 `;
 
 export const MenuButton = styled.button<{ active?: boolean }>`
@@ -32,7 +32,7 @@ export const Sidebar = styled.nav<{ isOpen?: boolean }>`
   position: fixed;
   left: 8rem;
   top: 2rem;
-  height: calc(100vh - 80px); /* 네브바 높이 제외 */
+  height: calc(100% - 80px); /* 네브바 높이 제외 */
   display: flex;
   flex-direction: column;
   gap: 12px;

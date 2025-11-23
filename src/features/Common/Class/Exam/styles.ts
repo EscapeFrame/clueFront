@@ -5,7 +5,7 @@ import { fonts } from '@/shared/theme/font.styles';
 export const Container = styled.div`
   display: flex;
   flex-direction: column; 
-  padding: 0 8rem;
+  padding: 0 14rem;
 `;
 
 export const ErrorText = styled.p`
