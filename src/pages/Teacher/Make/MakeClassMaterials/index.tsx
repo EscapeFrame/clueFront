@@ -3,7 +3,7 @@ import * as s from "./styles";
 import Step1 from "@/features/Teacher/MakeMaterials/Step1/Step1";
 import Step2 from "@/features/Teacher/MakeMaterials/Step2/Step2";
 import Step3 from "@/features/Teacher/MakeMaterials/Step3/Step3";
-import { Word, AgentFlowResponse, Doc } from "@/features/Teacher/MakeMaterials/api";
+import { Word, AgentFlowResponse, Doc, patchAgentFlow } from "@/features/Teacher/MakeMaterials/api";
 import { usePostAgentDoc } from "@/features/Teacher/MakeMaterials/hooks/useAgentDoc";
 
 export default function MakeClassMaterials() {
@@ -31,8 +31,17 @@ export default function MakeClassMaterials() {
             setAgentId(payload.data.agentId);
             setCurrentStep(currentStep + 1); // Move to Step2
         } else if (payload && "words" in payload && agentId) {
-            // From Step2 (words payload)
-            postDocMutate({ agentId, words: payload.words });
+            // From Step2 (words payload) - update flow on server via PATCH, then request docs
+            (async () => {
+                try {
+                    await patchAgentFlow(agentId, payload.words);
+                    postDocMutate({ agentId, words: payload.words });
+                } catch (err) {
+                    const maybeErr = err as { message?: string } | undefined;
+                    const message = maybeErr && maybeErr.message ? maybeErr.message : String(err);
+                    alert(`플로우 업데이트에 실패했습니다: ${message}`);
+                }
+            })();
         } else {
             // General next (e.g., from Step3)
             setCurrentStep(currentStep + 1);
