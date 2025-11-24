@@ -3,6 +3,7 @@ import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
 import { AssignmentFile, DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
 import { getCheckStudent, getStudentSubmissionDetail } from '@/entities/Class/api';
+import { IoClose } from 'react-icons/io5';
 
 interface AssignmentEntryProps {
   assignmentId: string;
@@ -198,7 +199,7 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
               <s.StatusBadge isSubmitted={selectedStudent.isSubmitted}>
                 {selectedStudent.isSubmitted ? '제출완료' : '미제출'}
               </s.StatusBadge>
-              <s.CloseButton onClick={closeModal}>×</s.CloseButton>
+              <s.CloseButton onClick={closeModal}><IoClose size={16} /></s.CloseButton>
             </s.ModalHeader>
             <s.ModalBody>
               {selectedStudent.isSubmitted ? (

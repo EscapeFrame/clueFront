@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { IoClose } from 'react-icons/io5';
 import * as s from "./styles";
 import { usePostMaterials } from "../hooks/useMaterials";
 import { MdAdd, MdRemove } from "react-icons/md";
@@ -111,7 +112,7 @@ export default function Step1({ onNext }: Step1Props) {
                         {keywords.map((k) => (
                             <s.KeywordItem key={k}>
                                 <span>{k}</span>
-                                <button type="button" onClick={() => removeKeyword(k)}>×</button>
+                                <button type="button" onClick={() => removeKeyword(k)}><IoClose size={16} /></button>
                             </s.KeywordItem>
                         ))}
                     </s.KeywordList>

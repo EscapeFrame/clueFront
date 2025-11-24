@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { Component, ReactNode } from 'react';
 import * as s from './styles';
+import { IoClose } from 'react-icons/io5';
 
 interface SlidePanelProps {
   isOpen: boolean;                  // 패널 열림 여부
@@ -61,7 +62,7 @@ export class SlidePanel extends Component<SlidePanelProps, SlidePanelState> {
           <s.Header>
             <div id="slidepanel-title">{title}</div>
             <s.CloseButton aria-label="닫기" onClick={onClose}>
-              &times;
+              <IoClose size={16} />
             </s.CloseButton>
           </s.Header>
           <s.Content>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { IoClose } from 'react-icons/io5';
 import * as S from './styles';
 import { LinkCard, LinkFormData, LINK_CATEGORY_MAP, LINK_CATEGORY_ENGLISH_MAP, AuthorizationType } from '@/linkSave/types/card';
 import { FormInputGroup } from './Input';
@@ -144,7 +145,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
       <S.ModalContent onClick={e => e.stopPropagation()}>
         <S.ModalHeader>
           <S.ModalTitle>{modalTitle}</S.ModalTitle>
-          <S.CloseButton onClick={onClose}>&times;</S.CloseButton>
+          <S.CloseButton onClick={onClose}><IoClose size={16} /></S.CloseButton>
         </S.ModalHeader>
 
         <form onSubmit={handleSubmit}>
