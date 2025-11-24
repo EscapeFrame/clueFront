@@ -70,7 +70,7 @@ export const Item = styled.div`
   margin-right: 1.25rem;
   text-decoration: none;
   color: ${theme.colors.black};
-  ${fonts.P2}
+  ${fonts.P3}
   display: flex;
   align-items: center; /* 텍스트 세로 중앙정렬 */
   height: 100%; /* 높이 꽉 채워서 정렬 안정화 */

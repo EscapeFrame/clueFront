@@ -26,7 +26,7 @@ export const SearchField = styled.input`
   border: none;
   outline: none;
   background: transparent;
-  ${fonts.P1}
+  ${fonts.P2}
 `;
 
 export const SearchIcon = styled(IoSearch)`
