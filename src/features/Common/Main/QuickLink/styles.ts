@@ -32,6 +32,7 @@ export const LinkContainer = styled.div`
   overflow-x: auto;                /* 넘치면 스크롤 */
   width: 100%;
   box-sizing: border-box;
+  padding-bottom: 20px;            /* 스크롤바와 내용물 간격 */
 
   @media (max-width: 768px) {
     grid-auto-flow: row;
@@ -45,12 +46,19 @@ export const Link = styled.a`
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 250px;
+  min-height: 250px;
   text-decoration: none;
   color: ${theme.colors.white};
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+  }
 `;
 
 export const LogoBox = styled.div`
@@ -60,12 +68,15 @@ export const LogoBox = styled.div`
   overflow: hidden;
 
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 20%;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
     display: block;
     transition: transform 160ms ease, object-position 160ms ease;
+  padding: 8px; /* 작은 내부 여백을 줘서 이미지가 모서리에 붙어 잘리는 현상 완화 */
+  box-sizing: border-box;
   }
 
   &::after {
@@ -99,8 +110,8 @@ export const Title = styled.div`
 `;
 
 export const Explain = styled.div`
-    display: 'flex';
-    justifyContent: 'space-between';
-    margin: 0;
-    padding: 0;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
 `;
