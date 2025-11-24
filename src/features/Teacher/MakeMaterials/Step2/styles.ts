@@ -188,7 +188,8 @@ export const NodeTitleInput = styled.textarea`
     color: #1f2937;
     text-align: center;
     outline: none;
-    resize: vertical;
+    resize: none; /* disable manual resize, we'll autosize programmatically */
+    overflow: hidden; /* hide scrollbars */
     line-height: 1.2;
     background: transparent;
 
