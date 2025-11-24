@@ -79,14 +79,91 @@ export interface AgentDocResponse {
 
 export const postAgentDoc = async (agentId: string, words: Word[]): Promise<AgentDocResponse> => {
   const response = await Customapi.post(`/api/v1/agents/${agentId}/doc`, { words }, { timeout: 180000 });
-  return response.data;
+  const raw = response.data as Record<string, unknown>;
+
+  // Normalize to AgentDocResponse shape: data.doc.docs
+  const docs: Doc[] = (() => {
+    if (!raw) return [];
+    // case: data.docs
+    const data = raw['data'];
+    if (data && typeof data === 'object') {
+      const dataObj = data as Record<string, unknown>;
+      const maybeDocs = dataObj['docs'];
+      if (Array.isArray(maybeDocs)) return maybeDocs as Doc[];
+      const doc = dataObj['doc'];
+      if (doc && typeof doc === 'object') {
+        const docObj = doc as Record<string, unknown>;
+        const nested = docObj['docs'];
+        if (Array.isArray(nested)) return nested as Doc[];
+      }
+    }
+    // fallback empty
+    return [];
+  })();
+
+  const normalized: AgentDocResponse = {
+    data: {
+      status: (() => {
+        if (raw['success'] === true) return 'success';
+        const d = raw['data'];
+        if (d && typeof d === 'object') {
+          const dObj = d as Record<string, unknown>;
+          const s = dObj['status'];
+          if (typeof s === 'string') return s;
+        }
+        return 'failed';
+      })(),
+      doc: { docs },
+      agent_id: agentId,
+    },
+    message: (raw['message'] as string) ?? '',
+  };
+
+  return normalized;
 };
 
 
 // ================= PATCH /api/v1/agents/{agent_id}/doc =================
 export const patchAgentDoc = async (agentId: string, docs: Doc[]): Promise<AgentDocResponse> => {
   const response = await Customapi.patch(`/api/v1/agents/${agentId}/doc`, { docs }, { timeout: 180000 });
-  return response.data;
+  const raw = response.data as Record<string, unknown>;
+
+  const retDocs: Doc[] = (() => {
+    if (!raw) return [];
+    const data = raw['data'];
+    if (data && typeof data === 'object') {
+      const dataObj = data as Record<string, unknown>;
+      const maybeDocs = dataObj['docs'];
+      if (Array.isArray(maybeDocs)) return maybeDocs as Doc[];
+      const doc = dataObj['doc'];
+      if (doc && typeof doc === 'object') {
+        const docObj = doc as Record<string, unknown>;
+        const nested = docObj['docs'];
+        if (Array.isArray(nested)) return nested as Doc[];
+      }
+    }
+    return [];
+  })();
+
+  const normalized: AgentDocResponse = {
+    data: {
+      status: (() => {
+        if (raw['success'] === true) return 'success';
+        const d = raw['data'];
+        if (d && typeof d === 'object') {
+          const dObj = d as Record<string, unknown>;
+          const s = dObj['status'];
+          if (typeof s === 'string') return s;
+        }
+        return 'failed';
+      })(),
+      doc: { docs: retDocs },
+      agent_id: agentId,
+    },
+    message: (raw['message'] as string) ?? '',
+  };
+
+  return normalized;
 };
 
 
