@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/hooks/useAccessToken";
 import useQuizSocket from "@/app/hooks/useQuizSocket";
+import { useCheckRoomJoinable, useQuizRoom } from "@/entities/Quiz/api";
 
 import JoinQuiz from "@/entities/Quiz/Student/Join";
 import Solving from "@/entities/Quiz/Student/Solving";
@@ -125,19 +126,38 @@ export default function STUQuiz() {
         };
     }, [roomCode, subscribe, step, user.userId]);
 
-    // 방 참여 핸들러
-    const handleJoinRoom = (code: string) => {
+    // 방 참여 핸들러 (REST API로 먼저 참여 가능 여부 확인)
+    const handleJoinRoom = async (code: string) => {
         if (!character || !user.userId) {
             alert("캐릭터를 선택하고 로그인해주세요.");
             return;
         }
 
-        setRoomCode(code);
-        
-        if (send) {
-            // 방 참여 메시지 전송
-            send(`/app/quiz/join/${code}`, { userId: user.userId });
-            setStep("waiting");
+        try {
+            // REST API로 방 참여 가능 여부 확인
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/quiz/rooms/${code}/joinable`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+            });
+            
+            const joinableData = await response.json();
+            
+            if (!joinableData.joinable) {
+                alert(joinableData.message || "참여할 수 없는 방입니다.");
+                return;
+            }
+
+            setRoomCode(code);
+            
+            if (send) {
+                // 방 참여 메시지 전송
+                send(`/app/quiz/join/${code}`, { userId: user.userId });
+                setStep("waiting");
+            }
+        } catch (error) {
+            console.error("방 참여 가능 여부 확인 실패:", error);
+            alert("방 정보를 확인하는 중 오류가 발생했습니다.");
         }
     };
 

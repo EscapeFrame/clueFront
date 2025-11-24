@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import useQuizSocket from "@/app/hooks/useQuizSocket";
+import { useAuth } from "@/app/hooks/useAccessToken";
+import { useQuizRoom, useQuizRoomsByHost } from "@/entities/Quiz/api";
 
 import CreateQuiz from "@/entities/Quiz/Teacher/CreateQuiz";
 import WaitingRoom from "@/entities/Quiz/Teacher/WaitingRoom";
