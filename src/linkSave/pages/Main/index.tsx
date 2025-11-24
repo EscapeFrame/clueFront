@@ -4,7 +4,7 @@ import LinkCardList from '@/linkSave/components/CardList';
 import LinkFormModal from '@/linkSave/components/Modal';
 import DeleteConfirmModal from '@/linkSave/components/Modal/Delete';
 import * as S from './styles';
-import { LinkCard, LinkFormData, LINK_CATEGORY_ENGLISH_MAP, LinkCategoryKorean } from '@/linkSave/types/card';
+import { LinkCard, LinkFormData, LINK_CATEGORY_ENGLISH_MAP, LinkCategoryKorean, AuthorizationType } from '@/linkSave/types/card';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { useGetAlllinks, useAddLink, useDeleteLink, useUpdateLink } from '@/linkSave/hooks/useLinkSave';
@@ -18,13 +18,49 @@ export const LinkSaveMain = () => {
     const [modalMode, setModalMode] = useState<'추가' | '수정'>('추가');
     const [selectedCard, setSelectedCard] = useState<LinkCard | null>(null); // 수정/삭제 대상 카드
 
-    const { data: cardsData, isLoading, isError, error } = useGetAlllinks();
+    const {
+        data: pagesData,
+        isLoading,
+        isError,
+        error,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useGetAlllinks(40);
     const addLinkMutation = useAddLink();
     const updateLinkMutation = useUpdateLink();
     const deleteLinkMutation = useDeleteLink();
 
-    // cardsData가 배열이 아닐 경우 빈 배열로 초기화
-    const cards: LinkCard[] = Array.isArray(cardsData) ? cardsData : [];
+    // pagesData를 단일 배열로 병합
+    const cards: LinkCard[] = pagesData?.pages && Array.isArray(pagesData.pages)
+        ? (pagesData.pages.flat() as LinkCard[])
+        : [];
+
+    // 스크롤 핸들러: 창 스크롤이 하단에 가까워지면 다음 페이지 요청
+    React.useEffect(() => {
+        let ticking = false;
+        const handleScroll = () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const scrollTop = window.scrollY || window.pageYOffset;
+                const viewportHeight = window.innerHeight;
+                const fullHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+                const threshold = 300; // 바닥에서 300px 이내일 때 로드
+                if (fullHeight - (scrollTop + viewportHeight) <= threshold) {
+                    if (hasNextPage && !isFetchingNextPage) {
+                        fetchNextPage();
+                    }
+                }
+                ticking = false;
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
     const handleSearch = useCallback((query: string) => {
         setSearchQuery(query.toLowerCase());
@@ -61,7 +97,7 @@ export const LinkSaveMain = () => {
                 description: data.description,
                 link: data.link,
                 subjectType: LINK_CATEGORY_ENGLISH_MAP[data.subjectType as LinkCategoryKorean] || data.subjectType,
-                authorizationType: (data as any).authorizationType,
+                authorizationType: (data as unknown as { authorizationType?: AuthorizationType }).authorizationType,
                 // include grade/class if available from logged-in user
                 ...(user?.grade ? { grade: String(user.grade) } : {}),
                 ...(user?.classNo ? { clas: String(user.classNo) } : {}),

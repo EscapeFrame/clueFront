@@ -1,9 +1,13 @@
 import Customapi from '@/shared/config/api';
 import { LinkCard, LinkFormData } from '../types/card';
 
-// 1. 모든 링크 조회 (카테고리 무관)
-export const fetchAllLinks = async (): Promise<LinkCard[]> => {
-    const response = await Customapi.get('api/linksave');
+// 1. 모든 링크 조회 (카테고리 무관) - optional pagination
+export const fetchAllLinks = async (size?: number, offset?: number): Promise<LinkCard[]> => {
+    const params: Record<string, number> = {};
+    if (typeof size === 'number') params.size = size;
+    if (typeof offset === 'number') params.offset = offset;
+
+    const response = await Customapi.get('api/linksave', { params });
     return response.data;
 };
 
