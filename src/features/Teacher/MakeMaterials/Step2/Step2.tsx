@@ -25,6 +25,7 @@ export interface Step2Props {
     words: Word[];
     onBack?: () => void;
     onNext?: (payload: { words: Word[] }) => void;
+    agentId?: string;
 }
 
 const workflowIconMap: Record<WorkflowIconKey, React.ReactNode> = {

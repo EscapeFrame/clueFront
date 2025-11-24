@@ -48,6 +48,12 @@ const postAgentFlow = async (agentId: string): Promise<AgentFlowResponse> => {
   return response.data;
 };
 
+// ================= PATCH /api/v1/agents/{agent_id}/flow =================
+export const patchAgentFlow = async (agentId: string, words: Word[]): Promise<AgentFlowResponse> => {
+  const response = await Customapi.patch(`/api/v1/agents/${agentId}/flow`, { words });
+  return response.data;
+};
+
 
 // ================= Step 3: POST /api/v1/agents/{agent_id}/doc =================
 
@@ -69,6 +75,13 @@ export interface AgentDocResponse {
 
 export const postAgentDoc = async (agentId: string, words: Word[]): Promise<AgentDocResponse> => {
   const response = await Customapi.post(`/api/v1/agents/${agentId}/doc`, { words });
+  return response.data;
+};
+
+
+// ================= PATCH /api/v1/agents/{agent_id}/doc =================
+export const patchAgentDoc = async (agentId: string, docs: Doc[]): Promise<AgentDocResponse> => {
+  const response = await Customapi.patch(`/api/v1/agents/${agentId}/doc`, { docs });
   return response.data;
 };
 
