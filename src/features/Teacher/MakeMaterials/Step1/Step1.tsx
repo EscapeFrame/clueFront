@@ -75,7 +75,7 @@ export default function Step1({ onNext }: Step1Props) {
         if (!isFormValid) return;
 
         mutate({
-            studing_name: title,
+            studying_name: title,
             learning_purpose: goal,
             main_word: keywords,
             link: links.filter(l => l.trim() !== ""),
