@@ -28,6 +28,7 @@ import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
 
 import { LinkSaveRoutes } from '@/linkSave/app/Routes';
 import TCHQuiz from '@/pages/Teacher/Quiz';
+import QuizApiTest from '@/pages/Common/QuizApiTest';
 
 interface AppRoutesProps {
   role: string | null;
@@ -91,6 +92,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
         <>
           <Route path="/setting" element={<Setting />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/quiz-api-test" element={<QuizApiTest />} />
         </>
       )}
 
