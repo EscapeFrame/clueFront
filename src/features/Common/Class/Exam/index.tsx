@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { HiMiniXMark } from "react-icons/hi2";
+// import { HiMiniXMark } from "react-icons/hi2";
 import * as s from './styles';
+import Button from '@/entities/UI/Button';
 import { ExamApi } from '../useExam';
 import { Exam, ExamDetail } from '@/shared/types/Class/Exam';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +15,7 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
   const [selectedExam, setSelectedExam] = useState<ExamDetail | null>(null);
   const { classId } = useParams<{ classId: string }>();
   const [exams, setExams] = useState<Exam[]>([]);
-  const [loading, setLoading] = useState(true);
+  // loading state removed as unused
   const navigate = useNavigate();
 
   const openModal = (exam: Exam) => setSelectedExam(exam);
@@ -26,10 +27,8 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
         if (!classId) throw new Error('classId가 없습니다.');
         const data = await ExamApi(classId);
         setExams(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('시험 불러오기 실패:', err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -104,11 +103,9 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
                           : '0 KB'}
                       </span>
                     </div>
-                    <button
-                      onClick={() => window.open(file.url || '#', '_blank')}
-                    >
+                    <Button type={2} width="90px" onClick={() => window.open(file.url || '#', '_blank')}>
                       다운로드
-                    </button>
+                    </Button>
                   </s.FileItem>
                 ))}
               </s.FileList>

@@ -1,15 +1,23 @@
 import * as s from './styles';
 
 interface ButtonProps {
-  text: string;
+  text?: string;
   width?: string | number;
-  type?: 0 | 1 | 2 | 3; // 0: primary, 1: light4, 2: line, 3: gray3
+  type?: 0 | 1 | 2 | 3; // 0: primary, 1: light4, 2: line, 3: gray3 (visual variant)
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean; // 활성화: false, 비활성화: true
+  children?: React.ReactNode;
+  htmlType?: 'button' | 'submit' | 'reset';
 }
 
 export default function Button({
-  text,width = '100%', type = 0,disabled = false, onClick,
+  text,
+  width = '100%',
+  type = 0,
+  disabled = false,
+  onClick,
+  children,
+  htmlType = 'button',
 }: ButtonProps) {
   const resolvedWidth = typeof width === 'number' ? `${width}px` : width;
 
@@ -19,8 +27,9 @@ export default function Button({
       variant={type}
       onClick={onClick}
       disabled={disabled}
+      type={htmlType}
     >
-      {text}
+      {children ?? text}
     </s.StyledButton>
   );
 }

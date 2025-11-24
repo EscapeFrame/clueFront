@@ -5,6 +5,7 @@ import { useNoticeDetail, useNoticeAttachments } from '@/features/Common/Main/ho
 import { noticeApi } from '@/features/Common/Main/api/useNotice';
 import { NoticeDocument, DetailNoticeItem } from '@/shared/types/notice';
 import { ButtonData } from '@/shared/types/modal';
+import { IoClose } from 'react-icons/io5';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 
@@ -117,7 +118,7 @@ export default function NoticeDetailModal({
                       </s.AttachmentLink>
                     </div>
                     {isTeacher && (
-                      <s.DeleteButton onClick={() => handleDeleteAttachment(doc.noticeDocumentId)}>&times;</s.DeleteButton>
+                      <s.DeleteButton onClick={() => handleDeleteAttachment(doc.noticeDocumentId)}><IoClose size={16} /></s.DeleteButton>
                     )}
                   </s.AttachmentItem>
                 ))}

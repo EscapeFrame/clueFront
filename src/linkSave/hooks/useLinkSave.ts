@@ -3,7 +3,7 @@ import { fetchLinks, fetchAllLinks, addLink, updateLink, deleteLink } from "../s
 import { LinkFormData, LinkCard } from "../types/card";
 
 // 1. 모든 링크 조회 (useGetAlllinks)
-export const useGetAlllinks = (size = 40): UseInfiniteQueryResult<LinkCard[], Error, InfiniteData<LinkCard[]>, [string, number]> => {
+export const useGetAlllinks = (size = 40): UseInfiniteQueryResult<InfiniteData<LinkCard[]>, Error> => {
     return useInfiniteQuery<LinkCard[], Error, InfiniteData<LinkCard[]>, [string, number]>({
         queryKey: ['allLinks', size],
         queryFn: async (context: QueryFunctionContext) => {

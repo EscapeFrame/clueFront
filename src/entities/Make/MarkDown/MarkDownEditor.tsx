@@ -297,7 +297,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
                 </s.FileUploadWrapper>
                 <s.EditorWrapper data-color-mode="light">
           <MDEditor
-            height="100%"
+            height="200%"
             value={mdContent}
             autoFocus={true}
             style={{ whiteSpace: 'pre-wrap' }}
@@ -305,14 +305,6 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
             preview="edit"
           />
                 </s.EditorWrapper>
-                <s.BottomButtons>
-                    <s.AIFeedbackButton onClick={() => setViewerMode('aiAgent')}>
-                        AI 피드백
-                        <s.AIFeedbackDesc>
-                            작성한 내용을 분석하여 피드백과 개선 제안을 제공합니다
-                        </s.AIFeedbackDesc>
-                    </s.AIFeedbackButton>
-                </s.BottomButtons>
             </s.EditorSection>
 
             <s.ViewerSection>
@@ -320,9 +312,6 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
                     <s.ToggleWrapper>
                         <s.ToggleButton active={viewerMode === 'preview'} onClick={() => setViewerMode('preview')}>
                             미리보기
-                        </s.ToggleButton>
-                        <s.ToggleButton active={viewerMode === 'aiAgent'} onClick={() => setViewerMode('aiAgent')}>
-                            AI Agents
                         </s.ToggleButton>
                     </s.ToggleWrapper>
                 </s.ViewerHeader>

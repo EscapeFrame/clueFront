@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { IoClose } from 'react-icons/io5';
 import * as s from '@/entities/UI/AddModal/styles'; // Reusing styles from AddModal
 import Button from '@/entities/UI/Button'; // Assuming Button is generic
 
@@ -31,7 +32,7 @@ export default function ScheduleAddModal({
       <s.ModalWrapper onClick={(e) => e.stopPropagation()}>
         <s.Header>
           <s.Title>시간표 추가</s.Title>
-          <s.CloseButton onClick={onClose}>&times;</s.CloseButton>
+          <s.CloseButton onClick={onClose}><IoClose size={16} /></s.CloseButton>
         </s.Header>
         
         <s.InputField

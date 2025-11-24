@@ -1,6 +1,7 @@
 // src/linkSave/components/DeleteConfirmModal.tsx
 
 import React from 'react';
+import { IoClose } from 'react-icons/io5';
 import * as S from '../styles';
 import { LinkCard } from '@/linkSave/types/card';
 
@@ -30,7 +31,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
       <S.ModalContent onClick={e => e.stopPropagation()}>
         <S.ModalHeader>
           <S.ModalTitle>내용을 삭제하시겠습니까?</S.ModalTitle>
-          <S.CloseButton onClick={onClose}>&times;</S.CloseButton>
+          <S.CloseButton onClick={onClose}><IoClose size={16} /></S.CloseButton>
         </S.ModalHeader>
 
         <S.DeleteItemInfo>

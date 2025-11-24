@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import * as s from '../styles';
+import { IoClose } from 'react-icons/io5';
 
 interface FileModalProps {
   onClose: () => void;
@@ -25,7 +26,7 @@ const FileModal: React.FC<FileModalProps> = ({ onClose, onFileUpload }) => {
       <s.ModalWrapper onClick={(e) => e.stopPropagation()}>
         <s.Header>
           <s.Title>파일 제출하기</s.Title>
-          <s.CloseBtn onClick={onClose}>&times;</s.CloseBtn>
+                        <s.CloseBtn onClick={onClose}><IoClose size={16} /></s.CloseBtn>
         </s.Header>
 
         <s.Content>

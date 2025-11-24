@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { Component, ReactNode } from 'react';
 import * as s from './styles';
+import { IoClose } from 'react-icons/io5';
+import Button from '@/entities/UI/Button';
 
 interface SlidePanelProps {
   isOpen: boolean;                  // 패널 열림 여부
@@ -9,7 +11,7 @@ interface SlidePanelProps {
   width?: string;                  // 패널 너비
   title?: string;                  // 패널 제목
   userRole?: 'Teacher' | 'Student' | string;  // 권한 구분
-  onSave?: (updatedContent: any) => void;     // 저장 콜백 (편집 시)
+  onSave?: (updatedContent: string) => void;     // 저장 콜백 (편집 시)
 }
 
 interface SlidePanelState {
@@ -61,7 +63,7 @@ export class SlidePanel extends Component<SlidePanelProps, SlidePanelState> {
           <s.Header>
             <div id="slidepanel-title">{title}</div>
             <s.CloseButton aria-label="닫기" onClick={onClose}>
-              &times;
+              <IoClose size={16} />
             </s.CloseButton>
           </s.Header>
           <s.Content>
@@ -72,7 +74,7 @@ export class SlidePanel extends Component<SlidePanelProps, SlidePanelState> {
                   onChange={this.handleChange}
                   style={{ width: '100%', height: '200px', fontSize: '1rem' }}
                 />
-                <button onClick={this.handleSave}>저장</button>
+                <Button type={0} onClick={this.handleSave}>저장</Button>
               </>
             ) : (
               <>
