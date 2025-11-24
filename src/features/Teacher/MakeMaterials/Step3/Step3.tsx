@@ -12,16 +12,24 @@ interface Step3Props {
 
 export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: Step3Props) {
     const [selectedDocIndex, setSelectedDocIndex] = useState<number>(0);
+    const [localDocs, setLocalDocs] = useState<Doc[]>([]);
     const [currentContent, setCurrentContent] = useState<string>("");
     const [isSending, setIsSending] = useState<boolean>(false);
 
+    // Initialize local copy when docs prop changes
     useEffect(() => {
-        if (docs.length > 0) {
-            setCurrentContent(docs[selectedDocIndex].content);
+        setLocalDocs(docs.map((d) => ({ ...d })));
+        setSelectedDocIndex(0);
+    }, [docs]);
+
+    // keep currentContent in sync with selected local doc
+    useEffect(() => {
+        if (localDocs.length > 0 && localDocs[selectedDocIndex]) {
+            setCurrentContent(localDocs[selectedDocIndex].content);
         } else {
             setCurrentContent("");
         }
-    }, [docs, selectedDocIndex]);
+    }, [localDocs, selectedDocIndex]);
 
     const handleDocSelect = (index: number) => {
         setSelectedDocIndex(index);
@@ -30,19 +38,22 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: S
     // Update the corresponding doc's content in the docs array when textarea changes
     const updateCurrentDocContent = (value: string) => {
         setCurrentContent(value);
-        // mutate passed-in docs array to prepare payload — keep minimal and best-effort
-        if (docs && docs[selectedDocIndex]) {
-            docs[selectedDocIndex].content = value;
-        }
+        // update local copy immutably
+        setLocalDocs((prev) => {
+            if (!prev[selectedDocIndex]) return prev;
+            const next = [...prev];
+            next[selectedDocIndex] = { ...next[selectedDocIndex], content: value };
+            return next;
+        });
     };
 
     const handleSend = async () => {
     if (!agentId) console.warn('agentId prop not provided. Request may fail.');
 
-        if (docs.length === 0) return;
+    if (localDocs.length === 0) return;
 
         setIsSending(true);
-        const payload = { docs: docs.map((d) => ({ index: d.index, content: d.content })) };
+    const payload = { docs: localDocs.map((d) => ({ index: d.index, content: d.content })) };
         console.log('Sending PATCH payload to /api/v1/agents/{agent_id}/doc', payload);
 
         try {

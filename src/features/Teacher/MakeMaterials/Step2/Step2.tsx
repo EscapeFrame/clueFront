@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useEffect, useState } from "react";
 import { PiBookOpenText, PiCodeSimple, PiPencilSimpleLine, PiClipboardText, PiPlusBold, PiXBold } from "react-icons/pi";
 import * as s from "./styles";
 
@@ -83,6 +83,7 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
     const [hoverNodeId, setHoverNodeId] = useState<string | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [draftTitle, setDraftTitle] = useState<string>("");
+    const editingRef = useRef<HTMLTextAreaElement | null>(null);
 
     
 
@@ -194,6 +195,15 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
         setDraftTitle("");
     }, [draftTitle, editingId]);
 
+    // autosize textarea when draftTitle changes or when editing starts
+    useEffect(() => {
+        const el = editingRef.current;
+        if (!el) return;
+        el.style.height = '0px';
+        const scrollHeight = el.scrollHeight;
+        el.style.height = `${Math.min(scrollHeight, 320)}px`;
+    }, [draftTitle, editingId]);
+
     const cancelEditing = useCallback(() => {
         setEditingId(null);
         setDraftTitle("");
@@ -242,6 +252,7 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
                             <s.NodeIcon>{workflowIconMap[node.icon]}</s.NodeIcon>
                             {editingId === node.id ? (
                                 <s.NodeTitleInput
+                                    ref={editingRef}
                                     value={draftTitle}
                                     onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setDraftTitle(event.target.value)}
                                     autoFocus
