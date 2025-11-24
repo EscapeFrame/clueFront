@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
-import { DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
+import { DetailAssignmentStudent, AssignmentFile } from '@/shared/types/Class/Assignment/Attachment';
 import { getCheckStudent, getStudentSubmissionDetail, downloadSubmissionAttachment } from '@/entities/Class/api';
 
 // Local types for handling submission attachments
@@ -16,9 +16,9 @@ type SubmissionAttachment = {
 type FileItem = {
   submissionAttachmentId: string;
   type: 'FILE' | 'LINK';
-  fileName?: string | null;
-  url?: string | null;
-  fileSize?: number | null;
+  fileName?: string;
+  url?: string;
+  fileSize?: number;
 };
 
 type CheckStudentItem = {
@@ -28,6 +28,18 @@ type CheckStudentItem = {
   number: number;
   isSubmitted: boolean;
   submissionId: string;
+  submittedAt?: string | null;
+};
+
+type StudentWithFiles = {
+  userName: string;
+  grade: number;
+  classNo: number;
+  number: number;
+  isSubmitted: boolean;
+  submissionId: string;
+  files?: FileItem[];
+  userImg?: string | null;
   submittedAt?: string | null;
 };
 
@@ -44,7 +56,7 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
   const [selectedNumber, setSelectedNumber] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<DetailAssignmentStudent | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<StudentWithFiles | null>(null);
 
   useEffect(() => {
                     const fetchStudents = async () => {
@@ -111,21 +123,6 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
     if (student.isSubmitted && student.submissionId) {
       try {
         const submissionDetails = await getStudentSubmissionDetail(student.submissionId);
-        type SubmissionAttachment = {
-          submissionAttachmentId: string;
-          type: 'FILE' | 'LINK';
-          value: string;
-          originalFileName?: string | null;
-          size?: number | null;
-        };
-
-        type FileItem = {
-          submissionAttachmentId: string;
-          type: 'FILE' | 'LINK';
-          fileName?: string | null;
-          url?: string | null;
-          fileSize?: number | null;
-        };
         const mappedFiles: FileItem[] = submissionDetails.submissionAttachmentResponses?.map((att: SubmissionAttachment) => ({
           // Keep both id and type so we can differentiate FILE vs LINK
           submissionAttachmentId: att.submissionAttachmentId,
@@ -134,17 +131,42 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
           url: att.value,
           fileSize: att.size,
         })) || [];
-
-        const detailedStudentData = {
-          ...student,
+        const detailedStudentData: StudentWithFiles = {
+          userName: student.userName,
+          grade: student.grade,
+          classNo: student.classNo,
+          number: student.number,
+          isSubmitted: student.isSubmitted,
+          submissionId: student.submissionId,
           files: mappedFiles,
-        } as DetailAssignmentStudent & { files: FileItem[] };
+          userImg: student.userImg,
+          submittedAt: student.submittedAt,
+        };
         setSelectedStudent(detailedStudentData);
       } catch (error) {
         console.error('Failed to fetch submission details', error);
       }
     } else {
-      setSelectedStudent(student);
+      // Convert any existing AssignmentFile[] on student to FileItem[] to satisfy state type
+      const mappedFiles: FileItem[] | undefined = student.files?.map((f: AssignmentFile) => ({
+        submissionAttachmentId: String(f.fileId ?? ''),
+        type: 'FILE',
+  fileName: f.fileName || String(f.name) || undefined,
+  url: f.url || undefined,
+  fileSize: f.fileSize ?? undefined,
+      }));
+      const studentForState: StudentWithFiles = {
+        userName: student.userName,
+        grade: student.grade,
+        classNo: student.classNo,
+        number: student.number,
+        isSubmitted: student.isSubmitted,
+        submissionId: student.submissionId,
+        files: mappedFiles,
+        userImg: student.userImg,
+        submittedAt: student.submittedAt,
+      };
+      setSelectedStudent(studentForState);
     }
     setModalIsOpen(true);
   };
@@ -288,10 +310,10 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                           <div className="fileInfo">
                             {file.type === 'FILE' ? (
                               <a href={file.url || '#'} target="_blank" rel="noreferrer">
-                                {file.fileName || file.originalFileName || '파일'}
+                                {file.fileName || '파일'}
                               </a>
                             ) : (
-                              <a href={file.url} target="_blank" rel="noreferrer">
+                              <a href={file.url || '#'} target="_blank" rel="noreferrer">
                                 {file.fileName || file.url}
                               </a>
                             )}
