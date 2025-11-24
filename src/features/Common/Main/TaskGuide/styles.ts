@@ -38,16 +38,22 @@ export const CardContainer = styled.div`
 `;
 
 export const Title = styled.div`
-  ${fonts.P4}
+  ${fonts.P5}
+  padding: 0;
+  margin: 0;
 
   @media (max-width: 768px) {
-    ${fonts.P3}
+    ${fonts.P4};
   }
 `;
 
-export const Explain = styled.div`
-  display: flex;
-  justifycontent: space-between;
-  margin: 0;
+export const Explain = styled.p`
+  ${fonts.P2}
+  color: ${theme.colors.gray[500]};
   padding: 0;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P1};
+  }
 `;

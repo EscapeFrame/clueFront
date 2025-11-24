@@ -14,7 +14,6 @@ export const CardContainer = styled.div`
 
 export const Title = styled.h2`
   ${fonts.P4}
-  font-weight: 700;
   color: ${colors.black};
   margin: 0 0 16px 0;
   padding: 0;
