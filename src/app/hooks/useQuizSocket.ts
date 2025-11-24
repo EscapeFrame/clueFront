@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import SockJS from "sockjs-client";
-import { Client, IMessage, StompSubscription } from "@stomp/stompjs";
+import { Client, IMessage, StompSubscription, IFrame } from "@stomp/stompjs";
 
 type QuizSocketOptions = {
   url?: string;
-  onConnect?: (frame?: any) => void;
-  onError?: (err?: any) => void;
+  onConnect?: (frame?: IFrame) => void;
+  onError?: (err?: IFrame) => void;
 };
 
 type SubscriptionHandle = {
@@ -23,6 +23,19 @@ export function useQuizSocket({ url = "http://localhost:8080/ws-quiz", onConnect
       webSocketFactory: () => new SockJS(url),
       reconnectDelay: 5000,
       debug: () => {},
+      // before connecting, make sure the CONNECT frame has the latest access token
+      beforeConnect: () => {
+        try {
+          const token = localStorage.getItem("accessToken");
+          if (token) {
+            // assign connectHeaders so the CONNECT frame includes Authorization
+            // (StompJS will read client.connectHeaders when sending CONNECT)
+            client.connectHeaders = { Authorization: `Bearer ${token}` };
+          }
+        } catch {
+          /* ignore localStorage errors */
+        }
+      },
       onConnect: (frame) => {
         clientRef.current = client;
         setConnected(true);
@@ -46,7 +59,7 @@ export function useQuizSocket({ url = "http://localhost:8080/ws-quiz", onConnect
     };
   }, [url, onConnect, onError]);
 
-  const subscribe = useCallback((destination: string, callback: (msg: any) => void): SubscriptionHandle | null => {
+  const subscribe = useCallback((destination: string, callback: (msg: unknown) => void): SubscriptionHandle | null => {
     if (!clientRef.current) return null;
     const sub: StompSubscription = clientRef.current.subscribe(destination, (m: IMessage) => {
       try {
