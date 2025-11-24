@@ -88,9 +88,15 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
 
             // 4. Upload file to /api/document/file
             const formData = new FormData();
+            // append classRoomId and directoryId as form fields
             formData.append('classRoomId', classRoomId);
             formData.append('directoryId', directoryId);
+            // append file(s) under 'files' key (server expects files array)
             formData.append('files', file);
+            // append metadata as JSON blob array [{ title }]
+            const metaTitle = localDocs && localDocs.length > 0 ? localDocs[0].index : 'document';
+            const metadataBlob = new Blob([JSON.stringify([{ title: metaTitle }])], { type: 'application/json' });
+            formData.append('metadata', metadataBlob);
 
             console.log('Uploading markdown file to /api/document/file');
             const uploadRes = await Customapi.post('/api/document/file', formData, {
