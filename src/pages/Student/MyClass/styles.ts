@@ -45,7 +45,7 @@ export const AddButton = styled.button`
   height: 36px;
   border: none;
   color: ${colors.white};
-  ${fonts.P2};
+  ${fonts.P3};
   transition: background 0.2s;
   display: flex;
   align-items: center;

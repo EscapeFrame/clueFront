@@ -16,8 +16,8 @@ export const ModalContent = styled.div`
   background-color: white;
   border-radius: 8px;
   width: 90%;
-  max-width: 500px; /* 이미지 기반 너비 */
-  padding: 30px;
+  max-width: 760px; /* 모달 최대 너비 확대 */
+  padding: 36px; /* 내부 패딩 증가 */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -31,7 +31,7 @@ export const ModalHeader = styled.div`
 `;
 
 export const ModalTitle = styled.h2`
-  font-size: 1.4em;
+  font-size: 2em; /* 제목 폰트 키움 */
   font-weight: 700;
   color: #333;
   margin: 0;
@@ -40,7 +40,7 @@ export const ModalTitle = styled.h2`
 export const CloseButton = styled.button`
   background: none;
   border: none;
-  font-size: 1.5em;
+  font-size: 1.8em; /* 닫기 버튼 확대 */
   cursor: pointer;
   color: #999;
   transition: color 0.2s;
@@ -54,7 +54,7 @@ export const CloseButton = styled.button`
 
 export const FormLabel = styled.label`
   display: block;
-  font-size: 0.9em;
+  font-size: 1em; /* 라벨 폰트 증가 */
   font-weight: 600;
   color: #333;
   margin-bottom: 8px;
@@ -67,11 +67,11 @@ export const FormLabel = styled.label`
 
 export const FormInput = styled.input`
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 14px; /* 입력창 패딩 증가 */
   margin-bottom: 20px;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-  font-size: 1em;
+  font-size: 1.2em; /* 입력 텍스트 키움 */
   box-sizing: border-box;
   transition: border-color 0.2s;
 
@@ -83,12 +83,12 @@ export const FormInput = styled.input`
 
 export const FormTextarea = styled(FormInput.withComponent('textarea'))`
   resize: vertical;
-  min-height: 80px;
+  min-height: 120px; /* 텍스트영역 높이 확장 */
   margin-bottom: 24px;
 `;
 
 export const TagDescription = styled.p`
-  font-size: 0.8em;
+  font-size: 1em; /* 설명 텍스트 키움 */
   color: #8c8c8c;
   margin-top: -10px;
   margin-bottom: 12px;
@@ -106,9 +106,9 @@ export const TagButton = styled.button<{ isSelected: boolean }>`
   color: ${props => (props.isSelected ? '#1890ff' : '#595959')};
   border: 1px solid ${props => (props.isSelected ? '#91d5ff' : '#d9d9d9')};
   border-radius: 4px;
-  padding: 6px 12px;
+  padding: 8px 14px; /* 태그 버튼 패딩 증가 */
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 1em; /* 태그 버튼 폰트 증가 */
   transition: all 0.2s;
 
   &:hover {
@@ -126,13 +126,13 @@ export const ModalFooter = styled.div`
 `;
 
 export const CancelButton = styled.button`
-  padding: 10px 20px;
+  padding: 12px 22px; /* 취소 버튼 패딩 증가 */
   background-color: #ffffff;
   color: #595959;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: 1.2em; /* 취소 버튼 폰트 증가 */
   transition: all 0.2s;
 
   &:hover {
@@ -141,13 +141,13 @@ export const CancelButton = styled.button`
 `;
 
 export const ConfirmButton = styled.button`
-  padding: 10px 20px;
+  padding: 12px 22px; /* 확인 버튼 패딩 증가 */
   background-color: #0077FF;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: 1.2em; /* 확인 버튼 폰트 증가 */
   transition: background-color 0.2s;
 
   &:hover {

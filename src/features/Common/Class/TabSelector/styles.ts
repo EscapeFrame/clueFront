@@ -21,7 +21,7 @@ export const TabButton = styled.button<{ isActive: boolean }>`
   padding: 0.5rem 1rem;
   border: none;
   cursor: pointer;
-  ${fonts.P2};
+  ${fonts.P3};
   color: ${({ isActive }) => (isActive ? colors.white : colors.gray[3])};
   background-color: ${({ isActive }) =>
     isActive ? colors.primary : "transparent"};

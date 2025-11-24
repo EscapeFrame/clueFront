@@ -116,7 +116,7 @@ export const LinkSaveMain = () => {
                     onSearch={handleSearch}
                 />
             </div>
-            <div>로딩 중...</div>
+            <S.LodingText>로딩 중...</S.LodingText>
         </S.Wrapper>;
     }
     if (isError) {
@@ -130,7 +130,7 @@ export const LinkSaveMain = () => {
                     onSearch={handleSearch}
                 />
             </div>
-            <div>링크를 불러오는 중 문제가 발생했습니다.</div>
+            <S.ErrorText>링크를 불러오는 중 문제가 발생했습니다!</S.ErrorText>
         </S.Wrapper>;
     }
 
