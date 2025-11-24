@@ -110,22 +110,25 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
     return (
         <s.Container>
             {/* 좌측 사이드바 (버튼형 메뉴) */}
-            <s.Sidebar>
-                <s.SideBox>
-                    <s.MenuList>
-                        {docs.map((doc, index) => (
-                            <li key={index}>
-                                <s.MenuButton
-                                    active={selectedDocIndex === index}
-                                    onClick={() => handleDocSelect(index)}
-                                >
-                                    {doc.index}
-                                </s.MenuButton>
-                            </li>
-                        ))}
-                    </s.MenuList>
-                </s.SideBox>
-            </s.Sidebar>
+            {!(isGenerating || isProcessing) && (
+                <s.Sidebar>
+                    <s.SideBox>
+                        <s.MenuList>
+                            {docs.map((doc, index) => (
+                                <li key={index}>
+                                    <s.MenuButton
+                                        active={selectedDocIndex === index}
+                                        onClick={() => handleDocSelect(index)}
+                                        disabled={isGenerating || isProcessing || isSending}
+                                    >
+                                        {doc.index}
+                                    </s.MenuButton>
+                                </li>
+                            ))}
+                        </s.MenuList>
+                    </s.SideBox>
+                </s.Sidebar>
+            )}
 
             {/* 메인 컨텐츠 */}
             <s.Content>
@@ -140,7 +143,7 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
                             <s.TextAreaBox
                                 value={currentContent}
                                 onChange={(e) => updateCurrentDocContent(e.target.value)}
-                                disabled={isGenerating || docs.length === 0}
+                                disabled={isGenerating || isProcessing || docs.length === 0}
                                 aria-label="문서 내용 편집"
                             />
                         </s.Field>

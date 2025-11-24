@@ -18,7 +18,7 @@ export default function MakeClassMaterials() {
             if (response && response.data && response.data.doc && response.data.doc.docs) {
                 setDocs(response.data.doc.docs);
             }
-            setCurrentStep(currentStep + 1); // Move to Step3
+            setCurrentStep((s) => s + 1); // Move to Step3
             setIsProcessing(false);
         },
         onError: (error) => {
@@ -32,7 +32,7 @@ export default function MakeClassMaterials() {
             // From Step1 (AgentFlowResponse)
             setFlowChartWords(payload.data.flow.words);
             setAgentId(payload.data.agentId);
-            setCurrentStep(currentStep + 1); // Move to Step2
+            setCurrentStep((s) => s + 1); // Move to Step2
         } else if (payload && "words" in payload && agentId) {
             // From Step2 (words payload) - update flow on server via PATCH, then request docs
             // prevent duplicate submissions
@@ -51,8 +51,12 @@ export default function MakeClassMaterials() {
             })();
         } else {
             // General next (e.g., from Step3)
-            setCurrentStep(currentStep + 1);
+            setCurrentStep((s) => s + 1);
         }
+    };
+
+    const handleBack = () => {
+        setCurrentStep((s) => Math.max(1, s - 1));
     };
 
     return (
@@ -70,8 +74,8 @@ export default function MakeClassMaterials() {
 
 
             {currentStep === 1 && <Step1 onNext={handleNext} />}
-            {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} agentId={agentId ?? undefined} isProcessing={isProcessing} />}
-            {currentStep === 3 && <Step3 onNext={handleNext} docs={docs} isGenerating={isDocPosting} agentId={agentId ?? undefined} isProcessing={isProcessing} />}
+            {currentStep === 2 && <Step2 onNext={handleNext} onBack={handleBack} words={flowChartWords} agentId={agentId ?? undefined} isProcessing={isProcessing} />}
+            {currentStep === 3 && <Step3 onNext={handleNext} onBack={handleBack} docs={docs} isGenerating={isDocPosting} agentId={agentId ?? undefined} isProcessing={isProcessing} />}
         </s.Wrapper>
     );
 }

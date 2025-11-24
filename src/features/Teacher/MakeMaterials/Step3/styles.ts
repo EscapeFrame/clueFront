@@ -57,6 +57,12 @@ export const MenuButton = styled.button<{ active?: boolean }>`
   background: ${({ active }) => (active ? colors.primary : colors.blue.light1)};
   color: ${({ active }) => (active ? 'white' : '#111827')};
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 `;
 
 export const Content = styled.div`
