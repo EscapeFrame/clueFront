@@ -26,6 +26,7 @@ export interface Step2Props {
     onBack?: () => void;
     onNext?: (payload: { words: Word[] }) => void;
     agentId?: string;
+    isProcessing?: boolean;
 }
 
 const workflowIconMap: Record<WorkflowIconKey, React.ReactNode> = {
@@ -76,7 +77,7 @@ const processInitialWords = (words: Word[]): WorkflowState => {
     return { nodes: sortedNodes };
 };
 
-export default function Step2({ words, onBack, onNext }: Step2Props) {
+export default function Step2({ words, onBack, onNext, isProcessing = false }: Step2Props) {
     const [workflow, setWorkflow] = useState<WorkflowState>(() => processInitialWords(words));
     const [draggingId, setDraggingId] = useState<string | null>(null);
     const [hoverEdgeIndex, setHoverEdgeIndex] = useState<number | null>(null);
@@ -304,9 +305,9 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
 
             <s.ControlGroup>
                 <s.ButtonRow>
-            <s.Button variant="secondary" type="button" onClick={onBack}>취소</s.Button>
-            <s.Button variant="primary" type="submit" onClick={handleNext}>다음</s.Button>
-                </s.ButtonRow>
+                <s.Button variant="secondary" type="button" onClick={onBack} disabled={isProcessing}>취소</s.Button>
+                <s.Button variant="primary" type="submit" onClick={handleNext} disabled={isProcessing}>다음</s.Button>
+                    </s.ButtonRow>
             </s.ControlGroup>
         
         </s.Container>

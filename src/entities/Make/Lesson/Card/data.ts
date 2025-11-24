@@ -9,9 +9,9 @@ export const lessonCards = [
     url: "markdown",
   },
   {
-    title: "Google Docs",
-    desc: ["문서 포맷에 익숙", "출력 및 배포 용이", "정돈된 레이아웃"],
-    url: "/lesson/google-docs",
+    title: "Flow Chart",
+    desc: ["Flow Chart", "AI 생성", "마크다운 변환"],
+    url: "MakeClassMaterials",
   },
   {
     title: "Google Slide",

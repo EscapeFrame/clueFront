@@ -57,6 +57,12 @@ export const MenuButton = styled.button<{ active?: boolean }>`
   background: ${({ active }) => (active ? colors.primary : colors.blue.light1)};
   color: ${({ active }) => (active ? 'white' : '#111827')};
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 `;
 
 export const Content = styled.div`
@@ -136,6 +142,51 @@ export const LoadingBox = styled.div`
   min-height: 300px;
   font-size: 1.2rem;
   color: #6b7280;
+`;
+
+export const SpinnerOverlay = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 300px;
+  background: rgba(255,255,255,0.6); /* subtle light overlay */
+`;
+
+export const Spinner = styled.div`
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 6px solid rgba(37,99,235,0.12);
+  border-top-color: rgba(37,99,235,0.9);
+  animation: spin 1s cubic-bezier(.4,.0,.2,1) infinite;
+  box-shadow: 0 6px 20px rgba(37,99,235,0.08);
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    background: #2563EB;
+    border-radius: 50%;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: .9; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: .65; }
+    100% { transform: translate(-50%, -50%) scale(0.9); opacity: .9; }
+  }
 `;
 
 export const ButtonRow = styled.div`
