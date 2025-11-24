@@ -10,9 +10,10 @@ interface Step3Props {
     onNext: () => void;
     onBack?: () => void;
     agentId?: string;
+    isProcessing?: boolean;
 }
 
-export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: Step3Props) {
+export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isProcessing = false }: Step3Props) {
     const { classRoomId, directoryId } = useParams<{ classRoomId: string; directoryId: string }>();
     const [selectedDocIndex, setSelectedDocIndex] = useState<number>(0);
     const [localDocs, setLocalDocs] = useState<Doc[]>([]);
@@ -129,10 +130,10 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: S
             {/* 메인 컨텐츠 */}
             <s.Content>
                 <s.PageTitle>수업 자료 편집</s.PageTitle>
-                {isGenerating ? (
-                    <s.LoadingBox>
-                        <p>문서 생성 중...</p>
-                    </s.LoadingBox>
+                {(isGenerating || isProcessing) ? (
+                    <s.SpinnerOverlay>
+                        <s.Spinner />
+                    </s.SpinnerOverlay>
                 ) : (
                     <s.Form>
                         <s.Field>
@@ -145,10 +146,10 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: S
                         </s.Field>
 
                         <s.ButtonRow>
-                            <s.Button variant="secondary" type="button" onClick={onBack}>
+                            <s.Button variant="secondary" type="button" onClick={onBack} disabled={isGenerating || isSending || isProcessing}>
                                 이전
                             </s.Button>
-                            <s.Button variant="primary" type="button" onClick={handleSend} disabled={isGenerating || isSending || docs.length === 0}>
+                            <s.Button variant="primary" type="button" onClick={handleSend} disabled={isGenerating || isSending || isProcessing || docs.length === 0}>
                                 {isSending ? '전송중...' : '내용전송'}
                             </s.Button>
                         </s.ButtonRow>

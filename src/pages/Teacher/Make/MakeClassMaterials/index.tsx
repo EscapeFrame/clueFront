@@ -11,6 +11,7 @@ export default function MakeClassMaterials() {
     const [agentId, setAgentId] = useState<string | null>(null);
     const [flowChartWords, setFlowChartWords] = useState<Word[]>([]);
     const [docs, setDocs] = useState<Doc[]>([]);
+    const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
     const { mutate: postDocMutate, isPending: isDocPosting } = usePostAgentDoc({
         onSuccess: (response) => {
@@ -18,9 +19,11 @@ export default function MakeClassMaterials() {
                 setDocs(response.data.doc.docs);
             }
             setCurrentStep(currentStep + 1); // Move to Step3
+            setIsProcessing(false);
         },
         onError: (error) => {
             alert(`문서 생성에 실패했습니다: ${error.message}`);
+            setIsProcessing(false);
         }
     });
 
@@ -32,6 +35,9 @@ export default function MakeClassMaterials() {
             setCurrentStep(currentStep + 1); // Move to Step2
         } else if (payload && "words" in payload && agentId) {
             // From Step2 (words payload) - update flow on server via PATCH, then request docs
+            // prevent duplicate submissions
+            if (isProcessing) return;
+            setIsProcessing(true);
             (async () => {
                 try {
                     await patchAgentFlow(agentId, payload.words);
@@ -40,6 +46,7 @@ export default function MakeClassMaterials() {
                     const maybeErr = err as { message?: string } | undefined;
                     const message = maybeErr && maybeErr.message ? maybeErr.message : String(err);
                     alert(`플로우 업데이트에 실패했습니다: ${message}`);
+                    setIsProcessing(false);
                 }
             })();
         } else {
@@ -63,8 +70,8 @@ export default function MakeClassMaterials() {
 
 
             {currentStep === 1 && <Step1 onNext={handleNext} />}
-            {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} agentId={agentId ?? undefined} />}
-            {currentStep === 3 && <Step3 onNext={handleNext} docs={docs} isGenerating={isDocPosting} agentId={agentId ?? undefined} />}
+            {currentStep === 2 && <Step2 onNext={handleNext} words={flowChartWords} agentId={agentId ?? undefined} isProcessing={isProcessing} />}
+            {currentStep === 3 && <Step3 onNext={handleNext} docs={docs} isGenerating={isDocPosting} agentId={agentId ?? undefined} isProcessing={isProcessing} />}
         </s.Wrapper>
     );
 }
