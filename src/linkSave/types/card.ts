@@ -5,7 +5,7 @@ export interface LinkCard {
   title: string;
   description: string;
   link: string; // URL
-  authorizationType?: 'PUBLIC' | 'PRIVATE' | string;
+  authorizationType?: AuthorizationType;
   subjectType: string | string[]; // API may provide a single subjectType like "General" or array
   date?: string; // optional, kept for backward compatibility
 }
@@ -16,10 +16,13 @@ export interface LinkFormData {
     link: string;
     description: string;
   subjectType: string;
-  authorizationType?: string;
+  authorizationType?: AuthorizationType;
   grade?: string;
   clas?: string;
 }
+
+// 공개 범위 타입: 공개, 비공개, 자신의 반
+export type AuthorizationType = 'PUBLIC' | 'PRIVATE' | 'CLASS_ONLY';
 
 export const LINK_CATEGORY_MAP = {
   Total: '전체',
