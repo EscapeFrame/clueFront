@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import SockJS from "sockjs-client";
 import { Client, IMessage, StompSubscription, IFrame } from "@stomp/stompjs";
-import { getAccessToken } from "@/api/baseApi";
 
 type QuizSocketOptions = {
   onConnect?: (frame?: IFrame) => void;
@@ -25,7 +24,8 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   const subscriptionsRef = useRef<StompSubscription[]>([]);
 
   useEffect(() => {
-    const accessToken = getAccessToken();
+    // localStorage에서 accessToken 가져오기
+    const accessToken = localStorage.getItem("accessToken");
     
     if (!accessToken) {
       console.log('[Quiz WebSocket] Access token is missing, connection skipped.');
