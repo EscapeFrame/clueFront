@@ -3,7 +3,7 @@ import Customapi from '@/shared/config/api';
 // ================= Step 1: POST /api/v1/agents =================
 
 export interface PostMaterialsRequest {
-  studing_name: string;
+  studying_name: string;
   learning_purpose: string;
   main_word: string[];
   link: string[];
