@@ -43,7 +43,11 @@ export interface AgentFlowResponse {
   message: string;
 }
 
-const postAgentFlow = async (agentId: string): Promise<AgentFlowResponse> => {
+// The raw response from POST /agents/{agentId}/flow may have a different shape
+// (e.g., { success, message, data: { words: [...] }, error }). We keep
+// postAgentFlow as a thin wrapper returning the raw data, and normalize it
+// in createAgentAndGetFlow.
+const postAgentFlow = async (agentId: string): Promise<unknown> => {
   const response = await Customapi.post(`/api/v1/agents/${agentId}/flow`);
   return response.data;
 };
@@ -94,7 +98,74 @@ export const createAgentAndGetFlow = async (data: PostMaterialsRequest): Promise
   const agentId = initialResponse.data.agent_id;
 
   // Step 2: Use the ID to get the flow data
-  const flowResponse = await postAgentFlow(agentId);
-  
-  return flowResponse;
+  const rawFlowResponse = await postAgentFlow(agentId);
+
+  // Normalize different possible server response shapes into AgentFlowResponse
+  // Expected normalized shape:
+  // {
+  //   data: { agentId: string, status: string, flow: { words: Word[] } },
+  //   message: string
+  // }
+
+  const words: Word[] = (() => {
+    if (rawFlowResponse && typeof rawFlowResponse === 'object') {
+      const rfObj = rawFlowResponse as Record<string, unknown>;
+      const data = rfObj.data;
+      if (data && typeof data === 'object') {
+        const dataObj = data as Record<string, unknown>;
+        const maybeWords = dataObj['words'];
+        if (Array.isArray(maybeWords)) {
+          return maybeWords.filter((w): w is Word =>
+            w && typeof w === 'object' && 'priority' in (w as object) && 'index' in (w as object) && 'iconNumber' in (w as object),
+          ) as Word[];
+        }
+      }
+      const flow = rfObj['flow'];
+      if (flow && typeof flow === 'object') {
+        const flowObj = flow as Record<string, unknown>;
+        const maybeWords = flowObj['words'];
+        if (Array.isArray(maybeWords)) {
+          return maybeWords.filter((w): w is Word =>
+            w && typeof w === 'object' && 'priority' in (w as object) && 'index' in (w as object) && 'iconNumber' in (w as object),
+          ) as Word[];
+        }
+      }
+    }
+    return [];
+  })();
+
+  const status = (() => {
+    if (rawFlowResponse && typeof rawFlowResponse === 'object') {
+      const rfObj = rawFlowResponse as Record<string, unknown>;
+      const success = rfObj['success'];
+      if (typeof success === 'boolean') return success ? 'success' : 'failed';
+      const data = rfObj['data'];
+      if (data && typeof data === 'object') {
+        const dataObj = data as Record<string, unknown>;
+        const s = dataObj['status'];
+        if (typeof s === 'string') return s;
+      }
+    }
+    return 'unknown';
+  })();
+
+  const message = (() => {
+    if (rawFlowResponse && typeof rawFlowResponse === 'object') {
+      const rfObj = rawFlowResponse as Record<string, unknown>;
+      const m = rfObj['message'];
+      if (typeof m === 'string') return m;
+    }
+    return '';
+  })();
+
+  const normalized: AgentFlowResponse = {
+    data: {
+      agentId,
+      status,
+      flow: { words },
+    },
+    message,
+  };
+
+  return normalized;
 };
