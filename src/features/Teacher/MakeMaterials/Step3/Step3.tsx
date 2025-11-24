@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import * as s from "./styles";
 import { Doc, patchAgentDoc } from "../api"; // Import Doc type and patch function
+import Customapi from '@/shared/config/api';
 
 interface Step3Props {
     docs: Doc[];
@@ -11,6 +13,7 @@ interface Step3Props {
 }
 
 export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: Step3Props) {
+    const { classRoomId, directoryId } = useParams<{ classRoomId: string; directoryId: string }>();
     const [selectedDocIndex, setSelectedDocIndex] = useState<number>(0);
     const [localDocs, setLocalDocs] = useState<Doc[]>([]);
     const [currentContent, setCurrentContent] = useState<string>("");
@@ -48,12 +51,12 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: S
     };
 
     const handleSend = async () => {
-    if (!agentId) console.warn('agentId prop not provided. Request may fail.');
+        if (!agentId) console.warn('agentId prop not provided. Request may fail.');
 
-    if (localDocs.length === 0) return;
+        if (localDocs.length === 0) return;
 
         setIsSending(true);
-    const payload = { docs: localDocs.map((d) => ({ index: d.index, content: d.content })) };
+        const payload = { docs: localDocs.map((d) => ({ index: d.index, content: d.content })) };
         console.log('Sending PATCH payload to /api/v1/agents/{agent_id}/doc', payload);
 
         try {
@@ -63,10 +66,41 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId }: S
 
             const res = await patchAgentDoc(idToUse as string, payload.docs);
             console.log('PATCH response', res);
-            // show response in network and console; onNext can be called to proceed
+
+            // After successful PATCH, create markdown file and upload
+            // 1. Convert localDocs to markdown format
+            const markdownContent = localDocs
+                .map((doc) => `# ${doc.index}\n${doc.content}`)
+                .join('\n\n');
+
+            // 2. Create File from markdown string
+            const blob = new Blob([markdownContent], { type: 'text/markdown' });
+            const file = new File([blob], 'document.md', { type: 'text/markdown' });
+
+            // 3. Get classRoomId and directoryId from URL params (useParams hook)
+            if (!classRoomId || !directoryId) {
+                console.warn('classRoomId or directoryId missing from URL params');
+                alert('URL 경로에 classRoomId 또는 directoryId가 없습니다.');
+                onNext();
+                return;
+            }
+
+            // 4. Upload file to /api/document/file
+            const formData = new FormData();
+            formData.append('classRoomId', classRoomId);
+            formData.append('directoryId', directoryId);
+            formData.append('file', file);
+
+            console.log('Uploading markdown file to /api/document/file');
+            const uploadRes = await Customapi.post('/api/document/file', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            console.log('File upload response', uploadRes.data);
+
             onNext();
         } catch (err) {
-            console.error('Failed to patch agent doc', err);
+            console.error('Failed to patch agent doc or upload file', err);
+            alert('문서 전송 또는 파일 업로드에 실패했습니다.');
         } finally {
             setIsSending(false);
         }
