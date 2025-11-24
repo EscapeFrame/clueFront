@@ -1,12 +1,25 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery, QueryFunctionContext, UseInfiniteQueryResult, InfiniteData } from "@tanstack/react-query";
 import { fetchLinks, fetchAllLinks, addLink, updateLink, deleteLink } from "../service/linksave";
-import { LinkFormData } from "../types/card";
+import { LinkFormData, LinkCard } from "../types/card";
 
 // 1. 모든 링크 조회 (useGetAlllinks)
-export const useGetAlllinks = () => {
-    return useQuery({
-        queryKey: ['allLinks'],
-        queryFn: fetchAllLinks,
+export const useGetAlllinks = (size = 40): UseInfiniteQueryResult<LinkCard[], Error, InfiniteData<LinkCard[]>, [string, number]> => {
+    return useInfiniteQuery<LinkCard[], Error, InfiniteData<LinkCard[]>, [string, number]>({
+        queryKey: ['allLinks', size],
+        queryFn: async (context: QueryFunctionContext) => {
+            const pageParam = context.pageParam as unknown;
+            const offset = typeof pageParam === 'number' ? pageParam : 0;
+            const data = await fetchAllLinks(size, offset);
+            return data as LinkCard[];
+        },
+        getNextPageParam: (lastPage, allPages) => {
+            // lastPage은 배열로 받아옴. 페이지가 비었거나 길이가 0이면 더 이상 없음
+            if (!lastPage || (Array.isArray(lastPage) && lastPage.length === 0)) return undefined;
+            // 다음 offset은 현재 불러온 총 개수
+            const nextOffset = allPages.reduce((sum, p) => sum + (Array.isArray(p) ? p.length : 0), 0);
+            return nextOffset;
+        },
+        initialPageParam: 0,
         staleTime: 1000 * 60 * 5, // 5분
         gcTime: 1000 * 60 * 10, // 10분
         refetchOnWindowFocus: false,
