@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { PiBookOpenText, PiCodeSimple, PiPencilSimpleLine, PiClipboardText, PiPlusBold, PiXBold } from "react-icons/pi";
 import * as s from "./styles";
 
@@ -84,12 +84,7 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [draftTitle, setDraftTitle] = useState<string>("");
 
-    const edges = useMemo(() => {
-        return workflow.nodes.slice(1).map((node, index) => ({
-            from: workflow.nodes[index].id,
-            to: node.id,
-        }));
-    }, [workflow.nodes]);
+    
 
     const handleAddNode = useCallback(() => {
         setWorkflow((prev) => {
@@ -216,6 +211,8 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
         onNext?.(payload);
     }, [onNext, workflow.nodes]);
 
+    
+
     return (
         <s.Container>
 
@@ -246,11 +243,12 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
                             {editingId === node.id ? (
                                 <s.NodeTitleInput
                                     value={draftTitle}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setDraftTitle(event.target.value)}
+                                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setDraftTitle(event.target.value)}
                                     autoFocus
                                     onBlur={commitTitle}
-                                    onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-                                        if (event.key === "Enter") {
+                                    onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                                        if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+                                            // allow cmd/ctrl+Enter to commit
                                             event.preventDefault();
                                             commitTitle();
                                         }
@@ -295,10 +293,11 @@ export default function Step2({ words, onBack, onNext }: Step2Props) {
 
             <s.ControlGroup>
                 <s.ButtonRow>
-                    <s.Button variant="secondary" type="button" onClick={onBack}>취소</s.Button>
-                    <s.Button variant="primary" type="submit" onClick={handleNext}>다음</s.Button>
+            <s.Button variant="secondary" type="button" onClick={onBack}>취소</s.Button>
+            <s.Button variant="primary" type="submit" onClick={handleNext}>다음</s.Button>
                 </s.ButtonRow>
             </s.ControlGroup>
+        
         </s.Container>
     );
 }

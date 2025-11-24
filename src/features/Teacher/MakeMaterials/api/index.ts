@@ -78,14 +78,14 @@ export interface AgentDocResponse {
 }
 
 export const postAgentDoc = async (agentId: string, words: Word[]): Promise<AgentDocResponse> => {
-  const response = await Customapi.post(`/api/v1/agents/${agentId}/doc`, { words });
+  const response = await Customapi.post(`/api/v1/agents/${agentId}/doc`, { words }, { timeout: 180000 });
   return response.data;
 };
 
 
 // ================= PATCH /api/v1/agents/{agent_id}/doc =================
 export const patchAgentDoc = async (agentId: string, docs: Doc[]): Promise<AgentDocResponse> => {
-  const response = await Customapi.patch(`/api/v1/agents/${agentId}/doc`, { docs });
+  const response = await Customapi.patch(`/api/v1/agents/${agentId}/doc`, { docs }, { timeout: 180000 });
   return response.data;
 };
 
