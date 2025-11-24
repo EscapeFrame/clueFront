@@ -90,7 +90,7 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
             const formData = new FormData();
             formData.append('classRoomId', classRoomId);
             formData.append('directoryId', directoryId);
-            formData.append('file', file);
+            formData.append('files', file);
 
             console.log('Uploading markdown file to /api/document/file');
             const uploadRes = await Customapi.post('/api/document/file', formData, {
