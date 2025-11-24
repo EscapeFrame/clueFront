@@ -6,23 +6,33 @@ type QuizSocketOptions = {
   url?: string;
   onConnect?: (frame?: IFrame) => void;
   onError?: (err?: IFrame) => void;
+  autoSubscribe?: {
+    destination: string;
+    callback: (msg: unknown) => void;
+  }[];
 };
 
 type SubscriptionHandle = {
   unsubscribe: () => void;
 };
 
+// 환경 변수에서 WebSocket URL 가져오기
+const DEFAULT_WS_URL = import.meta.env.VITE_WS_QUIZ_URL || "ws://localhost:8080/ws-quiz";
+
 // url 수정
-export function useQuizSocket({ url = "http://localhost:8080/ws-quiz", onConnect, onError }: QuizSocketOptions = {}) {
+export function useQuizSocket({ url = DEFAULT_WS_URL, onConnect, onError, autoSubscribe = [] }: QuizSocketOptions = {}) {
   const clientRef = useRef<Client | null>(null);
   const [connected, setConnected] = useState(false);
+  const subscriptionsRef = useRef<StompSubscription[]>([]);
 
   useEffect(() => {
     const client = new Client({
       // use SockJS so Spring STOMP endpoint with SockJS works
       webSocketFactory: () => new SockJS(url),
       reconnectDelay: 5000,
-      debug: () => {},
+      debug: (str) => {
+        console.log('[STOMP Debug]', str);
+      },
       // before connecting, make sure the CONNECT frame has the latest access token
       beforeConnect: () => {
         try {
@@ -39,9 +49,27 @@ export function useQuizSocket({ url = "http://localhost:8080/ws-quiz", onConnect
       onConnect: (frame) => {
         clientRef.current = client;
         setConnected(true);
+        console.log('[Quiz WebSocket] Connected', frame);
+
+        // 자동 구독 설정
+        autoSubscribe.forEach(({ destination, callback }) => {
+          const sub = client.subscribe(destination, (m: IMessage) => {
+            try {
+              const data = JSON.parse(m.body);
+              console.log(`[Quiz WebSocket] Received from ${destination}:`, data);
+              callback(data);
+            } catch {
+              console.log(`[Quiz WebSocket] Received from ${destination}:`, m.body);
+              callback(m.body);
+            }
+          });
+          subscriptionsRef.current.push(sub);
+        });
+
         onConnect?.(frame);
       },
       onStompError: (frame) => {
+        console.error('[Quiz WebSocket] STOMP Error', frame);
         onError?.(frame);
       },
     });
@@ -50,6 +78,16 @@ export function useQuizSocket({ url = "http://localhost:8080/ws-quiz", onConnect
 
     return () => {
       try {
+        // 모든 구독 해제
+        subscriptionsRef.current.forEach(sub => {
+          try {
+            sub.unsubscribe();
+          } catch {
+            /* ignore */
+          }
+        });
+        subscriptionsRef.current = [];
+        
         client.deactivate();
       } catch {
         /* ignore */
@@ -57,7 +95,7 @@ export function useQuizSocket({ url = "http://localhost:8080/ws-quiz", onConnect
       clientRef.current = null;
       setConnected(false);
     };
-  }, [url, onConnect, onError]);
+  }, [url, onConnect, onError, autoSubscribe]);
 
   const subscribe = useCallback((destination: string, callback: (msg: unknown) => void): SubscriptionHandle | null => {
     if (!clientRef.current) return null;
