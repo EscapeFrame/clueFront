@@ -94,3 +94,24 @@ export async function getStudentSubmissionDetail(submissionId: string) {
         throw error;
     }
 }
+
+// 학생 제출 첨부파일 다운로드 (submissionAttachmentId 사용)
+export async function downloadSubmissionAttachment(submissionAttachmentId: string) {
+    try {
+        const res = await Customapi.get(`/api/submissions/${submissionAttachmentId}/download`, { responseType: 'blob' });
+        if (res.status < 200 || res.status >= 300) {
+            console.error(`첨부파일 다운로드 실패: status ${res.status}`);
+            return null;
+        }
+        const contentDisposition = res.headers?.['content-disposition'] as string | undefined;
+        let filename: string | undefined = undefined;
+        if (contentDisposition) {
+            const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
+            if (match) filename = decodeURIComponent(match[1] || match[2]);
+        }
+        return { blob: res.data as Blob, filename };
+    } catch (error) {
+        console.error('첨부파일 다운로드 실패:', error);
+        return null;
+    }
+}

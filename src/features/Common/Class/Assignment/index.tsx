@@ -4,7 +4,7 @@ import { AssignmentCard } from '@/entities/Class/AssignmentCard/Student';
 import { SubmissionsApi } from '../api/useSubmissions';
 import { StudentSubmission } from '@/shared/types/submission';
 import * as s from './styles';
-import { StudentAssignmentData, SubmissionAttachmentResponse } from '@/entities/Class/AssignmentCard/Student'; // Import necessary types
+import { StudentAssignmentData } from '@/entities/Class/AssignmentCard/Student'; // Import necessary types
 
 export const AssignmentComponent: React.FC = () => {
   const { classId, classRoomId } = useParams<{ classId?: string; classRoomId?: string }>();
@@ -26,7 +26,8 @@ export const AssignmentComponent: React.FC = () => {
     SubmissionsApi.getAllForStudent(effectiveId)
       .then((data: StudentSubmission[]) => {
         const assignments: StudentAssignmentData[] = data.map(s => ({
-          assignmentId: s.submissionId, // Use s.submissionId directly (it's already string)
+          // Use the real assignmentId when provided by API; fall back to submissionId
+          assignmentId: s.assignmentId ?? s.submissionId,
           title: s.title,
           content: s.content,
           startDate: s.startDate, // Use s.startDate directly
