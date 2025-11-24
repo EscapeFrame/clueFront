@@ -47,11 +47,15 @@ export const Title = styled.div`
   }
 `;
 
-export const Explain = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0;
+export const Explain = styled.p`
+  ${fonts.P2}
+  color: ${theme.colors.gray[500]};
   padding: 0;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P1};
+  }
 `;
 
 export const Row = styled.div`
