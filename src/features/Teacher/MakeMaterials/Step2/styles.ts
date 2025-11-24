@@ -132,8 +132,10 @@ export const EdgeDropZone = styled.div<{ isActive: boolean }>`
 
 export const NodeCard = styled.div<{ isDragging: boolean; isDropTarget: boolean }>`
     position: relative;
-    width: 140px;
-    padding: 28px 22px 24px;
+    /* allow nodes to size reasonably but prevent overflowing the canvas */
+    width: 180px;
+    max-width: 260px;
+    padding: 20px 16px 18px;
     border-radius: 18px;
     background: ${(props) => (props.isDropTarget ? "#EEF2FF" : "#ffffff")};
     box-shadow: ${(props) =>
@@ -169,11 +171,15 @@ export const NodeTitle = styled.span`
     font-weight: 600;
     color: #1f2937;
     text-align: center;
-    word-break: keep-all;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 `;
 
-export const NodeTitleInput = styled.input`
+export const NodeTitleInput = styled.textarea`
     width: 100%;
+    min-height: 48px;
+    max-height: 140px;
     border: 1px solid ${theme.colors.blue[300]};
     border-radius: 10px;
     padding: 8px 10px;
@@ -182,10 +188,14 @@ export const NodeTitleInput = styled.input`
     color: #1f2937;
     text-align: center;
     outline: none;
+    resize: vertical;
+    line-height: 1.2;
+    background: transparent;
 
     &:focus {
         border-color: ${theme.colors.blue[500]};
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        background: #fff;
     }
 `;
 
