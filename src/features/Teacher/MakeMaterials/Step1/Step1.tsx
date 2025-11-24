@@ -77,8 +77,8 @@ export default function Step1({ onNext }: Step1Props) {
         mutate({
             studying_name: title,
             learning_purpose: goal,
-            main_word: keywords,
-            link: links.filter(l => l.trim() !== ""),
+            main_words: keywords,
+            links: links.filter(l => l.trim() !== ""),
         });
     };
 
