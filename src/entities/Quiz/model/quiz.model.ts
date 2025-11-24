@@ -3,7 +3,11 @@
 export type Participant = {
     userId: string;
     username: string;
-    // 기타 필요한 참가자 정보
+    sessionId?: string;
+    score?: number;
+    correctAnswers?: number;
+    isReady?: boolean;
+    joinedAt?: number;
 };
 
 export type Question = {
@@ -12,6 +16,7 @@ export type Question = {
     options: string[];
     timeLimit: number;
     difficulty: string;
+    correctAnswer?: number;  // 선생님만 볼 수 있음
 };
 
 export type Ranking = {
