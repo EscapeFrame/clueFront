@@ -72,7 +72,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/google-slide" element={<TCHMakeSlide />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile />} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
-          <Route path="/MakeClassMaterials" element={<MakeClassMaterials />} />
+          <Route path="/class/:classRoomId/:directoryId/make/lesson/MakeClassMaterials" element={<MakeClassMaterials />} />
           <Route path="/quiz" element={<TCHQuiz />} />
         </>
       )}
