@@ -5,6 +5,24 @@ import { AssignmentFile, DetailAssignmentStudent } from '@/shared/types/Class/As
 import { getCheckStudent, getStudentSubmissionDetail } from '@/entities/Class/api';
 import { IoClose } from 'react-icons/io5';
 
+// Local types for API responses to avoid `any`
+type RawStudent = {
+  userName?: string;
+  grade?: number;
+  classNo?: number;
+  number?: number;
+  isSubmitted?: boolean;
+  submissionId?: string;
+  submittedAt?: string | null;
+};
+
+type RawAttachment = {
+  originalFileName?: string;
+  value?: string;
+  size?: number;
+};
+import Button from '@/entities/UI/Button';
+
 interface AssignmentEntryProps {
   assignmentId: string;
   totalCount: number;
@@ -21,20 +39,20 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
   const [selectedStudent, setSelectedStudent] = useState<DetailAssignmentStudent | null>(null);
 
   useEffect(() => {
-                    const fetchStudents = async () => {
+                  const fetchStudents = async () => {
                         try {
-                            const responseData = await getCheckStudent(assignmentId);
-                            const mappedStudents: DetailAssignmentStudent[] = responseData.map((item: any) => ({
-                                userName: item.userName,
-                                grade: item.grade,
-                                classNo: item.classNo,
-                                number: item.number,
-                                isSubmitted: item.isSubmitted,
-                                submissionId: item.submissionId,
+                              const responseData = (await getCheckStudent(assignmentId)) as unknown as RawStudent[];
+                              const mappedStudents: DetailAssignmentStudent[] = responseData.map((item) => ({
+                                userName: item.userName || '',
+                                grade: item.grade || 0,
+                                classNo: item.classNo || 0,
+                                number: item.number || 0,
+                                isSubmitted: !!item.isSubmitted,
+                                submissionId: item.submissionId || '',
                                 files: [], // Initialize as empty array
                                 userImg: null, // Not provided by API, default to null
                                 submittedAt: item.submittedAt || null,
-                            }));
+                              }));
                             setStudents(mappedStudents || []);
                         } catch (error) {
                             console.error('학생 제출 현황 조회 실패:', error);
@@ -42,8 +60,6 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                         }
                     };    fetchStudents();
 
-    console.log("assignmentId:", assignmentId);
-    console.log("students:", students);
   }, [assignmentId]);
 
   useEffect(() => {
@@ -89,12 +105,13 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
         const submissionDetails = await getStudentSubmissionDetail(student.submissionId);
         const detailedStudentData = {
           ...student,
-          files: submissionDetails.submissionAttachmentResponses.map((att: any) => ({
+          files: (submissionDetails.submissionAttachmentResponses as RawAttachment[]).map((att) => ({
+            name: att.originalFileName || att.value || 'file',
             fileName: att.originalFileName,
             url: att.value,
             fileSize: att.size,
           })),
-        };
+        } as DetailAssignmentStudent;
         setSelectedStudent(detailedStudentData);
       } catch (error) { console.error('Failed to fetch submission details', error); }
     } else { setSelectedStudent(student); }
@@ -207,15 +224,13 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                   <>
                     <s.FileHeader>
                       <span>총 {selectedStudent.files?.length || 0}개 파일</span>
-                      <button
-                        onClick={() => {
+                      <Button type={2} width="auto" onClick={() => {
                           (selectedStudent.files || []).forEach(file => {
                             if (file.url) window.open(file.url, '_blank');
                           });
-                        }}
-                      >
+                        }}>
                         전체 다운로드
-                      </button>
+                      </Button>
                     </s.FileHeader>
                     <ul>
                       {selectedStudent.files.map((file: AssignmentFile, idx: number) => (
@@ -230,11 +245,9 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                                 : '0 KB'}
                             </span>
                           </div>
-                          <button
-                            onClick={() => window.open(file.url || '#', '_blank')}
-                          >
+                          <Button type={2} width="90px" onClick={() => window.open(file.url || '#', '_blank')}>
                             다운로드
-                          </button>
+                          </Button>
                         </s.FileItem>
                       ))}
                     </ul>
