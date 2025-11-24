@@ -5,8 +5,8 @@ import Customapi from '@/shared/config/api';
 export interface PostMaterialsRequest {
   studying_name: string;
   learning_purpose: string;
-  main_word: string[];
-  link: string[];
+  main_words: string[];
+  links: string[];
 }
 
 interface PostInitialAgentResponse {
