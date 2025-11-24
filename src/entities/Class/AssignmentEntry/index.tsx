@@ -1,8 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
-import { AssignmentFile, DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
-import { getCheckStudent, getStudentSubmissionDetail } from '@/entities/Class/api';
+import { DetailAssignmentStudent } from '@/shared/types/Class/Assignment/Attachment';
+import { getCheckStudent, getStudentSubmissionDetail, downloadSubmissionAttachment } from '@/entities/Class/api';
+
+// Local types for handling submission attachments
+type SubmissionAttachment = {
+  submissionAttachmentId: string;
+  type: 'FILE' | 'LINK';
+  value: string;
+  originalFileName?: string | null;
+  size?: number | null;
+};
+
+type FileItem = {
+  submissionAttachmentId: string;
+  type: 'FILE' | 'LINK';
+  fileName?: string | null;
+  url?: string | null;
+  fileSize?: number | null;
+};
+
+type CheckStudentItem = {
+  userName: string;
+  grade: number;
+  classNo: number;
+  number: number;
+  isSubmitted: boolean;
+  submissionId: string;
+  submittedAt?: string | null;
+};
 
 interface AssignmentEntryProps {
   assignmentId: string;
@@ -22,18 +49,18 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
   useEffect(() => {
                     const fetchStudents = async () => {
                         try {
-                            const responseData = await getCheckStudent(assignmentId);
-                            const mappedStudents: DetailAssignmentStudent[] = responseData.map((item: any) => ({
-                                userName: item.userName,
-                                grade: item.grade,
-                                classNo: item.classNo,
-                                number: item.number,
-                                isSubmitted: item.isSubmitted,
-                                submissionId: item.submissionId,
-                                files: [], // Initialize as empty array
-                                userImg: null, // Not provided by API, default to null
-                                submittedAt: item.submittedAt || null,
-                            }));
+              const responseData = await getCheckStudent(assignmentId) as CheckStudentItem[];
+              const mappedStudents: DetailAssignmentStudent[] = responseData.map((item: CheckStudentItem) => ({
+                userName: item.userName,
+                grade: item.grade,
+                classNo: item.classNo,
+                number: item.number,
+                isSubmitted: item.isSubmitted,
+                submissionId: item.submissionId,
+                files: [], // Initialize as empty array
+                userImg: null, // Not provided by API, default to null
+                submittedAt: item.submittedAt || null,
+              }));
                             setStudents(mappedStudents || []);
                         } catch (error) {
                             console.error('학생 제출 현황 조회 실패:', error);
@@ -41,8 +68,6 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                         }
                     };    fetchStudents();
 
-    console.log("assignmentId:", assignmentId);
-    console.log("students:", students);
   }, [assignmentId]);
 
   useEffect(() => {
@@ -86,17 +111,41 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
     if (student.isSubmitted && student.submissionId) {
       try {
         const submissionDetails = await getStudentSubmissionDetail(student.submissionId);
+        type SubmissionAttachment = {
+          submissionAttachmentId: string;
+          type: 'FILE' | 'LINK';
+          value: string;
+          originalFileName?: string | null;
+          size?: number | null;
+        };
+
+        type FileItem = {
+          submissionAttachmentId: string;
+          type: 'FILE' | 'LINK';
+          fileName?: string | null;
+          url?: string | null;
+          fileSize?: number | null;
+        };
+        const mappedFiles: FileItem[] = submissionDetails.submissionAttachmentResponses?.map((att: SubmissionAttachment) => ({
+          // Keep both id and type so we can differentiate FILE vs LINK
+          submissionAttachmentId: att.submissionAttachmentId,
+          type: att.type, // 'FILE' or 'LINK'
+          fileName: att.originalFileName || att.value,
+          url: att.value,
+          fileSize: att.size,
+        })) || [];
+
         const detailedStudentData = {
           ...student,
-          files: submissionDetails.submissionAttachmentResponses.map((att: any) => ({
-            fileName: att.originalFileName,
-            url: att.value,
-            fileSize: att.size,
-          })),
-        };
+          files: mappedFiles,
+        } as DetailAssignmentStudent & { files: FileItem[] };
         setSelectedStudent(detailedStudentData);
-      } catch (error) { console.error('Failed to fetch submission details', error); }
-    } else { setSelectedStudent(student); }
+      } catch (error) {
+        console.error('Failed to fetch submission details', error);
+      }
+    } else {
+      setSelectedStudent(student);
+    }
     setModalIsOpen(true);
   };
 
@@ -208,8 +257,25 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                       <span>총 {selectedStudent.files?.length || 0}개 파일</span>
                       <button
                         onClick={() => {
-                          (selectedStudent.files || []).forEach(file => {
-                            if (file.url) window.open(file.url, '_blank');
+                          // 전체 동작: FILE은 개별 다운로드 링크 호출, LINK는 새 탭으로 오픈
+                          (selectedStudent.files || []).forEach(async (file: FileItem) => {
+                            if (file.type === 'FILE') {
+                              try {
+                                const res = await downloadSubmissionAttachment(file.submissionAttachmentId);
+                                if (res && res.blob) {
+                                  const url = window.URL.createObjectURL(res.blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = res.filename || file.fileName || 'download';
+                                  document.body.appendChild(a);
+                                  a.click();
+                                  a.remove();
+                                  window.URL.revokeObjectURL(url);
+                                }
+                              } catch (e) { console.error('전체 다운로드 중 실패', e); }
+                            } else {
+                              if (file.url) window.open(file.url, '_blank');
+                            }
                           });
                         }}
                       >
@@ -217,23 +283,47 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                       </button>
                     </s.FileHeader>
                     <ul>
-                      {selectedStudent.files.map((file: AssignmentFile, idx: number) => (
+                      {selectedStudent.files.map((file: FileItem, idx: number) => (
                         <s.FileItem key={idx}>
                           <div className="fileInfo">
-                            <a href={file.url || '#'} target="_blank" rel="noreferrer">
-                              {file.name || file.fileName}
-                            </a>
+                            {file.type === 'FILE' ? (
+                              <a href={file.url || '#'} target="_blank" rel="noreferrer">
+                                {file.fileName || file.originalFileName || '파일'}
+                              </a>
+                            ) : (
+                              <a href={file.url} target="_blank" rel="noreferrer">
+                                {file.fileName || file.url}
+                              </a>
+                            )}
                             <span>
                               {file.fileSize
                                 ? (file.fileSize / 1024).toFixed(2) + ' KB'
                                 : '0 KB'}
                             </span>
                           </div>
-                          <button
-                            onClick={() => window.open(file.url || '#', '_blank')}
-                          >
-                            다운로드
-                          </button>
+                          {file.type === 'FILE' ? (
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const res = await downloadSubmissionAttachment(file.submissionAttachmentId);
+                                  if (res && res.blob) {
+                                    const url = window.URL.createObjectURL(res.blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = res.filename || file.fileName || 'download';
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    a.remove();
+                                    window.URL.revokeObjectURL(url);
+                                  }
+                                } catch (e) { console.error('파일 다운로드 실패', e); }
+                              }}
+                            >
+                              다운로드
+                            </button>
+                          ) : (
+                            <button onClick={() => file.url && window.open(file.url, '_blank')}>열기</button>
+                          )}
                         </s.FileItem>
                       ))}
                     </ul>
