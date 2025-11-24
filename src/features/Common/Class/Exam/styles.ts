@@ -25,6 +25,9 @@ export const Description = styled.p`
   color: ${colors.gray[4]};
   margin: 0; 
   padding: 0; 
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
   
   @media (max-width: 1200px) { 
     ${fonts.P2} 

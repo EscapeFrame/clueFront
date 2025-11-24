@@ -13,6 +13,7 @@ import {
   getAssignmentAttachments,
   deleteSubmissionAttachment, // Add this line
 } from '../api';
+import { getStudentSubmissionDetail } from '../api';
 import AttachmentBox from '@/entities/UI/Attachment';
 import AddModal from '@/entities/UI/AddModal';
 
@@ -29,6 +30,7 @@ interface TeacherAttachment {
   type: 'FILE' | 'LINK';
   value: string;
   originalFileName?: string;
+  assignmentAttachmentId?: string;
 }
 
 export interface SubmissionAttachmentResponse {
@@ -70,9 +72,7 @@ export function AssignmentCard({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [teacherAttachments, setTeacherAttachments] = useState<
-    TeacherAttachment[]
-  >([]);
+  const [teacherAttachments, setTeacherAttachments] = useState<TeacherAttachment[]>([]);
   const [
     isFetchingTeacherAttachments,
     setIsFetchingTeacherAttachments,
@@ -210,7 +210,19 @@ export function AssignmentCard({
     setIsModalOpen(true);
     setIsFetchingTeacherAttachments(true);
     try {
-      const attachments = await getAssignmentAttachments(data.assignmentId);
+      let assignmentIdToUse = data.assignmentId;
+      // If assignmentId looks like a submissionId (same id used), attempt to resolve real assignmentId
+      if (!assignmentIdToUse || assignmentIdToUse === data.submissionId) {
+        try {
+          const submissionDetail = await getStudentSubmissionDetail(data.submissionId);
+          if (submissionDetail && submissionDetail.assignmentId) {
+            assignmentIdToUse = submissionDetail.assignmentId;
+          }
+        } catch (err) {
+          console.warn('Failed to resolve assignmentId from submission detail, falling back to provided id', err);
+        }
+      }
+      const attachments = await getAssignmentAttachments(assignmentIdToUse);
       if (Array.isArray(attachments)) {
         setTeacherAttachments(attachments);
       }
@@ -314,27 +326,54 @@ export function AssignmentCard({
               <p>자료를 불러오는 중...</p>
             ) : teacherAttachments.length > 0 ? (
               <s.FileListSection>
-                {teacherAttachments.map((att, index) => (
-                  <a
-                    key={index}
-                    href={att.value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <s.FileItem>
-                      <s.FileInfoContainer>
-                        {att.type === 'FILE' ? <FaRegFile /> : <FaLink />}
-                        <div>
-                          <s.FileNameText>
-                            {att.type === 'FILE'
-                              ? att.originalFileName
-                              : att.value}
-                          </s.FileNameText>
-                        </div>
-                      </s.FileInfoContainer>
-                    </s.FileItem>
-                  </a>
+                {teacherAttachments.map((att: TeacherAttachment, index) => (
+                  <s.FileItem key={index}>
+                    <s.FileInfoContainer>
+                      {att.type === 'FILE' ? <FaRegFile /> : <FaLink />}
+                      <div>
+                        <s.FileNameText>
+                          {att.type === 'FILE' ? att.originalFileName : att.value}
+                        </s.FileNameText>
+                      </div>
+                    </s.FileInfoContainer>
+                    {att.type === 'FILE' ? (
+                      <button
+                        onClick={async () => {
+                          try {
+                            // call assignment attachment download endpoint
+                            const res = await fetch(`/api/assignments/${att.assignmentAttachmentId}/download`, {
+                              method: 'GET',
+                              headers: { Accept: '*/*' },
+                            });
+                            if (!res.ok) throw new Error('네트워크 응답 실패');
+                            const blob = await res.blob();
+                            // try to get filename from headers
+                            const cd = res.headers.get('content-disposition');
+                            let filename = att.originalFileName || 'download';
+                            if (cd) {
+                              const m = cd.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
+                              if (m) filename = decodeURIComponent(m[1] || m[2]);
+                            }
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                          } catch (e) {
+                            console.error('파일 다운로드 실패', e);
+                            alert('파일을 다운로드할 수 없습니다.');
+                          }
+                        }}
+                      >
+                        다운로드
+                      </button>
+                    ) : (
+                      <button onClick={() => att.value && window.open(att.value, '_blank')}>열기</button>
+                    )}
+                  </s.FileItem>
                 ))}
               </s.FileListSection>
             ) : (

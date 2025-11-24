@@ -14,6 +14,7 @@ export interface StudentSubmission {
   endDate: string;
   userName: string;
   submissionId: string;
+  assignmentId?: string; // optional: some APIs may return assignmentId
   IsSubmitted: boolean;
   submittedAt: string;
   submissionAttachmentResponses: SubmissionAttachmentResponse[];
