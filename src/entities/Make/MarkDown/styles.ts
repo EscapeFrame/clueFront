@@ -225,6 +225,30 @@ export const EditorWrapper = styled.div`
   @media (max-width: 768px) {
     height: auto;
   }
+  .w-md-editor .w-md-editor-toolbar {
+    /* increased by ~20% from previous reduced sizes */
+    min-height: 38px !important;
+    height: 38px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .w-md-editor .w-md-editor-toolbar li > button,
+  .w-md-editor .w-md-editor-toolbar button {
+    /* increased by ~20% */
+    padding: 6px 8px !important;
+    height: 30px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+  }
+
+  .w-md-editor .w-md-editor-toolbar li > button svg,
+  .w-md-editor .w-md-editor-toolbar button svg {
+    width: 17px !important;
+    height: 17px !important;
+  }
 `;
 
 export const SaveWrapper = styled.div`
