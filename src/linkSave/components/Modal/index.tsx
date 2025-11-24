@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as S from './styles';
-import { LinkCard, LinkFormData, LINK_CATEGORY_MAP, LINK_CATEGORY_ENGLISH_MAP } from '@/linkSave/types/card';
+import { LinkCard, LinkFormData, LINK_CATEGORY_MAP, LINK_CATEGORY_ENGLISH_MAP, AuthorizationType } from '@/linkSave/types/card';
 import { FormInputGroup } from './Input';
 import ToggleSwitch from '../UI/ToggleSwitch';
 
@@ -119,7 +119,7 @@ const LinkFormModal: React.FC<LinkFormModalProps> = ({
       return;
     }
 
-    let visibilityScope = 'PRIVATE'; 
+    let visibilityScope: AuthorizationType = 'PRIVATE';
     if (visibility.grade) {
       visibilityScope = 'PUBLIC';
     } else if (visibility.class) {
