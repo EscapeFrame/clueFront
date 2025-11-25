@@ -1,10 +1,10 @@
 import { fonts } from "@/shared/theme/font.styles";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
   padding: 2rem 14rem;
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
 
   @media (max-width: 768px) {
     padding: 2rem 5rem;
@@ -12,7 +12,7 @@ export const Container = styled.div`
 `;
 
 export const ErrorMessage = styled.div`
-  color: ${theme.colors.red};
+  color: ${colors.red[3]};
 `;
 
 export const Icon = styled.div`
@@ -27,8 +27,8 @@ export const Icon = styled.div`
 
 export const PostButton = styled.div`
   width: 100%;
-  background: ${theme.colors.blue[500]};
-  color: ${theme.colors.white};
+  background: ${colors.primary};
+  color: ${colors.white};
   padding: 10px 0;
   border-radius: 8px;
   text-align: center;

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
@@ -49,7 +49,7 @@ export const AgreementScript = styled.div`
   text-align: center;
   margin-top: 10px;
   ${fonts.P2}
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
 
   @media (max-width: 1200px) {
     ${fonts.P3}
@@ -99,7 +99,7 @@ export const Image = styled.img`
 export const Tittle = styled.div`
   ${fonts.P5}
   margin-top: 2rem;
-  color: ${theme.colors.black};
+  color: ${colors.black};
 
   @media (max-width: 856px) {
     ${fonts.P4}

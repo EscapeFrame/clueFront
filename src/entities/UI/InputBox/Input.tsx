@@ -1,4 +1,4 @@
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import * as S from './styles';
 
 type InputBoxProps = {
@@ -13,7 +13,7 @@ export default function InputBox({ label, id, value = '', required = true, onCha
   return (
     <S.Wrapper>
       <S.Label htmlFor={id}>
-        {label} {required && <span style={{ color: theme.colors.blue[500] }}>*</span>}
+        {label} {required && <span style={{ color: colors.primary }}>*</span>}
       </S.Label>
       <S.Input
         id={id}

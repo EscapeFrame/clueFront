@@ -1,5 +1,5 @@
 import { fonts } from "@/shared/theme/font.styles";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
@@ -10,7 +10,7 @@ export const Container = styled.div`
 `;
 
 export const ErrorMessage = styled.div`
-  color: ${theme.colors.red};
+  color: ${colors.red[3]};
 `;
 
 export const Icon = styled.div`

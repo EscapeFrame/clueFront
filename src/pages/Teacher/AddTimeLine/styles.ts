@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
@@ -17,7 +17,7 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   ${fonts.P5};
-  color: ${theme.colors.black};
+  color: ${colors.black};
   margin-bottom: 16px;
 
   @media (max-width: 1200px) {
@@ -30,7 +30,7 @@ export const Title = styled.h1`
 `;
 
 export const InfoBox = styled.div`
-  background: ${theme.colors.gray[200]};
+  background: ${colors.gray[2]};
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 24px;
@@ -45,7 +45,7 @@ export const InfoBox = styled.div`
 `;
 
 export const InfoIcon = styled.span`
-  color: ${theme.colors.blue[600]};
+  color: ${colors.primary};
   ${fonts.P3};
   font-weight: bold;
 
@@ -55,7 +55,7 @@ export const InfoIcon = styled.span`
 `;
 
 export const InfoText = styled.p`
-  color: #1976d2;
+  color: ${colors.primary};
   ${fonts.P2};
   margin: 0;
 
@@ -92,7 +92,7 @@ export const TeacherInput = styled.div`
 export const TeacherLabel = styled.label`
   display: block;
   ${fonts.P2};
-  color: ${theme.colors.black};
+  color: ${colors.black};
   margin-bottom: 8px;
 
   @media (max-width: 768px) {
@@ -103,14 +103,14 @@ export const TeacherLabel = styled.label`
 export const TeacherInputField = styled.input`
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid ${theme.colors.gray[400]};
+  border: 1px solid ${colors.gray[4]};
   border-radius: 8px;
   ${fonts.P1};
   box-sizing: border-box;
 
   &:focus {
     outline: none;
-    border-color: #2196f3;
+    border-color: ${colors.primary};
   }
 
   @media (max-width: 768px) {
@@ -139,11 +139,11 @@ export const PDFB = styled.button`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: ${theme.colors.gray[100]};
-  color: ${theme.colors.black};
+  background: ${colors.gray[1]};
+  color: ${colors.black};
 
   &:hover {
-    background: ${theme.colors.gray[200]};
+    background: ${colors.gray[2]};
   }
 
   @media (max-width: 768px) {
@@ -162,8 +162,8 @@ export const GoogleSheetB = styled.button`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: ${theme.colors.blue[500]};
-  color: ${theme.colors.black};
+  background: ${colors.primary};
+  color: ${colors.black};
 
   @media (max-width: 768px) {
     padding: 10px 14px;

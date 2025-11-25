@@ -1,6 +1,6 @@
 import { fonts } from '@/shared/theme/font.styles';
 import styled from '@emotion/styled';
-import {theme} from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
   background: white;
@@ -33,7 +33,7 @@ export const Title = styled.div`
 
 export const Explain = styled.div`
   ${fonts.P2}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   padding: 0;
   margin: 0;
 
@@ -52,7 +52,7 @@ export const LoadingContainer = styled.div`
 
 export const LoadingText = styled.p`
   ${fonts.P1}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   margin: 0;
 `;
 
@@ -67,7 +67,7 @@ export const ErrorContainer = styled.div`
 
 export const ErrorText = styled.p`
   ${fonts.P1}
-  color: ${theme.colors.red}
+  color: ${colors.red[3]}
   margin: 0;
   text-align: center;
 `;
@@ -82,7 +82,7 @@ export const EmptyContainer = styled.div`
 
 export const EmptyText = styled.p`
   ${fonts.P1}
-  color: ${theme.colors.blue[500]};
+  color: ${colors.primary};
   margin: 0;
   font-weight: 500;
 `;

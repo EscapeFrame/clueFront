@@ -1,5 +1,5 @@
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 export const TableWrapper = styled.div`
@@ -21,23 +21,23 @@ export const Title = styled.div`
 
 export const HeaderCell = styled.th`
   padding: 0.75rem;
-  background: ${theme.colors.blue[400]};
-  border: 1px solid ${theme.colors.gray[300]};
+  background: ${colors.blue.light4};
+  border: 1px solid ${colors.gray[3]};
 `;
 
 export const TimeCell = styled.td`
   padding: 0.5rem;
   width: 4rem;
-  background: ${theme.colors.gray[100]};
-  border: 1px solid ${theme.colors.gray[300]};
+  background: ${colors.gray[1]};
+  border: 1px solid ${colors.gray[3]};
   font-weight: 600;
   text-align: center;
 `;
 
 export const Cell = styled.td<{ isLunch?: boolean }>`
   padding: 0.75rem;
-  border: 1px solid ${theme.colors.gray[300]};
-  background: ${({ isLunch }) => (isLunch ? '${theme.colors.gray[200]}' : '${theme.colors.white}')};
+  border: 1px solid ${colors.gray[3]};
+  background: ${({ isLunch }) => (isLunch ? '${colors.gray[2]}' : '${colors.white}')};
   text-align: center;
   white-space: pre-line;
 `;

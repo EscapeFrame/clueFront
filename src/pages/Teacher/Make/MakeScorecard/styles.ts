@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 const cellWidth = '160px';
@@ -114,10 +114,10 @@ export const RemoveButton = styled.button`
   border: none;
   cursor: pointer;
   padding: 2px;
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
 
   &:hover {
-    color: ${theme.colors.blue[500]};
+    color: ${colors.primary};
   }
 
   @media (max-width: 768px) {
@@ -128,15 +128,15 @@ export const RemoveButton = styled.button`
 
 export const CellBox = styled.div`
   width: 100%;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 8px;
   padding: 8px;
   min-height: 80px;
   cursor: pointer;
-  background: ${theme.colors.white};
+  background: ${colors.white};
 
   &:hover {
-    border-color: ${theme.colors.blue[600]};
+    border-color:${colors.primary};
   }
 
   @media (max-width: 768px) {
@@ -153,7 +153,7 @@ export const SpacerCell = styled.div`
 export const HeaderBox = styled.div`
   position: relative;
   width: 100%;
-  background: ${theme.colors.blue[100]};
+  background: ${colors.blue.light1};
   padding: 10px;
   text-align: center;
   border-radius: 6px;
@@ -184,7 +184,7 @@ export const TextArea = styled.textarea`
 export const TextBlock = styled.div`
   white-space: pre-wrap;
   ${fonts.P2};
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
 
   @media (max-width: 768px) {
     ${fonts.P3};
@@ -206,7 +206,7 @@ export const AddRowButton = styled.button`
   width: 100%;
   max-width: 100%;
   height: 40px;
-  background: ${theme.colors.gray[100]};
+  background: ${colors.gray[1]};
   border: none;
   border-radius: 8px;
   padding: 12px 0;
@@ -215,7 +215,7 @@ export const AddRowButton = styled.button`
   text-align: center;
 
   &:hover {
-    background: ${theme.colors.blue[300]};
+    background: ${colors.blue.light3};
   }
 
   @media (max-width: 768px) {
@@ -227,19 +227,19 @@ export const AddRowButton = styled.button`
 export const AddColumnButton = styled.button`
   width: 100%;
   height: 100%;
-  background: ${theme.colors.gray[200]};
-  border: 2px dashed ${theme.colors.gray[400]};
+  background: ${colors.gray[2]};
+  border: 2px dashed ${colors.gray[4]};
   border-radius: 6px;
   ${fonts.P4};
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
 
   &:hover {
-    background: ${theme.colors.blue[400]};
-    color: ${theme.colors.black};
+    background: ${colors.blue.light4};
+    color: ${colors.black};
   }
 
   @media (max-width: 768px) {
@@ -248,5 +248,5 @@ export const AddColumnButton = styled.button`
 `;
 
 export const ErrorMessage = styled.input`
-  color: ${theme.colors.red};
+  color: ${colors.red[3]};
 `;

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { fonts } from "@/shared/theme/font.styles";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
@@ -29,7 +29,7 @@ export const Title = styled.div`
 export const desc = styled.div`
   ${fonts.P2}
   text-align: center;
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   margin-bottom: 1rem;
   padding: 0;
 `;

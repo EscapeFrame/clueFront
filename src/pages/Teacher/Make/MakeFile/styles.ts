@@ -1,4 +1,4 @@
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
@@ -12,7 +12,7 @@ export const Container = styled.div`
 export const Card = styled.div`
   width: 100%;
   max-width: 640px;
-  background: ${theme.colors.white};
+  background: ${colors.white};
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(20,20,30,0.06);
   padding: 28px;
@@ -32,22 +32,22 @@ export const FileLabel = styled.label`
   gap: 8px;
   padding: 8px 12px;
   border-radius: 8px;
-  background: ${'#0077FF'};
-  color: #fff;
+  background: ${colors.primary};
+  color: ${colors.white};
   cursor: pointer;
   font-weight: 600;
 `;
 
 export const FileName = styled.p`
   margin: 0;
-  color: ${theme.colors.black || '#222'};
+  color: ${colors.black || '#222'};
   font-size: 14px;
 `;
 
 export const Status = styled.p<{ variant?: 'error' | 'info' | 'success' }>`
   margin: 8px 0 0 0;
   font-size: 14px;
-  color: ${props => props.variant === 'error' ? '#d93025' : props.variant === 'success' ? '#188038' : '#334155'};
+  color: ${props => props.variant === 'error' ? colors.red[3] : props.variant === 'success' ? colors.primary : colors.black};
 `;
 
 export const Actions = styled.div`
