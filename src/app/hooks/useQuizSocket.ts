@@ -82,6 +82,15 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         console.log('[Quiz WebSocket] Connection frame:', frame);
         console.log('[Quiz WebSocket] Server version:', frame.headers?.['version']);
         console.log('[Quiz WebSocket] Heart-beat:', frame.headers?.['heart-beat']);
+        console.log('[Quiz WebSocket] Session:', frame.headers?.['session']);  // ⬅️ 세션 확인!
+        console.log('[Quiz WebSocket] All headers:', frame.headers);  // ⬅️ 모든 헤더 출력
+        
+        // ⚠️ 세션 헤더 확인
+        if (!frame.headers?.['session']) {
+          console.error('[Quiz WebSocket] 🚨 서버가 session 헤더를 보내지 않았습니다!');
+          console.error('[Quiz WebSocket] 이것은 서버 설정 문제입니다.');
+          console.error('[Quiz WebSocket] 백엔드 개발자에게 WebSocket 세션 설정을 확인하도록 요청하세요.');
+        }
 
         // 연결 완료 - 리렌더링 트리거
         setConnecting(false);
@@ -112,44 +121,50 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
           }
         });
 
-        // 재연결 시 manual subscribe 재등록 (약간의 지연 추가)
+        // 재연결 시 manual subscribe 재등록 (NO setTimeout - 클라이언트 상태 확인)
         if (manualSubscriptionMetaRef.current.length) {
-          console.log(`[Quiz WebSocket] Re-subscribing ${manualSubscriptionMetaRef.current.length} subscriptions after short delay...`);
+          console.log(`[Quiz WebSocket] Re-subscribing ${manualSubscriptionMetaRef.current.length} subscriptions...`);
           
-          // 서버가 CONNECTED를 보낸 직후 바로 SUBSCRIBE하면 거부할 수 있으므로 100ms 지연
-          setTimeout(() => {
-            // 중복 제거 (destination 기준)
-            const uniqueSubs = Array.from(
-              new Map(
-                manualSubscriptionMetaRef.current.map(item => [item.destination, item])
-              ).values()
-            );
+          // 중복 제거 (destination 기준)
+          const uniqueSubs = Array.from(
+            new Map(
+              manualSubscriptionMetaRef.current.map(item => [item.destination, item])
+            ).values()
+          );
+          
+          // 기존 메타 초기화 (재구독 성공 후 다시 추가됨)
+          manualSubscriptionMetaRef.current = [];
+          
+          uniqueSubs.forEach(({ destination, callback, headers }) => {
+            // ⚠️ 중요: client.connected 직접 확인!
+            if (!client.connected) {
+              console.warn('[Quiz WebSocket] ⚠️ Client not connected during re-subscribe, re-queuing:', destination);
+              manualSubscriptionMetaRef.current.push({ destination, callback, headers });
+              return;
+            }
             
-            // 기존 메타 초기화 (재구독 성공 후 다시 추가됨)
-            manualSubscriptionMetaRef.current = [];
-            
-            uniqueSubs.forEach(({ destination, callback, headers }) => {
-              try {
-                console.log('[Quiz WebSocket] 📤 Re-subscribing to:', destination);
-                const sub = client.subscribe(
-                  destination,
-                  (m: IMessage) => {
-                    try {
-                      callback(JSON.parse(m.body));
-                    } catch {
-                      callback(m.body);
-                    }
-                  },
-                  headers || { Authorization: `Bearer ${accessToken}` }
-                );
-                subscriptionsRef.current.push(sub);
-                manualSubscriptionMetaRef.current.push({ destination, callback, headers });
-                console.log(`[Quiz WebSocket] ✅ Re-subscribed successfully to ${destination}`);
-              } catch (e) {
-                console.error('[Quiz WebSocket] ❌ Failed to re-subscribe to', destination, e);
-              }
-            });
-          }, 100);
+            try {
+              console.log('[Quiz WebSocket] 📤 Re-subscribing to:', destination);
+              const sub = client.subscribe(
+                destination,
+                (m: IMessage) => {
+                  try {
+                    callback(JSON.parse(m.body));
+                  } catch {
+                    callback(m.body);
+                  }
+                },
+                headers || { Authorization: `Bearer ${accessToken}` }
+              );
+              subscriptionsRef.current.push(sub);
+              manualSubscriptionMetaRef.current.push({ destination, callback, headers });
+              console.log(`[Quiz WebSocket] ✅ Re-subscribed successfully to ${destination}`);
+            } catch (e) {
+              console.error('[Quiz WebSocket] ❌ Failed to re-subscribe to', destination, e);
+              // 실패 시 다시 큐에 추가
+              manualSubscriptionMetaRef.current.push({ destination, callback, headers });
+            }
+          });
         }
 
         // 대기중이던 send 메시지 플러시
