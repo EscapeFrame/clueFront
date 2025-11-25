@@ -184,6 +184,7 @@ export default function MarkDownViewerPage() {
         </s.ViewerContainer>
       </s.Container>
 
+      {isTeacher && (
         <s.FloatingButton onClick={() => {
           if (!classRoomId || !documentId) {
             return;
@@ -192,6 +193,7 @@ export default function MarkDownViewerPage() {
         }}>
           Quiz 생성
         </s.FloatingButton>
+      )}
     </s.PageWrapper>
   );
 }
