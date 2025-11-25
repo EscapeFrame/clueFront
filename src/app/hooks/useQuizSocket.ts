@@ -45,8 +45,14 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       webSocketFactory: () => new SockJS(API_BASE_URL + '/ws-quiz'),
       heartbeatIncoming: 4000, // 서버로부터 4초 간격으로 하트비트 확인
       heartbeatOutgoing: 4000, // 클라이언트가 4초 간격으로 서버에 하트비트 전송
-      reconnectDelay: 1000, // 연결이 끊어진 경우 1초 후 재연결 시도
+      reconnectDelay: 5000, // 연결이 끊어진 경우 5초 후 재연결 시도 (1초→5초로 증가)
       connectHeaders: { Authorization: `Bearer ${accessToken}` }, // CONNECT 프레임 헤더 추가
+      debug: (str) => {
+        // STOMP 프레임 디버깅 (서버 응답 확인용)
+        if (str.includes('ERROR') || str.includes('MESSAGE') || str.includes('CONNECTED')) {
+          console.log('[Quiz WebSocket DEBUG]', str);
+        }
+      },
       onConnect: (frame) => {
         clientRef.current = client;
         setConnected(true);
@@ -129,8 +135,18 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         console.error('[Quiz WebSocket] Error details:', {
           command: frame.command,
           headers: frame.headers,
-          body: frame.body
+          body: frame.body,
+          isBinaryBody: frame.isBinaryBody
         });
+        
+        // 인증 에러면 토큰 문제
+        if (frame.headers?.message?.includes('Unauthorized') || 
+            frame.headers?.message?.includes('Invalid token') ||
+            frame.body?.includes('Unauthorized')) {
+          console.error('[Quiz WebSocket] ⚠️ AUTHENTICATION FAILED - Check your token!');
+          alert('인증에 실패했습니다. 다시 로그인해주세요.');
+        }
+        
         setConnected(false);
         onError?.(frame);
       },
