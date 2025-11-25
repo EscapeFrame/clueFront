@@ -36,7 +36,83 @@ dependencies {
 </dependencies>
 ```
 
-## 2. WebSocket Configuration
+## 2. Spring Security Configuration (WebSocket 허용)
+
+**중요**: Spring Security를 사용하는 경우, WebSocket 엔드포인트를 명시적으로 허용해야 합니다.
+
+```java
+package com.example.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // WebSocket 엔드포인트 허용 (중요!)
+                .requestMatchers("/ws-quiz/**").permitAll()
+                .requestMatchers("/topic/**").permitAll()
+                // SockJS fallback 엔드포인트도 허용
+                .requestMatchers("/ws-quiz/info").permitAll()
+                .requestMatchers("/ws-quiz/websocket").permitAll()
+                .requestMatchers("/ws-quiz/**/**").permitAll()
+                // 기타 엔드포인트 설정
+                .anyRequest().authenticated()
+            );
+
+        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 허용할 origin 설정 (프로덕션에서는 구체적인 도메인 지정 권장)
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5173",  // Vite 개발 서버
+            "http://localhost:3000",  // React 개발 서버
+            "https://yourdomain.com"  // 프로덕션 도메인
+        ));
+
+        // 또는 패턴 사용
+        configuration.setAllowedOriginPatterns(List.of("*"));
+
+        // 허용할 HTTP 메서드
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+        // 허용할 헤더
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        // 인증 정보 허용 (쿠키, Authorization 헤더 등)
+        configuration.setAllowCredentials(true);
+
+        // preflight 요청 캐싱 시간 (초)
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+}
+```
+
+## 3. WebSocket Configuration (CORS 포함)
 
 ```java
 package com.example.config;
@@ -66,13 +142,39 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-quiz")
+                // CORS 설정: 허용할 origin 지정
+                .setAllowedOrigins(
+                    "http://localhost:5173",  // Vite 개발 서버
+                    "http://localhost:3000",  // React 개발 서버
+                    "https://yourdomain.com"  // 프로덕션 도메인
+                )
+                // 또는 패턴으로 모든 origin 허용 (개발 환경용)
                 .setAllowedOriginPatterns("*")
+                // 인증 정보(쿠키, Authorization 헤더) 허용
+                .setAllowedHeaders("*")
+                .withSockJS()
+                    // SockJS 설정
+                    .setStreamBytesLimit(512 * 1024)
+                    .setHttpMessageCacheSize(1000)
+                    .setDisconnectDelay(30 * 1000);
+
+        // useQuizSocket.ts에서 사용하는 엔드포인트도 추가
+        registry.addEndpoint("/topic/quiz/rooms")
+                .setAllowedOriginPatterns("*")
+                .setAllowedHeaders("*")
                 .withSockJS();
     }
 }
 ```
 
-## 3. JWT Interceptor (WebSocket 인증)
+### CORS 설정 주의사항
+
+1. **개발 환경**: `setAllowedOriginPatterns("*")`로 모든 origin 허용
+2. **프로덕션 환경**: `setAllowedOrigins()`로 구체적인 도메인만 허용
+3. **인증**: `setAllowedHeaders("*")`로 Authorization 헤더 허용 필수
+4. **Spring Security**: WebSocket 엔드포인트를 명시적으로 permitAll() 처리
+
+## 4. JWT Interceptor (WebSocket 인증)
 
 ```java
 package com.example.config;
@@ -122,7 +224,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
 }
 ```
 
-## 4. DTO 클래스들
+## 5. DTO 클래스들
 
 ```java
 // 방 생성 요청
@@ -186,7 +288,7 @@ public class RankingData {
 }
 ```
 
-## 5. Controller 구현
+## 6. Controller 구현
 
 ```java
 package com.example.controller;
@@ -414,7 +516,7 @@ public class QuizBattleController {
 }
 ```
 
-## 6. Service 구현 예시
+## 7. Service 구현 예시
 
 ```java
 package com.example.service;
@@ -595,7 +697,7 @@ public class QuizBattleService {
 }
 ```
 
-## 7. 주요 엔드포인트 정리
+## 8. 주요 엔드포인트 정리
 
 ### 구독 (Subscribe)
 - `/topic/quiz/rooms` - 방 생성 알림
@@ -615,21 +717,21 @@ public class QuizBattleService {
 - `/app/quiz/leave/{roomCode}` - 방 나가기
 - `/app/quiz/cancel/{roomCode}` - 방 취소
 
-## 8. 보안 고려사항
+## 9. 보안 고려사항
 
 1. **JWT 토큰 검증**: 모든 WebSocket 연결에서 JWT 토큰을 검증해야 합니다
 2. **권한 확인**: 호스트만 할 수 있는 작업(시작, 취소 등)은 반드시 권한을 확인해야 합니다
 3. **Rate Limiting**: 답변 제출 등의 작업에 Rate Limiting을 적용하세요
 4. **입력 검증**: 모든 사용자 입력은 검증되어야 합니다
 
-## 9. 성능 최적화
+## 10. 성능 최적화
 
 1. **Redis 사용**: 방 정보와 게임 상태를 Redis에 저장하는 것을 권장합니다
 2. **Connection Pool**: 데이터베이스 연결 풀을 적절히 설정하세요
 3. **메시지 압축**: 큰 메시지는 압축을 고려하세요
 4. **로깅 최적화**: 프로덕션 환경에서는 DEBUG 로그를 최소화하세요
 
-## 10. 테스트
+## 11. 테스트
 
 WebSocket 테스트를 위해 다음 도구들을 사용할 수 있습니다:
 - Postman (WebSocket 지원)
