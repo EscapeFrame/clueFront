@@ -74,7 +74,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile />} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/MakeClassMaterials" element={<MakeClassMaterials />} />
-          <Route path="/quiz" element={<TCHQuiz />} />
+          <Route path="/class/:classRoomId/:documentId/quiz" element={<TCHQuiz />} />
         </>
       )}
       {role === 'STU' && (

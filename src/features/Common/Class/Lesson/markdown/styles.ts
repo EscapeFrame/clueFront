@@ -9,23 +9,6 @@ export const PageWrapper = styled.div`
 `;
 
 export const Container = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  overflow-y: auto;
-  background-color: #fff;
-`;
-
-export const ViewerContainer = styled.div`
-  background: white;
-  width: 100%;
-  border-radius: 12px;
-  padding: 40px 60px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
-`;
-
-export const ViewerHeader = styled.div`
   margin-bottom: 48px;
 
   h1 {
@@ -36,9 +19,6 @@ export const ViewerHeader = styled.div`
     border-bottom: 2px solid ${theme.colors.gray[300]};
     padding-bottom: 12px;
   }
-`;
-
-export const ViewerWrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   line-height: 1.8;
   color: #2c2c2c;
@@ -200,3 +180,24 @@ export const DocumentItem = styled.div<{ active: boolean }>`
     color: ${({ active }) => (active ? '#111' : theme.colors.blue[700])};
   }
 `;
+
+export const FloatingButton = styled.button`
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  background: ${theme.colors.blue[600]};
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(59,130,246,0.24);
+  cursor: pointer;
+  font-weight: 700;
+  z-index: 1200;
+  transition: transform 0.12s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+ 
