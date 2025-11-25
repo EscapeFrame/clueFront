@@ -4,8 +4,7 @@ export const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
-  padding: 20px 128px;
-  /* 부모 요소의 헤더/네비게이션 높이를 고려하여 조정 필요 */
+  padding: 20px 14rem;
 `;
 
 export const CardContainer = styled.div`
