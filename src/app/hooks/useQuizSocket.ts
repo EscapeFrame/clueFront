@@ -108,23 +108,43 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   }, [onConnect, onError, autoSubscribe]);
 
   const subscribe = useCallback((destination: string, callback: (msg: unknown) => void): SubscriptionHandle | null => {
-    if (!clientRef.current) return null;
-    const sub: StompSubscription = clientRef.current.subscribe(destination, (m: IMessage) => {
-      try {
-        callback(JSON.parse(m.body));
-      } catch {
-        callback(m.body);
-      }
-    });
-    return { unsubscribe: () => sub.unsubscribe() };
-  }, []);
+    if (!clientRef.current || !connected) {
+      console.warn('[Quiz WebSocket] Cannot subscribe: not connected yet');
+      return null;
+    }
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const sub: StompSubscription = clientRef.current.subscribe(
+        destination, 
+        (m: IMessage) => {
+          try {
+            callback(JSON.parse(m.body));
+          } catch {
+            callback(m.body);
+          }
+        },
+        { Authorization: `Bearer ${accessToken}` }
+      );
+      return { unsubscribe: () => sub.unsubscribe() };
+    } catch (error) {
+      console.error('[Quiz WebSocket] Subscribe error:', error);
+      return null;
+    }
+  }, [connected]);
 
   const send = useCallback((destination: string, body: unknown) => {
-    if (!clientRef.current) return;
-    clientRef.current.publish({ destination, body: JSON.stringify(body) });
-  }, []);
+    if (!clientRef.current || !connected) {
+      console.warn('[Quiz WebSocket] Cannot send: not connected yet');
+      return;
+    }
+    try {
+      clientRef.current.publish({ destination, body: JSON.stringify(body) });
+    } catch (error) {
+      console.error('[Quiz WebSocket] Send error:', error);
+    }
+  }, [connected]);
 
-  return { connected, subscribe, send };
+  return { connected, connecting, subscribe, send };
 }
 
 export default useQuizSocket;
