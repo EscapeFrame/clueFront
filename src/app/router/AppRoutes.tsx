@@ -29,6 +29,7 @@ import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
 import { LinkSaveRoutes } from '@/linkSave/app/Routes';
 import TCHQuiz from '@/pages/Teacher/Quiz';
 import QuizApiTest from '@/pages/Common/QuizApiTest';
+import QuizBattle from '@/features/QuizBattle';
 
 interface AppRoutesProps {
   role: string | null;
@@ -75,6 +76,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/MakeClassMaterials" element={<MakeClassMaterials />} />
           <Route path="/class/:classRoomId/:documentId/quiz" element={<TCHQuiz />} />
+          <Route path="/quiz-battle" element={<QuizBattle />} />
         </>
       )}
       {role === 'STU' && (
@@ -84,6 +86,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId" element={<STUClass />} />
           <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
           <Route path="/quiz" element={<STUQuiz />} />
+          <Route path="/quiz-battle" element={<QuizBattle />} />
           <Route path="/linksave/*" element={<LinkSaveRoutes />} />
         </>
       )}
