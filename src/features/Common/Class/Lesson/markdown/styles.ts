@@ -9,6 +9,23 @@ export const PageWrapper = styled.div`
 `;
 
 export const Container = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+  background-color: #fff;
+`;
+
+export const ViewerContainer = styled.div`
+  background: white;
+  width: 100%;
+  border-radius: 12px;
+  padding: 40px 60px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+`;
+
+export const ViewerHeader = styled.div`
   margin-bottom: 48px;
 
   h1 {
@@ -19,6 +36,9 @@ export const Container = styled.div`
     border-bottom: 2px solid ${theme.colors.gray[300]};
     padding-bottom: 12px;
   }
+`;
+
+export const ViewerWrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   line-height: 1.8;
   color: #2c2c2c;
