@@ -5,14 +5,7 @@ import TaskGuide from '@/features/Common/Main/TaskGuide';
 import Notice from '@/features/Common/Main/Notice';
 import { MySchedule } from '@/features/Common/Main/Schedule';
 
-// const test = async () => {
-//     const res = await ('/test/duck', { name: 'duck' });
-//     console.log(res);
-// }
-
 export default function Home() {
-
-
     return (
         <s.Container>
             <s.Left>

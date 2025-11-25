@@ -1,5 +1,6 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
 import qs from 'qs';
+import { logger } from '@/shared/utils/logger';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const controllerMap = new Map<string, AbortController>();
@@ -59,7 +60,7 @@ Customapi.interceptors.response.use(
     }
 
     if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
-      console.warn('요청이 취소됨:', error.config?.url);
+      logger.warn('요청이 취소됨:', error.config?.url);
       return Promise.reject(error); // 에러 전파
     }
 
