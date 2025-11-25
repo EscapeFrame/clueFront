@@ -26,6 +26,9 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   const manualSubscriptionMetaRef = useRef<{ destination: string; callback: (msg: unknown) => void; headers?: Record<string,string> }[]>([]);
   // 연결 중 전송된 메시지 큐(연결 후 플러시)
   const pendingSendQueueRef = useRef<{ destination: string; body: unknown }[]>([]);
+  // 재연결 시도 횟수 제한
+  const reconnectAttemptsRef = useRef(0);
+  const maxReconnectAttempts = 5;
 
   useEffect(() => {
     // localStorage에서 accessToken 가져오기
@@ -45,8 +48,21 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       webSocketFactory: () => new SockJS(API_BASE_URL + '/ws-quiz'),
       heartbeatIncoming: 4000, // 서버로부터 4초 간격으로 하트비트 확인
       heartbeatOutgoing: 4000, // 클라이언트가 4초 간격으로 서버에 하트비트 전송
-      reconnectDelay: 5000, // 연결이 끊어진 경우 5초 후 재연결 시도 (1초→5초로 증가)
+      reconnectDelay: 5000, // 연결이 끊어진 경우 5초 후 재연결 시도
       connectHeaders: { Authorization: `Bearer ${accessToken}` }, // CONNECT 프레임 헤더 추가
+      
+      // 재연결 제한
+      beforeConnect: () => {
+        if (reconnectAttemptsRef.current >= maxReconnectAttempts) {
+          console.error('[Quiz WebSocket] ⚠️ Max reconnection attempts reached. Stopping reconnection.');
+          console.error('[Quiz WebSocket] 서버가 계속 연결을 거부합니다.');
+          return Promise.reject(new Error('Max reconnection attempts'));
+        }
+        reconnectAttemptsRef.current++;
+        console.log(`[Quiz WebSocket] Connection attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts}`);
+        return Promise.resolve();
+      },
+      
       debug: (str) => {
         // STOMP 프레임 디버깅 (서버 응답 확인용)
         if (str.includes('ERROR') || str.includes('MESSAGE') || str.includes('CONNECTED')) {
@@ -54,10 +70,12 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         }
       },
       onConnect: (frame) => {
+        reconnectAttemptsRef.current = 0; // 연결 성공 시 카운터 리셋
         clientRef.current = client;
         setConnected(true);
         setConnecting(false); // 연결 완료
-        console.log('[Quiz WebSocket] Connected to STOMP');
+        console.log('[Quiz WebSocket] ✅ Connected to STOMP successfully');
+        console.log('[Quiz WebSocket] Connection frame:', frame);
 
         // 자동 구독 설정
         autoSubscribe.forEach(({ destination, callback }) => {
@@ -152,15 +170,28 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       },
       
       onDisconnect: () => {
-        console.log('[Quiz WebSocket] Disconnected');
+        console.warn('[Quiz WebSocket] ⚠️ Disconnected from server');
+        console.warn('[Quiz WebSocket] Reconnect attempts:', reconnectAttemptsRef.current);
         setConnected(false);
       },
       onWebSocketClose: (event) => {
-        console.warn('[Quiz WebSocket] WebSocket closed', {
+        const closeInfo = {
           code: event?.code,
-          reason: event?.reason,
+          reason: event?.reason || 'No reason provided',
           wasClean: event?.wasClean
-        });
+        };
+        console.warn('[Quiz WebSocket] ⚠️ WebSocket closed', closeInfo);
+        
+        // code 1000은 정상 종료인데 서버가 의도적으로 끊는 것
+        if (event?.code === 1000 && reconnectAttemptsRef.current > 1) {
+          console.error('[Quiz WebSocket] 🚨 서버가 연결을 반복적으로 종료합니다!');
+          console.error('[Quiz WebSocket] 가능한 원인:');
+          console.error('  1. 구독 권한 없음 (/topic/quiz/rooms)');
+          console.error('  2. JWT 토큰 문제 (만료/유효하지 않음)');
+          console.error('  3. 서버 WebSocket 설정 오류');
+          console.error('[Quiz WebSocket] 백엔드 개발자에게 문의하세요!');
+        }
+        
         setConnected(false);
       },
     });
