@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useQuizSocket from "@/app/hooks/useQuizSocket";
 
 import CreateQuiz from "@/entities/Quiz/Teacher/CreateQuiz";
@@ -21,7 +21,7 @@ type TeacherStep =
     | "finish"; // 종료
 
 export default function TCHQuiz() {
-    const [searchParams] = useSearchParams();
+    const params = useParams();
     const [step, setStep] = useState<TeacherStep>("create");
     const [roomCode, setRoomCode] = useState(""); // 방 코드
     const [participants, setParticipants] = useState<Participant[]>([]); // 참가자 목록
@@ -32,10 +32,10 @@ export default function TCHQuiz() {
 
     const { connected, send, subscribe } = useQuizSocket();
     
-    // URL에서 classRoomId와 documentId 가져오기
-    // 예: /quiz?classRoomId=xxx&documentId=yyy
-    const classRoomId = searchParams.get('classRoomId') || undefined;
-    const documentId = searchParams.get('documentId') || undefined;
+    // URL 파라미터에서 classRoomId와 documentId 가져오기
+    // 예: /class/:classRoomId/:documentId/quiz
+    const classRoomId = params.classRoomId ?? undefined;
+    const documentId = params.documentId ?? undefined;
 
     type CreatePayload = {
         title: string;
