@@ -47,7 +47,7 @@ export default function Navbar() {
       <s.Container>
         <s.Brand>
           <s.LogoImg onClick={Main} src={clueLogo} alt="로고" />
-          <s.BrandText onClick={isLinkSavePage ? Main : LinkSave}>{isLinkSavePage ? 'LinkSave' : 'CLUE'}</s.BrandText>
+          <s.BrandText onClick={Main}>{isLinkSavePage ? 'LinkSave' : 'CLUE'}</s.BrandText>
         </s.Brand>
         <s.NavbarNav>
           <s.NavLinks>
