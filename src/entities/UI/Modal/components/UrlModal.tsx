@@ -19,7 +19,20 @@ const UrlModal: React.FC<ModalProps> = ({
       <s.ModalWrapper isWarning={isWarning}>
         <s.Header>
           <s.Title>{title}</s.Title>
-          <s.CloseBtn onClick={onClose} aria-label="CloseModal"><IoClose size={16} /></s.CloseBtn>
+          <s.CloseBtn 
+            onClick={onClose} 
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClose();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="모달 닫기"
+          >
+            <IoClose size={16} />
+          </s.CloseBtn>
         </s.Header>
 
         <s.Content>
