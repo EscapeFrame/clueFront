@@ -51,13 +51,12 @@ export default function Navbar() {
         </s.Brand>
         <s.NavbarNav>
           <s.NavLinks>
-            {!isLinkSavePage && (
               <>
                 <li>
                   <s.NavItem href="/class">내 학습실</s.NavItem>
                 </li>
                 {/* 학생만 LinkSave 메뉴 표시 */}
-                {user.role === 'STU' && (
+                {user.role !== 'TCH' && (
                   <li>
                     <s.NavItem onClick={handleLinkSaveClick}>
                       {isLinkSavePage ? 'CLUE' : 'LinkSave'}
@@ -65,7 +64,6 @@ export default function Navbar() {
                   </li>
                 )}
               </>
-            )}
             <li>
               <s.NavItem
                 href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca"
