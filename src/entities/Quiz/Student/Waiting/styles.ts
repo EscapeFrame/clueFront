@@ -64,3 +64,34 @@ export const RoomCode = styled.div`
     font-weight: 500;
     color: ${colors.primary}
 `;
+
+export const SubTitle = styled.h3`
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: ${colors.gray[4]};
+`;
+
+export const ParticipantList = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 8px;
+`;
+
+export const ParticipantItem = styled.div`
+    background-color: ${colors.gray[1]};
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: ${colors.gray[4]};
+`;
+
+export const EmptyText = styled.p`
+    font-size: 14px;
+    color: ${colors.gray[4]};
+    margin: 8px 0;
+`;

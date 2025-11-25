@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/hooks/useAccessToken";
 import useQuizSocket from "@/app/hooks/useQuizSocket";
-import { useCheckRoomJoinable, useQuizRoom } from "@/entities/Quiz/api";
 
 import JoinQuiz from "@/entities/Quiz/Student/Join";
 import Solving from "@/entities/Quiz/Student/Solving";
@@ -17,6 +16,13 @@ type StudentStep =
     | "finish";
 
 type Character = "owl" | "haeyul" | "panda" | "ferret" | "I" | "koala";
+
+type Participant = {
+    userId: string;
+    username: string;
+    score: number;
+    correctAnswers: number;
+};
 
 type Question = {
     questionNumber: number;
@@ -46,11 +52,12 @@ type FinalRanking = {
 
 export default function STUQuiz() {
     const { user } = useAuth();
-    const { send, subscribe } = useQuizSocket();
+    const { connected, send, subscribe } = useQuizSocket();
     
     const [step, setStep] = useState<StudentStep>("joinQuiz");
     const [roomCode, setRoomCode] = useState("");
     const [character, setCharacter] = useState<Character | null>(null);
+    const [participants, setParticipants] = useState<Participant[]>([]); // 참가자 목록 추가
 
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -62,9 +69,20 @@ export default function STUQuiz() {
 
     // 방 참여 후 구독 설정
     useEffect(() => {
-        if (!subscribe || !roomCode || step === "joinQuiz") return;
+        if (!subscribe || !roomCode || step === "joinQuiz" || !connected) return;
 
         const subs = [
+            // 참가자 목록 구독 추가
+            subscribe(
+                `/topic/quiz/${roomCode}/participants`,
+                (message: unknown) => {
+                    const msg = message as { allParticipants?: Participant[] };
+                    if (msg.allParticipants) {
+                        setParticipants(msg.allParticipants);
+                        console.log('[Quiz] Participants updated:', msg.allParticipants);
+                    }
+                }
+            ),
             // 게임 진행 (문제/종료) 구독
             subscribe(
                 `/topic/quiz/${roomCode}/game`,
@@ -124,12 +142,17 @@ export default function STUQuiz() {
         return () => {
             subs.forEach((sub) => sub?.unsubscribe());
         };
-    }, [roomCode, subscribe, step, user.userId]);
+    }, [roomCode, subscribe, step, user.userId, connected]);
 
     // 방 참여 핸들러 (REST API로 먼저 참여 가능 여부 확인)
     const handleJoinRoom = async (code: string) => {
         if (!character || !user.userId) {
             alert("캐릭터를 선택하고 로그인해주세요.");
+            return;
+        }
+
+        if (!connected) {
+            alert("퀴즈 서버에 연결 중입니다. 잠시 후 다시 시도해주세요.");
             return;
         }
 
@@ -150,10 +173,12 @@ export default function STUQuiz() {
 
             setRoomCode(code);
             
-            if (send) {
+            if (send && connected) {
                 // 방 참여 메시지 전송
                 send(`/app/quiz/join/${code}`, { userId: user.userId });
                 setStep("waiting");
+            } else {
+                alert("퀴즈 서버 연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
             }
         } catch (error) {
             console.error("방 참여 가능 여부 확인 실패:", error);
@@ -163,7 +188,11 @@ export default function STUQuiz() {
 
     // 답변 제출 핸들러
     const handleSubmitAnswer = (answerIndex: number) => {
-        if (!send || !roomCode || !currentQuestion) return;
+        if (!send || !roomCode || !currentQuestion || !connected) {
+            console.error('[Quiz] Cannot submit answer: not connected or missing data');
+            alert("연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
+            return;
+        }
 
         setSelectedAnswer(answerIndex);
         
@@ -187,6 +216,20 @@ export default function STUQuiz() {
 
     return (
         <>
+            {/* WebSocket 연결 대기 중 */}
+            {!connected && step !== "joinQuiz" && (
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                    fontSize: '18px',
+                    color: '#6b7280'
+                }}>
+                    퀴즈 서버에 연결 중...
+                </div>
+            )}
+
             {/* 퀴즈 참여 */}
             {step === "joinQuiz" && (
                 <JoinQuiz
@@ -197,12 +240,12 @@ export default function STUQuiz() {
             )}
 
             {/* 문제 대기 */}
-            {step === "waiting" && (
-                <QuizWaiting character={character} roomCode={roomCode} />
+            {connected && step === "waiting" && (
+                <QuizWaiting character={character} roomCode={roomCode} participants={participants} />
             )}
 
             {/* 문제 풀이 */}
-            {step === "question" && currentQuestion && (
+            {connected && step === "question" && currentQuestion && (
                 <Solving
                     question={{
                         id: `q${currentQuestion.questionNumber}`,
@@ -216,7 +259,7 @@ export default function STUQuiz() {
             )}
 
             {/* 문제 정답 결과 화면 */}
-            {step === "result" && currentQuestion && answerResult && (
+            {connected && step === "result" && currentQuestion && answerResult && (
                 <AnswerResult
                     question={{
                         id: `q${currentQuestion.questionNumber}`,
@@ -233,7 +276,7 @@ export default function STUQuiz() {
             )}
 
             {/* 모든 문제 완료(결과) */}
-            {step === "finish" && myRanking && (
+            {connected && step === "finish" && myRanking && (
                 <FinalResult
                     character={character || "panda"}
                     ranking={myRanking.rank}

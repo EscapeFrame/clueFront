@@ -30,7 +30,7 @@ export default function TCHQuiz() {
     const [currentRanking, setCurrentRanking] = useState<Ranking[]>([]); // 현재 랭킹
     const [finalRanking, setFinalRanking] = useState<Ranking[]>([]); // 최종 랭킹
 
-    const { send, subscribe } = useQuizSocket();
+    const { connected, send, subscribe } = useQuizSocket();
     
     // URL에서 classRoomId와 documentId 가져오기
     // 예: /quiz?classRoomId=xxx&documentId=yyy
@@ -48,7 +48,7 @@ export default function TCHQuiz() {
 
     // 1. 방 생성 구독 (마운트 시 한 번만)
     useEffect(() => {
-        if (!subscribe) return;
+        if (!subscribe || !connected) return;
 
         const sub = subscribe("/topic/quiz/rooms", (message: unknown) => {
             const msg = message as { roomCode?: string };
@@ -59,11 +59,11 @@ export default function TCHQuiz() {
         });
 
         return () => sub?.unsubscribe();
-    }, [subscribe]);
+    }, [subscribe, connected]);
 
     // 2. 게임 진행 관련 구독 (roomCode가 생겼을 때)
     useEffect(() => {
-        if (!subscribe || !roomCode) return;
+        if (!subscribe || !roomCode || !connected) return;
 
         const subs = [
             // 참가자 목록
@@ -105,39 +105,56 @@ export default function TCHQuiz() {
         return () => {
             subs.forEach((sub) => sub?.unsubscribe());
         };
-    }, [roomCode, subscribe]);
+    }, [roomCode, subscribe, connected]);
 
     return (
         <>
+            {/* WebSocket 연결 대기 중 */}
+            {!connected && (
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                    fontSize: '18px',
+                    color: '#6b7280'
+                }}>
+                    퀴즈 서버에 연결 중...
+                </div>
+            )}
+
             {/* 퀴즈 생성 */}
-            {step === "create" && (
+            {connected && step === "create" && (
                 <CreateQuiz
                     onCreate={(qs: CreatePayload) => {
                         const questionCount = qs.questionCount ?? 10;
                         setTotalQuestions(questionCount);
 
                         // send create room via websocket if available
-                        if (send) {
-                            const payload = {
-                                title: qs.title,
-                                topic: qs.title,
-                                maxParticipants: qs.maxParticipants ?? 30,
-                                questionCount: questionCount,
-                                timePerQuestion: qs.timePerQuestion ?? 30,
-                                // URL 파라미터에서 가져온 값 사용 (RAG 기반 문제 생성용)
-                                classRoomId: classRoomId,
-                                documentId: documentId,
-                            };
-
-                            // server expects connect to /ws-quiz then app destination /app/quiz/create
-                            send("/app/quiz/create", payload);
+                        if (!send || !connected) {
+                            alert("퀴즈 서버 연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
+                            return;
                         }
+                        
+                        const payload = {
+                            title: qs.title,
+                            topic: qs.title,
+                            maxParticipants: qs.maxParticipants ?? 30,
+                            questionCount: questionCount,
+                            timePerQuestion: qs.timePerQuestion ?? 30,
+                            // URL 파라미터에서 가져온 값 사용 (RAG 기반 문제 생성용)
+                            classRoomId: classRoomId,
+                            documentId: documentId,
+                        };
+
+                        // server expects connect to /ws-quiz then app destination /app/quiz/create
+                        send("/app/quiz/create", payload);
                     }}
                 />
             )}
 
             {/* 대기실 */}
-            {step === "waiting" && (
+            {connected && step === "waiting" && (
                 <WaitingRoom
                     roomCode={roomCode}
                     students={participants.map(p => ({
@@ -148,15 +165,17 @@ export default function TCHQuiz() {
                         correct: p.correctAnswers ?? 0,
                     }))}
                     onStart={() => {
-                        if (send && roomCode) {
-                            send(`/app/quiz/start/${roomCode}`, {});
+                        if (!send || !roomCode || !connected) {
+                            alert("연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
+                            return;
                         }
+                        send(`/app/quiz/start/${roomCode}`, {});
                     }}
                 />
             )}
 
             {/* 문제 출제 화면(선생님용) */}
-            {step === "question" && currentQuestion && (
+            {connected && step === "question" && currentQuestion && (
                 <QuizPlaying
                     question={{
                         id: `q${currentQuestion.questionNumber}`,
@@ -174,7 +193,7 @@ export default function TCHQuiz() {
             )}
 
             {/* 정답 공개 + 랭킹 */}
-            {step === "ranking" && currentQuestion && (
+            {connected && step === "ranking" && currentQuestion && (
                 <QuizResult
                     question={{
                         id: `q${currentQuestion.questionNumber}`,
@@ -190,15 +209,17 @@ export default function TCHQuiz() {
                         answers: {} as Record<string, number>,
                     }))}
                     onSubmit={() => {
-                        if (send && roomCode) {
-                            send(`/app/quiz/next/${roomCode}`, {});
+                        if (!send || !roomCode || !connected) {
+                            alert("연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
+                            return;
                         }
+                        send(`/app/quiz/next/${roomCode}`, {});
                     }}
                 />
             )}
 
             {/* 퀴즈 종료 후 최종 결과 */}
-            {step === "finish" && (
+            {connected && step === "finish" && (
                 <FinalRanking
                     students={finalRanking.map(r => ({
                         id: r.userId,
