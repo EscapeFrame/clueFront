@@ -19,8 +19,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSocketOptions = {}) {
   const clientRef = useRef<Client | null>(null);
-  const [connected, setConnected] = useState(false);
-  const [connecting, setConnecting] = useState(true); // 연결 중 상태 추가
+  // ⚠️ connected state 제거: clientRef.current.connected를 직접 사용
+  const [connecting, setConnecting] = useState(true); // 연결 중 상태
   // 자동 구독(subscribe 호출 시 기록 후 재연결 시 재등록)
   const subscriptionsRef = useRef<StompSubscription[]>([]);
   const manualSubscriptionMetaRef = useRef<{ destination: string; callback: (msg: unknown) => void; headers?: Record<string,string> }[]>([]);
@@ -29,6 +29,8 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   // 재연결 시도 횟수 제한
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
+  // 강제 리렌더링을 위한 카운터
+  const [, forceUpdate] = useState(0);
 
   useEffect(() => {
     // localStorage에서 accessToken 가져오기
@@ -36,7 +38,6 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
     
     if (!accessToken) {
       console.log('[Quiz WebSocket] Access token is missing, connection skipped.');
-      setConnected(false);
       setConnecting(false); // 토큰 없으면 연결 시도 안함
       return;
     }
@@ -82,9 +83,9 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         console.log('[Quiz WebSocket] Server version:', frame.headers?.['version']);
         console.log('[Quiz WebSocket] Heart-beat:', frame.headers?.['heart-beat']);
 
-        // ⚠️ 중요: setConnected를 먼저 호출하여 구독 가능하게 만듦
-        setConnected(true);
-        setConnecting(false); // 연결 완료
+        // 연결 완료 - 리렌더링 트리거
+        setConnecting(false);
+        forceUpdate(prev => prev + 1);
 
         // 자동 구독 설정
         autoSubscribe.forEach(({ destination, callback }) => {
@@ -184,14 +185,12 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
           alert('인증에 실패했습니다. 다시 로그인해주세요.');
         }
         
-        setConnected(false);
         onError?.(frame);
       },
       
       onDisconnect: () => {
         console.warn('[Quiz WebSocket] ⚠️ Disconnected from server');
         console.warn('[Quiz WebSocket] Reconnect attempts:', reconnectAttemptsRef.current);
-        setConnected(false);
       },
       onWebSocketClose: (event) => {
         const closeInfo = {
@@ -210,8 +209,6 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
           console.error('  3. 서버 WebSocket 설정 오류');
           console.error('[Quiz WebSocket] 백엔드 개발자에게 문의하세요!');
         }
-        
-        setConnected(false);
       },
     });
 
@@ -230,7 +227,6 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         });
         subscriptionsRef.current = [];
         
-        setConnected(false);
         client.deactivate();
       } catch {
         /* ignore */
@@ -248,14 +244,16 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       meta => meta.destination === destination
     );
     
+    const isClientConnected = clientRef.current?.connected === true;
+    
     console.log('[Quiz WebSocket] Subscribe attempt:', {
       destination,
-      connected,
-      clientConnected: clientRef.current?.connected,
+      clientConnected: isClientConnected,
+      clientExists: !!clientRef.current,
       isDuplicate
     });
     
-    if (!clientRef.current || !connected || clientRef.current.connected !== true) {
+    if (!clientRef.current || !isClientConnected) {
       if (!isDuplicate) {
         console.warn('[Quiz WebSocket] ⏳ Delaying subscribe until connected:', destination);
         manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
@@ -301,10 +299,12 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       }
       return null;
     }
-  }, [connected]);
+  }, []);
 
   const send = useCallback((destination: string, body: unknown) => {
-    if (!clientRef.current || !connected || clientRef.current.connected !== true) {
+    const isClientConnected = clientRef.current?.connected === true;
+    
+    if (!clientRef.current || !isClientConnected) {
       console.warn('[Quiz WebSocket] Queueing message until connected:', destination);
       pendingSendQueueRef.current.push({ destination, body });
       return;
@@ -314,7 +314,9 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
     } catch (error) {
       console.error('[Quiz WebSocket] Send error:', error);
     }
-  }, [connected]);
+  }, []);
+
+  const connected = clientRef.current?.connected === true;
 
   return { connected, connecting, subscribe, send };
 }
