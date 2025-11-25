@@ -136,15 +136,14 @@ export default function TCHQuiz() {
                             return;
                         }
                         
+                        // Build payload matching backend CreateRoomRequest DTO
                         const payload = {
-                            title: qs.title,
-                            topic: qs.title,
                             maxParticipants: qs.maxParticipants ?? 30,
                             questionCount: questionCount,
                             timePerQuestion: qs.timePerQuestion ?? 30,
-                            // URL 파라미터에서 가져온 값 사용 (RAG 기반 문제 생성용)
-                            classRoomId: classRoomId,
-                            documentId: documentId,
+                            // UUIDs expected as strings
+                            classRoomId: classRoomId ?? undefined,
+                            documentId: documentId ?? undefined,
                         };
 
                         // server expects connect to /ws-quiz then app destination /app/quiz/create

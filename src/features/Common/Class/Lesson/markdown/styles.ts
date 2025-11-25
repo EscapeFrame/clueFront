@@ -200,3 +200,24 @@ export const DocumentItem = styled.div<{ active: boolean }>`
     color: ${({ active }) => (active ? '#111' : theme.colors.blue[700])};
   }
 `;
+
+export const FloatingButton = styled.button`
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  background: ${theme.colors.blue[800]};
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(59,130,246,0.24);
+  cursor: pointer;
+  font-weight: 700;
+  z-index: 1200;
+  transition: transform 0.12s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+ 
