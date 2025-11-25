@@ -2,8 +2,6 @@ import { css } from '@emotion/react';
 import { theme } from './theme.styles';
 
 export const globalStyles = css`
-  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
-
   *, *::before, *::after {
     box-sizing: border-box;
   }
