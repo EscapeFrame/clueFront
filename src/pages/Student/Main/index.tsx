@@ -1,10 +1,12 @@
-import React from 'react';
-import { QuickLink } from '@/features/Common/Main/QuickLink';
-import PendingTask from '@/features/Common/Main/PendingTask';
-import TaskGuide from '@/features/Common/Main/TaskGuide';
-import Notice from '@/features/Common/Main/Notice';
-import { MySchedule } from '@/features/Common/Main/Schedule';
+import React, { lazy, Suspense } from 'react';
 import * as s from './styles';
+
+// Lazy load components
+const MySchedule = lazy(() => import('@/features/Common/Main/Schedule').then(module => ({ default: module.MySchedule })));
+const PendingTask = lazy(() => import('@/features/Common/Main/PendingTask'));
+const TaskGuide = lazy(() => import('@/features/Common/Main/TaskGuide'));
+const QuickLink = lazy(() => import('@/features/Common/Main/QuickLink').then(module => ({ default: module.QuickLink })));
+const Notice = lazy(() => import('@/features/Common/Main/Notice'));
 
 interface HomeLayoutProps {
   children: React.ReactNode;
@@ -14,17 +16,34 @@ const HomeLayout: React.FC<HomeLayoutProps> = ({ children }) => {
   return <s.Container>{children}</s.Container>;
 };
 
+// 로딩 컴포넌트
+const LoadingFallback = () => (
+  <s.LoadingBox>
+    <s.LoadingText>로딩 중...</s.LoadingText>
+  </s.LoadingBox>
+);
+
 export default function HomePage() {
   return (
     <HomeLayout>
       <s.Left>
-        <MySchedule />
-        <PendingTask />     {/* 미제출과제*/}
-        <TaskGuide />       {/* 수행평가 안내 */}
-        <QuickLink />       {/* 학교서비스바로가기 */}
+        <Suspense fallback={<LoadingFallback />}>
+          <MySchedule />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <PendingTask />     {/* 미제출과제*/}
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <TaskGuide />       {/* 수행평가 안내 */}
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <QuickLink />       {/* 학교서비스바로가기 */}
+        </Suspense>
       </s.Left>
       <s.Right>
-        <Notice />          {/* 공지사항 */}
+        <Suspense fallback={<LoadingFallback />}>
+          <Notice />          {/* 공지사항 */}
+        </Suspense>
       </s.Right>
     </HomeLayout>
   );

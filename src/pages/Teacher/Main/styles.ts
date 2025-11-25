@@ -45,3 +45,18 @@ export const Right = styled.div`
     left: 0;
   }
 `;
+
+export const LoadingBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+`;
+
+export const LoadingText = styled.p`
+  color: #999;
+  font-size: 14px;
+`;
