@@ -14,8 +14,8 @@ import { submitFile, finalizeSubmission, cancelSubmission } from '../api';
 
 interface UploadedFile { id: string; name: string; size: string; file?: File }
 
-function isAssignmentFileType(f: any): f is AssignmentFileType {
-  return f && typeof f === 'object' && 'fileId' in f && 'fileName' in f;
+function isAssignmentFileType(f: unknown): f is AssignmentFileType {
+  return typeof f === 'object' && f !== null && 'fileId' in f && 'fileName' in f;
 }
 
 export function AssignmentCard({ data, updateAssignment }: AssignmentCardProps) {
