@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import SockJS from "sockjs-client";
 import { Client, IMessage, StompSubscription, IFrame } from "@stomp/stompjs";
+import { logger } from "@/shared/utils/logger";
 
 type QuizSocketOptions = {
   onConnect?: (frame?: IFrame) => void;
@@ -24,12 +25,19 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   const [connecting, setConnecting] = useState(true); // 연결 중 상태 추가
   const subscriptionsRef = useRef<StompSubscription[]>([]);
 
+  // autoSubscribe를 ref로 관리하여 불필요한 재연결 방지
+  const autoSubscribeRef = useRef(autoSubscribe);
+
+  useEffect(() => {
+    autoSubscribeRef.current = autoSubscribe;
+  }, [autoSubscribe]);
+
   useEffect(() => {
     // localStorage에서 accessToken 가져오기
     const accessToken = localStorage.getItem("accessToken");
     
     if (!accessToken) {
-      console.log('[Quiz WebSocket] Access token is missing, connection skipped.');
+      logger.warn('[Quiz WebSocket] Access token is missing, connection skipped.');
       setConnected(false);
       setConnecting(false); // 토큰 없으면 연결 시도 안함
       return;
@@ -48,19 +56,19 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         clientRef.current = client;
         setConnected(true);
         setConnecting(false); // 연결 완료
-        console.log('[Quiz WebSocket] Connected to STOMP');
+        logger.info('[Quiz WebSocket] Connected to STOMP');
 
         // 자동 구독 설정
-        autoSubscribe.forEach(({ destination, callback }) => {
+        autoSubscribeRef.current.forEach(({ destination, callback }) => {
           const sub = client.subscribe(
             destination,
             (m: IMessage) => {
               try {
                 const data = JSON.parse(m.body);
-                console.log(`[Quiz WebSocket] Received from ${destination}:`, data);
+                logger.debug(`[Quiz WebSocket] Received from ${destination}:`, data);
                 callback(data);
               } catch {
-                console.log(`[Quiz WebSocket] Received from ${destination}:`, m.body);
+                logger.debug(`[Quiz WebSocket] Received from ${destination}:`, m.body);
                 callback(m.body);
               }
             },
@@ -73,13 +81,13 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       },
       
       onStompError: (frame) => {
-        console.error('[Quiz WebSocket] STOMP Error', frame);
+        logger.error('[Quiz WebSocket] STOMP Error', frame);
         setConnected(false);
         onError?.(frame);
       },
-      
+
       onDisconnect: () => {
-        console.log('[Quiz WebSocket] Disconnected');
+        logger.info('[Quiz WebSocket] Disconnected');
         setConnected(false);
       },
     });
@@ -93,20 +101,20 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         subscriptionsRef.current.forEach(sub => {
           try {
             sub.unsubscribe();
-          } catch {
-            /* ignore */
+          } catch (error) {
+            logger.warn('[Quiz WebSocket] Failed to unsubscribe:', error);
           }
         });
         subscriptionsRef.current = [];
-        
+
         setConnected(false);
         client.deactivate();
-      } catch {
-        /* ignore */
+      } catch (error) {
+        logger.warn('[Quiz WebSocket] Failed to cleanup connection:', error);
       }
       clientRef.current = null;
     };
-  }, [onConnect, onError, autoSubscribe]);
+  }, [onConnect, onError]); // autoSubscribe는 ref로 관리하므로 의존성 배열에서 제외
 
   const subscribe = useCallback((destination: string, callback: (msg: unknown) => void): SubscriptionHandle | null => {
     if (!clientRef.current) return null;
