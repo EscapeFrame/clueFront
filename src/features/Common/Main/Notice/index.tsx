@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import NoticeCard from '@/entities/Main/NoticeCard';
 import * as s from './styles';
 import { NoticeItem } from '@/shared/types/notice';
 import { DetailNoticeItem } from '@/shared/types/notice';
-import { useNotices } from '@/features/Common/Main/hooks/useNotice';
+import { useNoticesQuery, categorizeNotices } from '@/features/Common/Main/api/useNoticeQuery';
 import AddNoticeModal from '@/features/Common/Main/Notice/AddNoticeModal';
 import NoticeDetailModal from '@/features/Common/Main/Notice/DetailNoticeModal';
 import EditNoticeModal from '@/features/Common/Main/Notice/EditNoticeModal';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Notice() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
@@ -16,20 +17,27 @@ export default function Notice() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const user = useRecoilValue(userState);
   const isTeacher = !!user && user.role === 'TEACHER';
+  const queryClient = useQueryClient();
 
-  const {
-    serviceNotices,
-    schoolNotices,
-    scheduleNotices,
-    loading,
-    error, refetch,
-  } = useNotices();
+  const { data: notices = [], isLoading: loading, error } = useNoticesQuery();
 
-  // sort notices by createdAt desc (newest first)
-  const sortDesc = (a: NoticeItem, b: NoticeItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  const sortedService = [...(serviceNotices || [])].sort(sortDesc);
-  const sortedSchool = [...(schoolNotices || [])].sort(sortDesc);
-  const sortedSchedule = [...(scheduleNotices || [])].sort(sortDesc);
+  // sort notices by createdAt desc (newest first) and categorize
+  const { serviceNotices, schoolNotices, scheduleNotices } = useMemo(() => {
+    const sortDesc = (a: NoticeItem, b: NoticeItem) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+
+    const categorized = categorizeNotices(notices);
+
+    return {
+      serviceNotices: [...categorized.serviceNotices].sort(sortDesc),
+      schoolNotices: [...categorized.schoolNotices].sort(sortDesc),
+      scheduleNotices: [...categorized.scheduleNotices].sort(sortDesc),
+    };
+  }, [notices]);
+
+  const refetch = () => {
+    queryClient.invalidateQueries({ queryKey: ['notices'] });
+  };
 
   const handleStartEdit = (noticeDetail: DetailNoticeItem) => {
     setNoticeToEdit(noticeDetail);
@@ -57,23 +65,23 @@ export default function Notice() {
         <s.Row>
           <NoticeCard
             cardTitle="서비스공지"
-            notices={sortedService}
+            notices={serviceNotices}
             loading={loading}
-            error={error}
+            error={error?.message || null}
             onSelect={setSelectedNotice}
           />
           <NoticeCard
             cardTitle="학교공지"
-            notices={sortedSchool}
+            notices={schoolNotices}
             loading={loading}
-            error={error}
+            error={error?.message || null}
             onSelect={setSelectedNotice}
           />
           <NoticeCard
             cardTitle="일정안내"
-            notices={sortedSchedule}
+            notices={scheduleNotices}
             loading={loading}
-            error={error}
+            error={error?.message || null}
             onSelect={setSelectedNotice}
           />
         </s.Row>

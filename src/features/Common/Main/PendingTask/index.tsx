@@ -1,12 +1,12 @@
 import * as s from './styles';
 import DdayCard from '@/entities/Main/DdayCard/index';
-import { usePendingTasks } from '@/features/Common/Main/hooks/usePendingTask';
+import { usePendingTasksQuery } from '@/features/Common/Main/api/usePendingTaskQuery';
 import { useAuth } from '@/app/hooks/useAccessToken';
 import dayjs from 'dayjs';
 import { PendingTaskItem } from '@/shared/types/task';
 
 export default function PendingTask(): React.ReactNode {
-  const { tasks, loading, error } = usePendingTasks();
+  const { data: tasks = [], isLoading: loading, error } = usePendingTasksQuery();
   const today = dayjs();
   const { user } = useAuth();
   const isTeacher = !!user && user.role === 'TEACHER';
@@ -27,7 +27,7 @@ export default function PendingTask(): React.ReactNode {
       <s.Container>
         <s.Title>{isTeacher ? '나의 과제' : '미제출 과제'}</s.Title>
         <s.ErrorContainer>
-          <s.ErrorText>{error}</s.ErrorText>
+          <s.ErrorText>{error.message || '과제를 불러오는 중 오류가 발생했습니다.'}</s.ErrorText>
         </s.ErrorContainer>
       </s.Container>
     );
@@ -56,7 +56,6 @@ export default function PendingTask(): React.ReactNode {
 
           if (endDate.isBefore(today, 'day')) return null; // 마감일이 오늘 이전인 경우 제외
 
-          console.log('Rendering task:', post.title, 'End Date:', post.endDate, 'Days Left:', daysLeft);
           return (
             <DdayCard
               key={post.title || index}
