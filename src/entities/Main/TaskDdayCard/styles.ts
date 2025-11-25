@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const Card = styled.a<{ isUrgent: boolean }>`
@@ -9,8 +9,8 @@ export const Card = styled.a<{ isUrgent: boolean }>`
   height: auto; // 내용에 맞게 높이 자동 조절
   padding: 1rem 1.5rem;
   border-radius: 8px;
-  background-color: ${theme.colors.white};
-  color: ${theme.colors.black};
+  background-color: ${colors.white};
+  color: ${colors.black};
   text-decoration: none;
   box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
   transition: transform 0.3s ease;
@@ -43,8 +43,8 @@ export const DisabledCard = styled.div<{ isUrgent: boolean }>`
   height: auto;
   padding: 1rem 1.5rem;
   border-radius: 12px;
-  background-color: ${theme.colors.gray[100]};
-  color: ${theme.colors.gray[400]};
+  background-color: ${colors.gray[1]};
+  color: ${colors.gray[4]};
   box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
   cursor: not-allowed;
   overflow: hidden;
@@ -70,12 +70,12 @@ export const Title = styled.div`
 export const DDayText = styled.div<{ isUrgent: boolean }>`
   ${fonts.P2}
   color: ${({ isUrgent }) =>
-    isUrgent ? theme.colors.red : "white"};
-  background: ${({isUrgent}) => isUrgent ? "#FFE3E9" : "#0077FF"};
+    isUrgent ? colors.red[3] : colors.white};
+  background: ${({isUrgent}) => isUrgent ? colors.gray[2] : colors.primary};
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   border: ${({ isUrgent }) =>
-    isUrgent ? `1px solid ${theme.colors.red}` : "none"};
+    isUrgent ? `1px solid ${colors.red[3]}` : "none"};
   display: inline-block;
 
 
@@ -87,7 +87,7 @@ export const DDayText = styled.div<{ isUrgent: boolean }>`
 
 export const Content = styled.div`
   ${fonts.P1};
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,7 +108,7 @@ export const Content = styled.div`
 
 export const Submit = styled.div`
   ${fonts.P1};
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
   text-align: right;
   position: absolute;
   bottom: 1rem;

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export const ModalWrapper = styled.div`
-  background: ${theme.colors.white};
+  background: ${colors.white};
   border-radius: 12px;
   padding: 24px;
   width: 90%;
@@ -20,7 +20,7 @@ export const Title = styled.h2`
   margin: 0;
   ${fonts.P3}
   font-weight: 600;
-  color: ${theme.colors.black};
+  color: ${colors.black};
 
   @media (max-width: 768px) {
     ${fonts.P2};
@@ -52,7 +52,7 @@ export const CloseButton = styled.button`
   border: none;
   ${fonts.P3}
   cursor: pointer;
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   padding: 0;
   width: 24px;
   height: 24px;
@@ -61,14 +61,14 @@ export const CloseButton = styled.button`
   justify-content: center;
   
   &:hover {
-    color: ${theme.colors.black};
+    color: ${colors.primary};
   }
 `;
 
 export const InputField = styled.input`
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid ${theme.colors.gray[400]};
+  border: 1px solid ${colors.gray[4]};
   border-radius: 8px;
   ${fonts.P2};
   margin-bottom: 16px;
@@ -76,11 +76,11 @@ export const InputField = styled.input`
   
   &:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: ${colors.primary};
   }
   
   &::placeholder {
-    color: ${theme.colors.gray[600]};
+    color: ${colors.gray[4]};
   }
 `;
 
@@ -98,10 +98,10 @@ export const SelectField = styled.div`
 export const SelectInput = styled.div`
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid ${theme.colors.gray[600]};
+  border: 1px solid ${colors.gray[4]};
   border-radius: 8px;
   ${fonts.P2};
-  background: ${theme.colors.white};
+  background: ${colors.white};
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -109,16 +109,16 @@ export const SelectInput = styled.div`
   box-sizing: border-box;
   
   &:hover {
-    border-color: #007bff;
+    border-color: ${colors.primary};
   }
 `;
 
 export const SelectPlaceholder = styled.span`
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
 `;
 
 export const ChevronIcon = styled.span`
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   ${fonts.P1}
 `;
 
@@ -134,12 +134,12 @@ export const Button = styled.button<{ primary?: boolean }>`
   ${fonts.P2}
   font-weight: 500;
   cursor: pointer;
-  border: ${props => props.primary ? 'none' : '1px solid #007bff'};
-  background: ${props => props.primary ? '#007bff' : theme.colors.white};
-  color: ${props => props.primary ? theme.colors.white : '#007bff'};
+  border: ${props => props.primary ? 'none' : `1px solid ${colors.primary}`};
+  background: ${props => props.primary ? colors.primary : colors.white};
+  color: ${props => props.primary ? colors.white : colors.primary};
   
   &:hover {
-    background: ${props => props.primary ? '#0056b3' : theme.colors.gray[200]};
+    background: ${props => props.primary ? colors.blue.dep1 : colors.gray[2]};
   }
 `;
 
@@ -148,8 +148,8 @@ export const Dropdown = styled.div`
   top: 100%;
   left: 0;
   right: 0;
-  background: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[400]};
+  background: ${colors.white};
+  border: 1px solid ${colors.gray[4]};
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -163,7 +163,7 @@ export const DropdownItem = styled.div`
   ${fonts.P2}
   
   &:hover {
-    background: ${theme.colors.gray[200]};
+    background: ${colors.gray[2]};
   }
   
   &:first-child {

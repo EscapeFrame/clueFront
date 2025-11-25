@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
@@ -11,10 +11,10 @@ export const Container = styled.div`
 
 export const LoginButtonStyled = styled.button`
   display: flex;
-  background: ${theme.colors.white};
-  color: ${theme.colors.black};
+  background: ${colors.white};
+  color: ${colors.black};
   border-radius: 8px;
-  border : 1px solid ${theme.colors.gray[600]};
+  border : 1px solid ${colors.gray[4]};
   padding: 0.8em 7em;
   ${fonts.P4}
   cursor: pointer;
@@ -22,7 +22,7 @@ export const LoginButtonStyled = styled.button`
   transition: background 0.2s;
   gap: 1rem;
   &:hover {
-    background: ${theme.colors.blue[100]};
+    background: ${colors.blue.light1};
   }
 
   & img {
@@ -34,8 +34,8 @@ export const LoginButtonStyled = styled.button`
 `;
 
 export const LogoutButtonStyled = styled.button`
-  background: #e0e0e0;
-  color: #333;
+  background: ${colors.gray[2]};
+  color: ${colors.black};
   border: none;
   border-radius: 4px;
   padding: 0.75em 2em;
@@ -44,6 +44,6 @@ export const LogoutButtonStyled = styled.button`
   margin: 0 0.5em;
   transition: background 0.2s;
   &:hover {
-    background: #bdbdbd;
+    background: ${colors.gray[3]};
   }
 `; 

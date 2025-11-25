@@ -1,13 +1,13 @@
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 export const Card = styled.div`
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   padding: 1rem;
-  border-radius: 12px;
-  background-color: ${theme.colors.gray[100]};
-  height: 10rem;
+  border-radius: 0.5rem;
+  background-color: ${colors.gray[1]};
+  height: 12rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -47,7 +47,7 @@ export const Title = styled.h3`
 
 export const Description = styled.div`
   ${fonts.P1}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   display: flex;
   margin: 0;
   padding: 0;
@@ -68,13 +68,13 @@ export const GoToLink = styled.button`
   border: none;
   align-self: flex-end;
   ${fonts.P2}
-  color: ${theme.colors.blue[500]};
+  color: ${colors.primary};
   background-color: transparent;
   border-radius: 6px;
   cursor: pointer;
 
   &:hover {
-    color: ${theme.colors.blue[700]};
+    color: ${colors.blue.dep1};
   }
 
   @media (max-width: 1200px) {

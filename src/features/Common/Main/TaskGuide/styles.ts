@@ -1,9 +1,9 @@
 import { fonts } from "@/shared/theme/font.styles";
 import styled from "@emotion/styled";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 
 export const Container = styled.div`
-  background: ${theme.colors.white};
+  background: ${colors.white};
   padding: 3rem 2rem;
   max-height: 100%;
   overflow: hidden;
@@ -49,7 +49,7 @@ export const Title = styled.div`
 
 export const Explain = styled.p`
   ${fonts.P2}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   padding: 0;
   margin: 0;
 

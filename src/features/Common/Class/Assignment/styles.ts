@@ -1,4 +1,5 @@
 import { fonts } from '@/shared/theme/font.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 interface StatusProps {
@@ -20,8 +21,8 @@ export const Grid = styled.div`
 `;
 
 export const Card = styled.div`
-  background: #fff;
-  border-radius: 8px;
+  background: ${colors.white};
+  border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: box-shadow 0.2s ease;
@@ -44,16 +45,16 @@ export const Header = styled.div`
 
 export const Title = styled.h3`
   margin: 0;
-    ${fonts.P4};
+  ${fonts.P4};
   font-weight: 600;
-  color: #333;
+  color: ${colors.black};
 `;
 
 export const Status = styled.span<StatusProps>`
-    ${fonts.P2};
+   ${fonts.P2};
   font-weight: 700;
-  color: ${({ $isSubmitted }) => ($isSubmitted ? '#2ecc71' : '#e74c3c')};
-  border: 1.5px solid ${({ $isSubmitted }) => ($isSubmitted ? '#2ecc71' : '#e74c3c')};
+  color: ${({ $isSubmitted }) => ($isSubmitted ? colors.primary : colors.red[3])};
+  border: 1.5px solid ${({ $isSubmitted }) => ($isSubmitted ? colors.primary : colors.red[3])};
   padding: 2px 8px;
   border-radius: 12px;
   user-select: none;
@@ -66,7 +67,7 @@ export const Status = styled.span<StatusProps>`
 export const Body = styled.div`
   padding: 0 16px 12px 16px;
   ${fonts.P2};
-  color: #555;
+  color: ${colors.gray[4]};
 `;
 
 export const TimeInfo = styled.div`
@@ -75,11 +76,11 @@ export const TimeInfo = styled.div`
   font-weight: 500;
 
   .deadline {
-    color: #555;
+    color: ${colors.gray[4]};
   }
 
   .remaining {
-    color: #999;
+    color: ${colors.gray[3]};
   }
 `;
 
@@ -109,7 +110,7 @@ export const DetailHeading = styled.h4`
 export const DetailText = styled.p`
   margin: 4px 0;
   ${fonts.P3};
-  color: #333;
+  color: ${colors.black};;
 
   strong {
     font-weight: 700;

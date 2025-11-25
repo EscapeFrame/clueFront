@@ -1,11 +1,11 @@
 import styled from "@emotion/styled";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const PageWrapper = styled.div`
   display: flex;
   height: calc(100vh - var(--app-top-offset, 0px));
-  background-color: #fff;
+  background-color: ${colors.white};
 `;
 
 export const Container = styled.div`
@@ -13,11 +13,11 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   overflow-y: auto;
-  background-color: #fff;
+  background-color: ${colors.white};
 `;
 
 export const ViewerContainer = styled.div`
-  background: white;
+  background: ${colors.white};
   width: 100%;
   border-radius: 12px;
   padding: 40px 60px;
@@ -31,9 +31,9 @@ export const ViewerHeader = styled.div`
   h1 {
     font-size: 28px;
     font-weight: 700;
-    color: #222;
+    color: ${colors.black};
     margin: 0;
-    border-bottom: 2px solid ${theme.colors.gray[300]};
+    border-bottom: 2px solid ${colors.gray[3]};
     padding-bottom: 12px;
   }
 `;
@@ -41,7 +41,7 @@ export const ViewerHeader = styled.div`
 export const ViewerWrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   line-height: 1.8;
-  color: #2c2c2c;
+  color: ${colors.black};
 
   h1,
   h2,
@@ -90,7 +90,7 @@ export const ViewerWrapper = styled.div`
   }
 
   blockquote {
-    border-left: 4px solid ${theme.colors.gray[300]};
+    border-left: 4px solid ${colors.gray[3]};
     margin: 16px 0;
     padding-left: 12px;
     color: #555;
@@ -110,7 +110,7 @@ export const TopTabs = styled.div`
   display: flex;
   gap: 8px;
   padding: 16px;
-  border-bottom: 1px solid ${theme.colors.gray[400]};
+  border-bottom: 1px solid ${colors.gray[4]};
 `;
 
 export const TabButton = styled.button<{ active: boolean }>`
@@ -121,7 +121,7 @@ export const TabButton = styled.button<{ active: boolean }>`
   gap: 4px;
   padding: 10px 8px;
   border: none;
-  // background-color: ${({ active }) => (active ? theme.colors.gray[400] : 'transparent')};
+  // background-color: ${({ active }) => (active ? colors.gray[4] : 'transparent')};
   border-radius: 6px;
   // cursor: pointer;
   transition: background-color 0.2s;
@@ -132,7 +132,7 @@ export const TabButton = styled.button<{ active: boolean }>`
   }
 
   // &:hover {
-  //   background-color: ${({ active }) => (active ? theme.colors.blue[200] : theme.colors.gray[200])};
+  //   background-color: ${({ active }) => (active ? colors.blue.light2 : colors.gray[2])};
   // }
 
   span {
@@ -164,7 +164,7 @@ export const DirectoryItem = styled.div`
   color: #222;
 
   &:hover {
-    color: ${theme.colors.blue[600]};
+    color: ${colors.blue.dep1};
   }
 `;
 
@@ -190,13 +190,34 @@ export const DocumentItem = styled.div<{ active: boolean }>`
   font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
-  background-color: ${({ active }) => (active ? theme.colors.blue[200] : 'transparent')};
+  background-color: ${({ active }) => (active ? colors.blue.light2 : 'transparent')};
   color: ${({ active }) => (active ? '#111' : '#333')};
   margin-bottom: 2px;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${({ active }) => (active ? theme.colors.blue[200] : theme.colors.gray[200])};
-    color: ${({ active }) => (active ? '#111' : theme.colors.blue[700])};
+    background-color: ${({ active }) => (active ? colors.blue.light2 : colors.gray[2])};
+    color: ${({ active }) => (active ? '#111' : colors.blue.dep2)};
   }
 `;
+
+export const FloatingButton = styled.button`
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  background: ${colors.blue.dep2};
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(59,130,246,0.24);
+  cursor: pointer;
+  font-weight: 700;
+  z-index: 1200;
+  transition: transform 0.12s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+ 

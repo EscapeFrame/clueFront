@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   min-width: 600px;
   padding: 3rem 2rem;
-  background: white;
+  background: ${colors.white};;
   width: 100%;
   border-radius: 24px;
-  border: 1px solid ${theme.colors.gray[200]};
+  border: 1px solid ${colors.gray[2]};
 
   @media (max-width: 1200px) {
     padding: 2rem 1rem;
@@ -32,7 +32,7 @@ export const Title = styled.h1`
 
 export const Explain = styled.p`
   ${fonts.P2}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   padding: 0;
   margin: 0;
 
@@ -47,7 +47,7 @@ export const Wrapper = styled.div`
   width: 100%;
   margin-top: 1rem;
   padding: 2rem;
-  background: ${theme.colors.white};
+  background: ${colors.white};
   border-radius: 16px;
 
   @media (max-width: 768px) {

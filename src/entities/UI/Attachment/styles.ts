@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
@@ -26,8 +26,8 @@ export const Buttons = styled.div`
 
 export const Button = styled.button`
   padding: 6px 10px;
-  background: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[200]};
+  background: ${colors.white};
+  border: 1px solid ${colors.gray[2]};
   border-radius: 4px;
   cursor: pointer;
 
@@ -38,12 +38,12 @@ export const Button = styled.button`
   min-width: 60px;
 
   &:hover {
-    background: ${theme.colors.gray[100]};
+    background: ${colors.gray[1]};
   }
 
   &:disabled {
-    background-color: ${theme.colors.gray[100]};
-    color: ${theme.colors.gray[400]};
+    background-color: ${colors.gray[1]};
+    color: ${colors.gray[4]};
     cursor: not-allowed;
   }
 
@@ -68,7 +68,7 @@ export const List = styled.div`
 `;
 
 export const Item = styled.div`
-  background: ${theme.colors.gray[200]};
+  background: ${colors.gray[2]};
   padding: 8px 12px;
   border-radius: 4px;
   position: relative;
@@ -88,14 +88,14 @@ export const Remove = styled.button`
   background: transparent;
   ${fonts.P2};
   cursor: pointer;
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
 
   &:hover {
-    color: ${theme.colors.red};
+    color: ${colors.red[3]};
   }
 
   &:disabled {
-    color: ${theme.colors.gray[400]};
+    color: ${colors.gray[4]};
     cursor: not-allowed;
   }
 `;

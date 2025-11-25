@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import * as s from './styles';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '@/entities/Context/LoginContext';
 import { getMarkDown } from '../../api/class/useMarkdown';
 import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
@@ -139,8 +141,9 @@ const Sidebar = () => {
 };
 
 export default function MarkDownViewerPage() {
-  const { documentId } = useParams<{ documentId: string }>();
+  const { classRoomId, documentId } = useParams<{ classRoomId: string; documentId: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const [mdContent, setMdContent] = useState('Loading...');
   const [title, setTitle] = useState(location.state?.title || '문서');
 
@@ -164,6 +167,9 @@ export default function MarkDownViewerPage() {
     setTitle(location.state?.title || '문서');
   }, [location.state?.title]);
 
+  const userCtx = useContext(UserContext);
+  const isTeacher = !!userCtx?.user && userCtx.user.role === 'TEACHER';
+
   return (
     <s.PageWrapper>
       <Sidebar />
@@ -177,6 +183,17 @@ export default function MarkDownViewerPage() {
           </s.ViewerWrapper>
         </s.ViewerContainer>
       </s.Container>
+
+      {isTeacher && (
+        <s.FloatingButton onClick={() => {
+          if (!classRoomId || !documentId) {
+            return;
+          }
+          navigate(`/class/${classRoomId}/${documentId}/quiz`);
+        }}>
+          Quiz 생성
+        </s.FloatingButton>
+      )}
     </s.PageWrapper>
   );
 }

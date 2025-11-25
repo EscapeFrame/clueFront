@@ -1,5 +1,5 @@
 import * as S from './styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 type SelectInputBoxProps = {
   label: string;
@@ -14,7 +14,7 @@ export default function SelectInputBox({ label,id,options,value = '',required = 
   return (
     <S.Wrapper>
       <S.Label htmlFor={id}>
-        {label} {required && <span style={{ color: theme.colors.blue[500] }}>*</span>}
+        {label} {required && <span style={{ color: colors.primary }}>*</span>}
       </S.Label>
       <S.Select id={id} name={id} required={required} value={value} onChange={onChange}>
         <option value="" disabled>

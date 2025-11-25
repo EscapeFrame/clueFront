@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { fonts } from "@/shared/theme/font.styles";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 
 export const Card = styled.div`
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 16px;
   padding: 1.2rem 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -44,7 +44,7 @@ export const CardTitle = styled.h3`
 
 export const CardList = styled.ul`
   ${fonts.P2}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   list-style: none;
   margin: 0;
   padding: 10px;
@@ -67,7 +67,7 @@ export const CardListItem = styled.li`
   &::before {
     content: "•";
     margin-right: 6px;
-    color: ${theme.colors.gray[500]};
+    color: ${colors.gray[4]};
   }
 
   @media (max-width: 1200px) {

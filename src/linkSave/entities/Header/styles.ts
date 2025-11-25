@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { fonts } from "@/shared/theme/font.styles";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 
 export const HeaderContainer = styled.div`
   display: grid;
@@ -40,9 +40,9 @@ export const Container = styled.div`
 
 export const AddLinkButton = styled.button`
   ${fonts.P2}
-  background-color: ${theme.colors.blue[800]};
+  background-color: ${colors.blue.dep2};
 
-  color: white;
+  color: ${colors.white};;
   border: none;
   border-radius: 4px;
   padding: 0.5rem 1rem;
@@ -50,7 +50,7 @@ export const AddLinkButton = styled.button`
   transition: background-color 0.3s;
   
   &:hover {
-    background-color: ${theme.colors.blue[700]};
+    background-color: ${colors.primary};
   }
 
   @media (max-width: 480px) {
@@ -69,7 +69,7 @@ export const ItemContainer = styled.ul`
 export const Item = styled.div`
   margin-right: 1.25rem;
   text-decoration: none;
-  color: ${theme.colors.black};
+  color: ${colors.black};
   ${fonts.P3}
   display: flex;
   align-items: center; /* 텍스트 세로 중앙정렬 */
@@ -78,11 +78,11 @@ export const Item = styled.div`
   transition: all 0.3s ease;
 
   &:hover {
-    color: ${theme.colors.blue[600]};
+    color: ${colors.primary};
   }
 
   &.active {
-    background-color: #0077FF;
+    background-color: ${colors.primary};;
     color: white;
     border-radius: 16px;
     padding: 5px 20px;
@@ -103,12 +103,12 @@ export const SearchContainer = styled.div`
 export const SearchInput = styled.input`
   ${fonts.P2}
   padding: 0.5rem 1rem;
-  border: 1px solid ${theme.colors.gray[400]};
+  border: 1px solid ${colors.gray[4]};
   border-radius: 4px 0 0 4px;
   outline: none;
 
   &:focus {
-    border-color: ${theme.colors.blue[600]};
+    border-color: ${colors.primary};
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
   }
 

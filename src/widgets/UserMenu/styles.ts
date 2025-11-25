@@ -62,7 +62,7 @@ export const User = styled.div`
   align-items: center;
   gap: 12px;
   background-color: ${(props) =>
-    props.role === "teacher" ? `${colors.red[1]}` : `${colors.blue.light1}`};
+    props.role === "TEACHER" ? `${colors.red[1]}` : `${colors.blue.light1}`};
   border-radius: 24px;
   padding: 6px 12px;
   item-align: center;
@@ -73,7 +73,8 @@ export const UserInfo = styled.div`
   align-items: center;
   gap: 8px;
   item-align: center;
-  color: ${colors.primary};
+  color: ${(props) =>
+    props.role === "TEACHER" ? `${colors.red[3]}` : `${colors.primary}`};
 `;
 
 export const Modal = styled.div`

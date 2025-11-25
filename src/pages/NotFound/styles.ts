@@ -1,5 +1,5 @@
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
@@ -77,7 +77,7 @@ export const Image = styled.img`
 export const Message = styled.p`
   ${fonts.P5}
   margin-bottom: 1rem;
-  color: ${theme.colors.black};
+  color: ${colors.black};
 
   @media (max-width: 1200px) {
     ${fonts.P4}
@@ -91,7 +91,7 @@ export const Message = styled.p`
 
 export const Sorry = styled.p`
   ${fonts.P4}
-  color: ${theme.colors.black};
+  color: ${colors.black};
   `;
 
 export const ButtonContainer = styled.div`
@@ -102,7 +102,7 @@ export const ButtonContainer = styled.div`
 
 export const GoToMain = styled.div`
   ${fonts.P3}
-  color: ${theme.colors.black};
+  color: ${colors.black};
   width: 150px;
   padding: 0.5rem 2rem;
   cursor: pointer;

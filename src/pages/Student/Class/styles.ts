@@ -1,8 +1,8 @@
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
-  background-color: ${theme.colors.white};
+  background-color: ${colors.gray[1]};
   height: 100vh;
 `;
 

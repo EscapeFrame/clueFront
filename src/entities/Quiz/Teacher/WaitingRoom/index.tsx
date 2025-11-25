@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
 import * as s from "./styles";
 import { colors } from "@/shared/theme/theme.styles";
 
@@ -43,11 +42,14 @@ export default function WaitingRoom({
     initialQuestions = 3,
     initialTime = 30,
 }: WaitingRoomProps) {
-    const navigate = useNavigate();
-
     const [memberCount, setMemberCount] = useState(initialMembers);
-    const [questionsCount, setQuestionsCount] = useState(initialQuestions);
+    const [questionsCount] = useState(initialQuestions);
     const [timeCount, setTimeCount] = useState(initialTime);
+
+    // 실시간 참가자 수 업데이트
+    useEffect(() => {
+        setMemberCount(students.length);
+    }, [students]);
 
     const getCharacterImage = (character: string) => {
         const key = character.replace(/1|2/gi, "");

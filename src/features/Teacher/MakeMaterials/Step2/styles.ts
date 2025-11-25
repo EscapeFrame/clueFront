@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 
 export const Container = styled.div`
-    background: #ffffff;
+    background: ${colors.white};;
     border-radius: 16px;
     box-shadow: 0 14px 40px rgba(31, 43, 64, 0.08);
     padding: 32px 36px 40px;
@@ -22,13 +22,13 @@ export const Header = styled.div`
 export const StepTitle = styled.h2`
     font-size: 24px;
     font-weight: 700;
-    color: #1f2937;
+    color: ${colors.black};;
     margin: 0 0 8px;
 `;
 
 export const StepDescription = styled.p`
     font-size: 15px;
-    color: #6b7280;
+    color: ${colors.gray[4]};;
     margin: 0;
 `;
 
@@ -54,31 +54,31 @@ const baseButton = `
 
 export const OutlineButton = styled.button`
     ${baseButton}
-    color: #4b5563;
-    background: #f3f4f6;
+    color: ${colors.gray[4]};;
+    background: ${colors.gray[1]};;
 
     &:hover {
-        background: #e5e7eb;
+        background: ${colors.gray[3]};;
     }
 `;
 
 export const PrimaryButton = styled.button`
     ${baseButton}
-    color: #ffffff;
-    background: ${theme.colors.blue[600]};
+    color: ${colors.white};;
+    background: ${colors.primary};
     box-shadow: 0 12px 24px rgba(0, 74, 223, 0.28);
 
     &:hover {
-        background: ${theme.colors.blue[700]};
+        background: ${colors.blue.dep1};
     }
 `;
 
 export const InfoBox = styled.div`
-    background: #eff4ff;
-    border: 1px solid #dbe7ff;
+    background: ${colors.gray[2]};
+    border: 1px solid ${colors.gray[3]};;
     border-radius: 12px;
     padding: 16px 20px;
-    color: #4c5a73;
+    color: ${colors.gray[4]};;
     font-size: 14px;
     line-height: 1.5;
 `;
@@ -110,7 +110,7 @@ export const EdgeDropZone = styled.div<{ isActive: boolean }>`
         width: 48px;
         height: 4px;
         border-radius: 999px;
-        background: ${(props) => (props.isActive ? theme.colors.blue[600] : "#d1d5db")};
+        background: ${(props) => (props.isActive ? colors.primary : colors.gray[3])};
         opacity: ${(props) => (props.isActive ? 1 : 0.45)};
         transition: all 0.2s ease;
     }
@@ -121,8 +121,8 @@ export const EdgeDropZone = styled.div<{ isActive: boolean }>`
         right: 8px;
         width: 12px;
         height: 12px;
-        border-right: 2px solid ${(props) => (props.isActive ? theme.colors.blue[600] : "#cbd5f5")};
-        border-bottom: 2px solid ${(props) => (props.isActive ? theme.colors.blue[600] : "#cbd5f5")};
+        border-right: 2px solid ${(props) => (props.isActive ? colors.primary : colors.blue.light1)};
+        border-bottom: 2px solid ${(props) => (props.isActive ? colors.primary : colors.blue.light2)};
         transform: rotate(-45deg);
         border-radius: 2px;
         opacity: ${(props) => (props.isActive ? 1 : 0.45)};
@@ -137,12 +137,12 @@ export const NodeCard = styled.div<{ isDragging: boolean; isDropTarget: boolean 
     max-width: 260px;
     padding: 20px 16px 18px;
     border-radius: 18px;
-    background: ${(props) => (props.isDropTarget ? "#EEF2FF" : "#ffffff")};
+    background: ${(props) => (props.isDropTarget ? colors.gray[2] : colors.white )};
     box-shadow: ${(props) =>
         props.isDragging
             ? "0 18px 34px rgba(35, 66, 177, 0.25)"
             : "0 12px 28px rgba(15, 23, 42, 0.12)"};
-    border: 1px solid ${(props) => (props.isDropTarget ? theme.colors.blue[500] : "#e5e7eb")};
+    border: 1px solid ${(props) => (props.isDropTarget ? colors.primary : colors.gray[1] )};
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -163,13 +163,13 @@ export const NodeIcon = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: ${theme.colors.blue[600]};
+    color: ${colors.primary};
 `;
 
 export const NodeTitle = styled.span`
     font-size: 16px;
     font-weight: 600;
-    color: #1f2937;
+    color: ${colors.black};
     text-align: center;
     white-space: normal;
     overflow-wrap: anywhere;
@@ -180,12 +180,12 @@ export const NodeTitleInput = styled.textarea`
     width: 100%;
     min-height: 48px;
     max-height: 140px;
-    border: 1px solid ${theme.colors.blue[300]};
+    border: 1px solid ${colors.blue.light3};
     border-radius: 10px;
     padding: 8px 10px;
     font-size: 15px;
     font-weight: 600;
-    color: #1f2937;
+    color: ${colors.black};;
     text-align: center;
     outline: none;
     resize: none; /* disable manual resize, we'll autosize programmatically */
@@ -194,9 +194,9 @@ export const NodeTitleInput = styled.textarea`
     background: transparent;
 
     &:focus {
-        border-color: ${theme.colors.blue[500]};
+        border-color: ${colors.primary};
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        background: #fff;
+        background: #${colors.white};;
     }
 `;
 
@@ -209,7 +209,7 @@ export const RemoveButton = styled.button`
     border-radius: 50%;
     border: none;
     background: rgba(15, 23, 42, 0.04);
-    color: #4b5563;
+    color: ${colors.gray[4]};;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -225,9 +225,9 @@ export const AddNodeButton = styled.button`
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    background: ${theme.colors.blue[500]};
+    background: ${colors.primary};
     border: none;
-    color: #ffffff;
+    color: ${colors.white};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -237,7 +237,7 @@ export const AddNodeButton = styled.button`
     box-shadow: 0 12px 30px rgba(59, 130, 246, 0.3);
 
     &:hover {
-        background: ${theme.colors.blue[600]};
+        background: ${colors.primary};
         transform: translateY(-1px);
     }
 `;
@@ -245,7 +245,7 @@ export const AddNodeButton = styled.button`
 export const ConsoleHint = styled.p`
     margin: 0;
     font-size: 13px; 
-    color: #94a3b8;
+    color: ${colors.gray[4]};;
 `;
 
 export const ButtonRow = styled.div`
@@ -255,7 +255,7 @@ export const ButtonRow = styled.div`
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   flex: 1;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid ${colors.gray[2]};;
 `;
 
 export const Button = styled.button<{ variant: "primary" | "secondary" }>`
@@ -271,33 +271,33 @@ export const Button = styled.button<{ variant: "primary" | "secondary" }>`
   ${({ variant }) =>
     variant === "primary" &&
     `
-        background-color: ${theme.colors.blue[800]};
+        background-color: ${colors.blue.dep1};
         color: white;
-        border-color: ${theme.colors.blue[800]};
+        border-color: ${colors.primary};
 
         &:hover {
-            background-color: #004ADF;
+            background-color:${colors.primary};
         }
     `}
 
   ${({ variant }) =>
     variant === "secondary" &&
     `
-        background-color: white;
-        color: #374151;
-        border-color: #d1d5db;
+        background-color: ${colors.white};;
+        color: ${colors.black};
+        border-color: ${colors.gray[3]};
 
         &:hover {
-            background-color: #f9fafb;
+            background-color: ${colors.gray[1]};;
         }
     `}
 
   ${({ disabled }) =>
     disabled &&
     `
-    background-color: #d1d5db;
-    color: #6b7280;
-    border-color: #d1d5db;
+    background-color: ${colors.gray[3]};
+    color: ${colors.gray[4]};;
+    border-color: ${colors.gray[3]};;
     cursor: not-allowed;
   `}
 `;

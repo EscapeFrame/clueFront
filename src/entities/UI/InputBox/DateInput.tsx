@@ -1,5 +1,5 @@
 import * as s from './styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export interface DateInputProps {
   label: string;
@@ -18,7 +18,7 @@ export default function DateInput({
   return (
     <s.Wrapper>
       <s.Label htmlFor={id}>
-        {label} {required && <span style={{ color: theme.colors.blue[500] }}>*</span>}
+        {label} {required && <span style={{ color: colors.primary}}>*</span>}
       </s.Label>
       <s.InputWrapper>
         <s.Input

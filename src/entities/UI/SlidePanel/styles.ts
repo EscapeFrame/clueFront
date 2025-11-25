@@ -1,5 +1,5 @@
 import { fonts } from '@/shared/theme/font.styles';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import styled from '@emotion/styled';
 
 export const Overlay = styled.div<{ isOpen: boolean }>`
@@ -18,7 +18,7 @@ export const Panel = styled.div<{ isOpen: boolean; width: string }>`
   height: 100vh;
   width: ${({ width }) => width};
   max-width: 100%;
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
   box-shadow: -4px 0 8px rgba(0,0,0,0.1);
   transform: translateX(${({ isOpen }) => (isOpen ? '0' : '100%')});
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -35,13 +35,13 @@ export const Header = styled.div`
   padding: 16px 24px;
   ${fonts.P4};
   font-weight: 600;
-  border-bottom: 1px solid ${theme.colors.gray[200]};
+  border-bottom: 1px solid ${colors.gray[2]};
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
-  background: ${theme.colors.white};
+  background: ${colors.white};
   z-index: 1;
 `;
 

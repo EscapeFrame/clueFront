@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 import { fonts } from '@/shared/theme/font.styles';
-import { colors, theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
 `;
 
 export const Title = styled.h2`
   ${fonts.P4};
   font-weight: 600;
-  color: ${theme.colors.black};
+  color: ${colors.black};
 `;
 
 export const FilterContainer = styled.div`
@@ -37,20 +37,20 @@ export const SearchGroup = styled.div`
 export const FilterLabel = styled.label`
   ${fonts.P3};
   font-weight: 500;
-  color: ${theme.colors.black};
+  color: ${colors.black};
 `;
 
 export const Select = styled.select`
   ${fonts.P3};
   padding: 0.5rem;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.25rem;
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
   cursor: pointer;
   
   &:focus {
-    outline: 2px solid ${theme.colors.blue[500]};
-    border-color: ${theme.colors.blue[500]};
+    outline: 2px solid ${colors.primary};
+    border-color: ${colors.primary};
   }
 `;
 
@@ -63,24 +63,24 @@ export const SearchContainer = styled.div`
 export const SearchInput = styled.input`
   ${fonts.P3};
   padding: 0.5rem;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.25rem;
   width: 100%;
   
   &:focus {
-    outline: 1px solid ${theme.colors.blue[500]};
-    border-color: ${theme.colors.blue[500]};
+    outline: 1px solid ${colors.primary};
+    border-color: ${colors.primary};
   }
   
   &::placeholder {
-    color: ${theme.colors.gray[500]};
+    color: ${colors.gray[4]};
   }
 `;
 
 export const SearchIcon = styled.div`
   position: absolute;
   right: 0.75rem;
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   pointer-events: none;
 `;
 
@@ -102,10 +102,10 @@ export const StudentRow = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 0.5rem;
   padding: 1rem;
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
   width: 100%; // 그리드에서 균등하게
 
   @media (max-width: 600px) {
@@ -116,7 +116,7 @@ export const StudentRow = styled.div`
 
 export const EmptyMessage = styled.p`
   ${fonts.P2};
-  color: ${theme.colors.red};
+  color: ${colors.red[3]};
 `;
 
 export const UserSection = styled.div`
@@ -135,7 +135,7 @@ export const UserInfo = styled.div`
 `;
 
 export const SubmitDate = styled.span`
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
   ${fonts.P2};
 `;
 
@@ -145,7 +145,7 @@ export const SubmitDate = styled.span`
 //   border-radius: 50%;
 //   flex-shrink: 0;
 //   border: 1px solid ${theme.colors.gray[400]};
-//   background-color: ${({ imgUrl }) => (imgUrl ? 'transparent' : theme.colors.gray[400])};
+//   background-color: ${({ imgUrl }) => (imgUrl ? 'transparent' : colors.gray[2])};
 //   background-image: ${({ imgUrl }) => (imgUrl ? `url(${imgUrl})` : 'none')};
 //   background-size: cover;
 //   background-position: center;
@@ -169,12 +169,12 @@ export const UserAvatar = styled.img<UserAvatarProps>`
 `;
 
 export const UserName = styled.span`
-  color: ${theme.colors.black};
+  color: ${colors.black};
   ${fonts.P3};
 `;
 
 export const UserNumber = styled.span`
-  color: ${theme.colors.gray[600]};
+  color: ${colors.gray[4]};
   ${fonts.P2};
 `;
 
@@ -249,7 +249,7 @@ export const FileItem = styled.li`
 
   span {
     ${fonts.P1}
-    color: ${theme.colors.gray[500]};
+    color: ${colors.gray[4]};
   }
 
   button {

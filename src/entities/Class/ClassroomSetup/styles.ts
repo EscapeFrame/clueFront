@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
   margin-bottom: 40px;
 
   @media (max-width: 1200px) {
@@ -82,7 +82,7 @@ export const FunctionTitle = styled.div`
 
 export const Description = styled.div`
   ${fonts.P2};
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   margin-top: 4px;
 
   @media (max-width: 1200px) {

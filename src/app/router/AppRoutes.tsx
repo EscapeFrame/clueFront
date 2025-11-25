@@ -8,7 +8,7 @@ import Setting from '@/pages/Common/Setting/Setting';
 import STUHome from '@/pages/Student/Main/index';
 import STUMyClass from '@/pages/Student/MyClass';
 import STUClass from '@/pages/Student/Class';
-// import STUQuiz from '@/pages/Student/Quiz';
+import STUQuiz from '@/pages/Student/Quiz';
 
 import TCHHome from '@/pages/Teacher/Main/index';
 import TCHMyClass from '@/pages/Teacher/MyClass';
@@ -27,8 +27,9 @@ import GenerateProblem from '@/pages/Teacher/Make/GenerateProblem';
 import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
 
 import { LinkSaveRoutes } from '@/linkSave/app/Routes';
-// import TCHQuiz from '@/pages/Teacher/Quiz';
-// import QuizApiTest from '@/pages/Common/QuizApiTest';
+import TCHQuiz from '@/pages/Teacher/Quiz';
+import QuizApiTest from '@/pages/Common/QuizApiTest';
+import QuizBattle from '@/features/QuizBattle';
 
 interface AppRoutesProps {
   role: string | null;
@@ -74,7 +75,8 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId/:directoryId/make/lesson/file" element={<TCHMakeFile />} />
           <Route path="/class/:classRoomId/setting" element={<ClassSetting />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/MakeClassMaterials" element={<MakeClassMaterials />} />
-          {/* <Route path="/quiz" element={<TCHQuiz />} /> */}
+          <Route path="/class/:classRoomId/:documentId/quiz" element={<TCHQuiz />} />
+          <Route path="/quiz-battle" element={<QuizBattle />} />
         </>
       )}
       {role === 'STU' && (
@@ -83,7 +85,8 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class" element={<STUMyClass />} />
           <Route path="/class/:classRoomId" element={<STUClass />} />
           <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
-          {/* <Route path="/quiz" element={<STUQuiz />} /> */}
+          <Route path="/quiz" element={<STUQuiz />} />
+          <Route path="/quiz-battle" element={<QuizBattle />} />
           <Route path="/linksave/*" element={<LinkSaveRoutes />} />
         </>
       )}
@@ -92,7 +95,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
         <>
           <Route path="/setting" element={<Setting />} />
           <Route path="/register" element={<RegisterPage />} />
-          {/* <Route path="/quiz-api-test" element={<QuizApiTest />} /> */}
+          <Route path="/quiz-api-test" element={<QuizApiTest />} />
         </>
       )}
 

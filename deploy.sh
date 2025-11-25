@@ -1,19 +1,24 @@
+#!/bin/bash
+
 REPOSITORY=/home/ubuntu/app
 cd $REPOSITORY
 
 APP_NAME=clueFront
-BUILD_DIR=$REPOSITORY/build
+BUILD_DIR=$REPOSITORY/dist
 
-CURRENT_PID=$(pgrep -f "serve -s $BUILD_DIR")
+echo "> 배포 시작: $APP_NAME"
 
-if [ -z $CURRENT_PID ]
-then
-  echo "> 현재 구동중인 프론트엔드가 없습니다."
-else
-  echo "> kill -15 $CURRENT_PID"
-  sudo kill -15 $CURRENT_PID
-  sleep 5
-fi
+# PM2 프로세스 정리 (더 이상 사용 안 함)
+echo "> Cleaning up old PM2 processes..."
+pm2 stop paletto-frontend 2>/dev/null || true
+pm2 delete paletto-frontend 2>/dev/null || true
 
-echo "> 프론트엔드 실행"
-nohup serve -s $BUILD_DIR -l 3000 > /dev/null 2>&1 &
+# Nginx가 직접 dist 폴더를 서빙하므로 별도 프로세스 불필요
+echo "> Static files ready in: $BUILD_DIR"
+
+# Nginx 재시작
+echo "> Restarting Nginx..."
+sudo systemctl restart nginx
+
+echo "> Deployment completed!"
+echo "> Nginx is serving static files from: $BUILD_DIR"
