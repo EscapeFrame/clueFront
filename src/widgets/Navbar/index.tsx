@@ -47,22 +47,23 @@ export default function Navbar() {
       <s.Container>
         <s.Brand>
           <s.LogoImg onClick={Main} src={clueLogo} alt="로고" />
-          <s.BrandText onClick={isLinkSavePage ? Main : LinkSave}>{isLinkSavePage ? 'LinkSave' : 'CLUE'}</s.BrandText>
+          <s.BrandText onClick={Main}>{isLinkSavePage ? 'LinkSave' : 'CLUE'}</s.BrandText>
         </s.Brand>
         <s.NavbarNav>
           <s.NavLinks>
-            {!isLinkSavePage && (
               <>
                 <li>
                   <s.NavItem href="/class">내 학습실</s.NavItem>
                 </li>
-                <li>
-                  <s.NavItem onClick={handleLinkSaveClick}>
-                    {isLinkSavePage ? 'CLUE' : 'LinkSave'}
-                  </s.NavItem>
-                </li>
+                {/* 학생만 LinkSave 메뉴 표시 */}
+                {user.role !== 'TCH' && (
+                  <li>
+                    <s.NavItem onClick={handleLinkSaveClick}>
+                      {isLinkSavePage ? 'CLUE' : 'LinkSave'}
+                    </s.NavItem>
+                  </li>
+                )}
               </>
-            )}
             <li>
               <s.NavItem
                 href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca"

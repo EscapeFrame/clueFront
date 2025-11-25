@@ -1,12 +1,13 @@
-import styled from 'styled-components';
-import { LuUpload } from 'react-icons/lu';
-import { colors } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "styled-components";
+import { LuUpload } from "react-icons/lu";
+import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,9 +15,9 @@ export const Overlay = styled.div`
 `;
 
 export const ModalWrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== 'isWarning' && prop !== '$variant',
-})<{ $variant?: 'default' | 'warning'; isWarning?: boolean }>`
-  background: ${colors.white};
+  shouldForwardProp: (prop) => prop !== "isWarning" && prop !== "$variant",
+})<{ $variant?: "default" | "warning"; isWarning?: boolean }>`
+  background: ${theme.colors.white};
   border-radius: 8px;
   width: 500px;
   max-width: 90%;
@@ -24,9 +25,9 @@ export const ModalWrapper = styled.div.withConfig({
   padding: 20px;
   overflow: auto;
   box-shadow: ${({ $variant, isWarning }) =>
-    $variant === 'warning' || isWarning
-      ? '0 0 15px 5px red'
-      : '0 0 10px rgba(0,0,0,0.1)'};
+    $variant === "warning" || isWarning
+      ? "0 0 15px 5px red"
+      : "0 0 10px rgba(0,0,0,0.1)"};
 
   @media (max-width: 768px) {
     width: 90%;
@@ -41,18 +42,30 @@ export const Header = styled.header`
 
 export const Title = styled.h2`
   margin: 0;
-    ${fonts.P4};
+  ${fonts.P4};
 `;
 
-export const CloseBtn = styled.button`
-  background: transparent;
-  border: none;
-  ${fonts.P4};
+export const CloseBtn = styled.span`
+  margin-left: auto;
+  color: ${colors.red[3]};
   cursor: pointer;
-  color: ${colors.gray[4]};
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
 
   &:hover {
-    color: ${colors.black};
+    background-color: rgba(255, 0, 0, 0.1);
+    transform: scale(1.1);
   }
 `;
 
@@ -81,15 +94,19 @@ export const DropZone = styled.label<{ $isDragOver: boolean }>`
   display: block;
   padding: 32px;
   text-align: center;
-  border: 2px dashed ${({ $isDragOver }) => ($isDragOver ? colors.primary : colors.gray[2])};
-  background-color: ${({ $isDragOver }) => ($isDragOver ? colors.gray[1] : colors.gray[2])};
+  border: 2px dashed
+    ${({ $isDragOver }) =>
+      $isDragOver ? theme.colors.blue[500] : theme.colors.gray[200]};
+  background-color: ${({ $isDragOver }) =>
+    $isDragOver ? theme.colors.gray[100] : theme.colors.gray[200]};
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
 
   p {
     margin-top: 12px;
-    color: ${({ $isDragOver }) => ($isDragOver ? colors.primary : colors.gray[4])};
+    color: ${({ $isDragOver }) =>
+      $isDragOver ? "#2563eb" : theme.colors.gray[500]};
     ${fonts.P3};
   }
 `;
@@ -110,8 +127,13 @@ export const StyledInput = styled.input`
   border-radius: 6px;
   ${fonts.P2};
   color: ${colors.black};
-  &::placeholder { color: ${colors.gray[4]}; }
-  &:focus { outline: 2px solid ${colors.primary}; outline-offset: 2px; }
+  &::placeholder {
+    color: ${theme.colors.gray[400]};
+  }
+  &:focus {
+    outline: 2px solid ${theme.colors.blue[600]};
+    outline-offset: 2px;
+  }
 `;
 
 const ButtonBase = styled.button`
