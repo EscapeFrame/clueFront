@@ -2,7 +2,7 @@ REPOSITORY=/home/ubuntu/app
 cd $REPOSITORY
 
 APP_NAME=clueFront
-BUILD_DIR=$REPOSITORY/build
+BUILD_DIR=$REPOSITORY/dist
 
 CURRENT_PID=$(pgrep -f "serve -s $BUILD_DIR")
 

@@ -30,7 +30,7 @@ jobs:
         run: npm run build
 
       - name: Make zip file
-        run: cd build && zip -r ../deploy.zip .
+        run: cd dist && zip -r ../deploy.zip .
 
       - name: SCP to EC2
         uses: appleboy/scp-action@v0.1.7
