@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const SelectBox = styled.div`
-  background-color: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[300]};
+  background-color: ${colors.white};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 8px;
   padding: 0.75rem 1rem;
   display: flex;
@@ -19,7 +19,7 @@ export const SelectBox = styled.div`
 `;
 
 export const AddButton = styled.div`
-  background-color: ${theme.colors.gray[200]};
+  background-color: ${colors.gray[2]};
   text-align: center;
   cursor: pointer;
   padding: 0.5rem 1rem;
@@ -42,8 +42,8 @@ export const Input = styled.input`
 `;
 
 export const DirectoryContainer = styled.div`
-  background-color: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[300]};
+  background-color: ${colors.white};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 8px;
   padding: 0.75rem 1rem;
   display: flex;
@@ -79,7 +79,7 @@ export const DeleteIcon = styled.span`
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #ef4444;
+  color: ${colors.red[3]};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,7 +99,7 @@ export const DeleteIcon2 = styled.span`
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #ef4444;
+  color: ${colors.red[3]};
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const TopContainer = styled.div`
@@ -26,7 +26,7 @@ export const TopContainer = styled.div`
 
 export const Container = styled.div`
   width: 100%;
-  background: ${theme.colors.white};
+  background: ${colors.white};
   margin: 0;
   box-sizing: border-box;
 `;
@@ -49,7 +49,7 @@ export const Title = styled.div`
 
 export const Explain = styled.p`
   ${fonts.P2}
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   padding: 0;
   margin: 0;
 
@@ -71,14 +71,14 @@ export const Row = styled.div`
 
 export const AddButton = styled.button`
   ${fonts.P5}
-  color: ${theme.colors.blue[500]};
-  background-color: ${theme.colors.white};
+  color: ${colors.primary};
+  background-color: ${colors.white};
   border: none;
   border-radius: 8px;
   cursor: pointer;
 
   &:hover {
-    color: ${theme.colors.black};
+    color: ${colors.black};
   }
 `;
 

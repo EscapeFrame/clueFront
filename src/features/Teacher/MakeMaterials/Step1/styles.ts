@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 
 export const Card = styled.div`
-  background-color: white;
+  background-color: ${colors.white};;
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -21,18 +21,18 @@ export const Field = styled.div`
   label {
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #374151;
+    color: ${colors.black};;
   }
 
   input[type="text"],
   textarea {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid ${colors.gray[2]};
     border-radius: 6px;
     font-size: 1rem;
     &:focus {
-      outline: 2px solid #3b82f6;
+      outline: 2px solid ${colors.primary};
       border-color: transparent;
     }
   }
@@ -54,8 +54,8 @@ export const KeywordItem = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #e0e7ff;
-  color: #3730a3;
+  background-color: ${colors.gray[1]};
+  color: ${colors.primary};
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.875rem;
@@ -65,9 +65,9 @@ export const KeywordItem = styled.div`
     all: unset;
     cursor: pointer;
     font-weight: 700;
-    color: #4f46e5;
+    color: ${colors.primary};
     &:hover {
-      color: #3730a3;
+      color: ${colors.blue.dep2};;
     }
   }
 `;
@@ -87,11 +87,11 @@ export const LinkButton = styled.button`
   justify-content: center;
   padding: 0.25rem;
   border-radius: 50%;
-  color: #9ca3af;
+  color: ${colors.gray[3]};;
 
   &:hover {
-    background-color: #f3f4f6;
-    color: #4b5563;
+    background-color: ${colors.gray[2]};;
+    color: ${colors.gray[4]};;
   }
 `;
 
@@ -102,11 +102,11 @@ export const AddLinkButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
-  color: ${theme.colors.blue[800]};
+  color: ${colors.blue.dep1};
   margin-top: 0.5rem;
 
   &:hover {
-    color: #004ADF;
+    color: ${colors.primary};
   }
 `;
 
@@ -117,7 +117,7 @@ export const ButtonRow = styled.div`
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   flex: 1;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid ${colors.gray[3]};
 `;
 
 export const Button = styled.button<{ variant: "primary" | "secondary" }>`
@@ -133,12 +133,12 @@ export const Button = styled.button<{ variant: "primary" | "secondary" }>`
   ${({ variant }) =>
     variant === "primary" &&
     `
-        background-color: ${theme.colors.blue[800]};
+        background-color: ${colors.primary};
         color: white;
-        border-color: ${theme.colors.blue[800]};
+        border-color: ${colors.primary};
 
         &:hover {
-            background-color: #004ADF;
+            background-color: ${colors.blue.dep2};;
         }
     `}
 
@@ -146,20 +146,20 @@ export const Button = styled.button<{ variant: "primary" | "secondary" }>`
     variant === "secondary" &&
     `
         background-color: white;
-        color: #374151;
-        border-color: #d1d5db;
+        color: ${colors.black};;
+        border-color: ${colors.gray[3]};;
 
         &:hover {
-            background-color: #f9fafb;
+            background-color: ${colors.gray[1]};;
         }
     `}
 
   ${({ disabled }) =>
     disabled &&
     `
-    background-color: #d1d5db;
-    color: #6b7280;
-    border-color: #d1d5db;
+    background-color: ${colors.gray[1]};;
+    color: ${colors.gray[4]};;
+    border-color: ${colors.gray[1]};;
     cursor: not-allowed;
   `}
 `;

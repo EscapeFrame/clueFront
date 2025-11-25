@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
@@ -7,7 +7,7 @@ export const Container = styled.div`
   display: grid;
   width: 100%;
   box-sizing: border-box;
-  background: white;
+  background: ${colors.white};
   border-radius: 24px;
   margin-bottom: 6rem;
   gap: 16px;
@@ -48,7 +48,7 @@ export const Link = styled.a`
   flex-direction: column;
   min-height: 250px;
   text-decoration: none;
-  color: ${theme.colors.white};
+  color: ${colors.white};
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);

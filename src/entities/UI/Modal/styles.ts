@@ -72,7 +72,7 @@ export const CloseBtn = styled.span`
 export const Notes = styled.p`
   margin-top: 8px;
   margin-bottom: 6px;
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   ${fonts.P2};
 `;
 
@@ -113,8 +113,7 @@ export const DropZone = styled.label<{ $isDragOver: boolean }>`
 
 export const UploadIcon = styled(LuUpload)<{ $isDragOver?: boolean }>`
   ${fonts.P5};
-  color: ${({ $isDragOver }) =>
-    $isDragOver ? "#2563eb" : theme.colors.gray[600]};
+  color: ${({ $isDragOver }) => ($isDragOver ? colors.primary : colors.gray[4])};
 `;
 
 export const HiddenFileInput = styled.input`
@@ -124,10 +123,10 @@ export const HiddenFileInput = styled.input`
 export const StyledInput = styled.input`
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid ${theme.colors.gray[300]};
+  border: 1px solid ${colors.gray[4]};
   border-radius: 6px;
   ${fonts.P2};
-  color: ${theme.colors.black};
+  color: ${colors.black};
   &::placeholder {
     color: ${theme.colors.gray[400]};
   }
@@ -145,21 +144,21 @@ const ButtonBase = styled.button`
 `;
 
 export const CancelButton = styled(ButtonBase)`
-  background: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[400]};
-  color: ${theme.colors.black};
+  background: ${colors.white};
+  border: 1px solid ${colors.gray[4]};
+  color: ${colors.black};
 
   &:hover {
-    background-color: ${theme.colors.gray[100]};
+    background-color: ${colors.gray[1]};
   }
 `;
 
 export const ConfirmButton = styled(ButtonBase)`
-  background: ${theme.colors.blue[600]};
-  color: ${theme.colors.white};
+  background: ${colors.blue.dep1};
+  color: ${colors.white};
   border: none;
 
   &:hover {
-    background-color: #2563eb;
+    background-color: ${colors.primary};
   }
 `;

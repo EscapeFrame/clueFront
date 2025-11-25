@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { blue, theme } from "@/shared/theme/theme.styles";
+import { colors } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
@@ -28,10 +28,10 @@ export const EditorSection = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: ${theme.colors.white};
+  background: ${colors.white};
   overflow: hidden;
   height: 100%;
-  border-right: 1px solid ${theme.colors.gray[300]};
+  border-right: 1px solid ${colors.gray[3]};
 
   @media (max-width: 768px) {
     height: auto;
@@ -59,7 +59,7 @@ export const EditorHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid ${theme.colors.gray[300]};
+  border-bottom: 1px solid ${colors.gray[3]};
 `;
 
 export const SectionTitle = styled.input`
@@ -68,7 +68,7 @@ export const SectionTitle = styled.input`
   outline: none;
   ${fonts.P5};
   font-weight: 600;
-  color: #495057;
+  color: ${colors.gray[4]};
   flex: 1;
 
   @media (max-width: 1200px) {
@@ -88,7 +88,7 @@ export const HeaderButtons = styled.div`
 
 export const FileUploadWrapper = styled.div`
   padding: 16px 20px;
-  border-bottom: 1px solid ${theme.colors.gray[300]};
+  border-bottom: 1px solid ${colors.gray[3]};
 `;
 
 export const FileUploadButton = styled.div`
@@ -96,16 +96,16 @@ export const FileUploadButton = styled.div`
     display: flex;
     align-items: center;
     padding: 8px 16px;
-    background-color: ${theme.colors.white};
-    border: 1px solid ${theme.colors.gray[300]};
+    background-color: ${colors.white};
+    border: 1px solid ${colors.gray[3]};
     border-radius: 6px;
     cursor: pointer;
     ${fonts.P2};
-    color: ${theme.colors.black};
+    color: ${colors.black};
     transition: all 0.2s;
 
     &:hover {
-      background-color: ${theme.colors.gray[200]};
+      background-color: ${colors.gray[2]};
     }
   }
 `;
@@ -114,13 +114,13 @@ export const BottomButtons = styled.div`
   display: flex;
   gap: 12px;
   padding: 16px 20px;
-  border-top: 1px solid ${theme.colors.gray[300]};
+  border-top: 1px solid ${colors.gray[3]};
 `;
 
 export const GenerateProblemButton = styled.button`
   padding: 12px 24px;
-  background-color: ${blue[500]};
-  color: ${theme.colors.white};
+  background-color: ${colors.primary};
+  color: ${colors.white};
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -129,7 +129,7 @@ export const GenerateProblemButton = styled.button`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${blue[600]};
+    background-color: ${colors.primary};
   }
 `;
 
@@ -138,29 +138,29 @@ export const AIFeedbackButton = styled.button`
   flex-direction: column;
   align-items: flex-start;
   padding: 12px 24px;
-  background-color: ${theme.colors.white};
-  border: 1px solid ${theme.colors.gray[300]};
+  background-color: ${colors.white};
+  border: 1px solid ${colors.gray[3]};
   border-radius: 6px;
   cursor: pointer;
   ${fonts.P3};
-  color: ${theme.colors.black};
+  color: ${colors.black};
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${theme.colors.gray[200]};
+    background-color: ${colors.gray[2]};
   }
 `;
 
 export const AIFeedbackDesc = styled.span`
   ${fonts.P1};
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
   margin-top: 4px;
 `;
 
 export const previousButton = styled.div`
   margin-top: 10px;
   padding: 10px;
-  color: ${blue[500]};
+  color: ${colors.primary};
   cursor: pointer;
 
   @media (max-width: 768px) {
@@ -173,7 +173,7 @@ export const previousButton = styled.div`
 export const cancelButton = styled.div`
   margin-top: 10px;
   padding: 10px;
-  color: ${blue[500]};
+  color: ${colors.primary};
   cursor: pointer;
 
   @media (max-width: 768px) {
@@ -188,7 +188,7 @@ export const endButton = styled.div`
   margin-bottom: 10px;
   padding: 10px;
   color: black;
-  background-color: ${blue[500]};
+  background-color: ${colors.primary};
   border-radius: 5px;
   cursor: pointer;
   padding-left: 30px;
@@ -357,7 +357,7 @@ export const ViewerHeader = styled.div`
 
 export const ToggleWrapper = styled.div`
   display: flex;
-  border-bottom: 1px solid ${theme.colors.gray[300]};
+  border-bottom: 1px solid ${colors.gray[3]};
 `;
 
 export const ToggleButton = styled.button<{ active: boolean }>`
@@ -365,9 +365,9 @@ export const ToggleButton = styled.button<{ active: boolean }>`
   border: none;
   background-color: transparent;
   border-bottom: 2px solid
-    ${({ active }) => (active ? theme.colors.blue[500] : "white")};
-  color: ${({ active, theme }) =>
-    active ? theme.colors.black : theme.colors.gray[500]};
+    ${({ active }) => (active ? colors.primary : colors.white)};
+  color: ${({ active }) =>
+    active ? colors.black : colors.gray[4]};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -391,21 +391,21 @@ export const AIAgentContainer = styled.div`
 `;
 
 export const FeedbackCard = styled.div`
-  background: ${theme.colors.white};
+  background: ${colors.white};
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 `;
 
 export const SuggestionCard = styled.div`
-  background: ${theme.colors.white};
+  background: ${colors.white};
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 `;
 
 export const ReferenceCard = styled.div`
-  background: ${theme.colors.white};
+  background: ${colors.white};
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -431,7 +431,7 @@ export const CardIcon = styled.div<{ bgColor: string }>`
 export const CardTitle = styled.h3`
   ${fonts.P3};
   font-weight: 600;
-  color: ${theme.colors.black};
+  color: ${colors.black};
   margin: 0;
 `;
 
@@ -453,7 +453,7 @@ export const FeedbackIcon = styled.div`
 
 export const FeedbackText = styled.p`
   ${fonts.P2};
-  color: ${theme.colors.black};
+  color: ${colors.black};
   margin: 0;
   line-height: 1.6;
 `;
@@ -466,7 +466,7 @@ export const SuggestionList = styled.div`
 
 export const SuggestionItem = styled.div`
   ${fonts.P2};
-  color: ${theme.colors.black};
+  color: ${colors.black};
   line-height: 1.6;
 `;
 
@@ -486,7 +486,7 @@ export const ReferenceItem = styled.div`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${theme.colors.gray[200]};
+    background-color: ${colors.gray[2]};
   }
 `;
 
@@ -497,5 +497,5 @@ export const ReferenceIcon = styled.div`
 
 export const ReferenceText = styled.span`
   ${fonts.P2};
-  color: ${theme.colors.black};
+  color: ${colors.black};
 `;

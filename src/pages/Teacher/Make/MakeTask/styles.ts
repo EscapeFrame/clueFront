@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
-  background-color: ${theme.colors.white};
+  background-color: ${colors.white};
   padding: 2rem 30rem;
   display: flex;
   flex-direction: column;
@@ -32,7 +32,7 @@ export const HeaderRow = styled.div`
 `;
 
 export const FileItem = styled.div`
-  background-color: ${theme.colors.gray[100]};
+  background-color: ${colors.gray[1]};
   padding: 0.5rem;
   border-radius: 5px;
 
@@ -63,7 +63,7 @@ export const Label = styled.label`
 `;
 
 export const FileUploadArea = styled.div<{ isDragOver?: boolean }>`
-  border: 2px dashed ${props => (props.isDragOver ? "#4a90e2" : "#ccc")};
+  border: 2px dashed ${props => (props.isDragOver ? colors.primary : colors.gray[3])};
   padding: 2rem;
   text-align: center;
   cursor: pointer;

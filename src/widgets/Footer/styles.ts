@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
-import { theme } from '@/shared/theme/theme.styles';
+import { colors } from '@/shared/theme/theme.styles';
 import { fonts } from '@/shared/theme/font.styles';
 
 export const Container = styled.div`
   width: 100vw;
   max-width: 100vw;
-  background: ${theme.colors.gray[200]};
+  background: ${colors.gray[2]};
   height: auto;
   overflow: hidden;
   box-sizing: border-box;
@@ -59,7 +59,7 @@ export const ItemList = styled.div`
   display: flex;
   justify-content: flex-start;
   gap: 36px;
-  color: ${theme.colors.gray[500]};
+  color: ${colors.gray[4]};
 
   @media (max-width: 1200px) {
     gap: 28px;

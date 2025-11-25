@@ -75,7 +75,7 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
         <AiOutlineQuestionCircle onClick={question} />
       </s.Icon>
       <s.User role={role}>
-        <s.UserInfo>
+        <s.UserInfo role={role}>
           <s.ProfileImage src={profileImageUrl || userProfileImage || myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>
           {studentNumber && <s.StudentNumber>{studentNumber}</s.StudentNumber>}

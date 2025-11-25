@@ -39,7 +39,7 @@ export const Section = styled.div`
 
 export const Title = styled.h2`
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 600;
     margin: 0;
 `;
 
