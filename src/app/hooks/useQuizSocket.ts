@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import SockJS from "sockjs-client";
 import { Client, IMessage, StompSubscription, IFrame } from "@stomp/stompjs";
 
 type QuizSocketOptions = {
@@ -25,6 +24,7 @@ export function useQuizSocket({
   const clientRef = useRef<Client | null>(null);
   // ⚠️ connected state 제거: clientRef.current.connected를 직접 사용
   const [connecting, setConnecting] = useState(true); // 연결 중 상태
+  const [connected, setConnected] = useState(false); // 명시적 연결 상태
   // 자동 구독(subscribe 호출 시 기록 후 재연결 시 재등록)
   const subscriptionsRef = useRef<StompSubscription[]>([]);
   const manualSubscriptionMetaRef = useRef<
@@ -61,13 +61,17 @@ export function useQuizSocket({
     const client = new Client({
       // SockJS를 사용: endpoint에 반드시 http/https 스킴을 사용해야 합니다.
       // 만약 환경변수에 ws/wss 스킴이 들어있다면 http/https로 정규화합니다.
+      // Use native WebSocket to avoid SockJS iframe/jsonp fallbacks
       webSocketFactory: () => {
         const rawBase = API_BASE_URL ?? window.location.origin;
-        const normalizedBase = rawBase
-          .replace(/^wss:\/\//i, 'https://')
-          .replace(/^ws:\/\//i, 'http://')
-          .replace(/\/$/, '');
-        return new SockJS(`${normalizedBase}/ws-quiz`);
+        const normalizedBase = rawBase.replace(/\/$/, '');
+        // convert http(s) -> ws(s)
+        const wsBase = normalizedBase
+          .replace(/^https:\/\//i, 'wss://')
+          .replace(/^http:\/\//i, 'ws://');
+        // Spring SockJS endpoints often accept native websocket at '/ws-quiz/websocket'
+        const wsUrl = `${wsBase}/ws-quiz/websocket`;
+        return new WebSocket(wsUrl);
       },
       debug: (str) => {
         console.log("debug:", str);
@@ -109,7 +113,8 @@ export function useQuizSocket({
         console.log("[Quiz WebSocket] All headers:", frame.headers); // ⬅️ 모든 헤더 출력
 
         // 연결 완료 - 리렌더링 트리거
-        setConnecting(false);
+  setConnecting(false);
+  setConnected(true);
         forceUpdate((prev) => prev + 1);
 
         // 자동 구독 설정
@@ -278,6 +283,7 @@ export function useQuizSocket({
           "[Quiz WebSocket] Reconnect attempts:",
           reconnectAttemptsRef.current,
         );
+  setConnected(false);
       },
       onWebSocketClose: (event) => {
         const closeInfo = {
@@ -298,6 +304,7 @@ export function useQuizSocket({
           console.error("  3. 서버 WebSocket 설정 오류");
           console.error("[Quiz WebSocket] 백엔드 개발자에게 문의하세요!");
         }
+  setConnected(false);
       },
     });
 
@@ -316,7 +323,8 @@ export function useQuizSocket({
         });
         subscriptionsRef.current = [];
 
-        client.deactivate();
+  client.deactivate();
+  setConnected(false);
       } catch {
         /* ignore */
       }
@@ -458,8 +466,7 @@ export function useQuizSocket({
     }
   }, []);
 
-  const connected = clientRef.current?.connected === true;
-
+  // return explicit connected state so consumers re-render
   return { connected, connecting, subscribe, send };
 }
 
