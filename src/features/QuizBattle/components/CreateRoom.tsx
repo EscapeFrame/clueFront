@@ -4,7 +4,7 @@ import type { RoomData } from '../types';
 import { CreateRoomContainer, FormGroup, Label, Input, Button } from './styles';
 
 interface CreateRoomProps {
-  token: string;
+  token?: string;
   onRoomCreated?: (roomCode: string, isHost: boolean) => void;
 }
 
@@ -20,23 +20,24 @@ const CreateRoom: React.FC<CreateRoomProps> = ({ token, onRoomCreated }) => {
   const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
-    // WebSocket 연결
+    // WebSocket 연결 (token은 QuizBattleService가 자동으로 localStorage에서 가져옴)
     QuizBattleService.connect(
       token,
       () => {
-        console.log('Connected successfully');
+        console.log('[CreateRoom] Connected successfully');
         setIsConnected(true);
       },
       (error) => {
-        console.error('Connection error:', error);
+        console.error('[CreateRoom] Connection error:', error);
         alert('WebSocket 연결 실패');
+        setIsConnected(false);
       }
     );
 
     return () => {
       QuizBattleService.disconnect();
     };
-  }, [token]);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

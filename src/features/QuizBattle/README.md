@@ -51,8 +51,9 @@ QuizBattle/
 ## 🔧 WebSocket 엔드포인트
 
 ### 연결
-- **URL**: `http://localhost:8080/ws-quiz`
+- **URL**: `${VITE_API_BASE_URL}/ws-quiz`
 - **프로토콜**: SockJS + STOMP
+- **인증**: JWT Bearer Token (Authorization 헤더)
 
 ### 구독 (Subscribe)
 - `/topic/quiz/rooms` - 방 생성 알림
@@ -113,7 +114,34 @@ Emotion (CSS-in-JS)을 사용하여 구현되었습니다.
 
 JWT 토큰을 사용하여 WebSocket 연결 시 인증합니다.
 - Props로 전달되거나
-- `localStorage`에서 자동 조회
+- `localStorage`의 `accessToken` 키에서 자동 조회
+- Authorization 헤더에 `Bearer {token}` 형식으로 전달
+
+## ⚙️ 환경 설정
+
+### 환경 변수 (.env)
+
+프로젝트 루트에 `.env` 파일을 생성하고 다음 변수를 설정하세요:
+
+```bash
+# API Base URL
+VITE_API_BASE_URL=http://localhost:8080
+
+# 또는 프로덕션 환경
+# VITE_API_BASE_URL=http://paletto.site:8080
+```
+
+`.env.example` 파일을 참고하세요.
+
+## 🔌 백엔드 연동
+
+백엔드 구현이 필요합니다. 자세한 내용은 `BACKEND_GUIDE.md`를 참고하세요.
+
+### 필수 백엔드 요구사항
+- Spring Boot WebSocket & STOMP 지원
+- JWT 인증 구현
+- `/ws-quiz` SockJS 엔드포인트
+- 모든 메시지 핸들러 구현
 
 ## 📦 의존성
 

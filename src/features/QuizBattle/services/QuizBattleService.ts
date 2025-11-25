@@ -8,39 +8,102 @@ import type {
   QuestionData,
 } from '../types';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
 class QuizBattleService {
   private client: Client | null = null;
   private connected: boolean = false;
   private subscriptions: Record<string, StompSubscription> = {};
+  private reconnectAttempts: number = 0;
+  private maxReconnectAttempts: number = 5;
 
   // WebSocket 연결
-  connect(token: string, onConnect?: () => void, onError?: (error: any) => void): void {
+  connect(token?: string, onConnect?: () => void, onError?: (error: any) => void): void {
+    // 토큰 가져오기 (파라미터 또는 localStorage)
+    const accessToken = token || localStorage.getItem('accessToken') || '';
+
+    if (!accessToken) {
+      console.error('[QuizBattle] Access token is missing');
+      if (onError) onError(new Error('Access token is required'));
+      return;
+    }
+
     // SockJS를 사용한 WebSocket 연결
-    const socket = new SockJS('http://localhost:8080/ws-quiz');
+    const socket = new SockJS(`${API_BASE_URL}/ws-quiz`);
 
     this.client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
-        Authorization: `Bearer ${token}`, // JWT 토큰 전달
+        Authorization: `Bearer ${accessToken}`, // JWT 토큰 전달
       },
-      debug: (str: string) => {
-        console.log('STOMP Debug:', str);
-      },
-      reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
-      onConnect: () => {
+      reconnectDelay: 5000,
+      beforeConnect: () => {
+        if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+          console.error('[QuizBattle] Max reconnection attempts reached');
+          return Promise.reject(new Error('Max reconnection attempts'));
+        }
+        this.reconnectAttempts++;
+        console.log(
+          `[QuizBattle] Connection attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts}`
+        );
+        return Promise.resolve();
+      },
+      debug: (str: string) => {
+        // 중요한 프레임만 로깅
+        if (
+          str.includes('ERROR') ||
+          str.includes('MESSAGE') ||
+          str.includes('CONNECTED') ||
+          str.includes('SUBSCRIBE') ||
+          str.includes('DISCONNECT')
+        ) {
+          console.log('[QuizBattle STOMP]', str);
+        }
+      },
+      onConnect: (frame) => {
         this.connected = true;
-        console.log('Connected to WebSocket');
+        this.reconnectAttempts = 0; // 연결 성공 시 카운터 리셋
+        console.log('[QuizBattle] ✅ Connected to WebSocket successfully');
+        console.log('[QuizBattle] Session:', frame.headers?.['session']);
         if (onConnect) onConnect();
       },
       onStompError: (frame: any) => {
-        console.error('STOMP error:', frame);
+        console.error('[QuizBattle] STOMP error:', frame);
+        console.error('[QuizBattle] Error details:', {
+          command: frame.command,
+          headers: frame.headers,
+          body: frame.body,
+        });
+
+        // 인증 에러 처리
+        if (
+          frame.headers?.message?.includes('Unauthorized') ||
+          frame.headers?.message?.includes('Invalid token') ||
+          frame.body?.includes('Unauthorized')
+        ) {
+          console.error('[QuizBattle] Authentication failed - Invalid token');
+          alert('인증에 실패했습니다. 다시 로그인해주세요.');
+        }
+
         if (onError) onError(frame);
       },
       onWebSocketError: (error: any) => {
-        console.error('WebSocket error:', error);
+        console.error('[QuizBattle] WebSocket error:', error);
         if (onError) onError(error);
+      },
+      onDisconnect: () => {
+        console.warn('[QuizBattle] Disconnected from server');
+        this.connected = false;
+      },
+      onWebSocketClose: (event) => {
+        console.warn('[QuizBattle] WebSocket closed', {
+          code: event?.code,
+          reason: event?.reason || 'No reason provided',
+          wasClean: event?.wasClean,
+        });
+        this.connected = false;
       },
     });
 

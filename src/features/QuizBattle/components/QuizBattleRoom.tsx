@@ -29,7 +29,7 @@ import {
 } from './styles';
 
 interface QuizBattleRoomProps {
-  token: string;
+  token?: string;
   roomCode: string;
   isHost: boolean;
   onLeaveRoom?: () => void;
@@ -51,17 +51,18 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   useEffect(() => {
-    // WebSocket 연결
+    // WebSocket 연결 (token은 QuizBattleService가 자동으로 localStorage에서 가져옴)
     QuizBattleService.connect(
       token,
       () => {
-        console.log('Connected successfully');
+        console.log('[QuizBattleRoom] Connected successfully');
         // 방 참가
         joinRoom();
       },
       (error) => {
-        console.error('Connection error:', error);
-        alert('WebSocket 연결 실패: ' + error.message);
+        console.error('[QuizBattleRoom] Connection error:', error);
+        const errorMessage = error?.message || '알 수 없는 오류';
+        alert('WebSocket 연결 실패: ' + errorMessage);
       }
     );
 
@@ -70,7 +71,7 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
       QuizBattleService.leaveRoom(roomCode);
       QuizBattleService.disconnect();
     };
-  }, []);
+  }, [roomCode]);
 
   // 타이머 관리
   useEffect(() => {
