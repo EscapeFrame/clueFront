@@ -21,6 +21,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSocketOptions = {}) {
   const clientRef = useRef<Client | null>(null);
   const [connected, setConnected] = useState(false);
+  const [connecting, setConnecting] = useState(true); // 연결 중 상태 추가
   const subscriptionsRef = useRef<StompSubscription[]>([]);
 
   useEffect(() => {
@@ -30,8 +31,11 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
     if (!accessToken) {
       console.log('[Quiz WebSocket] Access token is missing, connection skipped.');
       setConnected(false);
+      setConnecting(false); // 토큰 없으면 연결 시도 안함
       return;
     }
+
+    setConnecting(true); // 연결 시작
 
     const client = new Client({
       // SockJS를 사용 (기존 useStompClient와 동일)
@@ -43,6 +47,7 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       onConnect: (frame) => {
         clientRef.current = client;
         setConnected(true);
+        setConnecting(false); // 연결 완료
         console.log('[Quiz WebSocket] Connected to STOMP');
 
         // 자동 구독 설정
