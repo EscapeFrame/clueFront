@@ -60,7 +60,7 @@ export function useQuizSocket({
 
     const client = new Client({
       // SockJS를 사용 (기존 useStompClient와 동일)
-      webSocketFactory: () => new SockJS(API_BASE_URL + "/topic/quiz/rooms"),
+      webSocketFactory: () => new SockJS("ws://localhost:8080/ws-quiz"),
       debug: (str) => {
         console.log("debug:", str);
       },
