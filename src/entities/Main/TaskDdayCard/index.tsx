@@ -1,14 +1,14 @@
-import { Card, DDayText, Title, Submit } from './styles';
+import * as s from './styles';
 import { useIsUrgent, DDayCardProps } from './DdayCheck';
 
 export default function TaskDDayCard({ dDay, url, title }: DDayCardProps) {
   const isUrgent = useIsUrgent(dDay);
 
   return (
-    <Card href={url || undefined} isUrgent={isUrgent} target="_blank" rel="noopener noreferrer">
-      <DDayText isUrgent={isUrgent}>D-{dDay}</DDayText>
-      <Title>{title}</Title>
-      {url && <Submit>제출 &gt;</Submit>}
-    </Card>
+    <s.Card href={url || undefined} isUrgent={isUrgent} target="_blank" rel="noopener noreferrer">
+      <s.DDayText isUrgent={isUrgent}>D-{dDay}</s.DDayText>
+      <s.Title>{title}</s.Title>
+      {url && <s.Submit>제출 &gt;</s.Submit>}
+    </s.Card>
   );
 }

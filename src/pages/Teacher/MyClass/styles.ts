@@ -87,16 +87,26 @@ export const Grid = styled.div`
 
 export const Card = styled.div`
   background-color: ${colors.white};
-  padding: 16px;
-  border-radius: 16px;
+  padding: 1rem;
+  border-radius: 0.5rem;
   border: 1px solid ${colors.gray[2]};
   transition: box-shadow 0.3s;
   display: flex;
   flex-direction: column;
-  height: 10em;
+  min-height: 12rem;
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 1200px) {
+    padding: 0.8rem;
+    min-height: 240px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    min-height: auto;
   }
 `;
 

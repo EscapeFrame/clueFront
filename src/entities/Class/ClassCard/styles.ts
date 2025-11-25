@@ -5,9 +5,9 @@ import styled from '@emotion/styled';
 export const Card = styled.div`
   border: 1px solid ${colors.gray[3]};
   padding: 1rem;
-  border-radius: 12px;
+  border-radius: 0.5rem;
   background-color: ${colors.gray[1]};
-  height: 10rem;
+  height: 12rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

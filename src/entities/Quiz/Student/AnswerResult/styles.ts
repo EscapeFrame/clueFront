@@ -40,9 +40,9 @@ export const QuestionCount = styled.div`
 
 export const Card = styled.div<{ $isWrong: boolean }>`
   background-color: ${({ $isWrong }) =>
-        $isWrong ? "#fee2e2" : "#dcfce7"};
+        $isWrong ? colors.red[1] : colors.blue.light2};
   border: 2px solid ${({ $isWrong }) =>
-        $isWrong ? "#ef4444" : "#22c55e"};
+        $isWrong ? colors.red[3] : colors.primary};
   border-radius: 16px;
   padding: 24px;
   text-align: center;
@@ -84,7 +84,7 @@ export const HeaderWrapper = styled.div`
 export const CharacterImg = styled.div`
   width: 60px;
   height: 60px;
-  background-color: #ddd;
+  background-color: ${colors.gray[3]};
   border-radius: 50%;
 `;
 
@@ -99,7 +99,7 @@ export const MyScore = styled.div`
 export const CardTitle = styled.h2<{ $isWrong: boolean }>`
   font-size: 24px;
   font-weight: 700;
-  color: ${({ $isWrong }) => ($isWrong ? "#ef4444" : "#22c55e")};
+  color: ${({ $isWrong }) => ($isWrong ? colors.red[3] : colors.primary)};
   margin: 0;
   text-align: center;
 
@@ -110,7 +110,7 @@ export const CardTitle = styled.h2<{ $isWrong: boolean }>`
 
 export const Explanation = styled.p`
   margin-top: 8px;
-  color: #4b5563;
+  color: ${colors.gray[4]};
   text-align: center;
 `;
 
@@ -134,7 +134,7 @@ export const NextButton = styled.button`
   width: 700px;
   max-width: 100%;
   background-color: ${colors.primary};
-  color: white;
+  color: ${colors.white};
   border-radius: 8px;
   font-size: 18px;
   cursor: pointer;
