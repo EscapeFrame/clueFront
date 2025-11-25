@@ -3,6 +3,7 @@ import Customapi from "@/shared/config/api";
 import { userState } from "@/shared/model/userState";
 import { useRecoilState } from "recoil";
 import { User } from "@/entities/Context/LoginContext";
+import { logger } from "@/shared/utils/logger";
 
 interface AuthHook {
   accessToken: string | null;
@@ -68,7 +69,7 @@ export const useAuth = (): AuthHook => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      console.log("useAuth: useEffect/fetchUserInfo triggered.");
+      logger.debug("useAuth: useEffect/fetchUserInfo triggered.");
 
       // 앱 초기화 시 accessToken이 없거나 만료된 경우 서버에 refresh 요청을 보내 새 accessToken을 발급받아 저장
       // Customapi의 인터셉터는 401에서 자동 리프레시를 처리하지만, 페이지 로드 시 초기 요청이 없으면 자동 갱신이 일어나지 않습니다.
@@ -77,7 +78,7 @@ export const useAuth = (): AuthHook => {
       try {
         // 만약 accessToken이 없다면, reissue 엔드포인트를 직접 호출해 본다.
         if (!accessToken) {
-          console.log(
+          logger.debug(
             "useAuth: No accessToken in state, attempting to reissue via server.",
           );
           try {
@@ -92,7 +93,7 @@ export const useAuth = (): AuthHook => {
               setAccessToken(newToken);
             }
           } catch (reErr) {
-            console.warn(
+            logger.warn(
               "useAuth: Reissue attempt failed or no refresh token present:",
               reErr,
             );
@@ -102,16 +103,16 @@ export const useAuth = (): AuthHook => {
         // 이제 accessToken이 있으면 사용자 정보 요청
         const tokenNow = localStorage.getItem("accessToken");
         if (!tokenNow) {
-          console.log("useAuth: Still no accessToken after reissue attempt.");
+          logger.debug("useAuth: Still no accessToken after reissue attempt.");
           setLoading(false);
           return;
         }
 
-        console.log("useAuth: AccessToken exists, fetching user info...");
+        logger.debug("useAuth: AccessToken exists, fetching user info...");
 
         const res = await Customapi.get<User>("/api/user/me");
         const userData = res.data;
-        console.log("useAuth: User info fetched successfully:", userData);
+        logger.debug("useAuth: User info fetched successfully:", userData);
         setUser({
           userId: userData.userId || "",
           username: userData.username || "",
@@ -131,9 +132,9 @@ export const useAuth = (): AuthHook => {
           err &&
           (err.name === "CanceledError" || err.code === "ERR_CANCELED")
         ) {
-          console.warn("useAuth: User info fetch canceled.");
+          logger.warn("useAuth: User info fetch canceled.");
         } else if (err && err.response && err.response.status === 401) {
-          console.warn(
+          logger.warn(
             "useAuth: 401 when fetching user, attempting single reissue then retrying...",
           );
           try {
@@ -165,16 +166,16 @@ export const useAuth = (): AuthHook => {
               if (!justLoggedInRef.current) removeAuthInfo();
             }
           } catch (reErr) {
-            console.error("useAuth: Reissue on 401 failed:", reErr);
+            logger.error("useAuth: Reissue on 401 failed:", reErr);
             if (!justLoggedInRef.current) removeAuthInfo();
           }
         } else {
-          console.error("useAuth: Failed to fetch user info:", error);
+          logger.error("useAuth: Failed to fetch user info:", error);
           if (!justLoggedInRef.current) removeAuthInfo();
         }
       } finally {
         setLoading(false);
-        console.log("useAuth: Setting loading to false.");
+        logger.debug("useAuth: Setting loading to false.");
       }
     };
 
