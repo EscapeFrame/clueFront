@@ -21,7 +21,11 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   const clientRef = useRef<Client | null>(null);
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(true); // 연결 중 상태 추가
+  // 자동 구독(subscribe 호출 시 기록 후 재연결 시 재등록)
   const subscriptionsRef = useRef<StompSubscription[]>([]);
+  const manualSubscriptionMetaRef = useRef<{ destination: string; callback: (msg: unknown) => void; headers?: Record<string,string> }[]>([]);
+  // 연결 중 전송된 메시지 큐(연결 후 플러시)
+  const pendingSendQueueRef = useRef<{ destination: string; body: unknown }[]>([]);
 
   useEffect(() => {
     // localStorage에서 accessToken 가져오기
@@ -42,7 +46,7 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       heartbeatIncoming: 4000, // 서버로부터 4초 간격으로 하트비트 확인
       heartbeatOutgoing: 4000, // 클라이언트가 4초 간격으로 서버에 하트비트 전송
       reconnectDelay: 1000, // 연결이 끊어진 경우 1초 후 재연결 시도
-      
+      connectHeaders: { Authorization: `Bearer ${accessToken}` }, // CONNECT 프레임 헤더 추가
       onConnect: (frame) => {
         clientRef.current = client;
         setConnected(true);
@@ -67,6 +71,42 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
           );
           subscriptionsRef.current.push(sub);
         });
+
+        // 재연결 시 manual subscribe 재등록
+        if (manualSubscriptionMetaRef.current.length) {
+          manualSubscriptionMetaRef.current.forEach(({ destination, callback, headers }) => {
+            try {
+              const sub = client.subscribe(
+                destination,
+                (m: IMessage) => {
+                  try {
+                    callback(JSON.parse(m.body));
+                  } catch {
+                    callback(m.body);
+                  }
+                },
+                headers || { Authorization: `Bearer ${accessToken}` }
+              );
+              subscriptionsRef.current.push(sub);
+              console.log(`[Quiz WebSocket] Re-subscribed to ${destination}`);
+            } catch (e) {
+              console.error('[Quiz WebSocket] Failed to re-subscribe', destination, e);
+            }
+          });
+        }
+
+        // 대기중이던 send 메시지 플러시
+        if (pendingSendQueueRef.current.length) {
+          pendingSendQueueRef.current.forEach(({ destination, body }) => {
+            try {
+              client.publish({ destination, body: JSON.stringify(body) });
+              console.log('[Quiz WebSocket] Flushed queued message to', destination);
+            } catch (e) {
+              console.error('[Quiz WebSocket] Failed flushing queued message', destination, e);
+            }
+          });
+          pendingSendQueueRef.current = [];
+        }
 
         onConnect?.(frame);
       },
@@ -107,15 +147,18 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
     };
   }, [onConnect, onError, autoSubscribe]);
 
-  const subscribe = useCallback((destination: string, callback: (msg: unknown) => void): SubscriptionHandle | null => {
+  const subscribe = useCallback((destination: string, callback: (msg: unknown) => void, headers: Record<string,string> = {}): SubscriptionHandle | null => {
+    const accessToken = localStorage.getItem("accessToken");
+    const mergedHeaders = { Authorization: `Bearer ${accessToken}`, ...headers };
     if (!clientRef.current || !connected) {
-      console.warn('[Quiz WebSocket] Cannot subscribe: not connected yet');
+      console.warn('[Quiz WebSocket] Delaying subscribe until connected:', destination);
+      // 기록만 하고 null 반환 (재연결 후 등록)
+      manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
       return null;
     }
     try {
-      const accessToken = localStorage.getItem("accessToken");
       const sub: StompSubscription = clientRef.current.subscribe(
-        destination, 
+        destination,
         (m: IMessage) => {
           try {
             callback(JSON.parse(m.body));
@@ -123,9 +166,13 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
             callback(m.body);
           }
         },
-        { Authorization: `Bearer ${accessToken}` }
+        mergedHeaders
       );
-      return { unsubscribe: () => sub.unsubscribe() };
+      manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+      return { unsubscribe: () => {
+        try { sub.unsubscribe(); } catch {/* ignore */}
+        manualSubscriptionMetaRef.current = manualSubscriptionMetaRef.current.filter(meta => meta.destination !== destination || meta.callback !== callback);
+      } };
     } catch (error) {
       console.error('[Quiz WebSocket] Subscribe error:', error);
       return null;
@@ -134,7 +181,8 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
 
   const send = useCallback((destination: string, body: unknown) => {
     if (!clientRef.current || !connected) {
-      console.warn('[Quiz WebSocket] Cannot send: not connected yet');
+      console.warn('[Quiz WebSocket] Queueing message until connected:', destination);
+      pendingSendQueueRef.current.push({ destination, body });
       return;
     }
     try {
