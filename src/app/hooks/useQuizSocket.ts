@@ -64,72 +64,91 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       },
       
       debug: (str) => {
-        // STOMP 프레임 디버깅 (서버 응답 확인용)
-        if (str.includes('ERROR') || str.includes('MESSAGE') || str.includes('CONNECTED')) {
+        // STOMP 프레임 디버깅 - 모든 중요 프레임 출력
+        if (str.includes('ERROR') || 
+            str.includes('MESSAGE') || 
+            str.includes('CONNECTED') ||
+            str.includes('SUBSCRIBE') ||
+            str.includes('RECEIPT') ||
+            str.includes('DISCONNECT')) {
           console.log('[Quiz WebSocket DEBUG]', str);
         }
       },
       onConnect: (frame) => {
         reconnectAttemptsRef.current = 0; // 연결 성공 시 카운터 리셋
         clientRef.current = client;
-        setConnected(true);
-        setConnecting(false); // 연결 완료
         console.log('[Quiz WebSocket] ✅ Connected to STOMP successfully');
         console.log('[Quiz WebSocket] Connection frame:', frame);
+        console.log('[Quiz WebSocket] Server version:', frame.headers?.['version']);
+        console.log('[Quiz WebSocket] Heart-beat:', frame.headers?.['heart-beat']);
+
+        // ⚠️ 중요: setConnected를 먼저 호출하여 구독 가능하게 만듦
+        setConnected(true);
+        setConnecting(false); // 연결 완료
 
         // 자동 구독 설정
         autoSubscribe.forEach(({ destination, callback }) => {
-          const sub = client.subscribe(
-            destination,
-            (m: IMessage) => {
-              try {
-                const data = JSON.parse(m.body);
-                console.log(`[Quiz WebSocket] Received from ${destination}:`, data);
-                callback(data);
-              } catch {
-                console.log(`[Quiz WebSocket] Received from ${destination}:`, m.body);
-                callback(m.body);
-              }
-            },
-            { Authorization: `Bearer ${accessToken}` }
-          );
-          subscriptionsRef.current.push(sub);
+          console.log('[Quiz WebSocket] Auto-subscribing to:', destination);
+          try {
+            const sub = client.subscribe(
+              destination,
+              (m: IMessage) => {
+                try {
+                  const data = JSON.parse(m.body);
+                  console.log(`[Quiz WebSocket] Received from ${destination}:`, data);
+                  callback(data);
+                } catch {
+                  console.log(`[Quiz WebSocket] Received from ${destination}:`, m.body);
+                  callback(m.body);
+                }
+              },
+              { Authorization: `Bearer ${accessToken}` }
+            );
+            subscriptionsRef.current.push(sub);
+            console.log('[Quiz WebSocket] ✅ Auto-subscribed successfully to:', destination);
+          } catch (err) {
+            console.error('[Quiz WebSocket] ❌ Auto-subscribe failed:', destination, err);
+          }
         });
 
-        // 재연결 시 manual subscribe 재등록
+        // 재연결 시 manual subscribe 재등록 (약간의 지연 추가)
         if (manualSubscriptionMetaRef.current.length) {
-          console.log(`[Quiz WebSocket] Re-subscribing ${manualSubscriptionMetaRef.current.length} subscriptions`);
+          console.log(`[Quiz WebSocket] Re-subscribing ${manualSubscriptionMetaRef.current.length} subscriptions after short delay...`);
           
-          // 중복 제거 (destination 기준)
-          const uniqueSubs = Array.from(
-            new Map(
-              manualSubscriptionMetaRef.current.map(item => [item.destination, item])
-            ).values()
-          );
-          
-          // 기존 메타 초기화 (재구독 성공 후 다시 추가됨)
-          manualSubscriptionMetaRef.current = [];
-          
-          uniqueSubs.forEach(({ destination, callback, headers }) => {
-            try {
-              const sub = client.subscribe(
-                destination,
-                (m: IMessage) => {
-                  try {
-                    callback(JSON.parse(m.body));
-                  } catch {
-                    callback(m.body);
-                  }
-                },
-                headers || { Authorization: `Bearer ${accessToken}` }
-              );
-              subscriptionsRef.current.push(sub);
-              manualSubscriptionMetaRef.current.push({ destination, callback, headers });
-              console.log(`[Quiz WebSocket] Re-subscribed to ${destination}`);
-            } catch (e) {
-              console.error('[Quiz WebSocket] Failed to re-subscribe', destination, e);
-            }
-          });
+          // 서버가 CONNECTED를 보낸 직후 바로 SUBSCRIBE하면 거부할 수 있으므로 100ms 지연
+          setTimeout(() => {
+            // 중복 제거 (destination 기준)
+            const uniqueSubs = Array.from(
+              new Map(
+                manualSubscriptionMetaRef.current.map(item => [item.destination, item])
+              ).values()
+            );
+            
+            // 기존 메타 초기화 (재구독 성공 후 다시 추가됨)
+            manualSubscriptionMetaRef.current = [];
+            
+            uniqueSubs.forEach(({ destination, callback, headers }) => {
+              try {
+                console.log('[Quiz WebSocket] 📤 Re-subscribing to:', destination);
+                const sub = client.subscribe(
+                  destination,
+                  (m: IMessage) => {
+                    try {
+                      callback(JSON.parse(m.body));
+                    } catch {
+                      callback(m.body);
+                    }
+                  },
+                  headers || { Authorization: `Bearer ${accessToken}` }
+                );
+                subscriptionsRef.current.push(sub);
+                manualSubscriptionMetaRef.current.push({ destination, callback, headers });
+                console.log(`[Quiz WebSocket] ✅ Re-subscribed successfully to ${destination}`);
+              } catch (e) {
+                console.error('[Quiz WebSocket] ❌ Failed to re-subscribe to', destination, e);
+              }
+            });
+          }, 100);
         }
 
         // 대기중이던 send 메시지 플러시
@@ -229,21 +248,31 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       meta => meta.destination === destination
     );
     
+    console.log('[Quiz WebSocket] Subscribe attempt:', {
+      destination,
+      connected,
+      clientConnected: clientRef.current?.connected,
+      isDuplicate
+    });
+    
     if (!clientRef.current || !connected || clientRef.current.connected !== true) {
       if (!isDuplicate) {
-        console.warn('[Quiz WebSocket] Delaying subscribe until connected:', destination);
+        console.warn('[Quiz WebSocket] ⏳ Delaying subscribe until connected:', destination);
         manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+      } else {
+        console.warn('[Quiz WebSocket] ⏳ Subscribe already queued:', destination);
       }
       return null;
     }
     
     // 이미 구독 대기 중이면 스킵
     if (isDuplicate) {
-      console.log('[Quiz WebSocket] Subscription already pending:', destination);
+      console.log('[Quiz WebSocket] ✋ Subscription already pending:', destination);
       return null;
     }
     
     try {
+      console.log('[Quiz WebSocket] 📤 Sending SUBSCRIBE frame to:', destination);
       const sub: StompSubscription = clientRef.current.subscribe(
         destination,
         (m: IMessage) => {
@@ -256,13 +285,13 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         mergedHeaders
       );
       manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
-      console.log('[Quiz WebSocket] Subscribed to:', destination);
+      console.log('[Quiz WebSocket] ✅ Successfully subscribed to:', destination);
       return { unsubscribe: () => {
         try { sub.unsubscribe(); } catch {/* ignore */}
         manualSubscriptionMetaRef.current = manualSubscriptionMetaRef.current.filter(meta => meta.destination !== destination);
       } };
     } catch (error: unknown) {
-      console.error('[Quiz WebSocket] Subscribe error:', error);
+      console.error('[Quiz WebSocket] ❌ Subscribe error:', destination, error);
       const msg = (error as { message?: string } | null)?.message ?? '';
       if (msg.toLowerCase().includes('no underlying stomp')) {
         if (!isDuplicate) {
