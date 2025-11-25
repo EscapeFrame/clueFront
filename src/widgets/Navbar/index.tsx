@@ -56,11 +56,14 @@ export default function Navbar() {
                 <li>
                   <s.NavItem href="/class">내 학습실</s.NavItem>
                 </li>
-                <li>
-                  <s.NavItem onClick={handleLinkSaveClick}>
-                    {isLinkSavePage ? 'CLUE' : 'LinkSave'}
-                  </s.NavItem>
-                </li>
+                {/* 학생만 LinkSave 메뉴 표시 */}
+                {user.role === 'STU' && (
+                  <li>
+                    <s.NavItem onClick={handleLinkSaveClick}>
+                      {isLinkSavePage ? 'CLUE' : 'LinkSave'}
+                    </s.NavItem>
+                  </li>
+                )}
               </>
             )}
             <li>
