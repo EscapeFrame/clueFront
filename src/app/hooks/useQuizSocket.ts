@@ -59,8 +59,16 @@ export function useQuizSocket({
     setConnecting(true); // 연결 시작
 
     const client = new Client({
-      // SockJS를 사용 (기존 useStompClient와 동일)
-      webSocketFactory: () => new SockJS("wss://localhost:8080/ws-quiz"),
+      // SockJS를 사용: endpoint에 반드시 http/https 스킴을 사용해야 합니다.
+      // 만약 환경변수에 ws/wss 스킴이 들어있다면 http/https로 정규화합니다.
+      webSocketFactory: () => {
+        const rawBase = API_BASE_URL ?? window.location.origin;
+        const normalizedBase = rawBase
+          .replace(/^wss:\/\//i, 'https://')
+          .replace(/^ws:\/\//i, 'http://')
+          .replace(/\/$/, '');
+        return new SockJS(`${normalizedBase}/ws-quiz`);
+      },
       debug: (str) => {
         console.log("debug:", str);
       },
