@@ -74,7 +74,7 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
         <IoSettingsOutline onClick={setting} />
         <AiOutlineQuestionCircle onClick={question} />
       </s.Icon>
-      <s.User role={role}>
+      <s.User>
         <s.UserInfo>
           <s.ProfileImage src={profileImageUrl || userProfileImage || myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>
