@@ -203,9 +203,9 @@ export const DocumentItem = styled.div<{ active: boolean }>`
 
 export const FloatingButton = styled.button`
   position: fixed;
-  right: 24px;
-  bottom: 24px;
-  background: ${theme.colors.blue[600]};
+  right: 30px;
+  bottom: 30px;
+  background: ${theme.colors.blue[800]};
   color: white;
   border: none;
   padding: 12px 16px;

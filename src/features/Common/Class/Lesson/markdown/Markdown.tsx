@@ -184,21 +184,14 @@ export default function MarkDownViewerPage() {
         </s.ViewerContainer>
       </s.Container>
 
-      {/* Teacher-only floating Quiz create button */}
-      {isTeacher && (
         <s.FloatingButton onClick={() => {
-          // navigate to quiz route for current class/document
           if (!classRoomId || !documentId) {
-            // fallback: try to read from location pathname params
-            // but if missing, do nothing
             return;
           }
-          // use navigate to go to /class/:classRoomId/:documentId/quiz
           navigate(`/class/${classRoomId}/${documentId}/quiz`);
         }}>
           Quiz 생성
         </s.FloatingButton>
-      )}
     </s.PageWrapper>
   );
 }
