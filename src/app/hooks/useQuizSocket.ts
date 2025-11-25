@@ -16,6 +16,8 @@ type SubscriptionHandle = {
 };
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// stable empty autoSubscribe to avoid new-array default creating unstable deps
+const EMPTY_AUTO_SUBSCRIBE: QuizSocketOptions['autoSubscribe'] = [];
 
 export function useQuizSocket({
   onConnect,
@@ -39,9 +41,11 @@ export function useQuizSocket({
   // 재연결 시도 횟수 제한
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
+  // resolve actual autoSubscribe: use stable empty array when none provided
+  const resolvedAutoSubscribe = autoSubscribe.length === 0 ? EMPTY_AUTO_SUBSCRIBE : autoSubscribe;
   // stabilize autoSubscribe for effect dependencies
-  const autoSubscribeString = useMemo(() => JSON.stringify(autoSubscribe), [autoSubscribe]);
-  const parsedAutoSubscribe = useMemo(() => autoSubscribe, [autoSubscribe]);
+  const autoSubscribeString = useMemo(() => JSON.stringify(resolvedAutoSubscribe), [resolvedAutoSubscribe]);
+  const parsedAutoSubscribe = useMemo(() => resolvedAutoSubscribe, [resolvedAutoSubscribe]);
   // 강제 리렌더링을 위한 카운터
   const [, forceUpdate] = useState(0);
 
@@ -114,7 +118,7 @@ export function useQuizSocket({
         forceUpdate((prev) => prev + 1);
 
   // 자동 구독 설정
-  parsedAutoSubscribe.forEach(({ destination, callback }) => {
+  parsedAutoSubscribe?.forEach(({ destination, callback }) => {
           console.log("[Quiz WebSocket] Auto-subscribing to:", destination);
           try {
             const sub = client.subscribe(
