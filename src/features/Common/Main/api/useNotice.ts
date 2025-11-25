@@ -1,6 +1,7 @@
 import CustomApi from "@/shared/config/api";
 import { NoticeItem, PostNoticeItem, DetailNoticeItem } from "@/shared/types/notice";
 import { AxiosError } from "axios";
+import { logger } from "@/shared/utils/logger";
 
 // 아직 적힌거 없음
 export const noticeApi = {
@@ -11,7 +12,7 @@ export const noticeApi = {
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (error) {
-      console.error("전체 공지사항 조회 실패:", error);
+      logger.error("전체 공지사항 조회 실패:", error);
       throw error;
     }
   },
@@ -39,7 +40,7 @@ export const noticeApi = {
       headers: { 'Content-Type': undefined },
     });
 
-    console.log("공지사항 등록 응답:", response);
+    logger.debug("공지사항 등록 응답:", response);
     return response.data;
   },
 
@@ -60,7 +61,7 @@ export const noticeApi = {
       });
       return response.data;
     } catch (error) {
-      console.error('Error patching notice:', error);
+      logger.error('Error patching notice:', error);
       return (error as AxiosError).response?.status || 500;
     }
   },
@@ -71,7 +72,7 @@ export const noticeApi = {
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (error) {
-      console.error("공지사항 상세 조회 실패:", error);
+      logger.error("공지사항 상세 조회 실패:", error);
       throw error;
     }
   },
@@ -85,7 +86,7 @@ export const noticeApi = {
       if (res.status !== 201) return res.status;
       return res.data;
     } catch (error) {
-      console.error("공지사항 생성 실패:", error);
+      logger.error("공지사항 생성 실패:", error);
       throw error;
     }
   },
@@ -100,7 +101,7 @@ export const noticeApi = {
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (error) {
-      console.error("공지사항 수정 실패:", error);
+      logger.error("공지사항 수정 실패:", error);
       throw error;
     }
   },
@@ -112,7 +113,7 @@ export const noticeApi = {
       if (res.status !== 200) return res.status;
       return res.status;
     } catch (error) {
-      console.error("공지사항 삭제 실패:", error);
+      logger.error("공지사항 삭제 실패:", error);
       throw error;
     }
   },
@@ -124,7 +125,7 @@ export const noticeApi = {
       if (res.status !== 200) return res.status;
       return res.data;
     } catch (error) {
-      console.error("공지사항 링크 조회 실패:", error);
+      logger.error("공지사항 링크 조회 실패:", error);
       throw error;
     }
   },
@@ -135,7 +136,7 @@ export const noticeApi = {
       const res = await CustomApi.delete(`/api/notice/${noticeId}/document/${noticeDocumentId}`);
       return res.status;
     } catch (error) {
-      console.error("공지사항 첨부파일 삭제 실패:", error);
+      logger.error("공지사항 첨부파일 삭제 실패:", error);
       const axiosError = error as AxiosError;
       return axiosError.response?.status || 500;
     }
@@ -167,7 +168,7 @@ export const noticeApi = {
       });
       return res.status;
     } catch (error) {
-      console.error('공지사항 수정용 첨부파일 업로드 실패:', error);
+      logger.error('공지사항 수정용 첨부파일 업로드 실패:', error);
       const axiosError = error as AxiosError;
       return axiosError.response?.status || 500;
     }
@@ -190,7 +191,7 @@ export const noticeApi = {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("공지사항 파일 다운로드 실패:", error);
+      logger.error("공지사항 파일 다운로드 실패:", error);
       throw error;
     }
   },
