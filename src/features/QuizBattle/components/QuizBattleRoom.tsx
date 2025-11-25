@@ -146,17 +146,16 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
   const handleSubmitAnswer = (answerIndex: number) => {
     if (!currentQuestion || answerResult !== null) return;
 
-    const timeSpent = questionStartTime
-      ? Math.floor((Date.now() - questionStartTime) / 1000)
-      : 0;
+    // 새 명세서: timeSpent는 밀리초(ms) 단위
+    const timeSpent = questionStartTime ? Date.now() - questionStartTime : 0;
 
     setSelectedAnswer(answerIndex);
 
     QuizBattleService.submitAnswer(roomCode, {
       questionNumber: currentQuestion.questionNumber,
       answerIndex: answerIndex,
-      submittedAt: new Date().toISOString(),
-      timeSpent: timeSpent,
+      submittedAt: Date.now(), // epoch ms
+      timeSpent: timeSpent, // 밀리초 (ms)
     });
   };
 

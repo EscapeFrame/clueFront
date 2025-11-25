@@ -51,7 +51,11 @@ const CreateRoom: React.FC<CreateRoomProps> = ({ token, onRoomCreated }) => {
 
     QuizBattleService.createRoom(formData, (response) => {
       setIsCreating(false);
-      if (response.status === 'success' && response.roomCode) {
+      // 새 명세서: type: 'ROOM_CREATED' 또는 status: 'success' 확인
+      if (
+        (response.type === 'ROOM_CREATED' || response.status === 'success') &&
+        response.roomCode
+      ) {
         console.log('Room created:', response);
         if (onRoomCreated) {
           onRoomCreated(response.roomCode, true); // roomCode, isHost

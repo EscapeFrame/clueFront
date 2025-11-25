@@ -136,7 +136,10 @@ class QuizBattleService {
       '/topic/quiz/rooms',
       (message: IMessage) => {
         const response: WebSocketResponse = JSON.parse(message.body);
-        if (onRoomCreated) onRoomCreated(response);
+        // 새 명세서 기준: type: 'ROOM_CREATED' 확인
+        if (response.type === 'ROOM_CREATED' || response.status === 'success') {
+          if (onRoomCreated) onRoomCreated(response);
+        }
       }
     );
 
@@ -165,7 +168,15 @@ class QuizBattleService {
       `/topic/quiz/${roomCode}/participants`,
       (message: IMessage) => {
         const response: WebSocketResponse = JSON.parse(message.body);
-        if (callbacks.onParticipantUpdate) callbacks.onParticipantUpdate(response);
+        // 새 명세서: type: 'PARTICIPANT_JOINED', participants 필드 사용
+        // 하위 호환성: allParticipants도 지원
+        if (callbacks.onParticipantUpdate) {
+          // participants를 allParticipants로 매핑 (하위 호환성)
+          if (response.participants && !response.allParticipants) {
+            response.allParticipants = response.participants;
+          }
+          callbacks.onParticipantUpdate(response);
+        }
       }
     );
 
@@ -175,19 +186,63 @@ class QuizBattleService {
       (message: IMessage) => {
         const response: WebSocketResponse<QuestionData> = JSON.parse(message.body);
 
-        // 메시지 타입에 따라 콜백 실행
-        if (response.data && 'questionNumber' in response.data) {
-          // 문제 메시지
-          if (callbacks.onQuestion) callbacks.onQuestion(response.data);
-        } else if (response.status === 'finished') {
-          // 퀴즈 종료 메시지
-          if (callbacks.onQuizFinished) callbacks.onQuizFinished(response);
-        } else if (response.status === 'cancelled') {
-          // 방 취소 메시지
-          if (callbacks.onRoomCancelled) callbacks.onRoomCancelled(response);
-        } else if (response.status === 'error') {
-          // 에러 메시지
-          if (callbacks.onError) callbacks.onError(response);
+        // 새 명세서: type 필드로 메시지 구분
+        switch (response.type) {
+          case 'QUIZ_STARTED':
+          case 'NEXT_QUESTION':
+            // 문제 메시지 - QuestionData 형식으로 변환
+            if (callbacks.onQuestion) {
+              const questionData: QuestionData = {
+                questionNumber: (response as any).questionNumber,
+                questionText: (response as any).questionText,
+                options: (response as any).options || [],
+                timeLimit: (response as any).timeLimit,
+                totalQuestions: (response as any).totalQuestions,
+                correctAnswer: (response as any).correctAnswer,
+                explanation: (response as any).explanation,
+                difficulty: (response as any).difficulty,
+              };
+              callbacks.onQuestion(questionData);
+            }
+            break;
+
+          case 'QUIZ_FINISHED':
+            // 퀴즈 종료 메시지
+            if (callbacks.onQuizFinished) {
+              // rankings를 finalRankings로 매핑 (하위 호환성)
+              if (response.rankings && !response.finalRankings) {
+                response.finalRankings = response.rankings;
+              }
+              callbacks.onQuizFinished(response);
+            }
+            break;
+
+          case 'ROOM_CANCELLED':
+            // 방 취소 메시지
+            if (callbacks.onRoomCancelled) callbacks.onRoomCancelled(response);
+            break;
+
+          case 'ERROR':
+            // 에러 메시지
+            if (callbacks.onError) callbacks.onError(response);
+            break;
+
+          default:
+            // 하위 호환성: 기존 status 기반 처리
+            if (response.data && 'questionNumber' in response.data) {
+              // 문제 메시지
+              if (callbacks.onQuestion) callbacks.onQuestion(response.data);
+            } else if (response.status === 'finished') {
+              // 퀴즈 종료 메시지
+              if (callbacks.onQuizFinished) callbacks.onQuizFinished(response);
+            } else if (response.status === 'cancelled') {
+              // 방 취소 메시지
+              if (callbacks.onRoomCancelled) callbacks.onRoomCancelled(response);
+            } else if (response.status === 'error') {
+              // 에러 메시지
+              if (callbacks.onError) callbacks.onError(response);
+            }
+            break;
         }
       }
     );
@@ -242,8 +297,8 @@ class QuizBattleService {
       body: JSON.stringify({
         questionNumber: answerData.questionNumber,
         answerIndex: answerData.answerIndex,
-        submittedAt: answerData.submittedAt || new Date().toISOString(),
-        timeSpent: answerData.timeSpent,
+        submittedAt: answerData.submittedAt || Date.now(), // epoch ms
+        timeSpent: answerData.timeSpent, // 밀리초 (ms) 단위
       }),
     });
   }
