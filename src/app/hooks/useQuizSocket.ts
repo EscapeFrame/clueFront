@@ -121,6 +121,10 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         console.log('[Quiz WebSocket] Disconnected');
         setConnected(false);
       },
+      onWebSocketClose: () => {
+        console.warn('[Quiz WebSocket] WebSocket closed');
+        setConnected(false);
+      },
     });
 
     client.activate();
@@ -150,7 +154,7 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   const subscribe = useCallback((destination: string, callback: (msg: unknown) => void, headers: Record<string,string> = {}): SubscriptionHandle | null => {
     const accessToken = localStorage.getItem("accessToken");
     const mergedHeaders = { Authorization: `Bearer ${accessToken}`, ...headers };
-    if (!clientRef.current || !connected) {
+    if (!clientRef.current || !connected || clientRef.current.connected !== true) {
       console.warn('[Quiz WebSocket] Delaying subscribe until connected:', destination);
       // 기록만 하고 null 반환 (재연결 후 등록)
       manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
@@ -173,14 +177,20 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         try { sub.unsubscribe(); } catch {/* ignore */}
         manualSubscriptionMetaRef.current = manualSubscriptionMetaRef.current.filter(meta => meta.destination !== destination || meta.callback !== callback);
       } };
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('[Quiz WebSocket] Subscribe error:', error);
+      // 연결 문제로 실패 시 큐에 보관
+      const msg = (error as { message?: string } | null)?.message ?? '';
+      if (msg.toLowerCase().includes('no underlying stomp')) {
+        manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+        return null;
+      }
       return null;
     }
   }, [connected]);
 
   const send = useCallback((destination: string, body: unknown) => {
-    if (!clientRef.current || !connected) {
+    if (!clientRef.current || !connected || clientRef.current.connected !== true) {
       console.warn('[Quiz WebSocket] Queueing message until connected:', destination);
       pendingSendQueueRef.current.push({ destination, body });
       return;
