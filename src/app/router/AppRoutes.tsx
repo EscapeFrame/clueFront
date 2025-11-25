@@ -27,7 +27,6 @@ import GenerateProblem from '@/pages/Teacher/Make/GenerateProblem';
 import MakeClassMaterials from '@/pages/Teacher/Make/MakeClassMaterials';
 
 import { LinkSaveRoutes } from '@/linkSave/app/Routes';
-import ModalTest from '@/pages/Common/ModalTest';
 // import TCHQuiz from '@/pages/Teacher/Quiz';
 // import QuizApiTest from '@/pages/Common/QuizApiTest';
 
@@ -46,7 +45,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<ModalTest />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
