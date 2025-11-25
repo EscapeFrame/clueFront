@@ -74,7 +74,19 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
 
         // 재연결 시 manual subscribe 재등록
         if (manualSubscriptionMetaRef.current.length) {
-          manualSubscriptionMetaRef.current.forEach(({ destination, callback, headers }) => {
+          console.log(`[Quiz WebSocket] Re-subscribing ${manualSubscriptionMetaRef.current.length} subscriptions`);
+          
+          // 중복 제거 (destination 기준)
+          const uniqueSubs = Array.from(
+            new Map(
+              manualSubscriptionMetaRef.current.map(item => [item.destination, item])
+            ).values()
+          );
+          
+          // 기존 메타 초기화 (재구독 성공 후 다시 추가됨)
+          manualSubscriptionMetaRef.current = [];
+          
+          uniqueSubs.forEach(({ destination, callback, headers }) => {
             try {
               const sub = client.subscribe(
                 destination,
@@ -88,6 +100,7 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
                 headers || { Authorization: `Bearer ${accessToken}` }
               );
               subscriptionsRef.current.push(sub);
+              manualSubscriptionMetaRef.current.push({ destination, callback, headers });
               console.log(`[Quiz WebSocket] Re-subscribed to ${destination}`);
             } catch (e) {
               console.error('[Quiz WebSocket] Failed to re-subscribe', destination, e);
@@ -113,6 +126,11 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
       
       onStompError: (frame) => {
         console.error('[Quiz WebSocket] STOMP Error', frame);
+        console.error('[Quiz WebSocket] Error details:', {
+          command: frame.command,
+          headers: frame.headers,
+          body: frame.body
+        });
         setConnected(false);
         onError?.(frame);
       },
@@ -121,8 +139,12 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         console.log('[Quiz WebSocket] Disconnected');
         setConnected(false);
       },
-      onWebSocketClose: () => {
-        console.warn('[Quiz WebSocket] WebSocket closed');
+      onWebSocketClose: (event) => {
+        console.warn('[Quiz WebSocket] WebSocket closed', {
+          code: event?.code,
+          reason: event?.reason,
+          wasClean: event?.wasClean
+        });
         setConnected(false);
       },
     });
@@ -154,12 +176,26 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
   const subscribe = useCallback((destination: string, callback: (msg: unknown) => void, headers: Record<string,string> = {}): SubscriptionHandle | null => {
     const accessToken = localStorage.getItem("accessToken");
     const mergedHeaders = { Authorization: `Bearer ${accessToken}`, ...headers };
+    
+    // 중복 구독 방지 체크
+    const isDuplicate = manualSubscriptionMetaRef.current.some(
+      meta => meta.destination === destination
+    );
+    
     if (!clientRef.current || !connected || clientRef.current.connected !== true) {
-      console.warn('[Quiz WebSocket] Delaying subscribe until connected:', destination);
-      // 기록만 하고 null 반환 (재연결 후 등록)
-      manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+      if (!isDuplicate) {
+        console.warn('[Quiz WebSocket] Delaying subscribe until connected:', destination);
+        manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+      }
       return null;
     }
+    
+    // 이미 구독 대기 중이면 스킵
+    if (isDuplicate) {
+      console.log('[Quiz WebSocket] Subscription already pending:', destination);
+      return null;
+    }
+    
     try {
       const sub: StompSubscription = clientRef.current.subscribe(
         destination,
@@ -173,16 +209,18 @@ export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSo
         mergedHeaders
       );
       manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+      console.log('[Quiz WebSocket] Subscribed to:', destination);
       return { unsubscribe: () => {
         try { sub.unsubscribe(); } catch {/* ignore */}
-        manualSubscriptionMetaRef.current = manualSubscriptionMetaRef.current.filter(meta => meta.destination !== destination || meta.callback !== callback);
+        manualSubscriptionMetaRef.current = manualSubscriptionMetaRef.current.filter(meta => meta.destination !== destination);
       } };
     } catch (error: unknown) {
       console.error('[Quiz WebSocket] Subscribe error:', error);
-      // 연결 문제로 실패 시 큐에 보관
       const msg = (error as { message?: string } | null)?.message ?? '';
       if (msg.toLowerCase().includes('no underlying stomp')) {
-        manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+        if (!isDuplicate) {
+          manualSubscriptionMetaRef.current.push({ destination, callback, headers: mergedHeaders });
+        }
         return null;
       }
       return null;
