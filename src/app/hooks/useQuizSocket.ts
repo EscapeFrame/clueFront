@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import SockJS from "sockjs-client";
 import { Client, IMessage, StompSubscription, IFrame } from "@stomp/stompjs";
 
@@ -23,9 +23,7 @@ export function useQuizSocket({
   autoSubscribe = [],
 }: QuizSocketOptions = {}) {
   const clientRef = useRef<Client | null>(null);
-  // ⚠️ connected state 제거: clientRef.current.connected를 직접 사용
   const [connecting, setConnecting] = useState(true); // 연결 중 상태
-  // 자동 구독(subscribe 호출 시 기록 후 재연결 시 재등록)
   const subscriptionsRef = useRef<StompSubscription[]>([]);
   const manualSubscriptionMetaRef = useRef<
     {
@@ -41,6 +39,9 @@ export function useQuizSocket({
   // 재연결 시도 횟수 제한
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
+  // stabilize autoSubscribe for effect dependencies
+  const autoSubscribeString = useMemo(() => JSON.stringify(autoSubscribe), [autoSubscribe]);
+  const parsedAutoSubscribe = useMemo(() => autoSubscribe, [autoSubscribe]);
   // 강제 리렌더링을 위한 카운터
   const [, forceUpdate] = useState(0);
 
@@ -112,8 +113,8 @@ export function useQuizSocket({
         setConnecting(false);
         forceUpdate((prev) => prev + 1);
 
-        // 자동 구독 설정
-        autoSubscribe.forEach(({ destination, callback }) => {
+  // 자동 구독 설정
+  parsedAutoSubscribe.forEach(({ destination, callback }) => {
           console.log("[Quiz WebSocket] Auto-subscribing to:", destination);
           try {
             const sub = client.subscribe(
@@ -322,7 +323,7 @@ export function useQuizSocket({
       }
       clientRef.current = null;
     };
-  }, [onConnect, onError, autoSubscribe]);
+  }, [onConnect, onError, autoSubscribeString, parsedAutoSubscribe]);
 
   const subscribe = useCallback(
     (
