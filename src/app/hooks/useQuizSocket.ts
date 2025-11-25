@@ -15,7 +15,6 @@ type SubscriptionHandle = {
   unsubscribe: () => void;
 };
 
-// 환경 변수에서 API URL 가져오기 (기존 패턴과 동일)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export function useQuizSocket({ onConnect, onError, autoSubscribe = [] }: QuizSocketOptions = {}) {
