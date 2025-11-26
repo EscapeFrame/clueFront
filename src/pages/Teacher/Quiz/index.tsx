@@ -84,6 +84,7 @@ export default function TCHQuiz() {
             subscribe(
                 `/topic/quiz/${roomCode}/participants`,
                 (message: unknown) => {
+                    console.log("[TCH Quiz] Received participant update:", message);
                     const msg = message as { allParticipants?: Participant[] };
                     if (msg.allParticipants) {
                         setParticipants(msg.allParticipants);
@@ -211,7 +212,14 @@ export default function TCHQuiz() {
                         timeLimit: currentQuestion.timeLimit,
                         difficulty: currentQuestion.difficulty,
                     } as Question & { id: string; question: string; correctIndex: number }}
-                    onShowResult={() => setStep("ranking")}
+                    onShowResult={() => {
+                        if (!send || !roomCode || !connected) {
+                            alert("연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
+                            return;
+                        }
+                        send(`/app/quiz/rankings/${roomCode}`, {});
+                        setStep("ranking");
+                    }}
                     totalStudents={participants.length}
                 />
             )}

@@ -76,10 +76,10 @@ export default function STUQuiz() {
             subscribe(
                 `/topic/quiz/${roomCode}/participants`,
                 (message: unknown) => {
+                    console.log("[STU Quiz] Received participant update:", message);
                     const msg = message as { allParticipants?: Participant[] };
                     if (msg.allParticipants) {
                         setParticipants(msg.allParticipants);
-                        console.log('[Quiz] Participants updated:', msg.allParticipants);
                     }
                 }
             ),
@@ -97,11 +97,11 @@ export default function STUQuiz() {
                         finalRankings?: FinalRanking[];
                     };
                     
-                    if (msg.status === "success" && msg.questionText) {
+                    if (msg.status === "success") {
                         // 새 문제 받음
                         setCurrentQuestion({
                             questionNumber: msg.questionNumber || 1,
-                            questionText: msg.questionText,
+                            questionText: msg.questionText || "", // Fallback to empty string
                             options: msg.options || [],
                             correctAnswer: -1, // 학생은 정답을 모름
                             timeLimit: msg.timeLimit || 30,
@@ -142,7 +142,7 @@ export default function STUQuiz() {
         return () => {
             subs.forEach((sub) => sub?.unsubscribe());
         };
-    }, [roomCode, subscribe, step, user.userId, connected]);
+    }, [roomCode, subscribe, user.userId, connected]);
 
     // 방 참여 핸들러 (REST API로 먼저 참여 가능 여부 확인)
     const handleJoinRoom = async (code: string) => {
@@ -164,10 +164,10 @@ export default function STUQuiz() {
                 },
             });
             
-            const joinableData = await response.json();
+            const isJoinable = await response.json();
             
-            if (!joinableData.joinable) {
-                alert(joinableData.message || "참여할 수 없는 방입니다.");
+            if (!isJoinable) {
+                alert("참여할 수 없는 방입니다.");
                 return;
             }
 
