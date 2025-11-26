@@ -5,7 +5,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { getMarkDown } from '../../api/class/useMarkdown';
-import { getLessonDirectories } from '@/features/Common/Class/api/useLesson';
+import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
 // import { IoChatbubbleOutline } from 'react-icons/io5';
 // import { AiOutlineQuestionCircle } from 'react-icons/ai';
@@ -22,6 +22,10 @@ interface Directory {
   documentList?: Document[];
 }
 
+interface DirectoryResponse {
+  directoryList: Directory[];
+}
+
 const Sidebar = () => {
   const { classRoomId, documentId } = useParams<{ classRoomId: string; documentId: string }>();
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -30,20 +34,38 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!classRoomId) return;
+    if (classRoomId) {
+      const cachedDirectories = sessionStorage.getItem(`lessonDirectories-${classRoomId}`);
 
-    getLessonDirectories(classRoomId)
-      .then((res) => {
-        setDirectories(res.directoryList || []);
-        // 첫 번째 디렉토리 자동 열기
-        if (res.directoryList && res.directoryList.length > 0) {
-          setOpenDirs(new Set([res.directoryList[0].directoryId]));
+      const processDirectories = (directoryList: Directory[]) => {
+        setDirectories(directoryList || []);
+        const currentDir = directoryList?.find((dir) =>
+          dir.documentList?.some((doc) => String(doc.documentId) === documentId));
+
+        if (currentDir?.directoryId) {
+          setOpenDirs((prev) => new Set(prev).add(currentDir.directoryId));
         }
-      })
-      .catch((err) => {
-        console.error('Failed to fetch directories:', err);
-        setDirectories([]);
-      });
+      };
+
+      if (cachedDirectories) {
+        try {
+          const parsedData = JSON.parse(cachedDirectories);
+          processDirectories(parsedData);
+        } catch (e) {
+          console.error("Failed to parse cached directories", e);
+          // 파싱 실패 시 API 호출
+          qre(classRoomId).then((data: DirectoryResponse) => {
+            sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(data.directoryList || []));
+            processDirectories(data.directoryList);
+          });
+        }
+      } else {
+        qre(classRoomId).then((data: DirectoryResponse) => {
+          sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(data.directoryList || []));
+          processDirectories(data.directoryList);
+        });
+      }
+    }
   }, [classRoomId, documentId]);
 
   const toggleDir = (dirId: number) => {
@@ -58,12 +80,12 @@ const Sidebar = () => {
   return (
     <s.Sidebar>
       <s.TopTabs>
-        <s.TabButton
-          active={activeTab === 'curriculum'}
+        <s.TabButton 
+          active={activeTab === 'curriculum'} 
           onClick={() => setActiveTab('curriculum')}
         >
           <IoListOutline />
-          <s.TopButton>커리큘럼</s.TopButton>
+          <span>커리큘럼</span>
         </s.TabButton>
         {/* <s.TabButton 
           active={activeTab === 'chat'} 
@@ -126,18 +148,18 @@ export default function MarkDownViewerPage() {
   useEffect(() => {
     if (!documentId) return;
 
-    getMarkDown(documentId)
-      .then((res) => {
-        setMdContent(res.content || '');
-        if (res.title) {
-          setTitle(res.title);
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to fetch markdown:', err);
-        setMdContent('마크다운을 불러오는데 실패했습니다.');
-      });
-  }, [documentId, classRoomId]);
+    const fetchMdData = async () => {
+      try {
+        const response = await getMarkDown(documentId);
+        setMdContent(response);
+      } catch (error: unknown) {
+        console.error('Failed to fetch markdown:', error);
+        setMdContent('# Error\n\nFailed to load document.');
+      }
+    };
+
+    fetchMdData();
+  }, [documentId]);
 
   useEffect(() => {
     setTitle(location.state?.title || '문서');
