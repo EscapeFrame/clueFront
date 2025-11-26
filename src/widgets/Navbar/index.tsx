@@ -51,19 +51,26 @@ export default function Navbar() {
         </s.Brand>
         <s.NavbarNav>
           <s.NavLinks>
-              <>
+            <>
+              <li>
+                <s.NavItem href="/class">내 학습실</s.NavItem>
+              </li>
+              {/* 학생만 LinkSave 메뉴 표시 */}
+              {user.role !== 'TEACHER' && (
                 <li>
-                  <s.NavItem href="/class">내 학습실</s.NavItem>
+                  <s.NavItem onClick={handleLinkSaveClick}>
+                    {isLinkSavePage ? 'CLUE' : 'LinkSave'}
+                  </s.NavItem>
                 </li>
-                {/* 학생만 LinkSave 메뉴 표시 */}
-                {user.role !== 'TEACHER' && (
-                  <li>
-                    <s.NavItem onClick={handleLinkSaveClick}>
-                      {isLinkSavePage ? 'CLUE' : 'LinkSave'}
-                    </s.NavItem>
-                  </li>
-                )}
-              </>
+              )}
+            </>
+            {user.role !== 'TEACHER' && (
+              <li>
+                <s.NavItem onClick={() => navigate('/quiz')}>
+                  퀴즈
+                </s.NavItem>
+              </li>
+            )}
             <li>
               <s.NavItem
                 href="https://bssm.notion.site/Paletto-264f4899fc868056870de0c479446aca"
@@ -73,13 +80,6 @@ export default function Navbar() {
                 서비스 소개
               </s.NavItem>
             </li>
-            {user.role !== 'TEACHER' && (
-              <li>
-                <s.NavItem onClick={() => navigate('/quiz')}>
-                  퀴즈
-                </s.NavItem>
-              </li>
-            )}
           </s.NavLinks>
           <s.UserMenuWrapper>
             <Dropdown role={user.role} studentNumber={studentNumber} name={user.username} myImage={user.myImage ?? undefined} />
