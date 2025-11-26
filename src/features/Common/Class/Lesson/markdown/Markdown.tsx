@@ -4,7 +4,7 @@ import * as s from './styles';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
-import { getMarkDown, downloadDocumentAsBlob } from '../../api/class/useMarkdown';
+import { getDocumentInfo, downloadDocumentAsBlob } from '../../api/class/useMarkdown';
 import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
 // import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -151,10 +151,11 @@ export default function MarkDownViewerPage() {
 
     const fetchMdData = async () => {
       try {
-        const response = await getMarkDown(documentId);
+        // 먼저 파일 정보 확인
+        const info = await getDocumentInfo(documentId);
         
         // 파일명에서 확장자 확인
-        const filename = response.filename || title || `document_${documentId}`;
+        const filename = info.filename || title || `document_${documentId}`;
         const fileExtension = filename.toLowerCase().split('.').pop();
         
         // 다운로드 대상 확장자 목록
@@ -186,7 +187,7 @@ export default function MarkDownViewerPage() {
           }
         } else {
           // 마크다운 또는 기타 텍스트 파일로 렌더링
-          const content = typeof response.data === 'string' ? response.data : String(response.data);
+          const content = typeof info.data === 'string' ? info.data : String(info.data);
           setMdContent(content);
         }
       } catch (error: unknown) {
