@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import * as s from "./styles";
 import { Doc, patchAgentDoc } from "../api"; // Import Doc type and patch function
 import Customapi from '@/shared/config/api';
@@ -15,6 +15,7 @@ interface Step3Props {
 
 export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isProcessing = false }: Step3Props) {
     const { classRoomId, directoryId } = useParams<{ classRoomId: string; directoryId: string }>();
+    const navigate = useNavigate();
     const [selectedDocIndex, setSelectedDocIndex] = useState<number>(0);
     const [localDocs, setLocalDocs] = useState<Doc[]>([]);
     const [currentContent, setCurrentContent] = useState<string>("");
@@ -104,7 +105,8 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
             });
             console.log('File upload response', uploadRes.data);
 
-            onNext();
+            // 성공 후 클래스 페이지로 이동
+            navigate(`/class/${classRoomId}`);
         } catch (err) {
             console.error('Failed to patch agent doc or upload file', err);
             alert('문서 전송 또는 파일 업로드에 실패했습니다.');
@@ -116,7 +118,7 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
     return (
         <s.Container>
             {/* 좌측 사이드바 (버튼형 메뉴) */}
-            {!(isGenerating || isProcessing) && (
+            {!(isGenerating || isProcessing || isSending) && (
                 <s.Sidebar>
                     <s.SideBox>
                         <s.MenuList>
@@ -139,7 +141,7 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
             {/* 메인 컨텐츠 */}
             <s.Content>
                 <s.PageTitle>수업 자료 편집</s.PageTitle>
-                {(isGenerating || isProcessing) ? (
+                {(isGenerating || isProcessing || isSending) ? (
                     <s.SpinnerOverlay>
                         <s.Spinner />
                     </s.SpinnerOverlay>

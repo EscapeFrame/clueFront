@@ -18,7 +18,7 @@ export default function Home() {
             <s.Left>
                 <MySchedule />
                 <PendingTask />     {/* 미제출과제*/}
-                <TaskGuide />       {/* 수행평가 안내*/}
+                {/* <TaskGuide />       수행평가 안내 */}
                 <QuickLink />       {/* 학교서비스바로가기 */}
             </s.Left>
             <s.Right>
