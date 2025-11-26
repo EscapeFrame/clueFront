@@ -32,9 +32,16 @@ export default function Step1({ onNext }: Step1Props) {
         }
         if (e.key === "Enter" && keywordInput.trim() !== "") {
             e.preventDefault();
-            const v = keywordInput.trim();
-            if (v && !keywords.includes(v)) {
-                setKeywords((k) => [...k, v]);
+            const inputValue = keywordInput.trim();
+            
+            // 쉼표로 구분하여 여러 키워드를 한 번에 추가
+            const newKeywords = inputValue
+                .split(',')
+                .map(k => k.trim())
+                .filter(k => k !== "" && !keywords.includes(k));
+            
+            if (newKeywords.length > 0) {
+                setKeywords((k) => [...k, ...newKeywords]);
             }
             setKeywordInput("");
         }
@@ -118,7 +125,7 @@ export default function Step1({ onNext }: Step1Props) {
                         value={keywordInput}
                         onChange={(e) => setKeywordInput(e.target.value)}
                         onKeyDown={onKeyDownKeyword}
-                        placeholder="내용을 작성하고 enter를 눌러주세요. ex) useState, props"
+                        placeholder="내용을 작성하고 enter를 눌러주세요. ex) useState, props (쉼표로 구분 가능)"
                     />
                     <s.KeywordList>
                         {keywords.map((k) => (
