@@ -4,16 +4,15 @@ import { fonts } from "@/shared/theme/font.styles";
 
 export const PageWrapper = styled.div`
   display: flex;
-  /* Use min-height so zoom on html doesn't clip the layout; subtract top offset if present */
-  min-height: calc(100vh - var(--app-top-offset, 0px));
+  height: 100vh;
   background-color: ${colors.white};
+  overflow: hidden;
 `;
 
 export const Container = styled.div`
   flex: 1 1 auto;
   display: flex;
   justify-content: center;
-  /* Allow the container to scroll when content is taller than available space */
   overflow: auto;
   background-color: ${colors.white};
 `;
@@ -25,10 +24,9 @@ export const ViewerContainer = styled.div`
   border-radius: 12px;
   padding: 40px 60px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  /* Limit height so it never exceeds viewport even with html zoom applied */
   max-width: 1100px;
-  max-height: calc(100vh - var(--app-top-offset, 0px) - 80px);
-  overflow: auto;
+  height: fit-content;
+  margin: 20px;
 `;
 
 export const ViewerHeader = styled.div`
@@ -106,7 +104,7 @@ export const ViewerWrapper = styled.div`
 export const Sidebar = styled.div`
   width: 16rem;
   background-color: #fafbfc;
-  height: 100%;
+  height: 100vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -114,10 +112,17 @@ export const Sidebar = styled.div`
 
 export const TopTabs = styled.div`
   display: flex;
+  font-weight: 600;
+  font-size: 14px;
   gap: 8px;
   padding: 16px;
   border-bottom: 1px solid ${colors.gray[4]};
 `;
+
+export const TopButton = styled.span`
+  font-size: 22px;
+  font-weight: 600;
+  `;
 
 export const TabButton = styled.button<{ active: boolean }>`
   flex: 1;
@@ -134,7 +139,7 @@ export const TabButton = styled.button<{ active: boolean }>`
   color: #333;
 
   svg {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   // &:hover {
@@ -142,7 +147,7 @@ export const TabButton = styled.button<{ active: boolean }>`
   // }
 
   span {
-    font-size: 11px;
+    font-size: 18px;
     font-weight: ${({ active }) => (active ? 600 : 400)};
     white-space: nowrap;
   }
