@@ -12,28 +12,28 @@ export interface UserState {
     myImage: string | null;
 }
 
-export const userState = atom<UserState>({
-    key: 'userState',
-    default: {
-        username: '',
-        userId: '',
-        email: '',
-        role: '',
-        grade: 0,
-        classNo: 0,
-        number: 0,
-        description: '',
-        myImage: null,
-    },
-});
-
-// // 개발시 활성화
-// export const userState = atom({
-//    key: 'userState',
-//    default: {
-//        username: '공덕현',
-//        userId: '2201',
-//        role: 'TEACHER', // TEACHER STUDENT
-//        classCode: 0,
-//    },
+// export const userState = atom<UserState>({
+//     key: 'userState',
+//     default: {
+//         username: '',
+//         userId: '',
+//         email: '',
+//         role: '',
+//         grade: 0,
+//         classNo: 0,
+//         number: 0,
+//         description: '',
+//         myImage: null,
+//     },
 // });
+
+// 개발시 활성화
+export const userState = atom({
+   key: 'userState',
+   default: {
+       username: '공덕현',
+       userId: '2201',
+       role: 'TEACHER', // TEACHER STUDENT
+       classCode: 0,
+   },
+});
