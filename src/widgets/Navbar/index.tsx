@@ -55,6 +55,13 @@ export default function Navbar() {
               <li>
                 <s.NavItem href="/class">내 학습실</s.NavItem>
               </li>
+              {user.role === 'TEACHER' && (
+                <li>
+                  <s.NavItem onClick={() => navigate('/class?mode=ai-flow')}>
+                    AI수업 생성
+                  </s.NavItem>
+                </li>
+              )}
               {/* 학생만 LinkSave 메뉴 표시 */}
               {user.role !== 'TEACHER' && (
                 <li>
