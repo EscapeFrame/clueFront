@@ -31,7 +31,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (!classRoomId) return;
-    
+
     getLessonDirectories(classRoomId)
       .then((res) => {
         setDirectories(res.directoryList || []);
@@ -58,8 +58,8 @@ const Sidebar = () => {
   return (
     <s.Sidebar>
       <s.TopTabs>
-        <s.TabButton 
-          active={activeTab === 'curriculum'} 
+        <s.TabButton
+          active={activeTab === 'curriculum'}
           onClick={() => setActiveTab('curriculum')}
         >
           <IoListOutline />
@@ -155,7 +155,10 @@ export default function MarkDownViewerPage() {
             <h1>{title}</h1>
           </s.ViewerHeader>
           <s.ViewerWrapper data-color-mode="light">
-            <MDEditor.Markdown source={mdContent} />
+            <MDEditor.Markdown
+              source={mdContent}
+              style={{ fontSize: '18px', lineHeight: '1.8' }}
+            />
           </s.ViewerWrapper>
         </s.ViewerContainer>
       </s.Container>

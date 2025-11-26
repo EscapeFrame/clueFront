@@ -4,7 +4,8 @@ import { fonts } from "@/shared/theme/font.styles";
 
 export const PageWrapper = styled.div`
   display: flex;
-  height: 100vh;
+  gap: 24px;
+  min-height: calc(100vh / 0.8 - 50px);
   background-color: ${colors.white};
   overflow: hidden;
 `;
@@ -15,6 +16,7 @@ export const Container = styled.div`
   justify-content: center;
   overflow: auto;
   background-color: ${colors.white};
+  height: 100%;
 `;
 
 export const ViewerContainer = styled.div`
@@ -23,10 +25,8 @@ export const ViewerContainer = styled.div`
   box-sizing: border-box;
   border-radius: 12px;
   padding: 40px 60px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  max-width: 1100px;
   height: fit-content;
-  margin: 20px;
+  min-height: 100%;
 `;
 
 export const ViewerHeader = styled.div`
@@ -104,10 +104,10 @@ export const ViewerWrapper = styled.div`
 export const Sidebar = styled.div`
   width: 16rem;
   background-color: #fafbfc;
-  height: 100vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  border-right: 1px solid ${colors.gray[3]};
 `;
 
 export const TopTabs = styled.div`
@@ -116,7 +116,7 @@ export const TopTabs = styled.div`
   font-size: 14px;
   gap: 8px;
   padding: 16px;
-  border-bottom: 1px solid ${colors.gray[4]};
+  border-bottom: 1px solid ${colors.gray[3]};
 `;
 
 export const TopButton = styled.span`
@@ -132,20 +132,14 @@ export const TabButton = styled.button<{ active: boolean }>`
   gap: 4px;
   padding: 10px 8px;
   border: none;
-  // background-color: ${({ active }) => (active ? colors.gray[4] : 'transparent')};
+  background-color: ${({ active }) => (active ? 'transparent' : 'transparent')};
   border-radius: 6px;
-  // cursor: pointer;
   transition: background-color 0.2s;
   color: #333;
 
   svg {
     font-size: 24px;
   }
-
-  // &:hover {
-  //   background-color: ${({ active }) => (active ? colors.blue.light2 : colors.gray[2])};
-  // }
-
   span {
     font-size: 18px;
     font-weight: ${({ active }) => (active ? 600 : 400)};
