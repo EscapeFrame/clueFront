@@ -16,8 +16,6 @@ type SubscriptionHandle = {
 };
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-// stable empty autoSubscribe to avoid new-array default creating unstable deps
-const EMPTY_AUTO_SUBSCRIBE: QuizSocketOptions['autoSubscribe'] = [];
 
 export function useQuizSocket({
   onConnect,
@@ -41,11 +39,8 @@ export function useQuizSocket({
   // 재연결 시도 횟수 제한
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
-  // resolve actual autoSubscribe: use stable empty array when none provided
-  const resolvedAutoSubscribe = autoSubscribe.length === 0 ? EMPTY_AUTO_SUBSCRIBE : autoSubscribe;
   // stabilize autoSubscribe for effect dependencies
-  const autoSubscribeString = useMemo(() => JSON.stringify(resolvedAutoSubscribe), [resolvedAutoSubscribe]);
-  const parsedAutoSubscribe = useMemo(() => resolvedAutoSubscribe, [resolvedAutoSubscribe]);
+  const autoSubscribeString = useMemo(() => JSON.stringify(autoSubscribe), [autoSubscribe]);
   // 강제 리렌더링을 위한 카운터
   const [, forceUpdate] = useState(0);
 
@@ -135,7 +130,7 @@ export function useQuizSocket({
         forceUpdate((prev) => prev + 1);
 
   // 자동 구독 설정
-  parsedAutoSubscribe?.forEach(({ destination, callback }) => {
+  autoSubscribe?.forEach(({ destination, callback }) => {
           console.log("[Quiz WebSocket] Auto-subscribing to:", destination);
           try {
             const sub = client.subscribe(
@@ -191,7 +186,8 @@ export function useQuizSocket({
           // 기존 메타 초기화 (재구독 성공 후 다시 추가됨)
           manualSubscriptionMetaRef.current = [];
 
-          uniqueSubs.forEach(({ destination, callback, headers }) => {
+          uniqueSubs.forEach((sub) => {
+            const { destination, callback, headers } = sub;
             // ⚠️ 중요: client.connected 직접 확인!
             if (!client.connected) {
               console.warn(
@@ -251,7 +247,8 @@ export function useQuizSocket({
         if (pendingSendQueueRef.current.length) {
           const accessTokenFlush = localStorage.getItem('accessToken');
           const flushHeaders = accessTokenFlush ? { Authorization: `Bearer ${accessTokenFlush}` } : undefined;
-          pendingSendQueueRef.current.forEach(({ destination, body }) => {
+          pendingSendQueueRef.current.forEach((msg) => {
+            const { destination, body } = msg;
             try {
               client.publish({ destination, body: JSON.stringify(body), headers: flushHeaders });
               console.log(
@@ -349,7 +346,7 @@ export function useQuizSocket({
       }
       clientRef.current = null;
     };
-  }, [onConnect, onError, autoSubscribeString, parsedAutoSubscribe]);
+  }, [onConnect, onError, autoSubscribeString, autoSubscribe]);
 
   const subscribe = useCallback(
     (

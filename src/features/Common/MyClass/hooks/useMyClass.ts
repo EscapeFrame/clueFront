@@ -8,12 +8,12 @@ export const useMyClass = (): MyClassReturn => {
   const [error, setError] = useState<string | null>(null);
 
   // ClassItem 형태로 정규화
-  const normalizeClassData = (classes: any[]): ClassItem[] =>
+  const normalizeClassData = (classes: Record<string, unknown>[]): ClassItem[] =>
     classes.map(c => ({
       ...c,
       name: String(c.name ?? c.classRoomName ?? '알 수 없는 학습실'),
       description: String(c.description ?? ''),
-    }));
+    } as ClassItem));
 
   // 전체 학습실 불러오기
   const fetchMyClasses = useCallback(async (search?: string) => {
@@ -27,8 +27,9 @@ export const useMyClass = (): MyClassReturn => {
         return;
       }
       setMyClasses(normalizeClassData(result));
-    } catch (err: any) {
-      setError(err.response?.data?.message || '전체 학습실 불러오기 실패');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || '전체 학습실 불러오기 실패');
       setMyClasses([]);
     } finally {
       setLoading(false);
@@ -49,8 +50,9 @@ export const useMyClass = (): MyClassReturn => {
       const normalized = normalizeClassData([result])[0];
       setMyClasses(prev => [...prev, normalized]);
       return true;
-    } catch (err: any) {
-      setError(err.response?.data?.message || '학습실 참여 실패');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || '학습실 참여 실패');
       return false;
     } finally {
       setLoading(false);
@@ -67,10 +69,11 @@ export const useMyClass = (): MyClassReturn => {
         setError(`학습실 삭제 실패 (상태 코드: ${result})`);
         return false;
       }
-      setMyClasses(prev => prev.filter(c => c.id !== classId));
+      setMyClasses(prev => prev.filter(c => c.classRoomId !== classId));
       return true;
-    } catch (err: any) {
-      setError(err.response?.data?.message || '학습실 삭제 실패');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || '학습실 삭제 실패');
       return false;
     } finally {
       setLoading(false);

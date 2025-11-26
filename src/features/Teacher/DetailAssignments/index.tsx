@@ -85,9 +85,8 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const handleSaveEdit = async () => {
         if (assignment) {
             try {
-                const assignmentRecord = assignment as unknown as Record<string, unknown>;
-                const startSource: string | null = (assignmentRecord['startDate'] as string) ?? (assignmentRecord['start_date'] as string) ?? (assignmentRecord['duringDate'] as string) ?? null;
-                const startIso = startSource ? dayjs(startSource).toISOString().slice(0, 16) : dayjs().toISOString().slice(0, 16);
+                // startDate는 백엔드에서 관리하므로 현재 시간을 사용
+                const startIso = dayjs().toISOString().slice(0, 16);
 
                 const updatedAssignment = await AssignmentsApi.update(assignment.assignmentId, {
                     title: editTitle,
