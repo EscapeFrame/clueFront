@@ -75,6 +75,18 @@ export function useQuizSocket({
         return new SockJS(`${normalizedBase}/ws-quiz`);
       },
       debug: (str) => {
+        // Avoid leaking Authorization tokens in debug output.
+        try {
+          // Attempt to parse STOMP frame debug lines containing headers
+          if (typeof str === 'string' && str.includes('headers')) {
+            // quick redact for Authorization header
+            const redacted = str.replace(/(Authorization:\s*Bearer\s*)([^\s\n\r]+)/i, "$1[REDACTED]");
+            console.log("debug:", redacted);
+            return;
+          }
+        } catch {
+          /* ignore */
+        }
         console.log("debug:", str);
       },
       heartbeatIncoming: 4000, // 서버로부터 4초 간격으로 하트비트 확인
@@ -102,7 +114,12 @@ export function useQuizSocket({
         reconnectAttemptsRef.current = 0; // 연결 성공 시 카운터 리셋
         clientRef.current = client;
         console.log("[Quiz WebSocket] ✅ Connected to STOMP successfully");
-        console.log("[Quiz WebSocket] Connection frame:", frame);
+        // Redact Authorization header before logging frame headers to avoid token leak
+        const safeHeaders = { ...(frame.headers || {}) } as Record<string, unknown>;
+        if (typeof safeHeaders.Authorization === 'string') {
+          safeHeaders.Authorization = safeHeaders.Authorization.replace(/Bearer\s+.+/i, 'Bearer [REDACTED]');
+        }
+        console.log("[Quiz WebSocket] Connection frame headers:", safeHeaders);
         console.log(
           "[Quiz WebSocket] Server version:",
           frame.headers?.["version"],
@@ -111,7 +128,6 @@ export function useQuizSocket({
           "[Quiz WebSocket] Heart-beat:",
           frame.headers?.["heart-beat"],
         );
-        console.log("[Quiz WebSocket] All headers:", frame.headers); // ⬅️ 모든 헤더 출력
 
         // 연결 완료 - 리렌더링 트리거
         setConnecting(false);
