@@ -4,7 +4,7 @@ import * as s from './styles';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
-import { getMarkDown, downloadDocument } from '../../api/class/useMarkdown';
+import { getMarkDown, downloadDocumentAsBlob } from '../../api/class/useMarkdown';
 import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
 // import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -161,10 +161,20 @@ export default function MarkDownViewerPage() {
         if (fileExtension === 'md' && typeof response.data === 'string') {
           setMdContent(response.data);
         } else {
-          // 마크다운이 아닌 경우 다운로드 처리
-          const success = await downloadDocument(documentId, filename);
+          // 마크다운이 아닌 경우 Blob으로 다운로드 처리
+          const result = await downloadDocumentAsBlob(documentId);
           
-          if (success) {
+          if (result) {
+            // Blob을 다운로드
+            const url = window.URL.createObjectURL(result.blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = result.filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            
             setMdContent('# 파일 다운로드\n\n파일이 다운로드되었습니다.');
             // 다운로드 후 이전 페이지로 돌아가기
             setTimeout(() => {
