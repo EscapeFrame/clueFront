@@ -73,6 +73,13 @@ export default function Navbar() {
                 서비스 소개
               </s.NavItem>
             </li>
+            {user.role !== 'TEACHER' && (
+              <li>
+                <s.NavItem onClick={() => navigate('/quiz')}>
+                  퀴즈
+                </s.NavItem>
+              </li>
+            )}
           </s.NavLinks>
           <s.UserMenuWrapper>
             <Dropdown role={user.role} studentNumber={studentNumber} name={user.username} myImage={user.myImage ?? undefined} />

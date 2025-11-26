@@ -1,7 +1,7 @@
 import React from 'react';
 import * as s from './styles';
 import SearchBar from '@/linkSave/components/SearchBar';
-import { categoryData } from "./data";
+import { baseCategoryData } from "./data";
 import { IconType } from 'react-icons';
 
 interface HeaderProps {
@@ -11,7 +11,9 @@ interface HeaderProps {
     onSearch: (query: string) => void;
 }
 
+
 export default function Header({ onAddLink, onSelectCategory, activeCategory, onSearch }: HeaderProps) {
+
     return (
         <s.HeaderContainer>
             <s.TopRow>
@@ -21,7 +23,7 @@ export default function Header({ onAddLink, onSelectCategory, activeCategory, on
             </s.TopRow>
             <s.Container>
                 <s.ItemContainer>
-                    {categoryData.map((item) => {
+                    {baseCategoryData.map((item) => {
                         const Icon: IconType | undefined = item.icon;
                         return (
                             <li key={item.name}>

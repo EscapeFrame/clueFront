@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { colors } from '@/shared/theme/theme.styles';
+import { fonts } from '@/shared/theme/font.styles';
 
 export const Card = styled.div`
   background-color: ${colors.white};;
@@ -20,6 +21,7 @@ export const Field = styled.div`
 
   label {
     margin-bottom: 0.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: ${colors.black};;
   }
@@ -30,7 +32,7 @@ export const Field = styled.div`
     padding: 0.75rem 1rem;
     border: 1px solid ${colors.gray[2]};
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: 1.25rem;
     &:focus {
       outline: 2px solid ${colors.primary};
       border-color: transparent;
@@ -58,7 +60,7 @@ export const KeywordItem = styled.div`
   color: ${colors.primary};
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   font-weight: 500;
 
   button {
@@ -126,7 +128,7 @@ export const Button = styled.button<{ variant: "primary" | "secondary" }>`
   border-radius: 6px;
   width: 100%;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   cursor: pointer;
   transition: all 0.2s;
 
@@ -208,7 +210,7 @@ export const Spinner = styled.div`
 `;
 
 export const LoadingText = styled.p`
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: ${colors.gray[4]};
 `;

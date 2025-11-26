@@ -68,8 +68,7 @@ export const MenuButton = styled.button<{ active?: boolean }>`
 export const Content = styled.div`
   background: white;
   padding: 24px;
-  height: fit-content;
-  min-height: calc(100vh - 200px);
+  height: calc(100vh - 48px);
   border-radius: 12px;
   flex: 1;
   display: flex;
@@ -88,11 +87,14 @@ export const Form = styled.form`
   gap: 32px;
   flex: 1;
   min-height: 0;
+  height: 100%;
 `;
 
 export const Field = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
 
   label {
     font-size: 15px;
@@ -119,23 +121,26 @@ export const Field = styled.div`
 export const TextAreaBox = styled.textarea`
   background: white;
   border-radius: 6px;
-  border: none;
+  border: 1px solid #e5e7eb;
   outline: none;
+  padding: 16px;
 
   box-sizing: border-box;
   width: 100%;
-  min-height: 6rem;
-  max-height: 28rem;
+  flex: 1;
+  min-height: 500px;
   font-size: 15px;
   line-height: 1.6;
   color: #1f2937;
   overflow: auto;
   white-space: pre-wrap;
   font-family: inherit;
+  resize: none;
 
   &:focus {
     outline: none;
-    box-shadow: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
   }
 `;
 

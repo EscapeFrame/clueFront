@@ -13,31 +13,46 @@ export const Container = styled.div`
   gap: 16px;
 
   @media (max-width: 1200px) {
-    padding: 30px 4rem;
+    padding: 2.5rem 1.5rem;
+    margin-bottom: 4rem;
   }
 
   @media (max-width: 768px) {
-    padding: 20px 2rem;
-    grid-template-columns: 1fr;
-    row-gap: 20px;
+    padding: 2rem 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem 1rem;
     margin-bottom: 2rem;
+    border-radius: 16px;
   }
 `;
 
 export const LinkContainer = styled.div`
   display: grid;
-  grid-auto-flow: column;          /* 가로 방향으로만 흐르게 */
-  grid-auto-columns: repeat(auto-fit, minmax(min-content, max-content));
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
-  overflow-x: auto;                /* 넘치면 스크롤 */
   width: 100%;
   box-sizing: border-box;
-  padding-bottom: 20px;            /* 스크롤바와 내용물 간격 */
+
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
 
   @media (max-width: 768px) {
-    grid-auto-flow: row;
-    grid-template-columns: repeat(3, 1fr);
-    overflow-x: unset;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 `;
 
@@ -58,6 +73,20 @@ export const Link = styled.a`
   &:focus-visible {
     transform: translateY(-6px) scale(1.02);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+  }
+
+  @media (max-width: 768px) {
+    min-height: 200px;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 180px;
+    margin-top: 0;
+    
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-4px) scale(1.01);
+    }
   }
 `;
 
@@ -97,6 +126,17 @@ export const TextOverImage = styled.div`
   z-index: 1;
   ${fonts.P2}
   color: black;
+
+  @media (max-width: 768px) {
+    ${fonts.P3}
+    bottom: 12px;
+    right: 12px;
+  }
+
+  @media (max-width: 480px) {
+    bottom: 8px;
+    right: 8px;
+  }
 `;
 
 export const Title = styled.div`
@@ -105,7 +145,11 @@ export const Title = styled.div`
   margin: 0;
 
   @media (max-width: 768px) {
-    ${fonts.P4};
+    ${fonts.P4}
+  }
+
+  @media (max-width: 480px) {
+    ${fonts.P3}
   }
 `;
 
