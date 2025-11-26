@@ -38,8 +38,8 @@ const AttachmentBox: React.FC<Props> = ({
     onClick: () => void;
     icon: ReactNode;
   }[] = [
-  { label: "link", platform: "link", onClick: () => openLinkModal?.("link"), icon: <FaLink /> },
-  { label: "Upload", onClick: openUploadModal, icon: <FiUpload /> },
+      { label: "link", platform: "link", onClick: () => openLinkModal?.("link"), icon: <FaLink /> },
+      { label: "Upload", onClick: openUploadModal, icon: <FiUpload /> },
     ];
 
   return (
@@ -54,14 +54,15 @@ const AttachmentBox: React.FC<Props> = ({
         ))}
       </s.Buttons>
 
-              <s.List>
-                {attachments.map((item, index) => (
-                  <s.Item key={index}>
-                    {item.name}
-                    <s.Remove onClick={() => handleRemove(item)}>✕</s.Remove>
-                  </s.Item>
-                ))}
-              </s.List>    </s.Container>
+      <s.List>
+        {attachments.map((item, index) => (
+          <s.Item key={index}>
+            {item.name}
+            <s.Remove onClick={() => handleRemove(item)}>✕</s.Remove>
+          </s.Item>
+        ))}
+      </s.List>
+    </s.Container>
   );
 };
 
