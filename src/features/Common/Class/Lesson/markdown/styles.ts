@@ -4,25 +4,31 @@ import { fonts } from "@/shared/theme/font.styles";
 
 export const PageWrapper = styled.div`
   display: flex;
-  height: calc(100vh - var(--app-top-offset, 0px));
+  /* Use min-height so zoom on html doesn't clip the layout; subtract top offset if present */
+  min-height: calc(100vh - var(--app-top-offset, 0px));
   background-color: ${colors.white};
 `;
 
 export const Container = styled.div`
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   justify-content: center;
-  overflow-y: auto;
+  /* Allow the container to scroll when content is taller than available space */
+  overflow: auto;
   background-color: ${colors.white};
 `;
 
 export const ViewerContainer = styled.div`
   background: ${colors.white};
   width: 100%;
+  box-sizing: border-box;
   border-radius: 12px;
   padding: 40px 60px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
+  /* Limit height so it never exceeds viewport even with html zoom applied */
+  max-width: 1100px;
+  max-height: calc(100vh - var(--app-top-offset, 0px) - 80px);
+  overflow: auto;
 `;
 
 export const ViewerHeader = styled.div`
