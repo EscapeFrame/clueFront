@@ -24,14 +24,6 @@ export const Title = styled.h2`
   ${fonts.P5}
   margin: 0;
   color: ${colors.black};
-
-  @media (max-width: 1200px) {
-    ${fonts.P4}
-  }
-
-  @media (max-width: 768px) {
-    ${fonts.P3}
-  }
 `;
 
 export const Description = styled.p`
@@ -39,15 +31,6 @@ export const Description = styled.p`
   color: ${colors.gray[4]};
   margin: 0;
   padding: 0;
-
-  @media (max-width: 1200px) {
-    ${fonts.P1}
-  }
-
-  @media (max-width: 768px) {
-    ${fonts.P1}
-    text-align: center;
-  }
 `;
 
 export const TeacherRow = styled.div`
