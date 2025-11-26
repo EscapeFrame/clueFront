@@ -38,9 +38,6 @@ export function AssignmentCard({ data, assignmentId, onAssignmentSelect }: Assig
     <s.CardContainer onClick={() => onAssignmentSelect(assignmentId)}>
       <s.CardHeader>
         <s.Title>{data.title}</s.Title>
-        <s.StatusBadge variant={isSubmitted ? 'completed' : 'pending'}>
-          {isSubmitted ? '비활성화' : '활성화'}
-        </s.StatusBadge>
       </s.CardHeader>
 
       <s.InfoSection>

@@ -5,7 +5,11 @@ import { fonts } from '@/shared/theme/font.styles';
 export const Container = styled.div`
   display: flex;
   flex-direction: column; 
-  padding: 0 14rem;
+  padding: 2rem 14rem;
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
 `;
 
 export const ErrorText = styled.p`
@@ -21,16 +25,13 @@ export const SectionHeader = styled.div`
 `;
 
 export const Description = styled.p`
-  ${fonts.P3};
+  ${fonts.P2};
   color: ${colors.gray[4]};
   margin: 0; 
   padding: 0; 
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  white-space: pre-wrap;
   
   @media (max-width: 1200px) { 
-    ${fonts.P2} 
+    ${fonts.P1} 
   } 
 
   @media (max-width: 768px) { 

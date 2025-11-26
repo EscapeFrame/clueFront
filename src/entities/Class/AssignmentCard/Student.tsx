@@ -168,20 +168,20 @@ export function AssignmentCard({
 
   const handleDeleteAttachment = async (id: string, isNew: boolean) => {
     if (confirm('정말로 첨부파일을 삭제하시겠습니까?')) {
-        try {
-            if (!isNew) {
-                // If it's an existing attachment, call the API
-                await deleteSubmissionAttachment(id);
-            }
-            // Update the state to remove the file from the UI
-            setAttachments((prev) => prev.filter((att) => att.id !== id));
-            alert('첨부파일이 삭제되었습니다.');
-        } catch (error) {
-            console.error('첨부파일 삭제 실패:', error);
-            alert('첨부파일 삭제에 실패했습니다.');
+      try {
+        if (!isNew) {
+          // If it's an existing attachment, call the API
+          await deleteSubmissionAttachment(id);
         }
+        // Update the state to remove the file from the UI
+        setAttachments((prev) => prev.filter((att) => att.id !== id));
+        alert('첨부파일이 삭제되었습니다.');
+      } catch (error) {
+        console.error('첨부파일 삭제 실패:', error);
+        alert('첨부파일 삭제에 실패했습니다.');
+      }
     }
-};
+  };
 
   const renderDeadlineOrSubmission = () => {
     if (isSubmitted) {
@@ -264,19 +264,18 @@ export function AssignmentCard({
 
         <s.FileListSection>
           {attachments
-            .filter((att) => !att.isNew) // Filter for existing attachments in the card view
+            .filter((att) => !att.isNew)
             .map((file) => (
               <s.FileItem key={file.id}>
                 <s.FileInfoContainer>
                   {file.type === 'file' ? <FaRegFile /> : <FaLink />}
-                  <div>
-                    <s.FileNameText>{file.name}</s.FileNameText>
-                  </div>
+                  <s.FileNameText title={file.name}>{file.name}</s.FileNameText>
                 </s.FileInfoContainer>
-                {!isSubmitted && ( // Show delete button only if not submitted
-                    <s.FileRemoveButton onClick={() => handleDeleteAttachment(file.id, file.isNew || false)}>
-                        <FaXmark />
-                    </s.FileRemoveButton>
+
+                {!isSubmitted && (
+                  <s.FileRemoveButton onClick={() => handleDeleteAttachment(file.id, file.isNew || false)}>
+                    <FaXmark />
+                  </s.FileRemoveButton>
                 )}
               </s.FileItem>
             ))}
@@ -290,26 +289,27 @@ export function AssignmentCard({
           buttons={
             isSubmitted
               ? [
-                  { text: '닫기', type: 0, onClick: closeModal },
-                  {
-                    text: '제출 취소하기',
-                    type: 1,
-                    onClick: handleCancelSubmission,
-                    disabled: isSubmitting,
-                  },
-                ]
+                { text: '닫기', type: 2, onClick: closeModal, width: "50%"},
+                {
+                  text: '제출 취소하기',
+                  type: 1,
+                  onClick: handleCancelSubmission,
+                  disabled: isSubmitting,
+                  width: "50%"
+                },
+              ]
               : [
-                  { text: '닫기', type: 0, onClick: closeModal },
-                  {
-                    text: '과제 제출하기',
-                    type: 1,
-                    onClick: handleSubmit,
-                    disabled: isSubmitting,
-                  },
-                ]
+                { text: '닫기', type: 0, onClick: closeModal },
+                {
+                  text: '과제 제출하기',
+                  type: 1,
+                  onClick: handleSubmit,
+                  disabled: isSubmitting,
+                },
+              ]
           }
         >
-          <div style={{ lineHeight: 1.6, marginBottom: '20px' }}>
+          <div style={{ lineHeight: 1.6 }}>
             <p>
               <strong>설명:</strong> {data.content}
             </p>
@@ -318,8 +318,8 @@ export function AssignmentCard({
             </p>
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ marginBottom: '10px', fontWeight: 'bold' }}>
+          <div>
+            <h4 style={{ margin: '0px', fontWeight: '600' }}>
               제공된 자료
             </h4>
             {isFetchingTeacherAttachments ? (

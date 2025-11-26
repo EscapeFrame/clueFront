@@ -6,7 +6,8 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column; 
   padding: 2rem 14rem;
-  gap: 2rem;
+  gap: 0.5rem;
+  background-color: ${colors.gray[1]};
 
   @media (max-width: 768px) {
     padding: 2rem 1rem;
@@ -19,7 +20,6 @@ export const SettingButton = styled.button`
   border: none;
   cursor: pointer;
   ${fonts.P2};
-  width: 10rem;
   padding: 1rem;
   border-radius: 8px;
 `;
@@ -82,13 +82,12 @@ export const SectionHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px;
 `;
 
 export const Section = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
   margin-top: 8px;
 `;
 
@@ -100,14 +99,14 @@ export const LeftGroup = styled.div`
  export const RightGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem; 
+  gap: 0.5rem; 
 `;
 
 // 상위 디렉토리 (1차시, 2차시)
 export const DirectoryWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid ${colors.gray[3]};
+  border: 1px solid ${colors.gray[2]};
   border-radius: 12px;
   background-color: ${colors.white};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);

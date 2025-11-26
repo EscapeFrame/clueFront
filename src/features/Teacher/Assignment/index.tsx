@@ -47,6 +47,7 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
                 setLoading(false);
             });
     }, [effectiveId]);
+    
     const MakeTask = () => {
         if (!classRoomId) return;
         navigate(`/class/${classRoomId}/make/task`);

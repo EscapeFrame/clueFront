@@ -195,22 +195,20 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   return (
     <s.Container>
-      <s.SectionHeader>
-        <s.LeftGroup>
-          <s.Description>※ 디렉토리 제목 클릭 시 수정 가능합니다.</s.Description>
-        </s.LeftGroup>
-        <s.RightGroup>
-          {isTeacher && (
-            <>
-              <s.SettingButton onClick={() => navigate("setting")}>학습실 관리</s.SettingButton>
-              <s.CardContainer onClick={handleCodeSelect}>
-                <s.CardTitle>수업코드</s.CardTitle>
-                <s.CardText>{(copiedTitle || localCode || code) ?? "알 수 없음"}</s.CardText>
-              </s.CardContainer>
-            </>
-          )}
-        </s.RightGroup>
-      </s.SectionHeader>
+      {isTeacher && (
+        <s.SectionHeader>
+          <s.LeftGroup>
+            <s.Description>※ 디렉토리 제목 클릭 시 수정 가능합니다.</s.Description>
+          </s.LeftGroup>
+          <s.RightGroup>
+            <s.SettingButton onClick={() => navigate("setting")}>학습실 관리</s.SettingButton>
+            <s.CardContainer onClick={handleCodeSelect}>
+              <s.CardTitle>수업코드</s.CardTitle>
+              <s.CardText>{(copiedTitle || localCode || code) ?? "알 수 없음"}</s.CardText>
+            </s.CardContainer>
+          </s.RightGroup>
+        </s.SectionHeader>
+      )}
 
       <s.Section>
         {directories.map((dir) => {
