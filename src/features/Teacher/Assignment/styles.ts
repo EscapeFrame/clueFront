@@ -42,9 +42,14 @@ export const Card = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 200px;
 
   &:hover {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: 768px) {
+    min-height: 180px;
   }
 `;
 

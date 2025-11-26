@@ -57,26 +57,21 @@ export const CardHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 `;
 
 export const Title = styled.div`
   color: ${colors.black};
-  ${fonts.P3}
+  ${fonts.P4}
   font-weight: 600;
   margin: 0;
   word-break: break-word;
 
   @media (max-width: 1200px) {
-    ${fonts.P2}
+    ${fonts.P4}
   }
 
   @media (max-width: 768px) {
-    ${fonts.P1}
+    ${fonts.P4}
   }
 `;
 
