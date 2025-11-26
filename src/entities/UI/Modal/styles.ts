@@ -1,7 +1,6 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { LuUpload } from "react-icons/lu";
-import { theme } from "@/shared/theme/theme.styles";
-import { colors } from "@/shared/theme/theme.styles";
+import { theme, colors, spacing, radii, shadows } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
 
 export const Overlay = styled.div`
@@ -14,10 +13,10 @@ export const Overlay = styled.div`
   z-index: 9999;
 `;
 
-export const ModalWrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "isWarning" && prop !== "$variant",
+export const ModalWrapper = styled('div', {
+  shouldForwardProp: (prop: string) => prop !== "isWarning" && prop !== "$variant",
 })<{ $variant?: "default" | "warning"; isWarning?: boolean }>`
-  background: ${theme.colors.white};
+  background: ${(props) => props.theme.colors.surface};
   border-radius: 8px;
   width: 500px;
   max-width: 90%;

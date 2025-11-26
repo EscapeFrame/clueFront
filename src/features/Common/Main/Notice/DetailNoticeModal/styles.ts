@@ -22,7 +22,7 @@ export const ModalTitle = styled.div`
   border: 1px solid #d9d9d9;
   border-radius: 8px;
   padding: 0.5rem;
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.black};
+  color: ${(props) => props.theme.colors.text};
   margin: 0;
   word-break: break-word;
   font-weight: 400;
@@ -32,7 +32,7 @@ export const ModalMeta = styled.div`
   align-items: center;
   gap: 12px;
   ${fonts.P2};
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
 `;
 
 export const NoticeType = styled.span<{ type: string }>`
@@ -49,7 +49,7 @@ export const ModalText = styled.div`
   border-radius: 8px;
   padding: 0.5rem;
   min-height: 180px; /* 최소 높이를 200px로 설정 (원하는 값으로 조절) */
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.black};
+  color: ${(props) => props.theme.colors.text};
   margin: 0;
   word-break: break-word;
   font-weight: 400;
@@ -57,15 +57,14 @@ export const ModalText = styled.div`
 
 export const AttachmentsSection = styled.div`
   margin-top: 20px;
-  border-top: 1px solid
-    ${({ theme }: { theme: ThemeType }) => theme.colors.gray[200]};
+  border-top: 1px solid ${(props) => props.theme.colors.gray[200]};
   padding-top: 20px;
 `;
 
 export const AttachmentsTitle = styled.h4`
   ${fonts.P3};
   font-weight: 600;
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.black};
+  color: ${(props) => props.theme.colors.text};
   margin-top: 0;
   margin-bottom: 10px;
 `;
@@ -88,7 +87,7 @@ export const AttachmentItem = styled.li<{ $hasDelete?: boolean }>`
 export const AttachmentLink = styled.button`
   background: none;
   border: none;
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[600]};
+  color: ${(props) => props.theme.colors.blue[600]};
   ${fonts.P2};
   cursor: pointer;
   text-decoration: underline;
@@ -96,14 +95,14 @@ export const AttachmentLink = styled.button`
   padding: 0;
 
   &:hover {
-    color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[700]};
+    color: ${(props) => props.theme.colors.blue[700]};
   }
 `;
 
 export const DeleteButton = styled.button`
   background: none;
   border: none;
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
   cursor: pointer;
   font-size: 20px;
   padding: 0 8px;
@@ -112,18 +111,18 @@ export const DeleteButton = styled.button`
 
 export const LoadingText = styled.p`
   ${fonts.P2};
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
   text-align: center;
 `;
 
 export const ErrorText = styled.p`
   ${fonts.P2};
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.red};
+  color: ${(props) => props.theme.colors.red};
   text-align: center;
 `;
 
 export const EmptyText = styled.p`
   ${fonts.P2};
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
   text-align: center;
 `;

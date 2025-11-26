@@ -86,7 +86,7 @@ export const ModalDate = styled.div`
   width: 100%;
   text-align: right;
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.gray[400]};
+  color: ${(props) => props.theme.colors.gray[400]};
   margin-bottom: 16px;
 `;
 
@@ -94,7 +94,7 @@ export const ModalContent = styled.div`
   width: 100%;
   font-size: 16px;
   line-height: 1.6;
-  color: ${({ theme }) => theme.colors.gray[300]};
+  color: ${(props) => props.theme.colors.gray[300]};
   white-space: pre-wrap; /* API 응답의 줄바꿈(\n)을 그대로 표시합니다. */
   word-break: break-all; /* 긴 영단어나 URL이 영역을 벗어나지 않도록 합니다. */
   min-height: 150px;

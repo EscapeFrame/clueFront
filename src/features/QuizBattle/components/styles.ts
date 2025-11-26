@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { spacing, radii, shadows, transitions } from '@/shared/theme/theme.styles';
 
 // Common Components
 export const Button = styled.button<{
@@ -6,21 +7,25 @@ export const Button = styled.button<{
   danger?: boolean;
   large?: boolean;
 }>`
-  padding: ${(props) => (props.large ? '1rem 2rem' : '0.75rem 1.5rem')};
+  padding: ${(props) => (props.large ? `${spacing.md} ${spacing.xl}` : `${spacing.sm} ${spacing.lg}`)};
   font-size: ${(props) => (props.large ? '1.1rem' : '1rem')};
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: ${radii.md};
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all ${transitions.normal};
   background-color: ${(props) =>
-    props.primary ? '#4CAF50' : props.danger ? '#f44336' : '#757575'};
-  color: white;
+    props.primary
+      ? props.theme.colors.success
+      : props.danger
+        ? props.theme.colors.error
+        : props.theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.textInverse};
 
   &:hover:not(:disabled) {
     opacity: 0.9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: ${shadows.md};
   }
 
   &:disabled {
@@ -34,49 +39,51 @@ export const Button = styled.button<{
 `;
 
 export const Input = styled.input`
-  padding: 0.75rem;
+  padding: ${spacing.sm};
   font-size: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
+  border: 2px solid ${(props) => props.theme.colors.border};
+  border-radius: ${radii.md};
   width: 100%;
-  transition: border-color 0.3s ease;
+  transition: border-color ${transitions.normal};
+  background-color: ${(props) => props.theme.colors.surface};
+  color: ${(props) => props.theme.colors.text};
 
   &:focus {
     outline: none;
-    border-color: #4CAF50;
+    border-color: ${(props) => props.theme.colors.success};
   }
 `;
 
 export const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: ${spacing.lg};
 `;
 
 export const Label = styled.label`
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: ${spacing.sm};
   font-weight: 600;
-  color: #333;
+  color: ${(props) => props.theme.colors.text};
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: ${spacing.md};
+  margin-top: ${spacing.lg};
   flex-wrap: wrap;
 `;
 
 // CreateRoom Styles
 export const CreateRoomContainer = styled.div`
   max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: ${spacing.xl} auto;
+  padding: ${spacing.xl};
+  background: ${(props) => props.theme.colors.surface};
+  border-radius: ${radii.lg};
+  box-shadow: ${shadows.md};
 
   h2 {
-    margin-bottom: 1.5rem;
-    color: #333;
+    margin-bottom: ${spacing.lg};
+    color: ${(props) => props.theme.colors.text};
     text-align: center;
   }
 
@@ -87,45 +94,45 @@ export const CreateRoomContainer = styled.div`
 
   p {
     text-align: center;
-    color: #666;
-    margin-top: 1rem;
+    color: ${(props) => props.theme.colors.textSecondary};
+    margin-top: ${spacing.md};
   }
 `;
 
 // RoomList Styles
 export const RoomListContainer = styled.div`
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: ${spacing.xl} auto;
+  padding: ${spacing.xl};
 `;
 
 export const RoomListHeader = styled.div`
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: ${spacing['3xl']};
 
   h1 {
     font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 0.5rem;
+    color: ${(props) => props.theme.colors.text};
+    margin-bottom: ${spacing.sm};
   }
 
   p {
     font-size: 1.2rem;
-    color: #666;
+    color: ${(props) => props.theme.colors.textSecondary};
   }
 `;
 
 export const JoinRoomSection = styled.div`
   max-width: 500px;
-  margin: 0 auto 2rem;
-  padding: 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 0 auto ${spacing.xl};
+  padding: ${spacing.xl};
+  background: ${(props) => props.theme.colors.surface};
+  border-radius: ${radii.lg};
+  box-shadow: ${shadows.md};
 
   h2 {
-    margin-bottom: 1.5rem;
-    color: #333;
+    margin-bottom: ${spacing.lg};
+    color: ${(props) => props.theme.colors.text};
     text-align: center;
   }
 
@@ -138,70 +145,70 @@ export const JoinRoomSection = styled.div`
 export const RoomGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: ${spacing.lg};
+  margin-top: ${spacing.xl};
 `;
 
 export const RoomCard = styled.div`
-  padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: ${spacing.lg};
+  background: ${(props) => props.theme.colors.surface};
+  border-radius: ${radii.lg};
+  box-shadow: ${shadows.md};
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all ${transitions.normal};
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: ${shadows.lg};
   }
 `;
 
 export const RoomInfo = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: ${spacing.md};
 
   h3 {
-    margin-bottom: 0.5rem;
-    color: #333;
+    margin-bottom: ${spacing.sm};
+    color: ${(props) => props.theme.colors.text};
   }
 
   p {
-    color: #666;
-    margin: 0.25rem 0;
+    color: ${(props) => props.theme.colors.textSecondary};
+    margin: ${spacing.xs} 0;
   }
 `;
 
 export const RoomStatus = styled.span<{ status: string }>`
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
+  padding: ${spacing.xs} ${spacing.sm};
+  border-radius: ${radii.full};
   font-size: 0.9rem;
   font-weight: 600;
   background-color: ${(props) =>
     props.status === 'waiting'
-      ? '#4CAF50'
+      ? props.theme.colors.success
       : props.status === 'playing'
-        ? '#FF9800'
-        : '#757575'};
-  color: white;
+        ? props.theme.colors.warning
+        : props.theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.textInverse};
 `;
 
 // QuizBattleRoom Styles
 export const RoomContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: ${spacing.xl};
 `;
 
 export const RoomHeader = styled.div`
   text-align: center;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  color: white;
+  margin-bottom: ${spacing.xl};
+  padding: ${spacing.lg};
+  background: linear-gradient(135deg, ${(props) => props.theme.colors.blue[700]} 0%, ${(props) => props.theme.colors.blue[900]} 100%);
+  border-radius: ${radii.lg};
+  color: ${(props) => props.theme.colors.textInverse};
 
   h1 {
-    margin-bottom: 0.5rem;
+    margin-bottom: ${spacing.sm};
     font-size: 2rem;
   }
 
@@ -212,16 +219,16 @@ export const RoomHeader = styled.div`
 `;
 
 export const ParticipantsSection = styled.div`
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
+  background: ${(props) => props.theme.colors.surface};
+  padding: ${spacing.lg};
+  border-radius: ${radii.lg};
+  box-shadow: ${shadows.md};
+  margin-bottom: ${spacing.xl};
 
   h2,
   h3 {
-    margin-bottom: 1rem;
-    color: #333;
+    margin-bottom: ${spacing.md};
+    color: ${(props) => props.theme.colors.text};
   }
 `;
 
@@ -232,10 +239,10 @@ export const ParticipantsList = styled.ul`
 `;
 
 export const ParticipantItem = styled.li`
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  background: #f5f5f5;
-  border-radius: 8px;
+  padding: ${spacing.sm} ${spacing.md};
+  margin-bottom: ${spacing.sm};
+  background: ${(props) => props.theme.colors.backgroundTertiary};
+  border-radius: ${radii.md};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -243,20 +250,20 @@ export const ParticipantItem = styled.li`
 
 export const WaitingSection = styled.div`
   text-align: center;
-  padding: 3rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: ${spacing['3xl']};
+  background: ${(props) => props.theme.colors.surface};
+  border-radius: ${radii.lg};
+  box-shadow: ${shadows.md};
 
   h2 {
-    margin-bottom: 2rem;
-    color: #333;
+    margin-bottom: ${spacing.xl};
+    color: ${(props) => props.theme.colors.text};
   }
 
   p {
     font-size: 1.1rem;
-    color: #666;
-    margin: 1rem 0;
+    color: ${(props) => props.theme.colors.textSecondary};
+    margin: ${spacing.md} 0;
   }
 
   ${ButtonGroup} {
@@ -265,20 +272,20 @@ export const WaitingSection = styled.div`
 `;
 
 export const QuestionSection = styled.div`
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: ${(props) => props.theme.colors.surface};
+  padding: ${spacing.xl};
+  border-radius: ${radii.lg};
+  box-shadow: ${shadows.md};
 `;
 
 export const QuestionHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: ${spacing.xl};
 
   h2 {
-    color: #333;
+    color: ${(props) => props.theme.colors.text};
     margin: 0;
   }
 `;
@@ -286,10 +293,10 @@ export const QuestionHeader = styled.div`
 export const Timer = styled.div<{ warning?: boolean }>`
   font-size: 1.5rem;
   font-weight: 700;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  background-color: ${(props) => (props.warning ? '#f44336' : '#4CAF50')};
-  color: white;
+  padding: ${spacing.sm} ${spacing.md};
+  border-radius: ${radii.md};
+  background-color: ${(props) => (props.warning ? props.theme.colors.error : props.theme.colors.success)};
+  color: ${(props) => props.theme.colors.textInverse};
   animation: ${(props) => (props.warning ? 'pulse 1s infinite' : 'none')};
 
   @keyframes pulse {
@@ -305,20 +312,20 @@ export const Timer = styled.div<{ warning?: boolean }>`
 
 export const QuestionText = styled.p`
   font-size: 1.3rem;
-  color: #333;
-  margin-bottom: 2rem;
+  color: ${(props) => props.theme.colors.text};
+  margin-bottom: ${spacing.xl};
   line-height: 1.6;
-  padding: 1.5rem;
-  background: #f9f9f9;
-  border-radius: 8px;
-  border-left: 4px solid #4CAF50;
+  padding: ${spacing.lg};
+  background: ${(props) => props.theme.colors.backgroundTertiary};
+  border-radius: ${radii.md};
+  border-left: 4px solid ${(props) => props.theme.colors.success};
 `;
 
 export const OptionsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: ${spacing.md};
+  margin-bottom: ${spacing.xl};
 `;
 
 export const OptionButton = styled.button<{
@@ -326,33 +333,38 @@ export const OptionButton = styled.button<{
   correct?: boolean;
   incorrect?: boolean;
 }>`
-  padding: 1.5rem;
+  padding: ${spacing.lg};
   font-size: 1rem;
   border: 2px solid
     ${(props) =>
-      props.correct ? '#4CAF50' : props.incorrect ? '#f44336' : '#ddd'};
-  border-radius: 8px;
+      props.correct
+        ? props.theme.colors.success
+        : props.incorrect
+          ? props.theme.colors.error
+          : props.theme.colors.border};
+  border-radius: ${radii.md};
   background-color: ${(props) =>
     props.correct
-      ? '#e8f5e9'
+      ? props.theme.colors.green[100]
       : props.incorrect
-        ? '#ffebee'
+        ? props.theme.colors.red[100]
         : props.selected
-          ? '#e3f2fd'
-          : 'white'};
+          ? props.theme.colors.blue[100]
+          : props.theme.colors.surface};
+  color: ${(props) => props.theme.colors.text};
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all ${transitions.normal};
   text-align: left;
 
   &:hover:not(:disabled) {
     background-color: ${(props) =>
       props.correct
-        ? '#e8f5e9'
+        ? props.theme.colors.green[100]
         : props.incorrect
-          ? '#ffebee'
-          : '#f5f5f5'};
+          ? props.theme.colors.red[100]
+          : props.theme.colors.backgroundTertiary};
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: ${shadows.md};
   }
 
   &:disabled {
@@ -365,49 +377,49 @@ export const OptionButton = styled.button<{
 `;
 
 export const ResultMessage = styled.div<{ correct: boolean }>`
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  border-radius: 8px;
+  padding: ${spacing.lg};
+  margin: ${spacing.lg} 0;
+  border-radius: ${radii.md};
   font-size: 1.2rem;
   font-weight: 600;
   text-align: center;
-  background-color: ${(props) => (props.correct ? '#e8f5e9' : '#ffebee')};
-  color: ${(props) => (props.correct ? '#2e7d32' : '#c62828')};
-  border: 2px solid ${(props) => (props.correct ? '#4CAF50' : '#f44336')};
+  background-color: ${(props) => (props.correct ? props.theme.colors.green[100] : props.theme.colors.red[100])};
+  color: ${(props) => (props.correct ? props.theme.colors.green[700] : props.theme.colors.red[700])};
+  border: 2px solid ${(props) => (props.correct ? props.theme.colors.success : props.theme.colors.error)};
 `;
 
 export const FinishedSection = styled.div`
   text-align: center;
-  padding: 3rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: ${spacing['3xl']};
+  background: ${(props) => props.theme.colors.surface};
+  border-radius: ${radii.lg};
+  box-shadow: ${shadows.md};
 
   h2 {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #333;
+    margin-bottom: ${spacing.md};
+    color: ${(props) => props.theme.colors.text};
   }
 
   h3 {
     font-size: 1.5rem;
-    margin-bottom: 2rem;
-    color: #666;
+    margin-bottom: ${spacing.xl};
+    color: ${(props) => props.theme.colors.textSecondary};
   }
 `;
 
 export const RankingsList = styled.ol`
   list-style: none;
   padding: 0;
-  margin: 2rem 0;
+  margin: ${spacing.xl} 0;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 `;
 
 export const RankingItem = styled.li<{ rank: number }>`
-  padding: 1.5rem;
-  margin-bottom: 1rem;
+  padding: ${spacing.lg};
+  margin-bottom: ${spacing.md};
   background: ${(props) =>
     props.rank === 1
       ? 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
@@ -415,15 +427,15 @@ export const RankingItem = styled.li<{ rank: number }>`
         ? 'linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%)'
         : props.rank === 3
           ? 'linear-gradient(135deg, #CD7F32 0%, #B8860B 100%)'
-          : '#f5f5f5'};
-  color: ${(props) => (props.rank <= 3 ? 'white' : '#333')};
-  border-radius: 8px;
+          : props.theme.colors.backgroundTertiary};
+  color: ${(props) => (props.rank <= 3 ? props.theme.colors.textInverse : props.theme.colors.text)};
+  border-radius: ${radii.md};
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 1.1rem;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: ${shadows.sm};
 
   .rank {
     font-size: 1.3rem;
@@ -433,7 +445,7 @@ export const RankingItem = styled.li<{ rank: number }>`
   .username {
     flex: 1;
     text-align: left;
-    margin: 0 1rem;
+    margin: 0 ${spacing.md};
   }
 
   .score {

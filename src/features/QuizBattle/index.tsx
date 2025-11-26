@@ -71,20 +71,6 @@ const QuizBattle: React.FC<QuizBattleProps> = ({ token: propToken }) => {
       <div style={{ textAlign: 'center', padding: '3rem' }}>
         <h2>로그인이 필요합니다</h2>
         <p>퀴즈 배틀을 이용하려면 로그인해주세요.</p>
-        <button
-          onClick={() => navigate('/login')}
-          style={{
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-          }}
-        >
-          로그인 페이지로 이동
-        </button>
       </div>
     );
   }

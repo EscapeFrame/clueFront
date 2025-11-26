@@ -1,6 +1,4 @@
-import { ThemeProvider, Global } from '@emotion/react';
-import { theme } from '@/shared/theme/theme.styles';
-import { globalStyles } from '@/shared/theme/global';
+import { ThemeProvider } from '@/shared/theme/ThemeContext';
 import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router, useLocation, matchPath } from 'react-router-dom';
 import { UserContext } from '@/entities/Context/LoginContext';
@@ -11,8 +9,7 @@ import Navbar from '@/widgets/Navbar/index';
 export default function App() {
   return (
     <RecoilRoot>
-      <ThemeProvider theme={theme}>
-        <Global styles={globalStyles} />
+      <ThemeProvider>
         <Router>
           <AuthWrapper />
         </Router>

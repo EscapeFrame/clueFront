@@ -21,23 +21,23 @@ export const FormRow = styled.div`
 export const Label = styled.label`
   font-weight: 600;
   font-size: 16px;
-  color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
   display: flex;
   align-items: center;
   gap: 8px;
 `;
 
-const baseInputStyles = `
+const baseInputStyles = (props: any) => `
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid ${({ theme }: { theme: ThemeType }) => theme.colors.gray[300]};
+  border: 1px solid ${props.theme.colors.gray[300]};
   border-radius: 8px;
   font-size: 15px;
   box-sizing: border-box;
 
   &:focus {
     outline: none;
-    border-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+    border-color: ${props.theme.colors.blue[500]};
   }
 `;
 
@@ -61,7 +61,7 @@ export const RadioGroup = styled.div`
       align-items: center;
       cursor: pointer;
       font-size: 15px;
-      color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+      color: ${(props) => props.theme.colors.gray[500]};
     }
 
     input[type='radio'] {
@@ -71,7 +71,7 @@ export const RadioGroup = styled.div`
 
       width: 18px;
       height: 18px;
-      border: 2px solid ${({ theme }: { theme: ThemeType }) => theme.colors.gray[300]};
+      border: 2px solid ${(props) => props.theme.colors.gray[300]};
       border-radius: 4px;
       margin-right: 8px;
       cursor: pointer;
@@ -80,8 +80,8 @@ export const RadioGroup = styled.div`
       transition: all 0.2s ease;
 
       &:checked {
-        background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
-        border-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+        background-color: ${(props) => props.theme.colors.blue[500]};
+        border-color: ${(props) => props.theme.colors.blue[500]};
       }
 
       /* 체크 표시 아이콘 */
@@ -119,15 +119,15 @@ const smallButton = `
 
 export const AddButton = styled.button`
   ${smallButton}
-  background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+  background-color: ${(props) => props.theme.colors.blue[500]};
   &:hover {
-    background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[600]};
+    background-color: ${(props) => props.theme.colors.blue[600]};
   }
 `;
 
 export const RemoveButton = styled.button`
   ${smallButton}
-  background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.red};
+  background-color: ${(props) => props.theme.colors.red};
   &:hover {
     opacity: 0.8;
   }

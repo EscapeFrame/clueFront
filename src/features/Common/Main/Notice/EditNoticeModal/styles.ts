@@ -33,7 +33,7 @@ export const RadioGroup = styled.div`
       align-items: center;
       cursor: pointer;
       font-size: 15px;
-      color: ${({ theme }: { theme: ThemeType }) => theme.colors.gray[500]};
+      color: ${(props) => props.theme.colors.gray[500]};
     }
 
     input[type='radio'] {
@@ -43,7 +43,7 @@ export const RadioGroup = styled.div`
 
       width: 18px;
       height: 18px;
-      border: 2px solid ${({ theme }: { theme: ThemeType }) => theme.colors.gray[300]};
+      border: 2px solid ${(props) => props.theme.colors.gray[300]};
       border-radius: 4px;
       margin-right: 8px;
       cursor: pointer;
@@ -52,8 +52,8 @@ export const RadioGroup = styled.div`
       transition: all 0.2s ease;
 
       &:checked {
-        background-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
-        border-color: ${({ theme }: { theme: ThemeType }) => theme.colors.blue[500]};
+        background-color: ${(props) => props.theme.colors.blue[500]};
+        border-color: ${(props) => props.theme.colors.blue[500]};
       }
 
       /* 체크 표시 아이콘 */

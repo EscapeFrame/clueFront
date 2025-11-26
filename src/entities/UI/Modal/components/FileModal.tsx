@@ -23,7 +23,7 @@ const FileModal: React.FC<FileModalProps> = ({ onClose, onFileUpload }) => {
 
   return (
     <s.Overlay onClick={onClose}>
-      <s.ModalWrapper onClick={(e) => e.stopPropagation()}>
+      <s.ModalWrapper onClick={(e: React.MouseEvent) => e.stopPropagation()}>
         <s.Header>
           <s.Title>파일 제출하기</s.Title>
                         <s.CloseBtn onClick={onClose}><IoClose size={16} /></s.CloseBtn>
