@@ -147,7 +147,7 @@ export default function MarkDownViewerPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
-    // if (!documentId) return;
+    if (!documentId) return;
 
     const fetchMdData = async () => {
       try {
