@@ -33,3 +33,14 @@ export const PostButton = styled.div`
   border-radius: 8px;
   text-align: center;
 `;
+
+export const ActionRow = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+`;

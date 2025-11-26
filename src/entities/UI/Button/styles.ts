@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import { fonts } from '@/shared/theme/font.styles';
+import { fonts } from "@/shared/theme/font.styles";
 import { colors } from "@/shared/theme/theme.styles";
 
 export const StyledButton = styled.button<{
   width?: string;
-  variant?: 0 | 1 | 2 | 3;
+  variant?: 0 | 1 | 2 | 3 | 4;
 }>`
   width: ${({ width }) => width || "100%"};
   height: 44px;
@@ -48,6 +48,18 @@ export const StyledButton = styled.button<{
           background: ${colors.gray[3]};
           color: ${colors.white};
         `;
+      case 4:
+        return `
+          background: ${colors.white};
+          color: ${colors.black};
+          border: 1px solid ${colors.blue.light4};
+
+          &:hover:not(:disabled) {
+            background: ${colors.red[3]};
+            color: ${colors.white};
+            border-color: ${colors.red[3]};
+          }
+        `;
       default:
         return `
           background: ${colors.primary};
@@ -56,10 +68,12 @@ export const StyledButton = styled.button<{
     }
   }}
 
-  &:hover:not(:disabled) {
-    background: ${colors.red[3]};
-    color: ${colors.white};
-  }
+  ${({ variant }) => variant === 4 ? '' : `
+    &:hover:not(:disabled) {
+      background: ${colors.blue.dep1};
+      color: ${colors.white};
+    }
+  `}
 
   &:disabled {
     background: ${colors.gray[2]};
