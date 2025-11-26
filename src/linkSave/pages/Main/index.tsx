@@ -158,17 +158,39 @@ export const LinkSaveMain = () => {
     });
 
     if (isLoading) {
-        return <S.Wrapper>
-            <div>
-                <Header
-                    onAddLink={handleAddLinkClick}
-                    onSelectCategory={setActiveCategory}
-                    activeCategory={activeCategory}
-                    onSearch={handleSearch}
-                />
-            </div>
-            <S.LodingText>로딩 중...</S.LodingText>
-        </S.Wrapper>;
+        // Render header + skeleton grid while loading
+        const skeletons = Array.from({ length: 6 }).map((_, i) => (
+            <S.SkeletonCard key={i}>
+                <div className="header">
+                    <div className="date" />
+                    <div className="actions" />
+                </div>
+                <div className="content">
+                    <div className="title" />
+                    <div className="desc" />
+                </div>
+                <div className="tags">
+                    <div className="tag" />
+                    <div className="tag small" />
+                </div>
+            </S.SkeletonCard>
+        ));
+
+        return (
+            <S.Wrapper>
+                <div>
+                    <Header
+                        onAddLink={handleAddLinkClick}
+                        onSelectCategory={setActiveCategory}
+                        activeCategory={activeCategory}
+                        onSearch={handleSearch}
+                    />
+                </div>
+                <S.CardGrid>
+                    {skeletons}
+                </S.CardGrid>
+            </S.Wrapper>
+        );
     }
     if (isError) {
         console.error('링크 조회 중 에러 발생:', error);
