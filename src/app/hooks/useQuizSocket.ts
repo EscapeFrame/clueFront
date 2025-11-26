@@ -77,17 +77,18 @@ export function useQuizSocket({
       debug: (str) => {
         // Avoid leaking Authorization tokens in debug output.
         try {
-          // Attempt to parse STOMP frame debug lines containing headers
-          if (typeof str === 'string' && str.includes('headers')) {
-            // quick redact for Authorization header
-            const redacted = str.replace(/(Authorization:\s*Bearer\s*)([^\s\n\r]+)/i, "$1[REDACTED]");
-            console.log("debug:", redacted);
+          if (typeof str === 'string') {
+            // Replace any Bearer token occurrence and variants like 'Authorization:Bearer...' or 'Authorization: Bearer...'
+            let redactedAll = str.replace(/Bearer\s+[A-Za-z0-9\-_.]+/g, 'Bearer [REDACTED]');
+            redactedAll = redactedAll.replace(/Authorization:\s*Bearer[A-Za-z0-9\-_.]+/gi, 'Authorization: Bearer [REDACTED]');
+            redactedAll = redactedAll.replace(/Authorization:\s*Bearer\s+[A-Za-z0-9\-_.]+/gi, 'Authorization: Bearer [REDACTED]');
+            console.log('debug:', redactedAll);
             return;
           }
         } catch {
           /* ignore */
         }
-        console.log("debug:", str);
+        console.log('debug:', str);
       },
       heartbeatIncoming: 4000, // 서버로부터 4초 간격으로 하트비트 확인
       heartbeatOutgoing: 4000, // 클라이언트가 4초 간격으로 서버에 하트비트 전송
@@ -248,9 +249,11 @@ export function useQuizSocket({
 
         // 대기중이던 send 메시지 플러시
         if (pendingSendQueueRef.current.length) {
+          const accessTokenFlush = localStorage.getItem('accessToken');
+          const flushHeaders = accessTokenFlush ? { Authorization: `Bearer ${accessTokenFlush}` } : undefined;
           pendingSendQueueRef.current.forEach(({ destination, body }) => {
             try {
-              client.publish({ destination, body: JSON.stringify(body) });
+              client.publish({ destination, body: JSON.stringify(body), headers: flushHeaders });
               console.log(
                 "[Quiz WebSocket] Flushed queued message to",
                 destination,
@@ -464,6 +467,9 @@ export function useQuizSocket({
   const send = useCallback((destination: string, body: unknown) => {
     const isClientConnected = clientRef.current?.connected === true;
 
+    const accessTokenSend = localStorage.getItem('accessToken');
+    const sendHeaders = accessTokenSend ? { Authorization: `Bearer ${accessTokenSend}` } : undefined;
+
     if (!clientRef.current || !isClientConnected) {
       console.warn(
         "[Quiz WebSocket] Queueing message until connected:",
@@ -473,7 +479,7 @@ export function useQuizSocket({
       return;
     }
     try {
-      clientRef.current.publish({ destination, body: JSON.stringify(body) });
+      clientRef.current.publish({ destination, body: JSON.stringify(body), headers: sendHeaders });
     } catch (error) {
       console.error("[Quiz WebSocket] Send error:", error);
     }
