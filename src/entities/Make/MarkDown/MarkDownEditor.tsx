@@ -338,12 +338,14 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
               onClick: () => {
                 setMdContent(defaultTemplate);
                 setIsCancelOpen(false);
+                // 취소 확인 시 해당 클래스의 디렉터리로 이동
+                navigate(`/class/${classRoomId}/${directoryId}`);
               },
             },
             { text: '닫기', type: 1, onClick: () => setIsCancelOpen(false) },
           ]}
         >
-          현재 작성 중인 내용이 초기화됩니다.
+          화면을 나가겠습니까?
         </Modal>
       )}
       {/* 이전 */}
