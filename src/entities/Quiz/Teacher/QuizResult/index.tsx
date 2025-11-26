@@ -25,6 +25,9 @@ type Props = {
     question: Question;
     students: StudentAnswer[];
     onSubmit: () => void;
+    statistics?: { [key: number]: number }; // 서버에서 제공하는 통계 (선택지별 인원)
+    explanation?: string; // 설명
+    onShowRanking?: () => void; // 랭킹 보기 콜백
 };
 
 type CharacterKey = "owl" | "haeyul" | "panda" | "ferret" | "I" | "koala";
@@ -39,7 +42,7 @@ const npcColors: Record<CharacterKey, { bg: string; border: string }> = {
 
 const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "ferret", "koala"];
 
-export default function QuizResult({ current, total, question, students, onSubmit }: Props) {
+export default function QuizResult({ current, total, question, students, onSubmit, statistics, explanation, onShowRanking }: Props) {
     const navigate = useNavigate();
     const [showRanking, setShowRanking] = useState(false);
 
@@ -49,10 +52,12 @@ export default function QuizResult({ current, total, question, students, onSubmi
         return <Ranking students={students} currentQuestionId={question.id} onNext={onSubmit} current={current} total={total} handleQuit={handleQuit} />
     }
 
-    // 각 옵션별 응답 수 계산
-    const optionCounts = question.options.map((_, i) =>
-        students.filter(student => student.answers[question.id] === i).length
-    );
+    // 각 옵션별 응답 수 계산 (서버 통계 우선, 없으면 클라이언트에서 계산)
+    const optionCounts = statistics
+        ? question.options.map((_, i) => statistics[i] || 0)
+        : question.options.map((_, i) =>
+            students.filter(student => student.answers[question.id] === i).length
+        );
 
     // 최대값을 기준으로 높이 계산 (최소 100px, 최대 300px)
     const maxCount = Math.max(...optionCounts, 1);
@@ -70,6 +75,11 @@ export default function QuizResult({ current, total, question, students, onSubmi
             <s.CorrectIndex>
                 {question.correctIndex + 1}. {question.options[question.correctIndex]}
             </s.CorrectIndex>
+            {explanation && (
+                <div style={{ margin: '10px 0', padding: '10px', background: '#f0f0f0', borderRadius: '8px' }}>
+                    {explanation}
+                </div>
+            )}
 
             <s.Card>
                 {question.options.map((opt, i) => {
@@ -97,7 +107,13 @@ export default function QuizResult({ current, total, question, students, onSubmi
             </s.Card>
 
             <s.Buttons>
-                <s.RakingButton onClick={() => setShowRanking(true)}>랭킹보기</s.RakingButton>
+                <s.RakingButton onClick={() => {
+                    if (onShowRanking) {
+                        onShowRanking();
+                    } else {
+                        setShowRanking(true);
+                    }
+                }}>랭킹보기</s.RakingButton>
                 <s.SubmitButton onClick={onSubmit}>다음 문제</s.SubmitButton>
             </s.Buttons>
         </s.Container>

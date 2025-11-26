@@ -346,7 +346,7 @@ export function useQuizSocket({
       }
       clientRef.current = null;
     };
-  }, [onConnect, onError, autoSubscribeString, autoSubscribe]);
+  }, [onConnect, onError, autoSubscribeString]);
 
   const subscribe = useCallback(
     (
