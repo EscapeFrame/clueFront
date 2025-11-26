@@ -6,7 +6,7 @@ import * as s from '../styles';
 const DefaultModal: React.FC<ModalProps> = ({ title, children, onClose, isWarning, buttons }) => {
   return (
     <s.Overlay onClick={onClose}>
-      <s.ModalWrapper isWarning={isWarning}>
+      <s.ModalWrapper isWarning={isWarning} onClick={(e) => e.stopPropagation()}>
         <s.Header>
           <s.Title>{title}</s.Title>
           <s.CloseBtn 
