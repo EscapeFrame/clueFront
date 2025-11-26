@@ -348,10 +348,10 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                     </ul>
                   </>
                 ) : (
-                  <p>제출된 파일이 없습니다.</p>
+                  <s.EmptyStateMessage>제출된 파일이 없습니다.</s.EmptyStateMessage>
                 )
               ) : (
-                <p>현재 제출된 내용이 없습니다.</p>
+                <s.EmptyStateMessage>현재 제출된 내용이 없습니다.</s.EmptyStateMessage>
               )}
             </s.ModalBody>
           </s.ModalContent>
