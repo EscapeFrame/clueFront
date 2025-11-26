@@ -4,7 +4,7 @@ import * as s from './styles';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
-import { getMarkDown } from '../../api/class/useMarkdown';
+import { getMarkDown, downloadDocumentAsBlob } from '../../api/class/useMarkdown';
 import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
 // import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -152,7 +152,43 @@ export default function MarkDownViewerPage() {
     const fetchMdData = async () => {
       try {
         const response = await getMarkDown(documentId);
-        setMdContent(response);
+        
+        // 파일명에서 확장자 확인
+        const filename = response.filename || title || `document_${documentId}`;
+        const fileExtension = filename.toLowerCase().split('.').pop();
+        
+        // 다운로드 대상 확장자 목록
+        const downloadableExtensions = ['png', 'jpg', 'jpeg', 'gif', 'pdf', 'zip', 'rar', 'docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt', 'txt', 'csv'];
+        
+        // 다운로드 대상 파일인 경우
+        if (fileExtension && downloadableExtensions.includes(fileExtension)) {
+          // Blob으로 다운로드 처리
+          const result = await downloadDocumentAsBlob(documentId);
+          
+          if (result) {
+            // Blob을 다운로드
+            const url = window.URL.createObjectURL(result.blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = result.filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            
+            setMdContent('# 파일 다운로드\n\n파일이 다운로드되었습니다.');
+            // 다운로드 후 이전 페이지로 돌아가기
+            setTimeout(() => {
+              navigate(-1);
+            }, 500);
+          } else {
+            setMdContent('# Error\n\n파일 다운로드에 실패했습니다.');
+          }
+        } else {
+          // 마크다운 또는 기타 텍스트 파일로 렌더링
+          const content = typeof response.data === 'string' ? response.data : String(response.data);
+          setMdContent(content);
+        }
       } catch (error: unknown) {
         console.error('Failed to fetch markdown:', error);
         setMdContent('# Error\n\nFailed to load document.');
@@ -160,7 +196,7 @@ export default function MarkDownViewerPage() {
     };
 
     fetchMdData();
-  }, [documentId]);
+  }, [documentId, title, navigate]);
 
   useEffect(() => {
     setTitle(location.state?.title || '문서');
