@@ -258,6 +258,9 @@ export function useQuizSocket({
                 "[Quiz WebSocket] Flushed queued message to",
                 destination,
               );
+              console.log(
+                "headers:", flushHeaders
+              );
             } catch (e) {
               console.error(
                 "[Quiz WebSocket] Failed flushing queued message",

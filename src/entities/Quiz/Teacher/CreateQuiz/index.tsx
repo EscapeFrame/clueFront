@@ -1,17 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import ToggleSwitch from "@/entities/UI/ToggleSwitch";
 import * as s from "./styles";
 
 interface CreateQuizProps {
-    onCreate?: (quizData: { title: string; bonus: boolean }) => void;
+    onCreate?: (quizData: {
+        title: string;
+        maxParticipants?: number;
+        questionCount?: number;
+        timePerQuestion?: number;
+        classRoomId?: string;
+        documentId?: string;
+    }) => void;
     onCancel?: () => void;
 }
 
 export default function CreateQuiz({ onCreate }: CreateQuizProps) {
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
-    const [bonus, setBonus] = useState(false);
+    const [maxParticipants, setMaxParticipants] = useState(30);
+    const [questionCount, setQuestionCount] = useState(10);
+    const [timePerQuestion, setTimePerQuestion] = useState(30);
 
     return (
         <s.Container>
@@ -29,13 +37,40 @@ export default function CreateQuiz({ onCreate }: CreateQuizProps) {
 
                 <s.Section>
                     <s.SectionHeader>
-                        <s.SubTitle>보너스 게임</s.SubTitle>
-                        <s.SubExplantion>재미 요소를 추가한 방식이예요.</s.SubExplantion>
+                        <s.SubTitle>최대 참가인원</s.SubTitle>
                     </s.SectionHeader>
-                    <ToggleSwitch
-                        id="bonus-toggle"
-                        checked={bonus}
-                        onChange={(val: boolean) => setBonus(val)}
+                    <s.Input
+                        type="number"
+                        value={maxParticipants}
+                        onChange={(e) => setMaxParticipants(Math.max(1, parseInt(e.target.value) || 1))}
+                        min="1"
+                        max="100"
+                    />
+                </s.Section>
+
+                <s.Section>
+                    <s.SectionHeader>
+                        <s.SubTitle>문항 수</s.SubTitle>
+                    </s.SectionHeader>
+                    <s.Input
+                        type="number"
+                        value={questionCount}
+                        onChange={(e) => setQuestionCount(Math.max(1, parseInt(e.target.value) || 1))}
+                        min="1"
+                        max="50"
+                    />
+                </s.Section>
+
+                <s.Section>
+                    <s.SectionHeader>
+                        <s.SubTitle>문제당 시간 (초)</s.SubTitle>
+                    </s.SectionHeader>
+                    <s.Input
+                        type="number"
+                        value={timePerQuestion}
+                        onChange={(e) => setTimePerQuestion(Math.max(5, parseInt(e.target.value) || 5))}
+                        min="5"
+                        max="300"
                     />
                 </s.Section>
 
@@ -49,7 +84,9 @@ export default function CreateQuiz({ onCreate }: CreateQuizProps) {
 
                             onCreate?.({
                                 title,
-                                bonus,
+                                maxParticipants,
+                                questionCount,
+                                timePerQuestion,
                             });
                         }}>
                         퀴즈 생성
