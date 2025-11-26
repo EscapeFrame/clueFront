@@ -6,3 +6,17 @@ export const CATEGORY_FILTER_MAP: Record<CategoryKey, 'GENERAL' | 'MAJOR' | 'AFT
   '전공과목': 'MAJOR',
   '방과후': 'AFTER',
 };
+
+export const getCategoryLabel = (key?: string | null) => {
+  if (!key) return null;
+  switch (key) {
+    case 'GENERAL':
+      return '일반과목';
+    case 'MAJOR':
+      return '전공과목';
+    case 'AFTER':
+      return '방과후';
+    default:
+      return key;
+  }
+};

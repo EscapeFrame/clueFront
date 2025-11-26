@@ -249,6 +249,16 @@ export const EditorWrapper = styled.div`
     width: 17px !important;
     height: 17px !important;
   }
+  
+    /* 사용자 요청: 에디터 입력 및 코드 라인 폰트 크기 증가 */
+    .w-md-editor-text-input,
+    .w-md-editor-text-pre .code-line {
+      font-size: 1.3rem !important; /* 원하는 크기로 조절 */
+      line-height: 1.3rem !important; /* 줄 높이도 함께 조절 */
+    }
+    .w-md-editor-text-pre .code-line {
+      display: block; /* line-height가 올바르게 적용되도록 설정 */
+    }
 `;
 
 export const SaveWrapper = styled.div`

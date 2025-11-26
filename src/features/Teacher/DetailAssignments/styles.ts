@@ -1,8 +1,9 @@
-import styled from '@emotion/styled';
-import { fonts } from '@/shared/theme/font.styles';
-import { colors } from '@/shared/theme/theme.styles';
+import styled from "@emotion/styled";
+import { fonts } from "@/shared/theme/font.styles";
+import { colors } from "@/shared/theme/theme.styles";
 
 export const Container = styled.div`
+  min-height: 100vh;
   padding: 2rem 14rem;
   background-color: ${colors.white};
   color: ${colors.black};
@@ -278,7 +279,8 @@ export const FileIcon = styled.div`
 export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
   width: 100%;
   height: 150px;
-  border: 2px dashed ${props => props.isDragOver ? colors.primary : colors.gray[4]};
+  border: 2px dashed
+    ${(props) => (props.isDragOver ? colors.primary : colors.gray[4])};
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;

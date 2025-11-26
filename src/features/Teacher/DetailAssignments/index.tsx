@@ -260,9 +260,9 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
         setTempFiles(prev => prev.filter(f => f.id !== fileId));
     };
 
-    if (loading) return <p>로딩중...</p>;
-    if (error) return <p>{error}</p>;
-    if (!assignment) return <p>과제 정보를 찾을 수 없습니다.</p>;
+    if (loading) return <s.Container>로딩중...</s.Container>;
+    if (error) return <s.Container>{error}</s.Container>;
+    if (!assignment) return <s.Container>과제 정보를 찾을 수 없습니다.</s.Container>;
 
     const { title, description, files, links, endDate, submittedCount, totalCount } = assignment;
 

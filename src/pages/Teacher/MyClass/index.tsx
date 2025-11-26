@@ -2,7 +2,7 @@ import * as s from './styles';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
-import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector/category';
+import { CategoryKey, CATEGORY_FILTER_MAP, getCategoryLabel } from '@/features/Common/Class/TabSelector/category';
 
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
 import { FiPlus } from "react-icons/fi";
@@ -71,7 +71,7 @@ export default function MyClass() {
                 </s.CardHeader>
 
                 <s.InfoContent>
-                  {cls.sort || '-'} | {cls.target || '-'}
+                  {getCategoryLabel(cls.sort) || '-'} | {cls.target || '-'}
                 </s.InfoContent>
 
                 <s.CardDescription>{cls.description}</s.CardDescription>
