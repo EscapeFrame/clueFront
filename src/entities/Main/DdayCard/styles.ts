@@ -71,11 +71,8 @@ export const DDayText = styled.div<{ isUrgent: boolean }>`
   ${fonts.P2}
   color: ${({ isUrgent }) =>
     isUrgent ? colors.red[3] : colors.white};
-  background: ${({isUrgent}) => isUrgent ? colors.gray[2] : colors.primary};
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  border: ${({ isUrgent }) =>
-    isUrgent ? `1px solid ${colors.red[1]}` : "none"};
   display: inline-block;
 
 

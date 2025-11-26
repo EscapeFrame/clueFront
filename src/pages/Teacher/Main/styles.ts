@@ -8,14 +8,13 @@ export const Container = styled.div`
   gap: 24px;
   overflow-y: auto;
 
-  /* 반응형 패딩: 네브바와 동일한 기준 사용 */
-  @media (max-width: 868px) {
-    padding: 1rem 1.5rem;
+  @media (max-width: 1024px) {
+    padding: 1rem 2rem;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 868px) {
     padding: 1rem 1rem;
-    display: block;
+    flex-direction: column;
   }
 `;
 
@@ -25,6 +24,10 @@ export const Left = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media (max-width: 868px) {
+    width: 100%;
+  }
 `;
 
 export const Right = styled.div`
@@ -35,13 +38,13 @@ export const Right = styled.div`
   height: 100vh;
   background-color: #f7f7f7;
   right: 0;
+  display: flex;
+  flex-direction: column;
 
-  @media (max-width: 768px) {
+  @media (max-width: 868px) {
     width: 100%;
-    height: 100%;
-    border-radius: 24px;
-    position: none;
-    top: auto;
-    left: 0;
+    min-width: unset;
+    height: auto;
+    margin-left: 0;
   }
 `;

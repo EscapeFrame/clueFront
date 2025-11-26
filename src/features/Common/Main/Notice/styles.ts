@@ -14,13 +14,19 @@ export const TopContainer = styled.div`
 
   @media (max-width: 1200px) {
     max-width: 100%;
+    padding: 1.75rem;
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    height: auto;
+    max-width: 100%;
     border-radius: 16px;
     padding: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 `;
 
@@ -35,6 +41,13 @@ export const InventoryHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 `;
 
 export const Title = styled.div`
@@ -43,7 +56,11 @@ export const Title = styled.div`
   margin: 0;
 
   @media (max-width: 768px) {
-    ${fonts.P4};
+    ${fonts.P4}
+  }
+
+  @media (max-width: 480px) {
+    ${fonts.P3}
   }
 `;
 
@@ -54,7 +71,11 @@ export const Explain = styled.p`
   margin: 0;
 
   @media (max-width: 768px) {
-    ${fonts.P1};
+    ${fonts.P1}
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.875rem;
   }
 `;
 
@@ -63,9 +84,16 @@ export const Row = styled.div`
   width: 100%;
   margin-top: 12px;
   display: grid;
+  grid-template-columns: 1fr;
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 16px;
+    margin-top: 12px;
   }
 `;
 
@@ -76,9 +104,23 @@ export const AddButton = styled.button`
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
 
   &:hover {
     color: ${colors.black};
+    background-color: ${colors.gray[1]};
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P4}
+    padding: 0.4rem 0.8rem;
+  }
+
+  @media (max-width: 480px) {
+    ${fonts.P3}
+    padding: 0.3rem 0.6rem;
+    align-self: flex-end;
   }
 `;
 
@@ -88,6 +130,16 @@ export const ModalDate = styled.div`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.gray[400]};
   margin-bottom: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
 `;
 
 export const ModalContent = styled.div`
@@ -95,7 +147,19 @@ export const ModalContent = styled.div`
   font-size: 16px;
   line-height: 1.6;
   color: ${({ theme }) => theme.colors.gray[300]};
-  white-space: pre-wrap; /* API 응답의 줄바꿈(\n)을 그대로 표시합니다. */
-  word-break: break-all; /* 긴 영단어나 URL이 영역을 벗어나지 않도록 합니다. */
+  white-space: pre-wrap;
+  word-break: break-word;
   min-height: 150px;
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 120px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 100px;
+  }
 `;

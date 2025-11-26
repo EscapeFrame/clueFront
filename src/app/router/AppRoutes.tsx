@@ -46,7 +46,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<STUHome />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
@@ -65,9 +65,9 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
           <Route path="/class/:classRoomId" element={<TCHClass />} />
           <Route path="/class/:classRoomId/:documentId" element={<MarkDownViewerPage />} />
           <Route path="/class/make" element={<TCHMakeClass />} />
-          <Route path="/timeline" element={<AddTimeLine />} />
+          {/* <Route path="/timeline" element={<AddTimeLine />} /> */}
           <Route path="/class/:classRoomId/make/task" element={<TCHMakeTask />} />
-          <Route path="/class/make/score" element={<TCHMakeScorecard />} />
+          {/* <Route path="/class/make/score" element={<TCHMakeScorecard />} /> */}
           <Route path="/class/:classRoomId/:directoryId/make/lesson/markdown" element={<TCHMarkDown />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson/markdown/problem" element={<GenerateProblem />} />
           <Route path="/class/:classRoomId/:directoryId/make/lesson" element={<TCHMakeLesson />} />
