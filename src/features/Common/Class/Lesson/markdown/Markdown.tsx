@@ -153,17 +153,20 @@ export default function MarkDownViewerPage() {
       try {
         const response = await getMarkDown(documentId);
         
-        // 응답이 문자열이고 마크다운 형식인지 확인
-        if (typeof response === 'string') {
-          setMdContent(response);
+        // 파일명에서 확장자 확인
+        const filename = response.filename || title || `document_${documentId}`;
+        const fileExtension = filename.toLowerCase().split('.').pop();
+        
+        // .md 확장자인 경우에만 마크다운으로 렌더링
+        if (fileExtension === 'md' && typeof response.data === 'string') {
+          setMdContent(response.data);
         } else {
           // 마크다운이 아닌 경우 다운로드 처리
-          const fileName = title || `document_${documentId}`;
-          const success = await downloadDocument(documentId, fileName);
+          const success = await downloadDocument(documentId, filename);
           
           if (success) {
             setMdContent('# 파일 다운로드\n\n파일이 다운로드되었습니다.');
-            // 다운로드 후 이전 페이지로 돌아가기 (선택사항)
+            // 다운로드 후 이전 페이지로 돌아가기
             setTimeout(() => {
               navigate(-1);
             }, 500);
