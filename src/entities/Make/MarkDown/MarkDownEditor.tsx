@@ -297,7 +297,7 @@ export default function MarkDwonEditor({ classRoomId, directoryId }: { classRoom
         </s.FileUploadWrapper>
         <s.EditorWrapper data-color-mode="light">
           <MDEditor
-            height="200%"
+            height="100%"
             value={mdContent}
             autoFocus={true}
             style={{ whiteSpace: 'pre-wrap' }}

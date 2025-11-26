@@ -10,8 +10,8 @@ export default function MarkDown() {
     const param = useParams<Params>();
     const { classRoomId, directoryId } = param;
 
-    if (!classRoomId) return null;
-    if (!directoryId) return null;
+    // if (!classRoomId) return null;
+    // if (!directoryId) return null;
 
     console.log(directoryId);
     return (
