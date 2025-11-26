@@ -5,7 +5,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
 import { getMarkDown } from '../../api/class/useMarkdown';
-import { getLessonDirectories } from '@/features/Common/Class/api/useLesson';
+import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
 // import { IoChatbubbleOutline } from 'react-icons/io5';
 // import { AiOutlineQuestionCircle } from 'react-icons/ai';
@@ -22,6 +22,10 @@ interface Directory {
   documentList?: Document[];
 }
 
+interface DirectoryResponse {
+  directoryList: Directory[];
+}
+
 const Sidebar = () => {
   const { classRoomId, documentId } = useParams<{ classRoomId: string; documentId: string }>();
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -30,30 +34,38 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!classRoomId) {
-      console.log('[Sidebar] classRoomId가 없습니다.');
-      return;
-    }
+    if (classRoomId) {
+      const cachedDirectories = sessionStorage.getItem(`lessonDirectories-${classRoomId}`);
 
-    console.log('[Sidebar] 디렉토리 목록 로딩 시작:', classRoomId);
-    getLessonDirectories(classRoomId)
-      .then((res) => {
-        console.log('[Sidebar] 디렉토리 목록 응답:', res);
-        setDirectories(res.directoryList || []);
-        // 첫 번째 디렉토리 자동 열기
-        if (res.directoryList && res.directoryList.length > 0) {
-          setOpenDirs(new Set([res.directoryList[0].directoryId]));
+      const processDirectories = (directoryList: Directory[]) => {
+        setDirectories(directoryList || []);
+        const currentDir = directoryList?.find((dir) =>
+          dir.documentList?.some((doc) => String(doc.documentId) === documentId));
+
+        if (currentDir?.directoryId) {
+          setOpenDirs((prev) => new Set(prev).add(currentDir.directoryId));
         }
-      })
-      .catch((err) => {
-        console.error('[Sidebar] 디렉토리 목록 에러:', err);
-        console.error('[Sidebar] 에러 상세:', {
-          message: err.message,
-          response: err.response,
-          status: err.response?.status,
+      };
+
+      if (cachedDirectories) {
+        try {
+          const parsedData = JSON.parse(cachedDirectories);
+          processDirectories(parsedData);
+        } catch (e) {
+          console.error("Failed to parse cached directories", e);
+          // 파싱 실패 시 API 호출
+          qre(classRoomId).then((data: DirectoryResponse) => {
+            sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(data.directoryList || []));
+            processDirectories(data.directoryList);
+          });
+        }
+      } else {
+        qre(classRoomId).then((data: DirectoryResponse) => {
+          sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(data.directoryList || []));
+          processDirectories(data.directoryList);
         });
-        setDirectories([]);
-      });
+      }
+    }
   }, [classRoomId, documentId]);
 
   const toggleDir = (dirId: number) => {
@@ -68,12 +80,12 @@ const Sidebar = () => {
   return (
     <s.Sidebar>
       <s.TopTabs>
-        <s.TabButton
-          active={activeTab === 'curriculum'}
+        <s.TabButton 
+          active={activeTab === 'curriculum'} 
           onClick={() => setActiveTab('curriculum')}
         >
           <IoListOutline />
-          <s.TopButton>커리큘럼</s.TopButton>
+          <span>커리큘럼</span>
         </s.TabButton>
         {/* <s.TabButton 
           active={activeTab === 'chat'} 
@@ -134,30 +146,20 @@ export default function MarkDownViewerPage() {
   const [title, setTitle] = useState(location.state?.title || '문서');
 
   useEffect(() => {
-    if (!documentId) {
-      console.log('[Markdown] documentId가 없습니다.');
-      return;
-    }
+    if (!documentId) return;
 
-    console.log('[Markdown] 문서 로딩 시작:', documentId);
-    getMarkDown(documentId)
-      .then((res) => {
-        console.log('[Markdown] API 응답:', res);
-        setMdContent(res.content || '');
-        if (res.title) {
-          setTitle(res.title);
-        }
-      })
-      .catch((err) => {
-        console.error('[Markdown] API 에러:', err);
-        console.error('[Markdown] 에러 상세:', {
-          message: err.message,
-          response: err.response,
-          status: err.response?.status,
-        });
-        setMdContent('마크다운을 불러오는데 실패했습니다.');
-      });
-  }, [documentId, classRoomId]);
+    const fetchMdData = async () => {
+      try {
+        const response = await getMarkDown(documentId);
+        setMdContent(response);
+      } catch (error: unknown) {
+        console.error('Failed to fetch markdown:', error);
+        setMdContent('# Error\n\nFailed to load document.');
+      }
+    };
+
+    fetchMdData();
+  }, [documentId]);
 
   useEffect(() => {
     setTitle(location.state?.title || '문서');
