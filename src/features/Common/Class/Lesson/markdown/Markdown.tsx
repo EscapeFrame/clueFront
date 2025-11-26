@@ -30,10 +30,15 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!classRoomId) return;
+    if (!classRoomId) {
+      console.log('[Sidebar] classRoomId가 없습니다.');
+      return;
+    }
 
+    console.log('[Sidebar] 디렉토리 목록 로딩 시작:', classRoomId);
     getLessonDirectories(classRoomId)
       .then((res) => {
+        console.log('[Sidebar] 디렉토리 목록 응답:', res);
         setDirectories(res.directoryList || []);
         // 첫 번째 디렉토리 자동 열기
         if (res.directoryList && res.directoryList.length > 0) {
@@ -41,7 +46,12 @@ const Sidebar = () => {
         }
       })
       .catch((err) => {
-        console.error('Failed to fetch directories:', err);
+        console.error('[Sidebar] 디렉토리 목록 에러:', err);
+        console.error('[Sidebar] 에러 상세:', {
+          message: err.message,
+          response: err.response,
+          status: err.response?.status,
+        });
         setDirectories([]);
       });
   }, [classRoomId, documentId]);
@@ -124,17 +134,27 @@ export default function MarkDownViewerPage() {
   const [title, setTitle] = useState(location.state?.title || '문서');
 
   useEffect(() => {
-    if (!documentId) return;
+    if (!documentId) {
+      console.log('[Markdown] documentId가 없습니다.');
+      return;
+    }
 
+    console.log('[Markdown] 문서 로딩 시작:', documentId);
     getMarkDown(documentId)
       .then((res) => {
+        console.log('[Markdown] API 응답:', res);
         setMdContent(res.content || '');
         if (res.title) {
           setTitle(res.title);
         }
       })
       .catch((err) => {
-        console.error('Failed to fetch markdown:', err);
+        console.error('[Markdown] API 에러:', err);
+        console.error('[Markdown] 에러 상세:', {
+          message: err.message,
+          response: err.response,
+          status: err.response?.status,
+        });
         setMdContent('마크다운을 불러오는데 실패했습니다.');
       });
   }, [documentId, classRoomId]);
