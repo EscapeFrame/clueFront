@@ -36,11 +36,11 @@ export default function TCHQuiz() {
     });
 
     const { connected, send, subscribe } = useQuizSocket();
-    
+
     // URL 파라미터에서 classRoomId와 documentId 가져오기
     // 예: /class/:classRoomId/:documentId/quiz
-    const classRoomId = params.classRoomId ?? undefined;
-    const documentId = params.documentId ?? undefined;
+    const classRoomId = params.classRoomId;
+    const documentId = params.documentId;
 
     type CreatePayload = {
         title: string;

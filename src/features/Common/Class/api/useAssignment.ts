@@ -131,7 +131,7 @@ export const AssignmentsApi = {
     assignmentId: string | number
   ): Promise<{ submitted: boolean } | null> => {
     try {
-      const res = await Customapi.get<{ submitted: boolean }>(`api/submissions/${assignmentId}/check`);
+      const res = await Customapi.get<{ submitted: boolean }>(`/api/submissions/${assignmentId}/check`);
       if (res.status < 200 || res.status >= 300) {
         console.error(`과제 제출 여부 조회 실패: status ${res.status}`);
         return null;
