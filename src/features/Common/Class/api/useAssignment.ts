@@ -59,7 +59,7 @@ export const AssignmentsApi = {
     return null;
     }
   },
-  delete: async (assignmentId: number): Promise<AssignmentDeleteResponse | null> => {
+  delete: async (assignmentId: number|string): Promise<AssignmentDeleteResponse | null> => {
     try {
       const res = await Customapi.delete<AssignmentDeleteResponse>(`${API_BASE_URL}/${assignmentId}`);
       if (res.status < 200 || res.status >= 300) {
