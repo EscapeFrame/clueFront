@@ -57,7 +57,8 @@ export const StyledButton = styled.button<{
   }}
 
   &:hover:not(:disabled) {
-    background: ${colors.blue.dep2};
+    background: ${colors.red[3]};
+    color: ${colors.white};
   }
 
   &:disabled {
