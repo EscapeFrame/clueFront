@@ -118,7 +118,7 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
     return (
         <s.Container>
             {/* 좌측 사이드바 (버튼형 메뉴) */}
-            {!(isGenerating || isProcessing) && (
+            {!(isGenerating || isProcessing || isSending) && (
                 <s.Sidebar>
                     <s.SideBox>
                         <s.MenuList>
@@ -141,7 +141,7 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
             {/* 메인 컨텐츠 */}
             <s.Content>
                 <s.PageTitle>수업 자료 편집</s.PageTitle>
-                {(isGenerating || isProcessing) ? (
+                {(isGenerating || isProcessing || isSending) ? (
                     <s.SpinnerOverlay>
                         <s.Spinner />
                     </s.SpinnerOverlay>
