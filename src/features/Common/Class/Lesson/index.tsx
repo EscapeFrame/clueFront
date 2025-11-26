@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { IoDocumentOutline } from "react-icons/io5";
 import { IoCodeSlashOutline } from "react-icons/io5";
@@ -18,6 +18,8 @@ import { deleteDirectory, deleteDocument, Directory as ApiDirectory } from '@/en
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isAIFlowMode = searchParams.get('mode') === 'ai-flow';
   const user = useRecoilValue(userState);
 
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -230,7 +232,14 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                       <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDirectory(dir.id, e); }}>
                         <IoClose size={16} />
                       </s.DeleteIcon>
-                      <s.AddSub onClick={(e) => { e.stopPropagation(); navigate(`${dir.id}/make/lesson`); }}>+</s.AddSub>
+                      <s.AddSub onClick={(e) => { 
+                        e.stopPropagation(); 
+                        if (isAIFlowMode) {
+                          navigate(`${dir.id}/make/lesson/MakeClassMaterials`);
+                        } else {
+                          navigate(`${dir.id}/make/lesson`);
+                        }
+                      }}>+</s.AddSub>
                     </>
                   )}
                   <s.Icon>{isExpanded ? <IoIosArrowUp /> : <IoIosArrowDown />}</s.Icon>
@@ -265,7 +274,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         })}
       </s.Section>
       {/* 선생님만 디렉토리 추가 가능: 인라인으로 DirectorySelect 사용 */}
-      {isTeacher && (
+      {isTeacher && !isAIFlowMode && (
         <>
           {!isAddingDir && (
             <s.AddButton onClick={() => setIsAddingDir(true)}>

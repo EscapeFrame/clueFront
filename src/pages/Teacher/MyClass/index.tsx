@@ -1,6 +1,6 @@
 import * as s from './styles';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
 import { CategoryKey, CATEGORY_FILTER_MAP, getCategoryLabel } from '@/features/Common/Class/TabSelector/category';
 
@@ -12,6 +12,8 @@ import { FaRegClock } from "react-icons/fa6";
 
 export default function MyClass() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isAIFlowMode = searchParams.get('mode') === 'ai-flow';
   const { myClasses, error } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
@@ -24,7 +26,13 @@ export default function MyClass() {
     return tabMatch && searchMatch;
   });
 
-  const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
+  const handleViewClass = (id: string | number) => {
+    if (isAIFlowMode) {
+      navigate(`/class/${id}?mode=ai-flow`);
+    } else {
+      navigate(`/class/${id}`);
+    }
+  };
 
   const getIconByCategory = (categoryKey: string) => {
     switch (categoryKey) {
@@ -41,6 +49,18 @@ export default function MyClass() {
 
   return (
     <s.Container>
+      {/* AI Flow 모드 배너 */}
+      {isAIFlowMode && (
+        <s.AIFlowBanner>
+          <s.BannerContent>
+            <s.BannerTitle>AI 수업 생성 모드</s.BannerTitle>
+            <s.BannerDescription>
+              학습실을 선택한 후, 디렉토리의 + 버튼을 눌러 AI로 자료를 생성하세요
+            </s.BannerDescription>
+          </s.BannerContent>
+        </s.AIFlowBanner>
+      )}
+
       <s.HeaderSection>
         <s.HeaderContent>
           <s.TitleFont>나의 학습실</s.TitleFont>

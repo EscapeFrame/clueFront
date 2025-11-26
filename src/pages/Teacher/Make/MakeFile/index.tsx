@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from 'react-router-dom';
 import Customapi from '@/shared/config/api';
 import * as s from './styles';
 import Button from "@/entities/UI/Button";
@@ -11,8 +11,19 @@ const MakeFile: React.FC = () => {
     const [presentationId, setPresentationId] = useState<string | null>(null);
     const [title, setTitle] = useState<string>("");
     const params = useParams();
+    const navigate = useNavigate();
     const classRoomId = params.classRoomId ?? '';
     const directoryId = params.directoryId ?? '';
+
+    useEffect(() => {
+        if (presentationId) {
+            const timer = setTimeout(() => {
+                navigate(`/class/${classRoomId}`);
+            }, 500);
+
+            return () => clearTimeout(timer);
+        }
+    }, [presentationId, navigate, classRoomId]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setError(null);
