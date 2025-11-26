@@ -46,7 +46,7 @@ export const AppRoutes = ({ role, loading }: AppRoutesProps) => {
   if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="/login" element={<STUHome />} />
+        <Route path="/login" element={<TCHHome />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

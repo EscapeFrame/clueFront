@@ -18,7 +18,7 @@ export const DropdownButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  ${fonts.P3}
+  font-size: 20px;
   color: ${colors.black};
   padding: 0.5rem;
 
@@ -44,7 +44,7 @@ export const ProfileImage = styled.img`
 `;
 
 export const ProfileName = styled.div`
-  ${fonts.P2}
+  ${fonts.P3}
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
