@@ -335,11 +335,22 @@ export function AssignmentCard({
                       if (att.type === 'FILE') {
                         try {
                           // call assignment attachment download endpoint
-                          const res = await fetch(`/api/assignments/${att.assignmentAttachmentId}/download`, {
+                          const token = localStorage.getItem('accessToken');
+                          const downloadUrl = `/api/assignments/${att.assignmentAttachmentId}/download`;
+                          console.log('download request', { url: downloadUrl, hasToken: !!token });
+                          const res = await fetch(downloadUrl, {
                             method: 'GET',
-                            headers: { Accept: '*/*' },
+                            headers: { Accept: '*/*', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+                            credentials: 'include', // include cookies (JSESSIONID) if server expects session auth
                           });
-                          if (!res.ok) throw new Error('네트워크 응답 실패');
+
+                          console.log('download response', res.status, res.statusText);
+                          if (!res.ok) {
+                            let body = '';
+                            try { body = await res.text(); } catch { /* ignore */ }
+                            console.error('download error body:', body);
+                            throw new Error('네트워크 응답 실패');
+                          }
                           const blob = await res.blob();
                           // try to get filename from headers
                           const cd = res.headers.get('content-disposition');
