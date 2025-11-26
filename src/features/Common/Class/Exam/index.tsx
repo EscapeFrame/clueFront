@@ -37,18 +37,19 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
 
   return (
     <s.Container>
-      <s.SectionHeader>
-        <s.LeftGroup>
-          <s.Description>※ 디렉토리 제목 클릭 시 수정 가능합니다.</s.Description>
-        </s.LeftGroup>
-        {isTeacher &&
+      {isTeacher &&
+        <s.SectionHeader>
+          <s.LeftGroup>
+            <s.Description>※ 디렉토리 제목 클릭 시 수정 가능합니다.</s.Description>
+          </s.LeftGroup>
+
           <s.RightGroup>
             <s.SettingButton onClick={() => navigate("/class/task")}> {/* 내용 변경해야하는 부분 */}
               학습실 관리
             </s.SettingButton>
           </s.RightGroup>
-        }
-      </s.SectionHeader>
+        </s.SectionHeader>
+      }
 
       {exams.length === 0 ? (
         <s.ErrorText>현재 등록된 시험이 없습니다.</s.ErrorText>
@@ -113,8 +114,8 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
 
             {isTeacher && (
               <s.ModalFooter>
-                <s.Button>Edit</s.Button>
-                <s.Button>Delete</s.Button>
+                <s.Button>수정</s.Button>
+                <s.ButtonDelete>삭제</s.ButtonDelete>
               </s.ModalFooter>
             )}
           </s.ModalContent>

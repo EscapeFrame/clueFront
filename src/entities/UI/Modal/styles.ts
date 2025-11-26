@@ -54,13 +54,11 @@ export const CloseBtn = styled.span`
   justify-content: center;
   transition: background-color 0.2s ease, transform 0.2s ease;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
   flex-shrink: 0;
 
   svg {
-    width: 14px;
-    height: 14px;
+    width: 24px;
+    height: 24px;
   }
 
   &:hover {

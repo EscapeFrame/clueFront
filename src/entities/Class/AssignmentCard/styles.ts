@@ -14,7 +14,7 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
     variant === 'completed' ? colors.primary : colors.red[3]};
   background-color: ${({ variant }) =>
     variant === 'completed' ? colors.blue.light1 : colors.red[1]};
-  border: 2px solid ${({ variant }) =>
+  border: 1px solid ${({ variant }) =>
     variant === 'completed' ? `${colors.blue.light4}` : `${colors.red[3]}`};
 
   @media (max-width: 1200px) {
@@ -29,7 +29,7 @@ export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
 // 카드 레이아웃
 export const CardContainer = styled.div`
   border-radius: 0.5rem;
-  background-color: ${colors.white}
+  background-color: ${colors.white};
   border: 1px solid ${colors.gray[3]};
   padding: 1rem;
   transition: box-shadow 0.2s ease-in-out;
@@ -57,12 +57,10 @@ export const CardHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  gap: 1rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
   }
 `;
 
@@ -72,7 +70,6 @@ export const Title = styled.div`
   font-weight: 600;
   margin: 0;
   word-break: break-word;
-  margin-bottom: 10px;
 
   @media (max-width: 1200px) {
     ${fonts.P2}
@@ -86,7 +83,7 @@ export const Title = styled.div`
 export const InfoSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 5px;
   flex-grow: 1;
 
   @media (max-width: 768px) {
@@ -105,6 +102,9 @@ export const InfoItem = styled.div`
   svg {
     width: 1rem;
     height: 1rem;
+    @media (max-width: 1200px) {
+      display: none; // 1200px 밑에서 아이콘 숨김
+    }
   }
 
   @media (max-width: 1200px) {
@@ -134,7 +134,7 @@ export const FileItem = styled.div`
   align-items: center;
   padding: 0.5rem;
   border-radius: 8px;
-  background-color: #f5f5f5;
+  background-color: ${colors.gray[1]};
   border: 1px solid ${colors.gray[2]};
 
   @media (max-width: 1200px) {
@@ -152,8 +152,10 @@ export const FileInfoContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
 
   svg {
+    flex-shrink: 0; // 아이콘이 무조건 보이도록
     width: 1rem;
     height: 1rem;
   }
@@ -166,13 +168,28 @@ export const FileInfoContainer = styled.div`
 export const FileNameText = styled.div`
   ${fonts.P1}
   color: ${colors.black};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
 
-  @media (max-width: 1200px) {
-    ${fonts.P2}
-  }
+  position: relative;
 
-  @media (max-width: 768px) {
-    ${fonts.P3}
+  &:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    white-space: normal;
+    background: ${colors.gray[0]};
+    color: ${colors.black};
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 10;
+    width: max-content;
+    max-width: 300px;
   }
 `;
 

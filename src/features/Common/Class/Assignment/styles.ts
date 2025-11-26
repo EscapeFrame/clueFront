@@ -12,117 +12,11 @@ export const Container = styled.div`
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
+  width: 100%;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
   }
-`;
-
-export const Card = styled.div`
-  background: ${colors.white};
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  }
-
-`;
-
-export const Header = styled.div`
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const Title = styled.h3`
-  margin: 0;
-  ${fonts.P4};
-  font-weight: 600;
-  color: ${colors.black};
-`;
-
-export const Status = styled.span<StatusProps>`
-   ${fonts.P2};
-  font-weight: 700;
-  color: ${({ $isSubmitted }) => ($isSubmitted ? colors.primary : colors.red[3])};
-  border: 1.5px solid ${({ $isSubmitted }) => ($isSubmitted ? colors.primary : colors.red[3])};
-  padding: 2px 8px;
-  border-radius: 12px;
-  user-select: none;
-
-  @media (max-width: 768px) {
-    padding: 1px 6px;
-  };
-`;
-
-export const Body = styled.div`
-  padding: 0 16px 12px 16px;
-  ${fonts.P2};
-  color: ${colors.gray[4]};
-`;
-
-export const TimeInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-weight: 500;
-
-  .deadline {
-    color: ${colors.gray[4]};
-  }
-
-  .remaining {
-    color: ${colors.gray[3]};
-  }
-`;
-
-export const Footer = styled.div`
-  padding: 8px 16px 16px 16px;
-
-  @media (max-width: 768px) {
-    padding: 8px 12px 12px 12px;
-  }
-`;
-
-export const ActionButtons = styled.div`
-  display: flex;
-  gap: 12px;
-
-  button {
-    flex: 1;
-  }
-`;
-
-export const DetailHeading = styled.h4`
-  ${fonts.P3};
-  font-weight: 700;
-  margin: 16px 0 8px;
-`;
-
-export const DetailText = styled.p`
-  margin: 4px 0;
-  ${fonts.P3};
-  color: ${colors.black};;
-
-  strong {
-    font-weight: 700;
-  }
-`;
-
-export const DetailSection = styled.div`
-  padding: 8px 0;
-`;
-
-export const AddButton = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
 `;
