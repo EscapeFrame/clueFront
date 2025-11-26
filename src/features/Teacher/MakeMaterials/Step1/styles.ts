@@ -164,3 +164,51 @@ export const Button = styled.button<{ variant: "primary" | "secondary" }>`
   `}
 `;
 
+export const SpinnerOverlay = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1.5rem;
+`;
+
+export const Spinner = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 6px solid rgba(37,99,235,0.12);
+  border-top-color: rgba(37,99,235,0.9);
+  animation: spin 1s cubic-bezier(.4,.0,.2,1) infinite;
+  box-shadow: 0 6px 20px rgba(37,99,235,0.08);
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    background: #2563EB;
+    border-radius: 50%;
+    box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: .9; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: .65; }
+    100% { transform: translate(-50%, -50%) scale(0.9); opacity: .9; }
+  }
+`;
+
+export const LoadingText = styled.p`
+  font-size: 1rem;
+  font-weight: 500;
+  color: ${colors.gray[4]};
+`;
