@@ -55,11 +55,20 @@ export default function TCHQuiz() {
     useEffect(() => {
         if (!subscribe || !connected) return;
 
+        console.log("[TCH Quiz] Setting up /topic/quiz/rooms subscription");
+
         const sub = subscribe("/topic/quiz/rooms", (message: unknown) => {
-            const msg = message as { roomCode?: string };
+            console.log("[TCH Quiz] ✅ Received room creation message:", message);
+            const msg = message as { roomCode?: string; status?: string };
+            console.log("[TCH Quiz] roomCode:", msg?.roomCode);
+            console.log("[TCH Quiz] status:", msg?.status);
+            
             if (msg?.roomCode) {
+                console.log("[TCH Quiz] Setting roomCode and moving to waiting");
                 setRoomCode(msg.roomCode);
                 setStep("waiting");
+            } else {
+                console.warn("[TCH Quiz] ⚠️ No roomCode in message!");
             }
         });
 
