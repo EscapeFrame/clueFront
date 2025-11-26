@@ -56,6 +56,6 @@ export const TabButton = styled.button<TabButtonProps>`
 
   @media (max-width: 768px) {
     padding: 0.6rem 1rem;
-    ${fonts.P1};
+    ${fonts.P2};
   }
 `;
