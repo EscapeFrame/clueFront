@@ -18,7 +18,7 @@ export const DropdownButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  ${fonts.P3}
+  font-size: 20px;
   color: ${colors.black};
   padding: 0.5rem;
 
@@ -44,7 +44,7 @@ export const ProfileImage = styled.img`
 `;
 
 export const ProfileName = styled.div`
-  ${fonts.P2}
+  ${fonts.P3}
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -122,6 +122,22 @@ export const ModalButton = styled.button`
 
   &:hover {
     background-color: ${colors.gray[1]};
+  }
+`;
+
+export const ModalButtonDanger = styled.button`
+  ${fonts.P2}
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid ${colors.red[3]};
+  background-color: ${colors.red[1]};
+  color: ${colors.red[3]};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${colors.red[3]};
+    color: ${colors.white};
   }
 `;
 

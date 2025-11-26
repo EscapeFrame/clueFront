@@ -16,6 +16,8 @@ import {
 import { getStudentSubmissionDetail } from '../api';
 import AttachmentBox from '@/entities/UI/Attachment';
 import AddModal from '@/entities/UI/AddModal';
+import Customapi from '@/shared/config/api';
+import { AxiosError } from 'axios';
 
 interface Attachment {
   id: string;
@@ -327,7 +329,68 @@ export function AssignmentCard({
             ) : teacherAttachments.length > 0 ? (
               <s.FileListSection>
                 {teacherAttachments.map((att: TeacherAttachment, index) => (
-                  <s.FileItem key={index}>
+                  <s.FileItem 
+                    key={index}
+                    style={{ cursor: 'pointer' }}
+                    onClick={async () => {
+                      if (att.type === 'FILE') {
+                        try {
+                          console.log('다운로드 시작:', att.assignmentAttachmentId);
+                          
+                          // Customapi를 사용하여 파일 다운로드
+                          const response = await Customapi.get(
+                            `/api/assignments/${att.assignmentAttachmentId}/download`,
+                            {
+                              responseType: 'blob', // 중요: blob 타입으로 응답 받기
+                            }
+                          );
+                          
+                          console.log('다운로드 성공:', response.status, response.headers);
+                          
+                          // 파일명 추출
+                          const contentDisposition = response.headers['content-disposition'];
+                          let filename = att.originalFileName || 'download';
+                          
+                          if (contentDisposition) {
+                            const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
+                            if (match) {
+                              filename = decodeURIComponent(match[1] || match[2]);
+                            }
+                          }
+                          
+                          // Blob을 URL로 변환하여 다운로드
+                          const blob = new Blob([response.data]);
+                          const url = window.URL.createObjectURL(blob);
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.download = filename;
+                          document.body.appendChild(link);
+                          link.click();
+                          link.remove();
+                          window.URL.revokeObjectURL(url);
+                          
+                          console.log('파일 다운로드 완료:', filename);
+                        } catch (error) {
+                          const axiosError = error as AxiosError;
+                          console.error('파일 다운로드 실패:', {
+                            message: error instanceof Error ? error.message : '알 수 없는 오류',
+                            status: axiosError.response?.status,
+                            statusText: axiosError.response?.statusText,
+                            data: axiosError.response?.data,
+                          });
+                          const errorMessage = axiosError.response?.status 
+                            ? `${axiosError.response.status}` 
+                            : error instanceof Error ? error.message : '알 수 없는 오류';
+                          alert(`파일을 다운로드할 수 없습니다.\n오류: ${errorMessage}`);
+                        }
+                      } else {
+                        // LINK type - 새 창에서 열기
+                        if (att.value) {
+                          window.open(att.value, '_blank');
+                        }
+                      }
+                    }}
+                  >
                     <s.FileInfoContainer>
                       {att.type === 'FILE' ? <FaRegFile /> : <FaLink />}
                       <div>
@@ -336,43 +399,6 @@ export function AssignmentCard({
                         </s.FileNameText>
                       </div>
                     </s.FileInfoContainer>
-                    {att.type === 'FILE' ? (
-                      <button
-                        onClick={async () => {
-                          try {
-                            // call assignment attachment download endpoint
-                            const res = await fetch(`/api/assignments/${att.assignmentAttachmentId}/download`, {
-                              method: 'GET',
-                              headers: { Accept: '*/*' },
-                            });
-                            if (!res.ok) throw new Error('네트워크 응답 실패');
-                            const blob = await res.blob();
-                            // try to get filename from headers
-                            const cd = res.headers.get('content-disposition');
-                            let filename = att.originalFileName || 'download';
-                            if (cd) {
-                              const m = cd.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
-                              if (m) filename = decodeURIComponent(m[1] || m[2]);
-                            }
-                            const url = window.URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = filename;
-                            document.body.appendChild(a);
-                            a.click();
-                            a.remove();
-                            window.URL.revokeObjectURL(url);
-                          } catch (e) {
-                            console.error('파일 다운로드 실패', e);
-                            alert('파일을 다운로드할 수 없습니다.');
-                          }
-                        }}
-                      >
-                        다운로드
-                      </button>
-                    ) : (
-                      <button onClick={() => att.value && window.open(att.value, '_blank')}>열기</button>
-                    )}
                   </s.FileItem>
                 ))}
               </s.FileListSection>

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 export const Container = styled.div`
   background-color: ${colors.gray[1]};
-  min-height: 100vh;
+  min-height: 125vh;
   width: 100%;
 `;
 

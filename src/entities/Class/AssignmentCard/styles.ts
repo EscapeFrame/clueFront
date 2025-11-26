@@ -57,26 +57,21 @@ export const CardHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 `;
 
 export const Title = styled.div`
   color: ${colors.black};
-  ${fonts.P3}
+  ${fonts.P4}
   font-weight: 600;
   margin: 0;
   word-break: break-word;
 
   @media (max-width: 1200px) {
-    ${fonts.P2}
+    ${fonts.P4}
   }
 
   @media (max-width: 768px) {
-    ${fonts.P1}
+    ${fonts.P4}
   }
 `;
 
@@ -96,15 +91,12 @@ export const InfoItem = styled.div`
   margin-top: 0;
   align-items: center;
   gap: 0.5rem;
-  ${fonts.P1}
+  ${fonts.P2}
   color: ${colors.gray[4]};
 
   svg {
     width: 1rem;
     height: 1rem;
-    @media (max-width: 1200px) {
-      display: none; // 1200px 밑에서 아이콘 숨김
-    }
   }
 
   @media (max-width: 1200px) {

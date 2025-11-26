@@ -6,8 +6,8 @@ export const NavbarWrapper = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  height: 55px;
-  padding: 0.5rem 14rem;
+  height: 60px;
+  padding: 0.6rem 14rem;
   background-color: ${colors.white};
   border-bottom: 1px solid ${colors.gray[2]};
   z-index: 1000;
@@ -77,7 +77,7 @@ export const NavItem = styled.a`
   margin-right: 1.25rem;
   text-decoration: none;
   color: ${colors.black};
-  ${fonts.P3}
+  font-size: 20px;
   display: flex;
   align-items: center; /* 텍스트 세로 중앙정렬 */
   height: 100%; /* 높이 꽉 채워서 정렬 안정화 */

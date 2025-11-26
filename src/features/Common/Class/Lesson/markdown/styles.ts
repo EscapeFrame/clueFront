@@ -5,9 +5,9 @@ import { fonts } from "@/shared/theme/font.styles";
 export const PageWrapper = styled.div`
   display: flex;
   gap: 24px;
-  min-height: calc(100vh / 0.8 - 50px);
+  height: calc(100vh / 0.8 - 50px);
   background-color: ${colors.white};
-  overflow: hidden;
+  position: relative;
 `;
 
 export const Container = styled.div`
@@ -46,6 +46,8 @@ export const ViewerWrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   line-height: 1.8;
   color: ${colors.black};
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   h1,
   h2,
@@ -101,13 +103,45 @@ export const ViewerWrapper = styled.div`
   }
 `;
 
-export const Sidebar = styled.div`
-  width: 16rem;
+export const Sidebar = styled.div<{ isOpen: boolean }>`
+  width: ${({ isOpen }) => (isOpen ? '16rem' : '0')};
+  flex-shrink: 0;
   background-color: #fafbfc;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   border-right: 1px solid ${colors.gray[3]};
+  height: 100%;
+  transition: width 0.3s ease;
+`;
+
+export const SidebarToggleButton = styled.button<{ isOpen: boolean }>`
+  position: absolute;
+  left: ${({ isOpen }) => (isOpen ? 'calc(16rem - 12px)' : '-12px')};
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 64px;
+  background: ${colors.white};
+  border: 1px solid ${colors.gray[3]};
+  border-radius: 0 12px 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: left 0.3s ease;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+
+  svg {
+    font-size: 24px;
+    color: #666;
+  }
+
+  &:hover {
+    background: ${colors.gray[1]};
+  }
 `;
 
 export const TopTabs = styled.div`

@@ -15,8 +15,8 @@ const UrlModal: React.FC<ModalProps> = ({
 }) => {
 
   return (
-    <s.Overlay>
-      <s.ModalWrapper isWarning={isWarning}>
+    <s.Overlay onClick={onClose}>
+      <s.ModalWrapper isWarning={isWarning} onClick={(e) => e.stopPropagation()}>
         <s.Header>
           <s.Title>{title}</s.Title>
           <s.CloseBtn 

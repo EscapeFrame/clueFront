@@ -17,12 +17,44 @@ export const HeaderSection = styled.div`
   padding: 2rem 14rem 0 14rem;
   z-index: 10;
   flex-shrink: 0;
+
+  @media (max-width: 1400px) {
+    padding: 2rem 8rem 0 8rem;
+  }
+
+  @media (max-width: 1200px) {
+    padding: 2rem 4rem 0 4rem;
+  }
+
+  @media (max-width: 992px) {
+    padding: 1.5rem 2rem 0 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 1rem 0 1rem;
+  }
 `;
 
 export const CardArea = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 2rem 14rem 8rem 14rem;
+
+  @media (max-width: 1400px) {
+    padding: 2rem 8rem 8rem 8rem;
+  }
+
+  @media (max-width: 1200px) {
+    padding: 2rem 4rem 6rem 4rem;
+  }
+
+  @media (max-width: 992px) {
+    padding: 1.5rem 2rem 4rem 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 1rem 3rem 1rem;
+  }
 `;
 
 export const HeaderContent = styled.div`
@@ -30,12 +62,28 @@ export const HeaderContent = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
 `;
 
 export const TitleFont = styled.h1`
   ${fonts.P4};
   font-weight: 500;
   margin: 0;
+
+  @media (max-width: 992px) {
+    ${fonts.P3};
+  }
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+    text-align: center;
+  }
 `;
 
 export const AddButton = styled.button`
@@ -51,9 +99,15 @@ export const AddButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 
   &:hover {
     background-color: ${colors.blue.dep1};
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 40px;
   }
 `;
 
@@ -144,4 +198,48 @@ export const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+// AI Flow 배너 스타일
+export const AIFlowBanner = styled.div`
+  background: ${colors.blue.light4};
+  padding: 1.5rem 14rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+
+  @media (max-width: 1200px) {
+    padding: 1.5rem 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    gap: 1rem;
+  }
+`;
+
+export const BannerContent = styled.div`
+  flex: 1;
+`;
+
+export const BannerTitle = styled.h2`
+  ${fonts.P4};
+  font-weight: 600;
+  color: ${colors.white};
+  margin: 0 0 0.5rem 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P3};
+  }
+`;
+
+export const BannerDescription = styled.p`
+  ${fonts.P2};
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+
+  @media (max-width: 768px) {
+    ${fonts.P1};
+  }
 `;

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
 import { DetailAssignmentStudent, AssignmentFile } from '@/shared/types/Class/Assignment/Attachment';
-import { getCheckStudent, getStudentSubmissionDetail, downloadSubmissionAttachment } from '@/entities/Class/api';
+import { getCheckStudent, getStudentSubmissionDetail } from '@/entities/Class/api';
 import { IoClose } from 'react-icons/io5';
 import Button from '@/entities/UI/Button';
+import Customapi from '@/shared/config/api';
+import { AxiosError } from 'axios';
 
 // Local types for handling submission attachments
 type SubmissionAttachment = {
@@ -283,18 +285,39 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                         for (const file of selectedStudent.files || []) {
                           if (file.type === 'FILE') {
                             try {
-                              const res = await downloadSubmissionAttachment(file.submissionAttachmentId);
-                              if (res && res.blob) {
-                                const url = window.URL.createObjectURL(res.blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = res.filename || file.fileName || 'download';
-                                document.body.appendChild(a);
-                                a.click();
-                                a.remove();
-                                window.URL.revokeObjectURL(url);
+                              console.log('전체 다운로드 시작:', file.submissionAttachmentId);
+                              const response = await Customapi.get(
+                                `/api/submissions/${file.submissionAttachmentId}/download`,
+                                { responseType: 'blob' }
+                              );
+                              
+                              // 파일명 추출
+                              const contentDisposition = response.headers['content-disposition'];
+                              let filename = file.fileName || 'download';
+                              if (contentDisposition) {
+                                const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
+                                if (match) filename = decodeURIComponent(match[1] || match[2]);
                               }
-                            } catch (e) { console.error('전체 다운로드 중 실패', e); }
+                              
+                              // 다운로드
+                              const blob = new Blob([response.data]);
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = filename;
+                              document.body.appendChild(a);
+                              a.click();
+                              a.remove();
+                              window.URL.revokeObjectURL(url);
+                              console.log('파일 다운로드 완료:', filename);
+                            } catch (error) {
+                              const axiosError = error as AxiosError;
+                              console.error('전체 다운로드 중 실패:', {
+                                message: error instanceof Error ? error.message : '알 수 없는 오류',
+                                status: axiosError.response?.status,
+                                data: axiosError.response?.data,
+                              });
+                            }
                           } else {
                             if (file.url) window.open(file.url, '_blank');
                           }
@@ -325,18 +348,46 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                           {file.type === 'FILE' ? (
                             <Button type={2} width="90px" onClick={async () => {
                               try {
-                                const res = await downloadSubmissionAttachment(file.submissionAttachmentId);
-                                if (res && res.blob) {
-                                  const url = window.URL.createObjectURL(res.blob);
-                                  const a = document.createElement('a');
-                                  a.href = url;
-                                  a.download = res.filename || file.fileName || 'download';
-                                  document.body.appendChild(a);
-                                  a.click();
-                                  a.remove();
-                                  window.URL.revokeObjectURL(url);
+                                console.log('개별 다운로드 시작:', file.submissionAttachmentId);
+                                const response = await Customapi.get(
+                                  `/api/submissions/${file.submissionAttachmentId}/download`,
+                                  { responseType: 'blob' }
+                                );
+                                
+                                console.log('다운로드 성공:', response.status, response.headers);
+                                
+                                // 파일명 추출
+                                const contentDisposition = response.headers['content-disposition'];
+                                let filename = file.fileName || 'download';
+                                if (contentDisposition) {
+                                  const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
+                                  if (match) filename = decodeURIComponent(match[1] || match[2]);
                                 }
-                              } catch (e) { console.error('파일 다운로드 실패', e); }
+                                
+                                // 다운로드
+                                const blob = new Blob([response.data]);
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                window.URL.revokeObjectURL(url);
+                                console.log('파일 다운로드 완료:', filename);
+                              } catch (error) {
+                                const axiosError = error as AxiosError;
+                                console.error('파일 다운로드 실패:', {
+                                  message: error instanceof Error ? error.message : '알 수 없는 오류',
+                                  status: axiosError.response?.status,
+                                  statusText: axiosError.response?.statusText,
+                                  data: axiosError.response?.data,
+                                });
+                                const errorMessage = axiosError.response?.status 
+                                  ? `${axiosError.response.status}` 
+                                  : error instanceof Error ? error.message : '알 수 없는 오류';
+                                alert(`파일을 다운로드할 수 없습니다.\n오류: ${errorMessage}`);
+                              }
                             }}>
                               다운로드
                             </Button>
@@ -348,10 +399,10 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                     </ul>
                   </>
                 ) : (
-                  <p>제출된 파일이 없습니다.</p>
+                  <s.EmptyStateMessage>제출된 파일이 없습니다.</s.EmptyStateMessage>
                 )
               ) : (
-                <p>현재 제출된 내용이 없습니다.</p>
+                <s.EmptyStateMessage>현재 제출된 내용이 없습니다.</s.EmptyStateMessage>
               )}
             </s.ModalBody>
           </s.ModalContent>

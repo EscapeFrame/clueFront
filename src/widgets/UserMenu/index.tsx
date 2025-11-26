@@ -91,7 +91,7 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
           <s.ModalContent onClick={(e) => e.stopPropagation()}>
             <s.ModalText>로그아웃 하시겠습니까?</s.ModalText>
             <s.ModalButtonContainer>
-              <s.ModalButton onClick={handleLogout}>확인</s.ModalButton>
+              <s.ModalButtonDanger onClick={handleLogout}>확인</s.ModalButtonDanger>
               <s.ModalButton onClick={() => setIsModalOpen(false)}>취소</s.ModalButton>
             </s.ModalButtonContainer>
           </s.ModalContent>

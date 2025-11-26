@@ -4,12 +4,12 @@ import * as s from './styles';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
-import { getMarkDown } from '../../api/class/useMarkdown';
+import { getMarkDown, downloadDocument } from '../../api/class/useMarkdown';
 import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLesson';
 import { IoListOutline } from 'react-icons/io5';
 // import { IoChatbubbleOutline } from 'react-icons/io5';
 // import { AiOutlineQuestionCircle } from 'react-icons/ai';
-import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowDown, IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 interface Document {
   documentId: number;
@@ -26,7 +26,7 @@ interface DirectoryResponse {
   directoryList: Directory[];
 }
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => {
   const { classRoomId, documentId } = useParams<{ classRoomId: string; documentId: string }>();
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [openDirs, setOpenDirs] = useState<Set<number>>(new Set());
@@ -78,7 +78,7 @@ const Sidebar = () => {
   };
 
   return (
-    <s.Sidebar>
+    <s.Sidebar isOpen={isOpen}>
       <s.TopTabs>
         <s.TabButton 
           active={activeTab === 'curriculum'} 
@@ -144,6 +144,7 @@ export default function MarkDownViewerPage() {
   const navigate = useNavigate();
   const [mdContent, setMdContent] = useState('Loading...');
   const [title, setTitle] = useState(location.state?.title || '문서');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (!documentId) return;
@@ -151,7 +152,25 @@ export default function MarkDownViewerPage() {
     const fetchMdData = async () => {
       try {
         const response = await getMarkDown(documentId);
-        setMdContent(response);
+        
+        // 응답이 문자열이고 마크다운 형식인지 확인
+        if (typeof response === 'string') {
+          setMdContent(response);
+        } else {
+          // 마크다운이 아닌 경우 다운로드 처리
+          const fileName = title || `document_${documentId}`;
+          const success = await downloadDocument(documentId, fileName);
+          
+          if (success) {
+            setMdContent('# 파일 다운로드\n\n파일이 다운로드되었습니다.');
+            // 다운로드 후 이전 페이지로 돌아가기 (선택사항)
+            setTimeout(() => {
+              navigate(-1);
+            }, 500);
+          } else {
+            setMdContent('# Error\n\n파일 다운로드에 실패했습니다.');
+          }
+        }
       } catch (error: unknown) {
         console.error('Failed to fetch markdown:', error);
         setMdContent('# Error\n\nFailed to load document.');
@@ -159,7 +178,7 @@ export default function MarkDownViewerPage() {
     };
 
     fetchMdData();
-  }, [documentId]);
+  }, [documentId, title, navigate]);
 
   useEffect(() => {
     setTitle(location.state?.title || '문서');
@@ -170,7 +189,10 @@ export default function MarkDownViewerPage() {
 
   return (
     <s.PageWrapper>
-      <Sidebar />
+      <s.SidebarToggleButton onClick={() => setIsSidebarOpen(!isSidebarOpen)} isOpen={isSidebarOpen}>
+        {isSidebarOpen ? <IoIosArrowBack /> : <IoIosArrowForward />}
+      </s.SidebarToggleButton>
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
       <s.Container>
         <s.ViewerContainer>
           <s.ViewerHeader>

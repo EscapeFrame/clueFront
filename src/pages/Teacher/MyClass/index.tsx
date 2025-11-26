@@ -1,6 +1,6 @@
 import * as s from './styles';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
 import { CategoryKey, CATEGORY_FILTER_MAP, getCategoryLabel } from '@/features/Common/Class/TabSelector/category';
 
@@ -12,7 +12,9 @@ import { FaRegClock } from "react-icons/fa6";
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { myClasses, error } = useMyClass();
+  const [searchParams] = useSearchParams();
+  const isAIFlowMode = searchParams.get('mode') === 'ai-flow';
+  const { myClasses, error, loading } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
 
@@ -24,7 +26,13 @@ export default function MyClass() {
     return tabMatch && searchMatch;
   });
 
-  const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
+  const handleViewClass = (id: string | number) => {
+    if (isAIFlowMode) {
+      navigate(`/class/${id}?mode=ai-flow`);
+    } else {
+      navigate(`/class/${id}`);
+    }
+  };
 
   const getIconByCategory = (categoryKey: string) => {
     switch (categoryKey) {
@@ -41,6 +49,18 @@ export default function MyClass() {
 
   return (
     <s.Container>
+      {/* AI Flow 모드 배너 */}
+      {isAIFlowMode && (
+        <s.AIFlowBanner>
+          <s.BannerContent>
+            <s.BannerTitle>AI 수업 생성 모드</s.BannerTitle>
+            <s.BannerDescription>
+              학습실을 선택한 후, 디렉토리의 + 버튼을 눌러 AI로 자료를 생성하세요
+            </s.BannerDescription>
+          </s.BannerContent>
+        </s.AIFlowBanner>
+      )}
+
       <s.HeaderSection>
         <s.HeaderContent>
           <s.TitleFont>나의 학습실</s.TitleFont>
@@ -59,7 +79,32 @@ export default function MyClass() {
       </s.HeaderSection>
 
       <s.CardArea>
-        {!filteredClasses.length ? (
+        {loading ? (
+          // render skeletons while loading
+          <s.Grid>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <s.Card key={`skeleton-${i}`}>
+                <s.CardHeader>
+                  <s.IconWrapper>
+                    <div style={{ width: 28, height: 28, borderRadius: 6, background: '#e9ecef' }} />
+                  </s.IconWrapper>
+                  <s.CardTitle>
+                    <div style={{ width: 180, height: 18, borderRadius: 6, background: '#e9ecef' }} />
+                  </s.CardTitle>
+                </s.CardHeader>
+
+                <s.InfoContent>
+                  <div style={{ width: 140, height: 14, borderRadius: 6, background: '#f1f3f5' }} />
+                </s.InfoContent>
+
+                <s.CardDescription>
+                  <div style={{ width: '100%', height: 12, borderRadius: 6, background: '#f1f3f5', marginBottom: 6 }} />
+                  <div style={{ width: '80%', height: 12, borderRadius: 6, background: '#f1f3f5' }} />
+                </s.CardDescription>
+              </s.Card>
+            ))}
+          </s.Grid>
+        ) : (!filteredClasses.length ? (
           <s.EmptyMessage>참여한 학습실이 없습니다.</s.EmptyMessage>
         ) : (
           <s.Grid>
@@ -78,7 +123,7 @@ export default function MyClass() {
               </s.Card>
             ))}
           </s.Grid>
-        )}
+        ))}
       </s.CardArea>
     </s.Container>
   );

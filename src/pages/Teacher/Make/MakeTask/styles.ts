@@ -78,3 +78,14 @@ export const FileUploadArea = styled.div<{ isDragOver?: boolean }>`
     padding: 1rem;
   }
 `;
+
+export const ActionRow = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+`;

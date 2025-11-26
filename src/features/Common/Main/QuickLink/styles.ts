@@ -11,6 +11,7 @@ export const Container = styled.div`
   border-radius: 24px;
   margin-bottom: 6rem;
   gap: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 1200px) {
     padding: 2.5rem 1.5rem;

@@ -3,7 +3,7 @@ import { colors } from "@/shared/theme/theme.styles";
 import styled from "@emotion/styled";
 
 export const Container = styled.div`
-  padding: 2rem 14rem;
+  padding: 2rem 30rem;
   background-color: ${colors.white};
 
   @media (max-width: 768px) {
@@ -32,4 +32,15 @@ export const PostButton = styled.div`
   padding: 10px 0;
   border-radius: 8px;
   text-align: center;
+`;
+
+export const ActionRow = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
 `;

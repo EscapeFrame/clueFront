@@ -26,6 +26,16 @@ const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) =
     onDelete();
   };
 
+  // 영어 과목명을 한국어로 변환
+  const translateSubjectType = (subjectType: string): string => {
+    const translations: { [key: string]: string } = {
+      'General': '일반과목',
+      'Professional': '전공과목',
+      'AfterSchool': '방과후',
+    };
+    return translations[subjectType] || subjectType;
+  };
+
   const subjectTypes = Array.isArray(card.subjectType) ? card.subjectType : (card.subjectType ? [card.subjectType] : []);
 
   return (
@@ -46,7 +56,7 @@ const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) =
       </S.CardContent>
 
       <S.CardTagContainer>
-        {subjectTypes.map((subjectType, i) => <S.CardTag key={i}>{subjectType}</S.CardTag>)}
+        {subjectTypes.map((subjectType, i) => <S.CardTag key={i}>{translateSubjectType(subjectType)}</S.CardTag>)}
       </S.CardTagContainer>
     </S.CardContainer>
   );

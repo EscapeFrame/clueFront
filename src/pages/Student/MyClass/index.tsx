@@ -1,5 +1,5 @@
 import * as s from './styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
 import { CategoryKey, CATEGORY_FILTER_MAP, getCategoryLabel } from '@/features/Common/Class/TabSelector/category';
@@ -13,7 +13,7 @@ import { FaRegClock } from "react-icons/fa6";
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { myClasses, error, joinClassroom } = useMyClass();
+  const { myClasses, error, joinClassroom, loading, refetch } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
   const { isOpen, openModal, closeModal } = useModal();
@@ -30,6 +30,8 @@ export default function MyClass() {
 
   const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
+  const [shouldRefetchAfterJoin, setShouldRefetchAfterJoin] = useState(false);
+
   const handleJoinClass = async () => {
     const trimmed = code.trim();
     if (!trimmed) {
@@ -41,11 +43,21 @@ export default function MyClass() {
     if (ok) {
       setCode('');
       setModalError(null);
+      // 재조회 트리거
+      setShouldRefetchAfterJoin(true);
       closeModal();
     } else {
       setModalError('학습실 추가에 실패했습니다. 코드를 확인해주세요.');
     }
   };
+
+  // 재조회 실행
+  useEffect(() => {
+    if (shouldRefetchAfterJoin) {
+      refetch();
+      setShouldRefetchAfterJoin(false);
+    }
+  }, [shouldRefetchAfterJoin, refetch]);
 
   const getIconByCategory = (categoryKey: string) => {
     switch (categoryKey) {
@@ -80,7 +92,31 @@ export default function MyClass() {
       </s.HeaderSection>
 
       <s.CardArea>
-        {!filteredClasses.length ? (
+        {loading ? (
+          <s.Grid>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <s.Card key={`skeleton-${i}`}>
+                <s.CardHeader>
+                  <s.IconWrapper>
+                    <div style={{ width: 28, height: 28, borderRadius: 6, background: '#e9ecef' }} />
+                  </s.IconWrapper>
+                  <s.CardTitle>
+                    <div style={{ width: 180, height: 18, borderRadius: 6, background: '#e9ecef' }} />
+                  </s.CardTitle>
+                </s.CardHeader>
+
+                <s.InfoContent>
+                  <div style={{ width: 140, height: 14, borderRadius: 6, background: '#f1f3f5' }} />
+                </s.InfoContent>
+
+                <s.CardDescription>
+                  <div style={{ width: '100%', height: 12, borderRadius: 6, background: '#f1f3f5', marginBottom: 6 }} />
+                  <div style={{ width: '80%', height: 12, borderRadius: 6, background: '#f1f3f5' }} />
+                </s.CardDescription>
+              </s.Card>
+            ))}
+          </s.Grid>
+        ) : (!filteredClasses.length ? (
           <s.EmptyMessage>참여한 학습실이 없습니다.</s.EmptyMessage>
         ) : (
           <s.Grid>
@@ -97,7 +133,7 @@ export default function MyClass() {
               </s.Card>
             ))}
           </s.Grid>
-        )}
+        ))}
       </s.CardArea>
 
       {isOpen && (

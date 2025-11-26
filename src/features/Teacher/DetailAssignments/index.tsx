@@ -287,6 +287,22 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                             <s.EditButtonGroup>
                                 <Button text='저장' type={0} width={'90px'} onClick={handleSaveEdit} />
                                 <Button text='취소' type={1} width={'90px'} onClick={handleCancelEdit} />
+                                <Button text='삭제' type={4} width={'90px'} onClick={async () => {
+                                    if (window.confirm('정말로 이 과제를 삭제하시겠습니까?')) {
+                                        try {
+                                            const result = await AssignmentsApi.delete(assignment.assignmentId);
+                                            if (result) {
+                                                alert('과제가 성공적으로 삭제되었습니다.');
+                                                onBack();
+                                            } else {
+                                                alert('과제 삭제에 실패했습니다.');
+                                            }
+                                        } catch (error) {
+                                            console.error('과제 삭제 중 오류 발생:', error);
+                                            alert('과제 삭제 중 오류가 발생했습니다.');
+                                        }
+                                    }
+                                }} />
                             </s.EditButtonGroup>
                         </>
                     ) : (

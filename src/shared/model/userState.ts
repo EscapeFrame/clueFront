@@ -33,7 +33,7 @@ export const userState = atom<UserState>({
 //    default: {
 //        username: '공덕현',
 //        userId: '2201',
-//        role: 'TEACHER', // TEACHER STUDENT
+//        role: 'STUDENT', // TEACHER STUDENT
 //        classCode: 0,
 //    },
 // });
