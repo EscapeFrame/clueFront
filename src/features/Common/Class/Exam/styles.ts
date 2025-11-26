@@ -1,10 +1,11 @@
-import styled from '@emotion/styled';
-import { colors } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { colors } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   padding: 2rem 14rem;
 
   @media (max-width: 768px) {
@@ -27,25 +28,25 @@ export const SectionHeader = styled.div`
 export const Description = styled.p`
   ${fonts.P2};
   color: ${colors.gray[4]};
-  margin: 0; 
-  padding: 0; 
-  
-  @media (max-width: 1200px) { 
-    ${fonts.P1} 
-  } 
+  margin: 0;
+  padding: 0;
 
-  @media (max-width: 768px) { 
+  @media (max-width: 1200px) {
+    ${fonts.P1}
+  }
+
+  @media (max-width: 768px) {
     ${fonts.P1};
-    text-align: center; 
-  } 
+    text-align: center;
+  }
 `;
 
 export const LeftGroup = styled.div`
- display: flex; 
- align-items: center;
-`; 
- 
- export const RightGroup = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const RightGroup = styled.div`
   display: flex;
   align-items: center;
 `;
@@ -78,14 +79,13 @@ export const State = styled.div<{ $status: 0 | 1 }>`
   margin-right: 1rem;
   background-color: ${({ $status }) =>
     $status === 0 ? colors.gray[1] : colors.blue.light2};
-  border: 1px solid ${({ $status }) =>
-    $status === 0 ? colors.gray[3] : colors.blue.light4};
+  border: 1px solid
+    ${({ $status }) => ($status === 0 ? colors.gray[3] : colors.blue.light4)};
 `;
 
 export const StatusText = styled.span<{ $status: 0 | 1 }>`
   ${fonts.P2};
-  color: ${({ $status }) =>
-    $status === 0 ? colors.gray[4] : colors.primary};
+  color: ${({ $status }) => ($status === 0 ? colors.gray[4] : colors.primary)};
 `;
 
 export const Title = styled.span`
@@ -103,7 +103,7 @@ export const Date = styled.span`
 export const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -184,9 +184,8 @@ export const FileItem = styled.li`
       background-color: ${colors.primary};
       color: ${colors.white};
     }
-}
+  }
 `;
-
 
 export const ModalFooter = styled.div`
   display: flex;

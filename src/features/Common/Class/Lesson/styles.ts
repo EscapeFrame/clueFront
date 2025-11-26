@@ -1,10 +1,11 @@
-import styled from '@emotion/styled';
-import { colors } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { colors } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   padding: 2rem 14rem;
   gap: 0.5rem;
   background-color: ${colors.gray[1]};
@@ -65,17 +66,17 @@ export const PlusIcon = styled.div`
 export const Description = styled.p`
   ${fonts.P2};
   color: ${colors.gray[4]};
-  margin: 0; 
-  padding: 0; 
-  
-  @media (max-width: 1200px) { 
-    ${fonts.P1} 
-  } 
+  margin: 0;
+  padding: 0;
 
-  @media (max-width: 768px) { 
+  @media (max-width: 1200px) {
+    ${fonts.P1}
+  }
+
+  @media (max-width: 768px) {
     ${fonts.P1};
-    text-align: center; 
-  } 
+    text-align: center;
+  }
 `;
 
 export const SectionHeader = styled.div`
@@ -92,14 +93,14 @@ export const Section = styled.div`
 `;
 
 export const LeftGroup = styled.div`
- display: flex; 
- align-items: center;
-`; 
- 
- export const RightGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem; 
+`;
+
+export const RightGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 // 상위 디렉토리 (1차시, 2차시)
@@ -175,9 +176,9 @@ export const AddSub = styled.div`
 `;
 
 export const ProgressBarWrapper = styled.div`
-  display: flex;           
-  align-items: center;     
-  gap: 10px;              
+  display: flex;
+  align-items: center;
+  gap: 10px;
   height: 1rem;
   margin: 0 1.5rem 1.5rem 1.5rem;
 `;
@@ -191,19 +192,19 @@ export const ProgressBar = styled.div<{ $progress: number }>`
 `;
 
 export const ProgressText = styled.span`
-  flex-shrink: 0;          /* 텍스트가 줄어들지 않도록 고정 */
+  flex-shrink: 0; /* 텍스트가 줄어들지 않도록 고정 */
   font-size: 0.9rem;
   color: ${colors.primary};
 `;
 
 // 서브 디렉토리 영역
 export const SubDirectoryList = styled.div<{ $isExpanded: boolean }>`
-  max-height: ${({ $isExpanded }) => ($isExpanded ? '1000px' : '0')};
+  max-height: ${({ $isExpanded }) => ($isExpanded ? "1000px" : "0")};
   overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: ${({ $isExpanded }) => ($isExpanded ? '0.8rem 0' : '0')};
+  padding: ${({ $isExpanded }) => ($isExpanded ? "0.8rem 0" : "0")};
   background-color: ${colors.gray[1]};
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 `;
@@ -231,7 +232,8 @@ export const Check = styled.span<{ $isRead?: boolean }>`
   padding: 0.5rem;
   text-align: center;
   border-radius: 8px;
-  background-color: ${({ $isRead }) => ($isRead ? colors.blue.light2 : colors.gray[1])};
+  background-color: ${({ $isRead }) =>
+    $isRead ? colors.blue.light2 : colors.gray[1]};
   color: ${({ $isRead }) => ($isRead ? colors.primary : colors.gray[4])};
   display: flex;
   align-items: center;
@@ -266,7 +268,7 @@ export const CardContainer = styled.div`
   margin: 10px 0;
   padding: 0.1rem 1rem;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   gap: 15px;
   cursor: pointer;
 `;
@@ -288,7 +290,7 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -301,5 +303,5 @@ export const ModalContent = styled.div`
   padding: 24px;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
 `;
