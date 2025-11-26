@@ -2,7 +2,7 @@ import * as s from './styles';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
-import { CategoryKey, CATEGORY_FILTER_MAP } from '@/features/Common/Class/TabSelector/category';
+import { CategoryKey, CATEGORY_FILTER_MAP, getCategoryLabel } from '@/features/Common/Class/TabSelector/category';
 import { useModal } from '@/entities/UI/Modal/modal.hooks';
 import { Modal } from '@/entities/UI/Modal';
 import { useMyClass } from '@/features/Common/MyClass/hooks/useMyClass';
@@ -91,7 +91,7 @@ export default function MyClass() {
                   <s.CardTitle>{cls.name}</s.CardTitle>
                 </s.CardHeader>
                 <s.InfoContent>
-                  {cls.sort || '-'} | {cls.target || '-'}
+                  {getCategoryLabel(cls.sort) || '-'} | {cls.target || '-'}
                 </s.InfoContent>
                 <s.CardDescription>{cls.description}</s.CardDescription>
               </s.Card>
