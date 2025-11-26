@@ -117,7 +117,7 @@ function RegisterPage() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert('회원가입 완료! 메인 페이지로 이동합니다.');
+      alert('회원가입 완료!');
       navigate('/');
     } catch (err) {
       console.error('회원가입 실패:', err);
