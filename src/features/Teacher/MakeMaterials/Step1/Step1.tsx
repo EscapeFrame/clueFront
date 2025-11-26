@@ -4,6 +4,7 @@ import Button from '@/entities/UI/Button';
 import * as s from "./styles";
 import { usePostMaterials } from "../hooks/useMaterials";
 import { MdAdd, MdRemove } from "react-icons/md";
+import { useNavigate, useParams } from "react-router-dom";
 import { AgentFlowResponse } from "../api";
 
 interface Step1Props {
@@ -11,6 +12,8 @@ interface Step1Props {
 }
 
 export default function Step1({ onNext }: Step1Props) {
+    const navigate = useNavigate();
+    const { classRoomId } = useParams<{ classRoomId: string }>();
     const [title, setTitle] = useState<string>("");
     const [goal, setGoal] = useState<string>("");
     const [keywordInput, setKeywordInput] = useState<string>("");
@@ -33,13 +36,13 @@ export default function Step1({ onNext }: Step1Props) {
         if (e.key === "Enter" && keywordInput.trim() !== "") {
             e.preventDefault();
             const inputValue = keywordInput.trim();
-            
+
             // 쉼표로 구분하여 여러 키워드를 한 번에 추가
             const newKeywords = inputValue
                 .split(',')
                 .map(k => k.trim())
                 .filter(k => k !== "" && !keywords.includes(k));
-            
+
             if (newKeywords.length > 0) {
                 setKeywords((k) => [...k, ...newKeywords]);
             }
@@ -73,6 +76,7 @@ export default function Step1({ onNext }: Step1Props) {
         setKeywordInput("");
         setKeywords([]);
         setLinks([""]);
+        navigate(`/class/${classRoomId}`);
     };
 
     const isFormValid = title.trim() !== "" && goal.trim() !== "" && keywords.length > 0;
