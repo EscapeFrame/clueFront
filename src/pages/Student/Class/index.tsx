@@ -56,8 +56,8 @@ const Classroom: React.FC = () => {
         return <LessonComponent classRoomId={classRoomId} code={classInfo?.code} />;
       case 'assignment':
         return <AssignmentComponent />;
-      case 'exam':
-        return <ExamComponent />;
+      // case 'exam':
+        // return <ExamComponent />;
       default:
         return null;
     }

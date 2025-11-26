@@ -72,8 +72,8 @@ const Classroom: React.FC = () => {
         ) : (
           <AssignmentComponent onAssignmentSelect={handleAssignmentSelect} />
         );
-      case 'exam':
-        return <ExamComponent />;
+      // case 'exam':
+      //   return <ExamComponent />;
       default:
         return null;
     }
