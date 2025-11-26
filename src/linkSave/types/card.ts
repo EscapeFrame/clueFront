@@ -8,6 +8,7 @@ export interface LinkCard {
   authorizationType?: AuthorizationType;
   subjectType: string | string[]; // API may provide a single subjectType like "General" or array
   date?: string; // optional, kept for backward compatibility
+  mine?: boolean; // 내가 만든 링크인지 여부
 }
 
 // 폼에서 관리할 데이터 구조

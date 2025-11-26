@@ -137,6 +137,21 @@ export const LinkSaveMain = () => {
 
     const filteredCards = cards.filter(card => {
         const englishCategory = LINK_CATEGORY_ENGLISH_MAP[activeCategory as LinkCategoryKorean];
+        
+        // "내 링크" 카테고리인 경우
+        if (activeCategory === '내 링크') {
+            const searchMatch = card.title?.toLowerCase().includes(searchQuery);
+            return card.mine && searchMatch;
+        }
+        
+        // "반" 카테고리인 경우 - CLASS_ONLY와 PRIVATE 둘 다 조회
+        if (activeCategory === '반') {
+            const searchMatch = card.title?.toLowerCase().includes(searchQuery);
+            const authMatch = card.authorizationType === 'CLASS_ONLY' || card.authorizationType === 'PRIVATE';
+            return authMatch && searchMatch;
+        }
+        
+        // 일반 카테고리 필터링
         const categoryMatch = activeCategory === '전체' || (englishCategory && card.subjectType?.includes(englishCategory));
         const searchMatch = card.title?.toLowerCase().includes(searchQuery);
         return categoryMatch && searchMatch;
