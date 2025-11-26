@@ -1,5 +1,5 @@
 import * as s from './styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TabSelector from '@/features/Common/Class/TabSelector';
 import { CategoryKey, CATEGORY_FILTER_MAP, getCategoryLabel } from '@/features/Common/Class/TabSelector/category';
@@ -13,7 +13,7 @@ import { FaRegClock } from "react-icons/fa6";
 
 export default function MyClass() {
   const navigate = useNavigate();
-  const { myClasses, error, joinClassroom, loading } = useMyClass();
+  const { myClasses, error, joinClassroom, loading, refetch } = useMyClass();
   const [selectedTab, setSelectedTab] = useState<CategoryKey>('전체');
   const [searchValue, setSearchValue] = useState('');
   const { isOpen, openModal, closeModal } = useModal();
@@ -30,6 +30,8 @@ export default function MyClass() {
 
   const handleViewClass = (id: string | number) => navigate(`/class/${id}`);
 
+  const [shouldRefetchAfterJoin, setShouldRefetchAfterJoin] = useState(false);
+
   const handleJoinClass = async () => {
     const trimmed = code.trim();
     if (!trimmed) {
@@ -41,11 +43,21 @@ export default function MyClass() {
     if (ok) {
       setCode('');
       setModalError(null);
+      // 재조회 트리거
+      setShouldRefetchAfterJoin(true);
       closeModal();
     } else {
       setModalError('학습실 추가에 실패했습니다. 코드를 확인해주세요.');
     }
   };
+
+  // 재조회 실행
+  useEffect(() => {
+    if (shouldRefetchAfterJoin) {
+      refetch();
+      setShouldRefetchAfterJoin(false);
+    }
+  }, [shouldRefetchAfterJoin, refetch]);
 
   const getIconByCategory = (categoryKey: string) => {
     switch (categoryKey) {
