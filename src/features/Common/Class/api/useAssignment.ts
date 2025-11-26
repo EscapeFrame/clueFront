@@ -92,8 +92,12 @@ export const AssignmentsApi = {
   fileUpload: async (assignmentId: string | number, files: File[]): Promise<unknown> => {
     try {
       const formData = new FormData();
-      files.forEach((f) => formData.append('file', f));
-      const res = await Customapi.post(`${API_BASE_URL}/${assignmentId}/file`, formData);
+      files.forEach((f) => formData.append('files', f));
+      const res = await Customapi.post(`${API_BASE_URL}/${assignmentId}/file`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       if (res.status < 200 || res.status >= 300) {
         console.error(`파일 업로드 실패: status ${res.status}`);
         return null;
