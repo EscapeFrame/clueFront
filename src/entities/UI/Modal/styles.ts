@@ -62,7 +62,7 @@ export const CloseBtn = styled.span`
   }
 
   &:hover {
-    background-color: rgba(255, 0, 0, 0.1);
+    color: ${colors.red[3]};
     transform: scale(1.1);
   }
 `;

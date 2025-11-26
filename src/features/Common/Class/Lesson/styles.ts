@@ -138,8 +138,9 @@ export const Right = styled.div`
 `;
 
 export const Name = styled.span`
-  ${fonts.P3};
+  ${fonts.P4};
   color: ${colors.black};
+  font-weight: 500;
   flex-grow: 1;
 `;
 

@@ -5,7 +5,7 @@ import { colors } from "@/shared/theme/theme.styles";
 export const Container = styled.div`
   min-height: 100vh;
   padding: 2rem 14rem;
-  background-color: ${colors.white};
+  background-color: ${colors.gray[1]};
   color: ${colors.black};
 
   @media (max-width: 1200px) {

@@ -7,6 +7,7 @@ export const Container = styled.div`
   padding: 3rem 2rem;
   max-height: 100%;
   border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 export const CardContainer = styled.div`
