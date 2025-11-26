@@ -5,9 +5,8 @@ import { fonts } from "@/shared/theme/font.styles";
 export const PageWrapper = styled.div`
   display: flex;
   gap: 24px;
-  min-height: calc(100vh / 0.8 - 50px);
+  height: calc(100vh / 0.8 - 50px);
   background-color: ${colors.white};
-  overflow: hidden;
 `;
 
 export const Container = styled.div`
@@ -46,6 +45,8 @@ export const ViewerWrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   line-height: 1.8;
   color: ${colors.black};
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   h1,
   h2,
@@ -103,11 +104,13 @@ export const ViewerWrapper = styled.div`
 
 export const Sidebar = styled.div`
   width: 16rem;
+  flex-shrink: 0;
   background-color: #fafbfc;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   border-right: 1px solid ${colors.gray[3]};
+  height: 100%;
 `;
 
 export const TopTabs = styled.div`
