@@ -32,10 +32,12 @@ const LinkCardItem: React.FC<LinkCardItemProps> = ({ card, onEdit, onDelete }) =
     <S.CardContainer onClick={handleCardClick}>
       <S.CardHeader>
         <S.CardDate>{card.date || ''}</S.CardDate>
-        <S.CardActions>
-          <S.EditButton onClick={handleEditClick}><HiOutlinePencilSquare /></S.EditButton>
-          <S.DeleteButton onClick={handleDeleteClick}><GoTrash /></S.DeleteButton>
-        </S.CardActions>
+        {card.mine && (
+          <S.CardActions>
+            <S.EditButton onClick={handleEditClick}><HiOutlinePencilSquare /></S.EditButton>
+            <S.DeleteButton onClick={handleDeleteClick}><GoTrash /></S.DeleteButton>
+          </S.CardActions>
+        )}
       </S.CardHeader>
 
       <S.CardContent>

@@ -1,6 +1,7 @@
 import { IoBookOutline } from "react-icons/io5";
-import { HiOutlineAcademicCap } from "react-icons/hi2";
+import { HiOutlineAcademicCap, HiOutlineUserGroup } from "react-icons/hi2";
 import { CiClock2 } from "react-icons/ci";
+import { FaRegUser } from "react-icons/fa";
 import { IconType } from "react-icons";
 import { LINK_CATEGORY_MAP } from '@/linkSave/types/card';
 
@@ -14,4 +15,6 @@ export const categoryData: CategoryItem[] = [
     { name: LINK_CATEGORY_MAP.General, icon: IoBookOutline },
     { name: LINK_CATEGORY_MAP.Professional, icon: HiOutlineAcademicCap },
     { name: LINK_CATEGORY_MAP.AfterSchool, icon: CiClock2 },
+    { name: '반', icon: HiOutlineUserGroup },
+    { name: '내 링크', icon: FaRegUser },
 ];

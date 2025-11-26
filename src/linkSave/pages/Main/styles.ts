@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   top: 7%;
   width: 100%;
   min-height: 100%;
-  background-color: ${colors.gray[2]};
+  background-color: ${colors.gray[1]};
 `;
 
 export const LodingText = styled.div`
