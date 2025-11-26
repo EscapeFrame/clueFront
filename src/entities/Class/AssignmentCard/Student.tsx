@@ -299,13 +299,12 @@ export function AssignmentCard({
                 },
               ]
               : [
-                { text: '닫기', type: 2, onClick: closeModal, width: "50%" },
+                { text: '닫기', type: 0, onClick: closeModal },
                 {
                   text: '과제 제출하기',
                   type: 1,
                   onClick: handleSubmit,
                   disabled: isSubmitting,
-                  width: "50%"
                 },
               ]
           }
