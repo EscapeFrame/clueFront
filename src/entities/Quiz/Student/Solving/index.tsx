@@ -21,15 +21,29 @@ type Question = {
 type Props = {
     question?: Question; // 예시로 1개 문제 전달
     onSubmitAnswer: (answerIndex: number) => void;
+    currentQuestionNumber?: number; // 현재 문제 번호
+    totalQuestions?: number;        // 전체 문제 개수
+    timePerQuestion?: number;       // 문제당 시간
 };
 
-export default function Solving({ question, onSubmitAnswer }: Props) {
+export default function Solving({
+    question,
+    onSubmitAnswer,
+    currentQuestionNumber = 1,
+    totalQuestions = 10,
+    timePerQuestion = 30
+}: Props) {
     const navigate = useNavigate();
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-    const [timeLeft, setTimeLeft] = useState(20); // 예: 문제당 20초
-    const totalTime = 20;
-    const current = 1;
-    const total = 10;
+    const [timeLeft, setTimeLeft] = useState(timePerQuestion);
+    const totalTime = timePerQuestion;
+    const current = currentQuestionNumber;
+    const total = totalQuestions;
+
+    // 문제가 바뀔 때마다 타이머 초기화
+    useEffect(() => {
+        setTimeLeft(timePerQuestion);
+    }, [question?.id, timePerQuestion]);
 
     // 타이머
     useEffect(() => {

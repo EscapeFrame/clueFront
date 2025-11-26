@@ -29,16 +29,31 @@ type Props = {
     question: Question;
     onShowResult: () => void; // 정답 확인 버튼용
     totalStudents: number;     // 전체 인원
+    currentQuestionNumber?: number; // 현재 문제 번호
+    totalQuestions?: number;   // 전체 문제 개수
+    timePerQuestion?: number;  // 문제당 시간
 };
 
-export default function QuizPlaying({ question, onShowResult, totalStudents}: Props) {
+export default function QuizPlaying({
+    question,
+    onShowResult,
+    totalStudents,
+    currentQuestionNumber = 1,
+    totalQuestions = 10,
+    timePerQuestion = 30
+}: Props) {
     const [submittedCount, setSubmittedCount] = useState(0);
     const navigate = useNavigate();
-    const [timeLeft, setTimeLeft] = useState(20);
+    const [timeLeft, setTimeLeft] = useState(timePerQuestion);
 
-    const totalTime = 20;
-    const current = 1;
-    const total = 10;
+    const totalTime = timePerQuestion;
+    const current = currentQuestionNumber;
+    const total = totalQuestions;
+
+    // 문제가 바뀔 때마다 타이머 초기화
+    useEffect(() => {
+        setTimeLeft(timePerQuestion);
+    }, [question.id, timePerQuestion]);
 
     // 타이머
     useEffect(() => {

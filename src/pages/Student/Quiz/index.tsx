@@ -67,7 +67,7 @@ export default function STUQuiz() {
     const [answerReveal, setAnswerReveal] = useState<AnswerRevealMessage | null>(null); // 정답 공개 데이터
     const [myRanking, setMyRanking] = useState<FinalRanking | null>(null);
 
-    const [totalQuestions] = useState(10);
+    const [totalQuestions, setTotalQuestions] = useState(10); // 기본값 10
     const [submittedAt, setSubmittedAt] = useState<number>(0);
 
     // 방 참여 후 구독 설정
@@ -185,22 +185,50 @@ export default function STUQuiz() {
         }
 
         try {
-            // REST API로 방 참여 가능 여부 확인
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/quiz/rooms/${code}/joinable`, {
+            // REST API로 방 정보 조회
+            const roomResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/quiz/rooms/${code}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
                 },
             });
-            
-            const isJoinable = await response.json();
-            
+
+            if (!roomResponse.ok) {
+                alert("방을 찾을 수 없습니다.");
+                return;
+            }
+
+            const roomData = await roomResponse.json();
+            console.log("[STU Quiz] 방 정보 조회:", roomData);
+
+            // 총 문제 개수 설정
+            if (roomData.questionCount) {
+                setTotalQuestions(roomData.questionCount);
+                console.log("[STU Quiz] 총 문제 개수 설정:", roomData.questionCount);
+            }
+
+            // 방 참여 가능 여부 확인
+            const joinableResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/quiz/rooms/${code}/joinable`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+            });
+
+            const joinableData = await joinableResponse.json();
+            console.log("[STU Quiz] 참여 가능 여부 응답:", joinableData, "타입:", typeof joinableData);
+
+            // 응답이 boolean 또는 { joinable: boolean } 둘 다 처리
+            const isJoinable = typeof joinableData === 'boolean' ? joinableData : joinableData.joinable;
+
             if (!isJoinable) {
-                alert("참여할 수 없는 방입니다.");
+                const errorMessage = typeof joinableData === 'object' && joinableData.message
+                    ? joinableData.message
+                    : "참여할 수 없는 방입니다.";
+                alert(errorMessage);
                 return;
             }
 
             setRoomCode(code);
-            
+
             if (send && connected) {
                 // 방 참여 메시지 전송
                 send(`/app/quiz/join/${code}`, { userId: user.userId });
@@ -283,6 +311,9 @@ export default function STUQuiz() {
                         correctIndex: -1, // 학생은 정답을 모름
                     }}
                     onSubmitAnswer={handleSubmitAnswer}
+                    currentQuestionNumber={currentQuestion.questionNumber}
+                    totalQuestions={totalQuestions}
+                    timePerQuestion={currentQuestion.timeLimit}
                 />
             )}
 

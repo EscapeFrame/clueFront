@@ -62,13 +62,31 @@ export default function TCHQuiz() {
 
         const sub = subscribe("/topic/quiz/rooms", (message: unknown) => {
             console.log("[TCH Quiz] ✅ Received room creation message:", message);
-            const msg = message as { roomCode?: string; status?: string };
+            const msg = message as {
+                roomCode?: string;
+                status?: string;
+                questionCount?: number;
+                maxParticipants?: number;
+                timePerQuestion?: number;
+            };
             console.log("[TCH Quiz] roomCode:", msg?.roomCode);
+            console.log("[TCH Quiz] questionCount:", msg?.questionCount);
             console.log("[TCH Quiz] status:", msg?.status);
-            
+
             if (msg?.roomCode) {
                 console.log("[TCH Quiz] Setting roomCode and moving to waiting");
                 setRoomCode(msg.roomCode);
+
+                // 서버에서 받은 실제 문제 개수로 업데이트
+                if (msg.questionCount) {
+                    console.log("[TCH Quiz] 📊 서버 응답 문제 개수로 업데이트:", msg.questionCount);
+                    setTotalQuestions(msg.questionCount);
+                    setQuizSettings(prev => ({
+                        ...prev,
+                        questionCount: msg.questionCount!
+                    }));
+                }
+
                 setStep("waiting");
             } else {
                 console.warn("[TCH Quiz] ⚠️ No roomCode in message!");
@@ -176,10 +194,18 @@ export default function TCHQuiz() {
             {connected && step === "create" && (
                 <CreateQuiz
                     onCreate={(qs: CreatePayload) => {
+                        console.log("[TCH Quiz] 📝 퀴즈 생성 요청:", qs);
+
                         const questionCount = qs.questionCount ?? 10;
                         const maxParticipants = qs.maxParticipants ?? 30;
                         const timePerQuestion = qs.timePerQuestion ?? 30;
-                        
+
+                        console.log("[TCH Quiz] 📊 설정값:", {
+                            questionCount,
+                            maxParticipants,
+                            timePerQuestion
+                        });
+
                         setTotalQuestions(questionCount);
                         setQuizSettings({
                             maxParticipants,
@@ -192,7 +218,7 @@ export default function TCHQuiz() {
                             alert("퀴즈 서버 연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
                             return;
                         }
-                        
+
                         // Build payload matching backend CreateRoomRequest DTO
                         const payload = {
                             maxParticipants,
@@ -202,6 +228,8 @@ export default function TCHQuiz() {
                             classRoomId: classRoomId ?? undefined,
                             documentId: documentId ?? undefined,
                         };
+
+                        console.log("[TCH Quiz] 📤 서버로 전송할 payload:", payload);
 
                         // server expects connect to /ws-quiz then app destination /app/quiz/create
                         send("/app/quiz/create", payload);
@@ -263,6 +291,9 @@ export default function TCHQuiz() {
                         send(`/app/quiz/reveal-answer/${roomCode}`, {});
                     }}
                     totalStudents={participants.length}
+                    currentQuestionNumber={currentQuestion.questionNumber}
+                    totalQuestions={totalQuestions}
+                    timePerQuestion={quizSettings.timePerQuestion}
                 />
             )}
 
