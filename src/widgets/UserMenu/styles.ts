@@ -125,6 +125,22 @@ export const ModalButton = styled.button`
   }
 `;
 
+export const ModalButtonDanger = styled.button`
+  ${fonts.P2}
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid ${colors.red[3]};
+  background-color: ${colors.red[1]};
+  color: ${colors.red[3]};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${colors.red[3]};
+    color: ${colors.white};
+  }
+`;
+
 export const pointer = styled.div`
   cursor: pointer;
 `;
