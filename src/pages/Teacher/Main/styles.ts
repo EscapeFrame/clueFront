@@ -2,11 +2,10 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh / 0.8);
   background-color: #f7f7f7;
   padding: 1rem 14rem;
   gap: 24px;
-  overflow-y: auto;
 
   @media (max-width: 1024px) {
     padding: 1rem 2rem;
@@ -23,7 +22,6 @@ export const Left = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
   @media (max-width: 868px) {
     width: 100%;
