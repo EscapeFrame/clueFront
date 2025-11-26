@@ -9,7 +9,7 @@ import { getLessonDirectories as qre } from '@/features/Common/Class/api/useLess
 import { IoListOutline } from 'react-icons/io5';
 // import { IoChatbubbleOutline } from 'react-icons/io5';
 // import { AiOutlineQuestionCircle } from 'react-icons/ai';
-import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowDown, IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 interface Document {
   documentId: number;
@@ -26,7 +26,7 @@ interface DirectoryResponse {
   directoryList: Directory[];
 }
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => {
   const { classRoomId, documentId } = useParams<{ classRoomId: string; documentId: string }>();
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [openDirs, setOpenDirs] = useState<Set<number>>(new Set());
@@ -78,7 +78,7 @@ const Sidebar = () => {
   };
 
   return (
-    <s.Sidebar>
+    <s.Sidebar isOpen={isOpen}>
       <s.TopTabs>
         <s.TabButton 
           active={activeTab === 'curriculum'} 
@@ -144,6 +144,7 @@ export default function MarkDownViewerPage() {
   const navigate = useNavigate();
   const [mdContent, setMdContent] = useState('Loading...');
   const [title, setTitle] = useState(location.state?.title || '문서');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (!documentId) return;
@@ -170,7 +171,10 @@ export default function MarkDownViewerPage() {
 
   return (
     <s.PageWrapper>
-      <Sidebar />
+      <s.SidebarToggleButton onClick={() => setIsSidebarOpen(!isSidebarOpen)} isOpen={isSidebarOpen}>
+        {isSidebarOpen ? <IoIosArrowBack /> : <IoIosArrowForward />}
+      </s.SidebarToggleButton>
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
       <s.Container>
         <s.ViewerContainer>
           <s.ViewerHeader>
