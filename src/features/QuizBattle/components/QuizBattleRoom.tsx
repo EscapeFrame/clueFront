@@ -88,9 +88,23 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
       // 참가자 업데이트
       onParticipantUpdate: (response) => {
         console.log('Participant update:', response);
-        if (response.status === 'success' && response.allParticipants) {
-          setParticipants(response.allParticipants);
-        }
+          // Prefer the typed domain message shape (has 'participants')
+          if ('participants' in response && Array.isArray(response.participants)) {
+            setParticipants(response.participants);
+            return;
+          }
+
+          // Fallback to legacy/response wrapper shape
+          // fallback wrapper shape: { status: 'success', allParticipants: ParticipantInfo[] }
+          const wrapperResp = response as { status?: string; allParticipants?: unknown };
+          if (
+            typeof wrapperResp === 'object' &&
+            wrapperResp !== null &&
+            wrapperResp.status === 'success' &&
+            Array.isArray(wrapperResp.allParticipants)
+          ) {
+            setParticipants(wrapperResp.allParticipants as ParticipantInfo[]);
+          }
       },
 
       // 문제 수신
@@ -114,8 +128,14 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
       onQuizFinished: (response) => {
         console.log('Quiz finished:', response);
         setGameStatus('finished');
-        if (response.finalRankings) {
-          setRankings(response.finalRankings);
+        // Newer message uses `rankings`, older wrapper may use `finalRankings`
+        if ('rankings' in response && Array.isArray(response.rankings)) {
+          setRankings(response.rankings);
+        } else {
+          const wrapperResp = response as { rankings?: unknown; finalRankings?: unknown };
+          if (Array.isArray(wrapperResp.finalRankings)) {
+            setRankings(wrapperResp.finalRankings as RankingData[]);
+          }
         }
         setCurrentQuestion(null);
       },
