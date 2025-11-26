@@ -69,7 +69,7 @@ export const Section = styled.div`
   border: 1px solid ${colors.gray[3]};
   border-radius: 8px;
   margin-bottom: 10px;
-  background-color: ${colors.gray[1]};
+  background-color: ${colors.white};
 `;
 
 export const State = styled.div<{ $status: 0 | 1 }>`

@@ -114,8 +114,8 @@ export const ExamComponent: React.FC<ExamListProps> = ({ isTeacher }) => {
 
             {isTeacher && (
               <s.ModalFooter>
-                <s.Button>Edit</s.Button>
-                <s.Button>Delete</s.Button>
+                <s.Button>수정</s.Button>
+                <s.ButtonDelete>삭제</s.ButtonDelete>
               </s.ModalFooter>
             )}
           </s.ModalContent>
