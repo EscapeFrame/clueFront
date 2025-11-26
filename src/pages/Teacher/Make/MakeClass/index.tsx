@@ -101,13 +101,16 @@ export default function MakeClass() {
         handleToggle={handleToggle}
       />
       {error && <s.ErrorMessage>{error}</s.ErrorMessage>}
-      <Button
-        text={loading ? '생성 중...' : '수업 만들기'}
-        width="100%"
-        type={0}
-        onClick={handleSubmit}
-        disabled={loading}
-      />
+      <s.ActionRow>
+  <Button text="취소" type={4} disabled={loading} onClick={() => navigate(-1)} />
+        <Button
+          text={loading ? '생성 중...' : '수업 만들기'}
+          width="100%"
+          type={0}
+          onClick={handleSubmit}
+          disabled={loading}
+        />
+      </s.ActionRow>
     </s.Container>
   );
 }

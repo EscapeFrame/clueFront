@@ -9,6 +9,7 @@ export const Container = styled.div`
   width: 100%;
   border-radius: 24px;
   border: 1px solid ${colors.gray[2]};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 1200px) {
     padding: 2rem 1rem;

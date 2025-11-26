@@ -3,7 +3,6 @@ import { IoCalendarClearOutline } from 'react-icons/io5';
 import { LuClock4 } from 'react-icons/lu';
 import { AssignmentCardProps } from '@/shared/types/Class/Assignment/Attachment';
 import { differenceInDays, parseISO } from 'date-fns';
-import Button from '@/entities/UI/Button';
 import * as s from './styles';
 
 export function AssignmentCard({ data, assignmentId, onAssignmentSelect }: AssignmentCardProps & {

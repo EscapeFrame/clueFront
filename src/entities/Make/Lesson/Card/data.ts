@@ -17,7 +17,8 @@ export const lessonCards = [
     title: "Google Slide",
     desc: ["강의용 프레젠테이션에 최적", "시각 자료 강조", "학생 발표/프로젝트용 활용"],
     url: "google-slide",
-  },{
+  },
+  {
   title: "File",
   desc: ["PPTX", "PDF", "다양한 형식의 파일"],
   url: "file"

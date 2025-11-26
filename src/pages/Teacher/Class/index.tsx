@@ -81,7 +81,28 @@ const Classroom: React.FC = () => {
 
   return (
     <s.Container>
-      {classInfo ? <ClassInfo {...classInfo} /> : <p>로딩중...</p>}
+      {classInfo ? (
+        <ClassInfo {...classInfo} />
+      ) : (
+        // Richer skeleton resembling ClassInfo (title, teacher row, actions, description)
+        <div style={{ padding: '1rem 0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ width: 360, height: 22, borderRadius: 6, background: '#e9ecef' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 20, height: 20, borderRadius: 4, background: '#e9ecef' }} />
+                <div style={{ width: 220, height: 14, borderRadius: 6, background: '#f1f3f5' }} />
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 12 }}>
+            <div style={{ width: '100%', height: 12, borderRadius: 6, background: '#f1f3f5', marginBottom: 8 }} />
+            <div style={{ width: '90%', height: 12, borderRadius: 6, background: '#f1f3f5', marginBottom: 8 }} />
+            <div style={{ width: '60%', height: 12, borderRadius: 6, background: '#f1f3f5' }} />
+          </div>
+        </div>
+      )}
       <TabSelector
         tabs={tabs}
         activeTab={activeTab}

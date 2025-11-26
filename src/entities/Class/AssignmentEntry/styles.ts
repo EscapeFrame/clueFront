@@ -3,7 +3,6 @@ import { fonts } from '@/shared/theme/font.styles';
 import { colors } from '@/shared/theme/theme.styles';
 
 export const Container = styled.div`
-  background-color: ${colors.white};
 `;
 
 export const Title = styled.h2`
@@ -102,15 +101,22 @@ export const StudentRow = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-  border: 1px solid ${colors.gray[3]};
-  border-radius: 0.5rem;
+  border: 1px solid ${colors.gray[2]};
+  border-radius: 0.75rem;
   padding: 1rem;
-  background-color: ${colors.white};
+  background-color: ${colors.gray[1]};
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+  transition: box-shadow 120ms ease, transform 120ms ease;
   width: 100%; // 그리드에서 균등하게
 
   @media (max-width: 600px) {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(33,33,33,0.06);
+    transform: translateY(-2px);
   }
 `;
 
@@ -160,17 +166,18 @@ interface UserAvatarProps {
 }
 
 export const UserAvatar = styled.img<UserAvatarProps>`
-  width: ${({ large }) => (large ? '80px' : '40px')};
-  height: ${({ large }) => (large ? '80px' : '40px')};
+  width: ${({ large }) => (large ? '80px' : '48px')};
+  height: ${({ large }) => (large ? '80px' : '48px')};
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 12px;
   object-fit: cover;
-  background: #ccc;
+  background: ${colors.gray[2]};
 `;
 
 export const UserName = styled.span`
   color: ${colors.black};
   ${fonts.P3};
+  font-weight: 600;
 `;
 
 export const UserNumber = styled.span`
@@ -187,6 +194,7 @@ export const StatusBadge = styled.div<{ isSubmitted: boolean }>`
   @media (max-width: 600px) {
     margin-top: 0.5rem;
   }
+  margin-left: 12px;
 `;
 
 export const ModalOverlay = styled.div`
@@ -290,4 +298,16 @@ export const FileHeader = styled.div`
       color: ${colors.white};
     }
   }
+`;
+
+export const EmptyStateMessage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background-color: ${colors.gray[1]};
+  border-radius: 0.5rem;
+  color: ${colors.gray[4]};
+  ${fonts.P3};
+  text-align: center;
 `;

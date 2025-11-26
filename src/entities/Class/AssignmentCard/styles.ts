@@ -96,15 +96,12 @@ export const InfoItem = styled.div`
   margin-top: 0;
   align-items: center;
   gap: 0.5rem;
-  ${fonts.P1}
+  ${fonts.P2}
   color: ${colors.gray[4]};
 
   svg {
     width: 1rem;
     height: 1rem;
-    @media (max-width: 1200px) {
-      display: none; // 1200px 밑에서 아이콘 숨김
-    }
   }
 
   @media (max-width: 1200px) {

@@ -44,7 +44,7 @@ const MakeTask: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isFormValid = !!subject && !!dueDate && !!classRoomId;
+  const isFormValid = !!subject.trim() && !!dueDate && !!classRoomId;
 
   // 파일 선택
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,15 +138,15 @@ const MakeTask: React.FC = () => {
         start_date: startTime,
         end_date: endTime,
       });
-      
+
       const assignmentId = response;
 
       console.log("받은 assignmentId:", assignmentId);
-      
+
       if (!assignmentId) {
         throw new Error("과제 생성 후 ID를 받지 못했습니다.");
       }
-      
+
       console.log("과제 생성 성공, assignmentId:", assignmentId);
 
       if (attachments.length > 0) {
@@ -184,10 +184,13 @@ const MakeTask: React.FC = () => {
         onDeleteAttachment={handleDeleteAttachment}
       />
 
-  <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} showTime />
-  <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} showTime />
+      <DateInput label="시작일 입력" id="start" value={startDate} onChange={e => setStartDate(e.target.value)} showTime />
+      <DateInput label="마감일 입력" id="end" value={dueDate} required onChange={e => setDueDate(e.target.value)} min={startDate} showTime />
 
-      <Button text="완료" disabled={!isFormValid || isSubmitting} onClick={handleMakeTask} />
+      <S.ActionRow>
+        <Button text="취소" type={4} disabled={isSubmitting} onClick={() => navigate(-1)} />
+        <Button text="완료" disabled={!isFormValid || isSubmitting} onClick={handleMakeTask} />
+      </S.ActionRow>
 
       {/* 파일 업로드 모달 */}
       {isFileModalOpen && (
