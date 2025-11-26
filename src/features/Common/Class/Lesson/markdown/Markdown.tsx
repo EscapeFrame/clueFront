@@ -157,19 +157,11 @@ export default function MarkDownViewerPage() {
         const filename = response.filename || title || `document_${documentId}`;
         const fileExtension = filename.toLowerCase().split('.').pop();
         
-        console.log('File extension:', fileExtension);
-        console.log('Response data type:', typeof response.data);
-        console.log('Filename:', filename);
-        
         // .md 확장자인 경우에만 마크다운으로 렌더링
         if (fileExtension === 'md') {
           // 문자열이면 그대로 사용, 아니면 문자열로 변환 시도
-          if (typeof response.data === 'string') {
-            setMdContent(response.data);
-          } else {
-            // data가 객체나 다른 형태일 경우 문자열로 변환
-            setMdContent(String(response.data));
-          }
+          const content = typeof response.data === 'string' ? response.data : String(response.data);
+          setMdContent(content);
         } else {
           // 마크다운이 아닌 경우 Blob으로 다운로드 처리
           const result = await downloadDocumentAsBlob(documentId);
