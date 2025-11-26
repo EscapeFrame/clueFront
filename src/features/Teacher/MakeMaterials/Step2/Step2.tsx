@@ -227,10 +227,15 @@ export default function Step2({ words, onBack, onNext, isProcessing = false }: S
     return (
         <s.Container>
 
-
-
-            <s.WorkflowCanvas>
-                {workflow.nodes.map((node, index) => (
+            {isProcessing ? (
+                <s.SpinnerOverlay>
+                    <s.Spinner />
+                    <s.LoadingText>문서를 생성하는 중입니다...</s.LoadingText>
+                </s.SpinnerOverlay>
+            ) : (
+                <>
+                    <s.WorkflowCanvas>
+                        {workflow.nodes.map((node, index) => (
                     <React.Fragment key={node.id}>
                         <s.NodeCard
                             draggable
@@ -309,7 +314,8 @@ export default function Step2({ words, onBack, onNext, isProcessing = false }: S
                 <s.Button variant="primary" type="submit" onClick={handleNext} disabled={isProcessing}>다음</s.Button>
                     </s.ButtonRow>
             </s.ControlGroup>
-        
+                </>
+            )}
         </s.Container>
     );
 }

@@ -68,8 +68,12 @@ export const MenuButton = styled.button<{ active?: boolean }>`
 export const Content = styled.div`
   background: white;
   padding: 24px;
+  height: fit-content;
+  min-height: calc(100vh - 200px);
   border-radius: 12px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const PageTitle = styled.h2`

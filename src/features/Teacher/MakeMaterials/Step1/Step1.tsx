@@ -82,6 +82,17 @@ export default function Step1({ onNext }: Step1Props) {
         });
     };
 
+    if (isPending) {
+        return (
+            <s.Card>
+                <s.SpinnerOverlay>
+                    <s.Spinner />
+                    <s.LoadingText>수업 자료를 생성하는 중입니다...</s.LoadingText>
+                </s.SpinnerOverlay>
+            </s.Card>
+        );
+    }
+
     return (
         <s.Card>
             <s.Form onSubmit={handleSubmit}>
