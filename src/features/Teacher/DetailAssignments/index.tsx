@@ -35,7 +35,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
     const [isDragOver, setIsDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const today = dayjs().format('YYYY-MM-DD');
+    const today = dayjs().format('YYYY-MM-DDTHH:mm');
 
     // 공통으로 사용할 과제 조회 함수
     const fetchAndSetAssignment = useCallback(async () => {
@@ -61,7 +61,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                 setAssignment(mappedData);
                 setEditTitle(mappedData.title);
                 setEditDescription(mappedData.description);
-                setEditEndDate(dayjs(mappedData.endDate).format('YYYY-MM-DD'));
+                setEditEndDate(dayjs(mappedData.endDate).format('YYYY-MM-DDTHH:mm'));
                 setError(null);
             } else {
                 setError('과제 정보를 불러오지 못했습니다.');
@@ -114,7 +114,7 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
         if (assignment) {
             setEditTitle(assignment.title);
             setEditDescription(assignment.description);
-            setEditEndDate(dayjs(assignment.endDate).format('YYYY-MM-DD'));
+            setEditEndDate(dayjs(assignment.endDate).format('YYYY-MM-DDTHH:mm'));
         }
         setIsEditing(false);
     };
@@ -319,13 +319,14 @@ export const DetailAssignment: React.FC<{ assignmentId: string; onBack: () => vo
                             value={editEndDate}
                             onChange={(e) => setEditEndDate(e.target.value)}
                             min={today}
+                            showTime
                         />
                     ) : (
                         <s.DetailState>
                             <Icon0 />
                             <div className="text-group">
                                 <span>{stateData[0].name}</span>
-                                <span>{dayjs(endDate).format('YYYY-MM-DD')}</span>
+                                <span>{dayjs(endDate).format('YYYY-MM-DD HH:mm')}</span>
                             </div>
                         </s.DetailState>
                     )}
