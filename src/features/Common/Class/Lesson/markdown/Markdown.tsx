@@ -163,11 +163,17 @@ export default function MarkDownViewerPage() {
         
         console.log('[Markdown] Filename:', filename);
         console.log('[Markdown] Extension:', fileExtension);
+        console.log('[Markdown] Content-Type:', info.contentType);
         
         // 다운로드 대상 확장자 목록
         const downloadableExtensions = ['png', 'jpg', 'jpeg', 'gif', 'pdf', 'zip', 'rar', 'docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt', 'txt', 'csv'];
         
-        const shouldDownload = fileExtension && downloadableExtensions.includes(fileExtension);
+        // Content-Type으로 이미지/바이너리 파일 확인
+        const binaryContentTypes = ['image/', 'application/pdf', 'application/zip', 'application/octet-stream', 'application/vnd.'];
+        const isBinaryFile = info.contentType && binaryContentTypes.some(type => info.contentType?.startsWith(type));
+        
+        const shouldDownload = (fileExtension && downloadableExtensions.includes(fileExtension)) || isBinaryFile;
+        console.log('[Markdown] Is binary file:', isBinaryFile);
         console.log('[Markdown] Should download:', shouldDownload);
         
         // 다운로드 대상 파일인 경우

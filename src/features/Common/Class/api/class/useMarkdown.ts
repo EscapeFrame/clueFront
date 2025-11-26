@@ -11,12 +11,14 @@ export const getDocumentInfo = async (documentId: string) => {
     
     if (res.status < 200 || res.status >= 300) {
       console.error(`[API] 문서 정보 조회 실패: ${res.status}`);
-      return { filename: null, data: null };
+      return { filename: null, data: null, contentType: null };
     }
     
     // Content-Disposition 헤더에서 파일명 추출
     const contentDisposition = res.headers?.['content-disposition'] as string | undefined;
+    const contentType = res.headers?.['content-type'] as string | undefined;
     console.log('[API] Content-Disposition:', contentDisposition);
+    console.log('[API] Content-Type:', contentType);
     
     let filename: string | null = null;
     
@@ -30,10 +32,10 @@ export const getDocumentInfo = async (documentId: string) => {
     console.log('[API] Extracted filename:', filename);
     console.log('[API] Data type:', typeof res.data);
     
-    return { filename, data: res.data };
+    return { filename, data: res.data, contentType };
   } catch (error) {
     console.error('[API] 문서 정보 조회 중 오류:', error);
-    return { filename: null, data: null };
+    return { filename: null, data: null, contentType: null };
   }
 };
 
