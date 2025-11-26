@@ -1,12 +1,11 @@
-html, body, #root {
-  font-family: 'Pretendard';
-  min-height: 100%;
-  height: auto;
+html {
+  zoom: 0.8;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background-color: #F7F7F7;
+    font-family: 'Pretendard';
+    margin: 0;
+    padding: 0;
+    display: block;
+    height: 125vh;
 }
