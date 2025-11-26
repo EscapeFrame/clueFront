@@ -328,52 +328,56 @@ export function AssignmentCard({
             ) : teacherAttachments.length > 0 ? (
               <s.FileListSection>
                 {teacherAttachments.map((att: TeacherAttachment, index) => (
-                  <s.FileItem key={index}>
+                  <s.FileItem 
+                    key={index}
+                    style={{ cursor: 'pointer' }}
+                    onClick={async () => {
+                      if (att.type === 'FILE') {
+                        try {
+                          // call assignment attachment download endpoint
+                          const res = await fetch(`/api/assignments/${att.assignmentAttachmentId}/download`, {
+                            method: 'GET',
+                            headers: { Accept: '*/*' },
+                          });
+                          if (!res.ok) throw new Error('네트워크 응답 실패');
+                          const blob = await res.blob();
+                          // try to get filename from headers
+                          const cd = res.headers.get('content-disposition');
+                          let filename = att.originalFileName || 'download';
+                          if (cd) {
+                            const m = cd.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
+                            if (m) filename = decodeURIComponent(m[1] || m[2]);
+                          }
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = filename;
+                          document.body.appendChild(a);
+                          a.click();
+                          a.remove();
+                          window.URL.revokeObjectURL(url);
+                        } catch (e) {
+                          console.error('파일 다운로드 실패', e);
+                          alert('파일을 다운로드할 수 없습니다.');
+                        }
+                      } else {
+                        // LINK type
+                        if (att.value) {
+                          window.open(att.value, '_blank');
+                        }
+                      }
+                    }}
+                  >
                     <s.FileInfoContainer>
                       {att.type === 'FILE' ? <FaRegFile /> : <FaLink />}
                       <div>
-                        <s.FileNameText>
+                        <s.FileNameText 
+                          title={att.type === 'FILE' ? att.originalFileName : att.value}
+                        >
                           {att.type === 'FILE' ? att.originalFileName : att.value}
                         </s.FileNameText>
                       </div>
                     </s.FileInfoContainer>
-                    {att.type === 'FILE' ? (
-                      <button
-                        onClick={async () => {
-                          try {
-                            // call assignment attachment download endpoint
-                            const res = await fetch(`/api/assignments/${att.assignmentAttachmentId}/download`, {
-                              method: 'GET',
-                              headers: { Accept: '*/*' },
-                            });
-                            if (!res.ok) throw new Error('네트워크 응답 실패');
-                            const blob = await res.blob();
-                            // try to get filename from headers
-                            const cd = res.headers.get('content-disposition');
-                            let filename = att.originalFileName || 'download';
-                            if (cd) {
-                              const m = cd.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
-                              if (m) filename = decodeURIComponent(m[1] || m[2]);
-                            }
-                            const url = window.URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = filename;
-                            document.body.appendChild(a);
-                            a.click();
-                            a.remove();
-                            window.URL.revokeObjectURL(url);
-                          } catch (e) {
-                            console.error('파일 다운로드 실패', e);
-                            alert('파일을 다운로드할 수 없습니다.');
-                          }
-                        }}
-                      >
-                        다운로드
-                      </button>
-                    ) : (
-                      <button onClick={() => att.value && window.open(att.value, '_blank')}>열기</button>
-                    )}
                   </s.FileItem>
                 ))}
               </s.FileListSection>
