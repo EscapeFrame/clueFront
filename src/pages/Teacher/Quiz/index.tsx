@@ -29,6 +29,11 @@ export default function TCHQuiz() {
     const [totalQuestions, setTotalQuestions] = useState(10); // 총 문제 수
     const [currentRanking, setCurrentRanking] = useState<Ranking[]>([]); // 현재 랭킹
     const [finalRanking, setFinalRanking] = useState<Ranking[]>([]); // 최종 랭킹
+    const [quizSettings, setQuizSettings] = useState({
+        maxParticipants: 30,
+        questionCount: 10,
+        timePerQuestion: 30,
+    });
 
     const { connected, send, subscribe } = useQuizSocket();
     
@@ -128,7 +133,15 @@ export default function TCHQuiz() {
                 <CreateQuiz
                     onCreate={(qs: CreatePayload) => {
                         const questionCount = qs.questionCount ?? 10;
+                        const maxParticipants = qs.maxParticipants ?? 30;
+                        const timePerQuestion = qs.timePerQuestion ?? 30;
+                        
                         setTotalQuestions(questionCount);
+                        setQuizSettings({
+                            maxParticipants,
+                            questionCount,
+                            timePerQuestion,
+                        });
 
                         // send create room via websocket if available
                         if (!send || !connected) {
@@ -138,9 +151,9 @@ export default function TCHQuiz() {
                         
                         // Build payload matching backend CreateRoomRequest DTO
                         const payload = {
-                            maxParticipants: qs.maxParticipants ?? 30,
-                            questionCount: questionCount,
-                            timePerQuestion: qs.timePerQuestion ?? 30,
+                            maxParticipants,
+                            questionCount,
+                            timePerQuestion,
                             // UUIDs expected as strings
                             classRoomId: classRoomId ?? undefined,
                             documentId: documentId ?? undefined,
@@ -156,6 +169,9 @@ export default function TCHQuiz() {
             {connected && step === "waiting" && (
                 <WaitingRoom
                     roomCode={roomCode}
+                    initialMembers={participants.length}
+                    initialQuestions={quizSettings.questionCount}
+                    initialTime={quizSettings.timePerQuestion}
                     students={participants.map(p => ({
                         id: p.userId,
                         name: p.username,
