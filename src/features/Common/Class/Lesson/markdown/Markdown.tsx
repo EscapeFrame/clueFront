@@ -151,20 +151,31 @@ export default function MarkDownViewerPage() {
 
     const fetchMdData = async () => {
       try {
+        console.log('[Markdown] Fetching document:', documentId);
+        
         // 먼저 파일 정보 확인
         const info = await getDocumentInfo(documentId);
+        console.log('[Markdown] Document info:', info);
         
         // 파일명에서 확장자 확인
         const filename = info.filename || title || `document_${documentId}`;
         const fileExtension = filename.toLowerCase().split('.').pop();
         
+        console.log('[Markdown] Filename:', filename);
+        console.log('[Markdown] Extension:', fileExtension);
+        
         // 다운로드 대상 확장자 목록
         const downloadableExtensions = ['png', 'jpg', 'jpeg', 'gif', 'pdf', 'zip', 'rar', 'docx', 'xlsx', 'pptx', 'doc', 'xls', 'ppt', 'txt', 'csv'];
         
+        const shouldDownload = fileExtension && downloadableExtensions.includes(fileExtension);
+        console.log('[Markdown] Should download:', shouldDownload);
+        
         // 다운로드 대상 파일인 경우
-        if (fileExtension && downloadableExtensions.includes(fileExtension)) {
+        if (shouldDownload) {
+          console.log('[Markdown] Starting blob download...');
           // Blob으로 다운로드 처리
           const result = await downloadDocumentAsBlob(documentId);
+          console.log('[Markdown] Blob download result:', result);
           
           if (result) {
             // Blob을 다운로드
@@ -177,21 +188,26 @@ export default function MarkDownViewerPage() {
             a.remove();
             window.URL.revokeObjectURL(url);
             
+            console.log('[Markdown] File downloaded:', result.filename);
             setMdContent('# 파일 다운로드\n\n파일이 다운로드되었습니다.');
             // 다운로드 후 이전 페이지로 돌아가기
             setTimeout(() => {
               navigate(-1);
             }, 500);
           } else {
+            console.error('[Markdown] Blob download failed');
             setMdContent('# Error\n\n파일 다운로드에 실패했습니다.');
           }
         } else {
+          console.log('[Markdown] Rendering as markdown/text');
           // 마크다운 또는 기타 텍스트 파일로 렌더링
           const content = typeof info.data === 'string' ? info.data : String(info.data);
+          console.log('[Markdown] Content type:', typeof info.data);
+          console.log('[Markdown] Content length:', content.length);
           setMdContent(content);
         }
       } catch (error: unknown) {
-        console.error('Failed to fetch markdown:', error);
+        console.error('[Markdown] Failed to fetch markdown:', error);
         setMdContent('# Error\n\nFailed to load document.');
       }
     };
