@@ -12,6 +12,8 @@ import { userState } from '@/shared/model/userState';
 import Customapi from '@/shared/config/api'; // Add this line
 // Customapi is not required here because profile image is provided by useProfileImage
 import { useProfileImage } from '@/shared/model/profileImageState';
+import { useAuth } from '@/app/hooks/useAccessToken'; // Import useAuth hook
+
 
 interface DropdownProps {
   studentNumber?: number | string;
@@ -21,12 +23,14 @@ interface DropdownProps {
 }
 
 export default function Dropdown({ role, name, studentNumber, myImage: userProfileImage }: DropdownProps) {
-
+  const { user } = useAuth(); // Get user from useAuth hook
   const navigate = useNavigate();
   const [, setUser] = useRecoilState(userState);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const context = useContext(UserContext);
   const [profileImageUrl] = useProfileImage();
+
+
 
   if (!context) {
     throw new Error("Dropdown은 UserContext.Provider 안에서 사용되어야 합니다.");
@@ -78,7 +82,11 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
         <s.UserInfo>
           <s.ProfileImage src={profileImageUrl || userProfileImage || myImage} alt="프로필" />
           <s.ProfileName>{name}</s.ProfileName>
-          {studentNumber && <s.StudentNumber>{studentNumber}</s.StudentNumber>}
+          {user.role !== 'TEACHER' && (
+            <>
+              {studentNumber && <s.StudentNumber>{studentNumber}</s.StudentNumber>}
+            </>
+          )}
         </s.UserInfo>
         <s.pointer onClick={() => setIsModalOpen(true)}>
           <MdOutlineLogout />
