@@ -44,7 +44,7 @@ const Classroom: React.FC = () => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    localStorage.setItem('classroom-tab', tab);
+    localStorage.setItem('classroom-tab', 'lesson');
   };
 
   if (!classRoomId) return <NotFound />;
