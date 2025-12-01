@@ -80,10 +80,7 @@ export default function QuizPlaying({
             />
 
             <s.Card>
-                <s.Section>
-                    <s.PointText>{submittedCount}</s.PointText>&nbsp;/{totalStudents}
-                </s.Section>
-
+                
                 <s.Question>{question.question}</s.Question>
 
                 <s.OptionsGrid>
