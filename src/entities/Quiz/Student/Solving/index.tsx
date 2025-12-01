@@ -8,7 +8,7 @@ import RouletteOptions from "./Option/roulette";
 import MovingOptions from "./Option/moving";
 
 type QuestionType = "multiple" | "moving" | "roulette";
-type OptionKeys = "haeyul" | "panda" | "ferret" | "koala";
+type OptionKeys = "haeyul" | "panda" | "I" | "koala";
 
 type Question = {
     id: string;
@@ -58,7 +58,7 @@ export default function Solving({
         navigate("/"); // /main으로 이동
     };
 
-    const OPTION_KEYS: OptionKeys[] = ["haeyul", "panda", "ferret", "koala"];
+    const OPTION_KEYS: OptionKeys[] = ["haeyul", "panda", "I", "koala"];
 
     return (
         <s.Container>

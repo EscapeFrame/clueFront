@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as s from '../styles';
 import { colors } from "@/shared/theme/theme.styles";
 
-type OptionKeys = "haeyul" | "panda" | "ferret" | "koala";
+type OptionKeys = "haeyul" | "panda" | "I" | "koala";
 
 type RouletteProps = {
   options: [string, string, string, string];
@@ -13,13 +13,13 @@ type RouletteProps = {
 const npcColors: Record<OptionKeys, { bg: string; border: string }> = {
     haeyul: { bg: colors.npc.haeyul[0], border: colors.npc.haeyul[1] },
     panda: { bg: colors.npc.panda[0], border: colors.npc.panda[1] },
-    ferret: { bg: colors.npc.ferret[0], border: colors.npc.ferret[1] },
+    I: { bg: colors.npc.I[0], border: colors.npc.I[1] },
     koala: { bg: colors.npc.koala[0], border: colors.npc.koala[1] },
 };
 
 export default function RouletteOptions({
   options = ["해율", "판다", "페럿", "코알라"],
-  optionKeys = ["haeyul", "panda", "ferret", "koala"],
+  optionKeys = ["haeyul", "panda", "I", "koala"],
   onSelect = () => { }
 }: Partial<RouletteProps>) {
   const [rotation, setRotation] = useState(0);
