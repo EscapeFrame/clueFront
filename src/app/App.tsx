@@ -32,10 +32,10 @@ function AuthWrapper() {
   let role = user?.role || null;
   if (role === 'STUDENT') role = 'STU';
   else if (role === 'TEACHER') role = 'TCH';
-  // Hide Navbar on markdown editor route
-  const hideNavbar = !!matchPath(
-    '/class/:classRoomId/:directoryId/make/lesson/markdown',
-    location.pathname
+  // Hide Navbar on markdown editor route and login page
+  const hideNavbar = !!(
+    matchPath('/class/:classRoomId/:directoryId/make/lesson/markdown', location.pathname) ||
+    matchPath('/login', location.pathname)
   );
   return (
       <UserContext.Provider value={{ accessToken, user, setAuthInfo, removeAuthInfo }}>
