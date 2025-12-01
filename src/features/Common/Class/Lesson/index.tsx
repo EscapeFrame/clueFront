@@ -1,20 +1,19 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { IoDocumentOutline } from "react-icons/io5";
-import { IoCodeSlashOutline } from "react-icons/io5";
-import { HiOutlineSquare3Stack3D } from "react-icons/hi2";
-import { LuHash } from "react-icons/lu";
 import { IoClose } from "react-icons/io5";
 
 import * as s from './styles';
 
-import { Directory, LessonProps } from '@/shared/types/Class/Lesson';
+import { Directory, LessonProps, SubDirectory } from '@/shared/types/Class/Lesson';
 import { getLessonDirectories } from '../api';
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory, deleteDocument, Directory as ApiDirectory } from '@/entities/Make/api/useLesson';
+import ToggleSwitch from '@/entities/UI/ToggleSwitch';
+
+// UI state: editingDocId, visibilityMap used below
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -23,6 +22,11 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const user = useRecoilValue(userState);
 
   const [directories, setDirectories] = useState<Directory[]>([]);
+  // buffer for pending patch updates: documentId -> partial payload
+  const [pendingPatch, setPendingPatch] = useState<Record<string, Partial<{ directoryId: string; isPrivate: string; title: string }>>>({});
+  const patchInFlight = useRef<Record<string, boolean>>({});
+  const [editingDocId, setEditingDocId] = useState<string | null>(null);
+  const [visibilityMap, setVisibilityMap] = useState<Record<string, 'PRIVATE' | 'PUBLIC'>>({});
   const [code, setCode] = useState("코드를 불러오지 못했습니다.")
   // local class code (fallback to prop `code`)
   const [localCode, setLocalCode] = useState<string>(code ?? '');
@@ -50,19 +54,33 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
         sessionStorage.setItem(`lessonDirectories-${classRoomId}`, JSON.stringify(classInfo.directoryList));
       }
 
-      setCode(classInfo.code)
+      setCode(classInfo.code);
+      const visMap: Record<string, 'PRIVATE' | 'PUBLIC'> = {};
+      const normalizeDocType = (t: unknown): SubDirectory['type'] => {
+        const allowed = ['markdown', 'ppt', 'code', 'docs'] as const;
+        if (typeof t === 'string' && (allowed as readonly string[]).includes(t)) return t as SubDirectory['type'];
+        return 'docs';
+      };
+
       const dirs: Directory[] = classInfo.directoryList.map((dir) => ({
         id: dir.directoryId.toString(),
         name: dir.directoryName,
         isRead: false,
-        directoryList: dir.documentList.map(doc => ({
-          id: doc.documentId,
-          name: doc.title,
-          isRead: false,
-          type: doc.type as 'markdown' | 'ppt' | 'code' | 'docs',
-        })),
+        directoryList: dir.documentList.map(doc => {
+          type DocumentLike = { documentId?: string; id?: string; title?: string; name?: string; type?: unknown; isPrivate?: string };
+          const d = doc as unknown as DocumentLike;
+          const isPriv = (d.isPrivate as string | undefined) ?? 'PUBLIC';
+          visMap[String(d.documentId ?? d.id ?? '')] = (isPriv === 'PRIVATE' ? 'PRIVATE' : 'PUBLIC');
+          return {
+            id: d.documentId ?? d.id ?? '',
+            name: d.title ?? d.name ?? '',
+            isRead: false,
+            type: normalizeDocType(d.type),
+          } as SubDirectory;
+        }),
       }));
       setDirectories(dirs);
+      setVisibilityMap(visMap);
       // API may return a class code; prefer that if prop `code` is not provided
       if (classInfo.code) {
         setLocalCode(classInfo.code);
@@ -112,6 +130,88 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  // Drag & Drop: start
+  const dragSource = useRef<{ dirId: string; docId: string } | null>(null);
+  const isDraggingRef = useRef(false);
+  const clickTimerRef = useRef<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, parentDirId: string, docId: string) => {
+    dragSource.current = { dirId: parentDirId, docId };
+    e.dataTransfer.effectAllowed = 'move';
+    isDraggingRef.current = true;
+  };
+
+  const handleDragEnd = () => {
+    dragSource.current = null;
+    // small timeout to allow drop to process
+    setTimeout(() => { isDraggingRef.current = false; }, 50);
+  };
+
+  const handleNameClick = (e: React.MouseEvent, sub: SubDirectory) => {
+    e.stopPropagation();
+    // delay navigation to allow double-click detection
+    if (clickTimerRef.current) {
+      window.clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = null;
+    }
+    clickTimerRef.current = window.setTimeout(() => {
+      if (!isDraggingRef.current) {
+        handleDirectoryClick(sub, true);
+      }
+      clickTimerRef.current = null;
+    }, 200);
+  };
+
+  const handleNameDoubleClick = (e: React.MouseEvent, sub: SubDirectory) => {
+    e.stopPropagation();
+    if (clickTimerRef.current) {
+      window.clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = null;
+    }
+    if (isTeacher) setEditingDocId(sub.id);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDropToDir = (e: React.DragEvent, targetDirId: string) => {
+    e.preventDefault();
+    const src = dragSource.current;
+    if (!src) return;
+    if (src.dirId === targetDirId) return; // no-op
+
+    setDirectories(prev => {
+      const copy = prev.map(d => ({ ...d, directoryList: d.directoryList ? d.directoryList.map(sd => ({ ...sd })) : [] }));
+      // find and remove from source
+      const srcDir = copy.find(d => d.id === src.dirId);
+      const targetDir = copy.find(d => d.id === targetDirId);
+      if (!srcDir || !targetDir) return prev;
+      const docIndex = srcDir.directoryList?.findIndex(sd => sd.id === src.docId) ?? -1;
+      if (docIndex === -1) return prev;
+      const [moved] = srcDir.directoryList!.splice(docIndex, 1);
+      targetDir.directoryList = targetDir.directoryList ?? [];
+      targetDir.directoryList.unshift(moved);
+
+      // mark moved as not read in new dir context
+      moved.isRead = moved.isRead ?? false;
+
+      // enqueue PATCH for moved document's directoryId change
+      // assemble full payload: directoryId, isPrivate, title
+      const title = moved.name;
+      const isPriv = visibilityMap[moved.id] ?? 'PUBLIC';
+      setPendingPatch(prevPending => ({
+        ...prevPending,
+        [moved.id]: { ...(prevPending[moved.id] ?? {}), directoryId: targetDirId, isPrivate: isPriv, title },
+      }));
+
+      return copy;
+    });
+    dragSource.current = null;
+  };
+  // Drag & Drop: end
+
   const handleCodeSelect = () => {
     const copyText = localCode || code || '';
     navigator.clipboard.writeText(copyText)
@@ -127,22 +227,122 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   const handleDirectoryAdded = (newDir?: ApiDirectory | null) => {
     if (newDir) {
-      // API의 응답 형태에 따라 변환
+      // API의 응답 형태에 따라 변환 (안전한 접근)
+      const nd = newDir as unknown as Record<string, unknown>;
+      const idVal = nd.directoryId ?? nd.id ?? '';
+      const nameVal = (nd.directoryName ?? nd.name) as string | undefined;
+      const docList = (nd.documentList as unknown) as Array<Record<string, unknown>> | undefined;
       const dir = {
-        id: String((newDir as any).directoryId ?? (newDir as any).id ?? (newDir.id ?? '')),
-        name: (newDir as any).directoryName ?? (newDir as any).name ?? (newDir.name ?? '새 디렉토리'),
+        id: String(idVal ?? ''),
+        name: nameVal ?? '새 디렉토리',
         isRead: false,
-        directoryList: (newDir as any).documentList?.map((doc: any) => ({
-          id: String(doc.documentId ?? doc.id),
-          name: doc.title ?? doc.name,
-          isRead: false,
-          type: doc.type as 'markdown' | 'ppt' | 'code' | 'docs',
-        })) ?? [],
+        directoryList: (docList ?? []).map(doc => {
+          const docId = String(doc.documentId ?? doc.id ?? '');
+          const docName = String(doc.title ?? doc.name ?? '');
+          const docType = (doc.type as string) ?? undefined;
+          return {
+            id: docId,
+            name: docName,
+            isRead: false,
+            type: (docType as 'markdown' | 'ppt' | 'code' | 'docs') ?? 'docs',
+          };
+        }),
       };
-      setDirectories(prev => [dir, ...prev]);
+  setDirectories(prev => [dir as Directory, ...prev]);
     } else {
       setRefreshTrigger(prev => prev + 1);
     }
+  };
+
+  // Send PATCH requests for pendingPatch entries. useEffect watches pendingPatch and fires per-item.
+  useEffect(() => {
+    const entries = Object.entries(pendingPatch);
+    if (entries.length === 0) return;
+
+    entries.forEach(async ([docId, payload]) => {
+      if (!payload) return;
+      if (patchInFlight.current[docId]) return; // already sending
+      patchInFlight.current[docId] = true;
+        try {
+          // Build body according to API shape
+          const body: Record<string, string> = {};
+          if (payload.directoryId !== undefined) body.directoryId = String(payload.directoryId);
+          if (payload.isPrivate !== undefined) body.isPrivate = String(payload.isPrivate);
+          if (payload.title !== undefined) body.title = String(payload.title);
+
+          const res = await fetch(`/api/document/${encodeURIComponent(docId)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+        if (!res.ok) {
+          console.error('PATCH failed for document', docId, await res.text());
+        }
+      } catch (err) {
+        console.error('Error patching document', docId, err);
+      } finally {
+        // mark done and remove pending for this doc
+        patchInFlight.current[docId] = false;
+        setPendingPatch(prev => {
+          const copy = { ...prev };
+          delete copy[docId];
+          return copy;
+        });
+      }
+    });
+  }, [pendingPatch]);
+
+  // inline title edit handled via handleNameDoubleClick
+
+  const handleTitleChange = (docId: string, newTitle: string) => {
+  // only update UI locally while editing; do NOT enqueue PATCH for every keystroke
+  setDirectories(prev => prev.map(d => ({ ...d, directoryList: d.directoryList?.map(sd => sd.id === docId ? { ...sd, name: newTitle } : sd) })));
+  };
+
+  const handleTitleBlur = () => {
+    // when editing ends, send a single PATCH with full payload (directoryId, isPrivate, title)
+    if (!editingDocId) return setEditingDocId(null);
+    const docId = editingDocId;
+
+    // find current directoryId and isPrivate for this doc
+    let currentDirectoryId: string | undefined;
+    let currentIsPrivate: 'PRIVATE' | 'PUBLIC' = 'PUBLIC';
+    for (const d of directories) {
+      if (d.directoryList?.some(sd => sd.id === docId)) {
+        currentDirectoryId = d.id;
+        break;
+      }
+    }
+    currentIsPrivate = visibilityMap[docId] ?? 'PUBLIC';
+
+    // find current title from directories state
+    const currentTitle = directories.flatMap(d => d.directoryList ?? []).find(sd => sd.id === docId)?.name ?? '';
+
+    // always send full shape
+    setPendingPatch(prev => ({ ...prev, [docId]: { directoryId: currentDirectoryId ?? '', isPrivate: currentIsPrivate, title: currentTitle } }));
+
+    setEditingDocId(null);
+  };
+
+  // visibility toggle
+  const toggleVisibility = (docId: string) => {
+    // determine current directory and title
+    let currentDirectoryId: string | undefined;
+    for (const d of directories) {
+      if (d.directoryList?.some(sd => sd.id === docId)) {
+        currentDirectoryId = d.id;
+        break;
+      }
+    }
+    const currentTitle = directories.flatMap(d => d.directoryList ?? []).find(sd => sd.id === docId)?.name ?? '';
+
+    setVisibilityMap(prev => {
+      const cur = prev[docId] ?? 'PUBLIC';
+      const next = cur === 'PRIVATE' ? 'PUBLIC' : 'PRIVATE';
+      // enqueue patch with full payload
+      setPendingPatch(p => ({ ...p, [docId]: { ...(p[docId] ?? {}), directoryId: currentDirectoryId ?? '', isPrivate: next, title: currentTitle } }));
+      return { ...prev, [docId]: next };
+    });
   };
 
   if (loading) return <s.Container>수업 정보를 불러오는 중...</s.Container>;
@@ -230,7 +430,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                   {isTeacher && (
                     <>
                       <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDirectory(dir.id, e); }}>
-                        <IoClose size={16} />
+                        <IoClose size={18} />
                       </s.DeleteIcon>
                       <s.AddSub onClick={(e) => { 
                         e.stopPropagation(); 
@@ -251,23 +451,56 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
                 <s.ProgressText>{Math.round(progress)}%</s.ProgressText>
               </s.ProgressBarWrapper>
 
-              <s.SubDirectoryList $isExpanded={isExpanded}>
-                {dir.directoryList?.map(sub => (
-                  <s.SubItem key={sub.id} $isRead={sub.isRead} onClick={() => handleDirectoryClick(sub, true)}>
-                    <s.Check $isRead={sub.isRead}>
-                      {sub.type === 'markdown' && <LuHash />}
-                      {sub.type === 'ppt' && <HiOutlineSquare3Stack3D />}
-                      {sub.type === 'code' && <IoCodeSlashOutline />}
-                      {sub.type === 'docs' && <IoDocumentOutline />}
-                    </s.Check>
-                    <s.Name>{sub.name}</s.Name>
-                    {isTeacher && (
-                      <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDocument(sub.id, e); }}>
-                        <IoClose size={14} />
-                      </s.DeleteIcon>
-                    )}
-                  </s.SubItem>
-                ))}
+              <s.SubDirectoryList $isExpanded={isExpanded}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDropToDir(e, dir.id)}
+              >
+                {dir.directoryList?.map(sub => {
+                  const vis = visibilityMap[sub.id] ?? 'PUBLIC';
+                  const isEditing = editingDocId === sub.id;
+                  return (
+                    <s.SubItem key={sub.id} $isRead={sub.isRead}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, dir.id, sub.id)}
+                      onDragEnd={handleDragEnd}
+                    >
+                      <s.Check $isRead={sub.isRead} />
+
+                      { isEditing ? (
+                        <input
+                          autoFocus={true}
+                          style={{ width: 360, height: 36, fontSize: 14, padding: '6px 8px' }}
+                          value={sub.name}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => handleTitleChange(sub.id, e.target.value)}
+                          onBlur={() => handleTitleBlur()}
+                          onKeyDown={(e) => { if (e.key === 'Enter') { (e.target as HTMLInputElement).blur(); } }}
+                        />
+                      ) : (
+                        <s.Name
+                          onDoubleClick={(e) => handleNameDoubleClick(e, sub)}
+                          onClick={(e) => handleNameClick(e, sub)}
+                        >
+                          {sub.name}
+                        </s.Name>
+                      )}
+
+                      {isTeacher && (
+                        <>
+                          <ToggleSwitch
+                            id={`vis-${sub.id}`}
+                            checked={vis === 'PUBLIC'}
+                            onChange={() => { toggleVisibility(sub.id); }}
+                          />
+
+                          <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDocument(sub.id, e); }}>
+                            <IoClose size={18} />
+                          </s.DeleteIcon>
+                        </>
+                      )}
+                    </s.SubItem>
+                  );
+                })}
               </s.SubDirectoryList>
             </s.DirectoryWrapper>
           );
