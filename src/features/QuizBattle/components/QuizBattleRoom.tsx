@@ -6,6 +6,7 @@ import type {
   GameStatus,
   RankingData,
   AnswerResult,
+  AnswerRevealMessage,
 } from '../types';
 import {
   RoomContainer,
@@ -49,6 +50,7 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
   const [timeLeft, setTimeLeft] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [revealedAnswer, setRevealedAnswer] = useState<AnswerRevealMessage | null>(null);
 
   useEffect(() => {
     // WebSocket 연결 (token은 QuizBattleService가 자동으로 localStorage에서 가져옴)
@@ -116,12 +118,19 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
         setGameStatus('playing');
         setAnswerResult(null);
         setSelectedAnswer(null);
+        setRevealedAnswer(null); // 새 문제 시작 시 이전 정답 공개 초기화
       },
 
       // 답변 결과
       onAnswerResult: (result) => {
         console.log('Answer result:', result);
         setAnswerResult(result);
+      },
+
+      // 정답 공개 (시간 종료 시)
+      onAnswerReveal: (reveal) => {
+        console.log('Answer revealed:', reveal);
+        setRevealedAnswer(reveal);
       },
 
       // 퀴즈 종료
@@ -271,7 +280,7 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
               <OptionButton
                 key={idx}
                 onClick={() => handleSubmitAnswer(idx)}
-                disabled={answerResult !== null}
+                disabled={answerResult !== null || timeLeft === 0}
                 selected={selectedAnswer === idx}
                 correct={
                   answerResult !== null &&
@@ -289,11 +298,27 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
             ))}
           </OptionsGrid>
 
+          {/* 답변 결과 표시 */}
           {answerResult && (
             <ResultMessage correct={answerResult.isCorrect}>
               {answerResult.isCorrect ? '✓ 정답입니다!' : '✗ 틀렸습니다!'}
               <br />
               획득 점수: {answerResult.points}점
+            </ResultMessage>
+          )}
+
+          {/* 정답 공개 메시지 (백엔드에서 시간 종료 시 자동 전송) */}
+          {revealedAnswer && (
+            <ResultMessage correct={false}>
+              ⏰ 시간이 종료되었습니다!
+              <br />
+              정답: {currentQuestion?.options[revealedAnswer.correctAnswer]}
+              {revealedAnswer.explanation && (
+                <>
+                  <br />
+                  해설: {revealedAnswer.explanation}
+                </>
+              )}
             </ResultMessage>
           )}
 

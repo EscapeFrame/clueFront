@@ -206,6 +206,13 @@ class QuizBattleService {
             }
             break;
 
+          case 'ANSWER_REVEAL':
+            // 정답 공개 메시지 (시간 종료 시)
+            if (callbacks.onAnswerReveal) {
+              callbacks.onAnswerReveal(response as any);
+            }
+            break;
+
           case 'QUIZ_FINISHED':
             // 퀴즈 종료 메시지
             if (callbacks.onQuizFinished) {
@@ -229,7 +236,10 @@ class QuizBattleService {
 
           default:
             // 하위 호환성: 기존 status 기반 처리
-            if (response.data && 'questionNumber' in response.data) {
+            if (response.status === 'success' && (response as any).correctAnswer !== undefined) {
+              // 정답 공개 메시지 (status 기반)
+              if (callbacks.onAnswerReveal) callbacks.onAnswerReveal(response as any);
+            } else if (response.data && 'questionNumber' in response.data) {
               // 문제 메시지
               if (callbacks.onQuestion) callbacks.onQuestion(response.data);
             } else if (response.status === 'finished') {
