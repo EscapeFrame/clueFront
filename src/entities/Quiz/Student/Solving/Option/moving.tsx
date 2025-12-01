@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as s from "../styles";
 import { colors } from "@/shared/theme/theme.styles";
 
-type OptionKeys = "haeyul" | "panda" | "ferret" | "koala";
+type OptionKeys = "haeyul" | "panda" | "I" | "koala";
 
 type Props = {
   options: string[];
