@@ -185,6 +185,7 @@ class QuizBattleService {
       `/topic/quiz/${roomCode}/game`,
       (message: IMessage) => {
         const response: WebSocketResponse<QuestionData> = JSON.parse(message.body);
+        console.log('[QuizBattle] Game event received:', response);
 
         // 새 명세서: type 필드로 메시지 구분
         switch (response.type) {
@@ -206,6 +207,13 @@ class QuizBattleService {
             }
             break;
 
+          case 'ANSWER_REVEAL':
+            // 정답 공개 메시지 (시간 종료 시)
+            if (callbacks.onAnswerReveal) {
+              callbacks.onAnswerReveal(response as any);
+            }
+            break;
+
           case 'QUIZ_FINISHED':
             // 퀴즈 종료 메시지
             if (callbacks.onQuizFinished) {
@@ -219,7 +227,12 @@ class QuizBattleService {
 
           case 'ROOM_CANCELLED':
             // 방 취소 메시지
-            if (callbacks.onRoomCancelled) callbacks.onRoomCancelled(response);
+            console.log('[QuizBattle] ROOM_CANCELLED detected!', response);
+            if (callbacks.onRoomCancelled) {
+              callbacks.onRoomCancelled(response);
+            } else {
+              console.warn('[QuizBattle] onRoomCancelled callback is not defined!');
+            }
             break;
 
           case 'ERROR':
@@ -229,7 +242,11 @@ class QuizBattleService {
 
           default:
             // 하위 호환성: 기존 status 기반 처리
-            if (response.data && 'questionNumber' in response.data) {
+            console.log('[QuizBattle] Processing message in default case, type:', response.type, 'status:', response.status);
+            if (response.status === 'success' && (response as any).correctAnswer !== undefined) {
+              // 정답 공개 메시지 (status 기반)
+              if (callbacks.onAnswerReveal) callbacks.onAnswerReveal(response as any);
+            } else if (response.data && 'questionNumber' in response.data) {
               // 문제 메시지
               if (callbacks.onQuestion) callbacks.onQuestion(response.data);
             } else if (response.status === 'finished') {
@@ -237,7 +254,12 @@ class QuizBattleService {
               if (callbacks.onQuizFinished) callbacks.onQuizFinished(response);
             } else if (response.status === 'cancelled') {
               // 방 취소 메시지
-              if (callbacks.onRoomCancelled) callbacks.onRoomCancelled(response);
+              console.log('[QuizBattle] status=cancelled detected!', response);
+              if (callbacks.onRoomCancelled) {
+                callbacks.onRoomCancelled(response);
+              } else {
+                console.warn('[QuizBattle] onRoomCancelled callback is not defined!');
+              }
             } else if (response.status === 'error') {
               // 에러 메시지
               if (callbacks.onError) callbacks.onError(response);

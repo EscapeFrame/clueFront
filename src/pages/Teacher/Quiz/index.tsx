@@ -160,6 +160,42 @@ export default function TCHQuiz() {
                         setFinalRanking(msg.finalRankings ?? []);
                         setStep("finish");
                     }
+                    // 방 취소
+                    else if (msg.status === "cancelled") {
+                        console.log("[TCH Quiz] 🚫 방이 취소되었습니다:", msg);
+
+                        const msgWithReason = msg as { reason?: string; message?: string };
+                        let alertMessage = '퀴즈방이 종료되었습니다.';
+
+                        if (msgWithReason.reason) {
+                            switch (msgWithReason.reason) {
+                                case 'host_disconnected':
+                                    alertMessage = '호스트의 연결이 끊겨 퀴즈방이 종료되었습니다.';
+                                    break;
+                                case 'host_left':
+                                    alertMessage = '호스트가 퀴즈방을 나가 방이 종료되었습니다.';
+                                    break;
+                                case 'cancelled_by_host':
+                                    alertMessage = '호스트가 퀴즈방을 취소했습니다.';
+                                    break;
+                                default:
+                                    alertMessage = msgWithReason.message || '퀴즈방이 종료되었습니다.';
+                            }
+                        } else if (msgWithReason.message) {
+                            alertMessage = msgWithReason.message;
+                        }
+
+                        alert(alertMessage);
+
+                        // 초기 상태로 돌아가기
+                        setStep("create");
+                        setRoomCode("");
+                        setParticipants([]);
+                        setCurrentQuestion(null);
+                        setCurrentRanking([]);
+                        setFinalRanking([]);
+                        setAnswerReveal(null);
+                    }
                 }
             ),
             // 랭킹 업데이트

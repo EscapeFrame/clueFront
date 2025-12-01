@@ -4,6 +4,7 @@ export type MessageType =
   | 'PARTICIPANT_JOINED'
   | 'QUIZ_STARTED'
   | 'ANSWER_RESULT'
+  | 'ANSWER_REVEAL'
   | 'NEXT_QUESTION'
   | 'QUIZ_FINISHED'
   | 'RANKINGS_UPDATED'
@@ -45,6 +46,18 @@ export interface AnswerResult {
   points: number;
   correctAnswer: number; // 정답 인덱스
   explanation?: string; // 해설
+}
+
+// 정답 공개 메시지 (시간 종료 시)
+export interface AnswerRevealMessage {
+  type?: 'ANSWER_REVEAL';
+  status?: string;
+  questionNumber: number;
+  correctAnswer: number; // 정답 인덱스
+  explanation?: string; // 해설
+  statistics?: Map<number, number>; // 각 선택지별 응답 수
+  totalAnswers?: number; // 전체 응답 수
+  message?: string;
 }
 
 export interface RankingData {
@@ -131,8 +144,10 @@ export interface RankingsUpdatedMessage {
 // 방 취소 메시지
 export interface RoomCancelledMessage {
   type: 'ROOM_CANCELLED';
+  roomCode: string;
   message: string;
-  reason: string;
+  reason: 'host_disconnected' | 'host_left' | 'cancelled_by_host';
+  status?: 'cancelled'; // 하위 호환성
 }
 
 // 에러 메시지
@@ -152,6 +167,7 @@ export type WebSocketMessage =
   | RankingsUpdatedMessage
   | RoomCancelledMessage
   | AnswerResult
+  | AnswerRevealMessage
   | ErrorMessage;
 
 // 하위 호환성을 위한 기존 인터페이스 (deprecated)
@@ -172,6 +188,7 @@ export interface QuizBattleCallbacks {
   onParticipantUpdate?: (response: ParticipantUpdateMessage | WebSocketResponse) => void;
   onQuestion?: (question: QuestionData) => void;
   onAnswerResult?: (result: AnswerResult) => void;
+  onAnswerReveal?: (reveal: AnswerRevealMessage) => void;
   onQuizFinished?: (response: QuizFinishedMessage | WebSocketResponse) => void;
   onRoomCancelled?: (response: RoomCancelledMessage | WebSocketResponse) => void;
   onError?: (error: ErrorMessage | any) => void;
