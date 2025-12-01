@@ -86,7 +86,7 @@ export const StudentName = styled.div`
 export const StudentScore = styled.div`
   ${fonts.P2};
   font-weight: 600;
-  color: ${colors.gray[5]};
+  color: ${colors.gray[4]};
   margin-left: auto;
 `;
 
