@@ -19,6 +19,7 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
     const [assignments, setAssignments] = useState<Assignment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [refreshKey, setRefreshKey] = useState(0);
     const user = useRecoilValue(userState);
     const isTeacher = !!user && user.role === 'TEACHER';
 
@@ -46,7 +47,7 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
             .finally(() => {
                 setLoading(false);
             });
-    }, [effectiveId]);
+    }, [effectiveId, refreshKey]);
     const MakeTask = () => {
         if (!classRoomId) return;
         navigate(`/class/${classRoomId}/make/task`);
@@ -80,6 +81,7 @@ export const AssignmentComponent: React.FC<AssignmentComponentProps> = ({ onAssi
                                 data={a}
                                 assignmentId={String(a.assignmentId)}
                                 onAssignmentSelect={onAssignmentSelect}
+                                onDeleteSuccess={() => setRefreshKey(k => k + 1)}
                                 updateAssignment={(id, changes) => {
                                     setAssignments(prev => {
                                         const idx = prev.findIndex(x => x.assignmentId === id);
