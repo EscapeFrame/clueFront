@@ -24,6 +24,7 @@ type Participant = {
     username: string;
     score: number;
     correctAnswers: number;
+    profileImage?: string;
 };
 
 type Question = {
@@ -270,7 +271,8 @@ export default function STUQuiz() {
 
             if (send && connected) {
                 // 방 참여 메시지 전송
-                send(`/app/quiz/join/${code}`, { userId: user.userId });
+                const profileImage = character ? `/Paletto/${character}.png` : undefined;
+                send(`/app/quiz/join/${code}`, { userId: user.userId, profileImage });
                 setStep("waiting");
             } else {
                 alert("퀴즈 서버 연결이 끊어졌습니다. 페이지를 새로고침해주세요.");

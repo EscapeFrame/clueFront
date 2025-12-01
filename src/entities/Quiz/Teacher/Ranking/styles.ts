@@ -43,7 +43,7 @@ export const PodiumItem = styled.div<{ rank: number }>`
   flex-direction: column;
   align-items: center;
   order: ${(p) => (p.rank === 1 ? 2 : p.rank === 2 ? 1 : 3)};
-  margin: 5px;
+  margin: 10px;
 `;
 
 export const PodiumBox = styled.div<{ 
@@ -81,8 +81,13 @@ export const RankBadge = styled.div`
 export const StudentName = styled.div`
   ${fonts.P2};
   font-weight: 600;
-  text-align: center;
-  word-break: keep-all;
+`;
+
+export const StudentScore = styled.div`
+  ${fonts.P2};
+  font-weight: 600;
+  color: ${colors.gray[5]};
+  margin-left: auto;
 `;
 
 export const RemainingList = styled.div`
@@ -114,38 +119,11 @@ export const RankNumber = styled.span`
   min-width: 30px;
 `;
 
-export const List = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-export const ListItem = styled.li`
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
-`;
-
-export const Buttons = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  width: 100%;
-  margin: 10px;
-`;
-
-export const RetrunButton = styled.button`
-  ${fonts.P2};
-  font-weight: 600;
-  color: ${colors.primary};
-  border: 1px solid ${colors.primary};;
-  border-radius: 10px;
-  cursor: pointer;
-  width: 100%;
-
-  &:hover {
-    background-color: ${colors.blue.light2};
-    border: none;
-  }
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 `;
 
 export const SubmitButton = styled.button`
@@ -157,7 +135,7 @@ export const SubmitButton = styled.button`
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  width: 100%;
+  width: fit-content;
 
   &:hover {
     background-color: ${colors.blue.light2};

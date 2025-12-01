@@ -13,6 +13,7 @@ type Participant = {
     username: string;
     score?: number;
     correctAnswers?: number;
+    profileImage?: string;
 };
 
 type Props = {
@@ -49,6 +50,10 @@ export default function QuizWaiting({ character, roomCode, participants = [] }: 
                         <s.ParticipantList>
                             {participants.map((p) => (
                                 <s.ParticipantItem key={p.userId}>
+                                    <s.ParticipantImage
+                                        src={p.profileImage || '/Paletto/panda.png'}
+                                        alt={p.username}
+                                    />
                                     {p.username}
                                 </s.ParticipantItem>
                             ))}
