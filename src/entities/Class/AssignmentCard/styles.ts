@@ -1,21 +1,22 @@
-import styled from '@emotion/styled';
-import { colors } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { colors } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 // 상태 뱃지
-export const StatusBadge = styled.span<{ variant?: 'pending' | 'completed' }>`
+export const StatusBadge = styled.span<{ variant?: "pending" | "completed" }>`
   padding: 0.25rem;
   border-radius: 16px;
   ${fonts.P1}
   white-space: nowrap;
   display: inline-block;
 
-  color:${({ variant }) =>
-    variant === 'completed' ? colors.primary : colors.red[3]};
+  color: ${({ variant }) =>
+    variant === "completed" ? colors.primary : colors.red[3]};
   background-color: ${({ variant }) =>
-    variant === 'completed' ? colors.blue.light1 : colors.red[1]};
-  border: 1px solid ${({ variant }) =>
-    variant === 'completed' ? `${colors.blue.light4}` : `${colors.red[3]}`};
+    variant === "completed" ? colors.blue.light1 : colors.red[1]};
+  border: 1px solid
+    ${({ variant }) =>
+      variant === "completed" ? `${colors.blue.light4}` : `${colors.red[3]}`};
 
   @media (max-width: 1200px) {
     ${fonts.P2}
@@ -38,7 +39,7 @@ export const CardContainer = styled.div`
   flex-direction: column;
 
   &:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   @media (max-width: 1200px) {
@@ -48,7 +49,6 @@ export const CardContainer = styled.div`
 
   @media (max-width: 768px) {
     padding: 0.5rem;
-    min-height: auto;
   }
 `;
 
@@ -178,7 +178,7 @@ export const FileNameText = styled.div`
     color: ${colors.black};
     padding: 2px 6px;
     border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     z-index: 10;
     width: max-content;
     max-width: 300px;
@@ -283,12 +283,16 @@ export const FileList = styled.div`
 `;
 
 export const FileUploadArea = styled.div<{ isDragOver: boolean }>`
-  border: ${({ isDragOver }) => isDragOver ? `2px solid ${colors.primary}` : `2px dashed ${colors.gray[3]}`};
+  border: ${({ isDragOver }) =>
+    isDragOver
+      ? `2px solid ${colors.primary}`
+      : `2px dashed ${colors.gray[3]}`};
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 12px;
   text-align: center;
-  background: ${({ isDragOver }) => isDragOver ? `${colors.blue.light1}` : `${colors.gray[1]}`};
+  background: ${({ isDragOver }) =>
+    isDragOver ? `${colors.blue.light1}` : `${colors.gray[1]}`};
   transition: background 0.2s, border 0.2s;
   cursor: pointer;
   user-select: none;
