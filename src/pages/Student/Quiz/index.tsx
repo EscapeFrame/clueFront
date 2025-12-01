@@ -423,7 +423,7 @@ export default function STUQuiz() {
                         </div>
                     )}
 
-                    <h4 style={{ marginTop: '20px' }}>응답 통계</h4>
+                    <h2 style={{ marginTop: '20px' }}>응답 통계</h2>
                     <div style={{ width: '100%' }}>
                         {currentQuestion.options.map((opt, idx) => {
                             const count = answerReveal.statistics[idx] || 0;
