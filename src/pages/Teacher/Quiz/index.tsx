@@ -180,7 +180,6 @@ export default function TCHQuiz() {
         };
     }, [roomCode, subscribe, connected]);
 
-    // If creating room, render only the full-page loading to avoid underlying UI staying visible
     if (isCreatingRoom) {
         return (
             <PageOverlay>
@@ -254,16 +253,6 @@ export default function TCHQuiz() {
                         send("/app/quiz/create", payload);
                     }}
                 />
-            )}
-
-            {/* 방 생성 요청 대기 - 전체 페이지 로딩 표시 */}
-            {isCreatingRoom && (
-                <PageOverlay>
-                    <PageSpinnerWrapper>
-                        <Spinner />
-                    </PageSpinnerWrapper>
-                    <Message>방을 생성중입니다... <br />잠시만 기다려주세요.</Message>
-                </PageOverlay>
             )}
 
             {/* 대기실 */}
