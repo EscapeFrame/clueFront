@@ -152,8 +152,33 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
       // 방 취소
       onRoomCancelled: (response) => {
         console.log('Room cancelled:', response);
-        alert('방이 호스트에 의해 취소되었습니다.');
-        if (onLeaveRoom) onLeaveRoom();
+
+        // reason에 따른 메시지 표시
+        let message = '퀴즈방이 종료되었습니다.';
+        if ('reason' in response) {
+          switch (response.reason) {
+            case 'host_disconnected':
+              message = '호스트의 연결이 끊겨 퀴즈방이 종료되었습니다.';
+              break;
+            case 'host_left':
+              message = '호스트가 퀴즈방을 나가 방이 종료되었습니다.';
+              break;
+            case 'cancelled_by_host':
+              message = '호스트가 퀴즈방을 취소했습니다.';
+              break;
+          }
+        }
+
+        // WebSocket 연결 종료
+        QuizBattleService.leaveRoom(roomCode);
+        QuizBattleService.disconnect();
+
+        // 알림 표시 후 메인 페이지로 이동
+        alert(message);
+
+        if (onLeaveRoom) {
+          onLeaveRoom();
+        }
       },
 
       // 에러

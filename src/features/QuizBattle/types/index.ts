@@ -144,8 +144,10 @@ export interface RankingsUpdatedMessage {
 // 방 취소 메시지
 export interface RoomCancelledMessage {
   type: 'ROOM_CANCELLED';
+  roomCode: string;
   message: string;
-  reason: string;
+  reason: 'host_disconnected' | 'host_left' | 'cancelled_by_host';
+  status?: 'cancelled'; // 하위 호환성
 }
 
 // 에러 메시지
