@@ -43,13 +43,15 @@ export const Message = styled.div`
 `;
 
 export const PageOverlay = styled.div`
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
   gap: 1.5rem;
-  height: calc(125vh - 60px);
+  background: rgba(255,255,255,0.95);
+  z-index: 2000;
 `;
 
 export const PageSpinnerWrapper = styled.div`
