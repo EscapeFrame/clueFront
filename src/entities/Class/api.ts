@@ -98,18 +98,42 @@ export async function getStudentSubmissionDetail(submissionId: string) {
 // 학생 제출 첨부파일 다운로드 (submissionAttachmentId 사용)
 export async function downloadSubmissionAttachment(submissionAttachmentId: string) {
     try {
-        const res = await Customapi.get(`/api/submissions/${submissionAttachmentId}/download`, { responseType: 'blob' });
+        const res = await Customapi.get(`/api/submissions/${submissionAttachmentId}/download`);
         if (res.status < 200 || res.status >= 300) {
             console.error(`첨부파일 다운로드 실패: status ${res.status}`);
             return null;
         }
-        const contentDisposition = res.headers?.['content-disposition'] as string | undefined;
+
+        if (typeof res.data === 'string') {
+            const possibleUrl = res.data as string;
+            if (possibleUrl.startsWith('http://') || possibleUrl.startsWith('https://') || possibleUrl.startsWith('/')) {
+                return { url: possibleUrl };
+            }
+        }
+
+        if (res.data && typeof res.data === 'object') {
+            const body = res.data as Record<string, unknown>;
+            const urlField = typeof body.url === 'string' ? (body.url as string) : undefined;
+            const linkField = typeof body.link === 'string' ? (body.link as string) : undefined;
+            if (urlField || linkField) {
+                return { url: urlField || linkField };
+            }
+        }
+
+        const blobRes = await Customapi.get(`/api/submissions/${submissionAttachmentId}/download`, { responseType: 'blob' });
+        if (blobRes.status < 200 || blobRes.status >= 300) {
+            console.error(`첨부파일 다운로드 실패: status ${blobRes.status}`);
+            return null;
+        }
+
+        const contentDisposition = blobRes.headers?.['content-disposition'] as string | undefined;
         let filename: string | undefined = undefined;
         if (contentDisposition) {
             const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
             if (match) filename = decodeURIComponent(match[1] || match[2]);
         }
-        return { blob: res.data as Blob, filename };
+
+        return { blob: blobRes.data as Blob, filename };
     } catch (error) {
         console.error('첨부파일 다운로드 실패:', error);
         return null;
