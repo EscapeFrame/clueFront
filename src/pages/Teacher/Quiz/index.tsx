@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useQuizSocket from "@/app/hooks/useQuizSocket";
+import { Overlay, ModalBox, Spinner, Message } from './styles';
+
+ 
 
 import CreateQuiz from "@/entities/Quiz/Teacher/CreateQuiz";
 import WaitingRoom from "@/entities/Quiz/Teacher/WaitingRoom";
@@ -37,7 +40,7 @@ export default function TCHQuiz() {
         questionCount: 10,
         timePerQuestion: 30,
     });
-
+    const [isCreatingRoom, setIsCreatingRoom] = useState(false);
     const { connected, send, subscribe } = useQuizSocket();
 
     // URL 파라미터에서 classRoomId와 documentId 가져오기
@@ -76,6 +79,8 @@ export default function TCHQuiz() {
             if (msg?.roomCode) {
                 console.log("[TCH Quiz] Setting roomCode and moving to waiting");
                 setRoomCode(msg.roomCode);
+
+                setIsCreatingRoom(false);
 
                 // 서버에서 받은 실제 문제 개수로 업데이트
                 if (msg.questionCount) {
@@ -232,10 +237,21 @@ export default function TCHQuiz() {
                         console.log("[TCH Quiz] 📤 서버로 전송할 payload:", payload);
 
                         // server expects connect to /ws-quiz then app destination /app/quiz/create
+                        setIsCreatingRoom(true);
                         send("/app/quiz/create", payload);
                     }}
                 />
             )}
+
+            {/* 방 생성 요청 대기 로딩 오버레이 */}
+                        {isCreatingRoom && (
+                                <Overlay>
+                                        <ModalBox>
+                                                <Spinner />
+                                                <Message>방을 생성중입니다... 잠시만 기다려주세요.</Message>
+                                        </ModalBox>
+                                </Overlay>
+                        )}
 
             {/* 대기실 */}
             {connected && step === "waiting" && (
