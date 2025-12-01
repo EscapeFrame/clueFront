@@ -17,9 +17,10 @@ interface CreateQuizProps {
 export default function CreateQuiz({ onCreate }: CreateQuizProps) {
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
-    const [maxParticipants, setMaxParticipants] = useState(30);
-    const [questionCount, setQuestionCount] = useState(10);
-    const [timePerQuestion, setTimePerQuestion] = useState(30);
+    // start as empty inputs so user can type freely
+    const [maxParticipantsInput, setMaxParticipantsInput] = useState("");
+    const [questionCountInput, setQuestionCountInput] = useState("");
+    const [timePerQuestionInput, setTimePerQuestionInput] = useState("");
 
     return (
         <s.Container>
@@ -40,11 +41,11 @@ export default function CreateQuiz({ onCreate }: CreateQuizProps) {
                         <s.SubTitle>최대 참가인원</s.SubTitle>
                     </s.SectionHeader>
                     <s.Input
-                        type="number"
-                        value={maxParticipants}
-                        onChange={(e) => setMaxParticipants(Math.max(1, parseInt(e.target.value) || 1))}
-                        min="1"
-                        max="100"
+                        type="text"
+                        value={maxParticipantsInput}
+                        onChange={(e) => setMaxParticipantsInput(e.target.value)}
+                        inputMode="numeric"
+                        placeholder="예: 30"
                     />
                 </s.Section>
 
@@ -53,11 +54,11 @@ export default function CreateQuiz({ onCreate }: CreateQuizProps) {
                         <s.SubTitle>문항 수</s.SubTitle>
                     </s.SectionHeader>
                     <s.Input
-                        type="number"
-                        value={questionCount}
-                        onChange={(e) => setQuestionCount(Math.max(1, parseInt(e.target.value) || 1))}
-                        min="1"
-                        max="50"
+                        type="text"
+                        value={questionCountInput}
+                        onChange={(e) => setQuestionCountInput(e.target.value)}
+                        inputMode="numeric"
+                        placeholder="예: 10"
                     />
                 </s.Section>
 
@@ -66,11 +67,11 @@ export default function CreateQuiz({ onCreate }: CreateQuizProps) {
                         <s.SubTitle>문제당 시간 (초)</s.SubTitle>
                     </s.SectionHeader>
                     <s.Input
-                        type="number"
-                        value={timePerQuestion}
-                        onChange={(e) => setTimePerQuestion(Math.max(5, parseInt(e.target.value) || 5))}
-                        min="5"
-                        max="300"
+                        type="text"
+                        value={timePerQuestionInput}
+                        onChange={(e) => setTimePerQuestionInput(e.target.value)}
+                        inputMode="numeric"
+                        placeholder="예: 30"
                     />
                 </s.Section>
 
@@ -82,11 +83,30 @@ export default function CreateQuiz({ onCreate }: CreateQuizProps) {
                         onClick={() => {
                             if (!title.trim()) return alert("퀴즈명을 입력하세요!");
 
+                            // validate non-empty numeric inputs
+                            if (maxParticipantsInput.trim() && !/^-?\d+$/.test(maxParticipantsInput.trim())) {
+                                return alert('최대 참가인원은 정수로 입력해주세요');
+                            }
+                            if (questionCountInput.trim() && !/^-?\d+$/.test(questionCountInput.trim())) {
+                                return alert('문항 수는 정수로 입력해주세요');
+                            }
+                            if (timePerQuestionInput.trim() && !/^-?\d+$/.test(timePerQuestionInput.trim())) {
+                                return alert('문제당 시간은 정수(초)로 입력해주세요');
+                            }
+
+                            const mp = parseInt(maxParticipantsInput);
+                            const qc = parseInt(questionCountInput);
+                            const tp = parseInt(timePerQuestionInput);
+
+                            const maxParticipantsVal = Number.isFinite(mp) ? Math.max(1, Math.min(100, mp)) : undefined;
+                            const questionCountVal = Number.isFinite(qc) ? Math.max(1, Math.min(50, qc)) : undefined;
+                            const timePerQuestionVal = Number.isFinite(tp) ? Math.max(5, Math.min(300, tp)) : undefined;
+
                             onCreate?.({
                                 title,
-                                maxParticipants,
-                                questionCount,
-                                timePerQuestion,
+                                maxParticipants: maxParticipantsVal,
+                                questionCount: questionCountVal,
+                                timePerQuestion: timePerQuestionVal,
                             });
                         }}>
                         퀴즈 생성
