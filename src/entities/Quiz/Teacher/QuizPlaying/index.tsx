@@ -28,7 +28,7 @@ const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "I", "koala"];
 type Props = {
     question: Question;
     onShowResult: () => void; // 정답 확인 버튼용
-    totalStudents: number;     // 전체 인원
+    // totalStudents: number;     // 전체 인원 (더 이상 사용되지 않음)
     currentQuestionNumber?: number; // 현재 문제 번호
     totalQuestions?: number;   // 전체 문제 개수
     timePerQuestion?: number;  // 문제당 시간
@@ -37,12 +37,11 @@ type Props = {
 export default function QuizPlaying({
     question,
     onShowResult,
-    totalStudents,
     currentQuestionNumber = 1,
     totalQuestions = 10,
     timePerQuestion = 30
 }: Props) {
-    const [submittedCount, setSubmittedCount] = useState(0);
+    // 제출자 수 관련 기능 제거됨
     const navigate = useNavigate();
     const [timeLeft, setTimeLeft] = useState(timePerQuestion);
 
@@ -81,7 +80,7 @@ export default function QuizPlaying({
 
             <s.Card>
                 <s.Section>
-                    <s.PointText>{submittedCount}</s.PointText>&nbsp;/{totalStudents}
+                    <s.PointText>{current}</s.PointText>&nbsp;/ {total}
                 </s.Section>
 
                 <s.Question>{question.question}</s.Question>

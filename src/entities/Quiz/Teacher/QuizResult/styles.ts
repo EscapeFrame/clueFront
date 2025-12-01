@@ -24,6 +24,9 @@ export const Question = styled.h2`
   color: ${colors.black};
   margin: 10px;
   padding: 0px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 `;
 
 export const CorrectIndex = styled.div`
@@ -32,6 +35,9 @@ export const CorrectIndex = styled.div`
   color: ${colors.primary};
   margin-bottom: 2rem;
   padding: 0px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 `;
 
 export const Card = styled.div`
@@ -91,7 +97,9 @@ export const OptionLabel = styled.div<{ bgColor: string; borderColor: string;}>`
   background-color: ${(p) => p.bgColor};
   border: 1.5px solid ${(p) => p.borderColor};
   border-radius: 10px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 `;
 
 export const Buttons = styled.div`
