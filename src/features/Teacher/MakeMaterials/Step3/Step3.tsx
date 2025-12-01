@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import * as s from "./styles";
 import { Doc, patchAgentDoc } from "../api"; // Import Doc type and patch function
 import Customapi from '@/shared/config/api';
+import MarkdownBlock from './MarkdownBlock';
 
 interface Step3Props {
     docs: Doc[];
@@ -148,11 +149,10 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
                 ) : (
                     <s.Form>
                         <s.Field>
-                            <s.TextAreaBox
-                                value={currentContent}
-                                onChange={(e) => updateCurrentDocContent(e.target.value)}
-                                disabled={isGenerating || isProcessing || docs.length === 0}
-                                aria-label="문서 내용 편집"
+                            <MarkdownBlock
+                                content={currentContent}
+                                onChange={(value) => updateCurrentDocContent(value)}
+                                disabled={isGenerating || isProcessing || localDocs.length === 0}
                             />
                         </s.Field>
 
@@ -160,7 +160,7 @@ export default function Step3({ docs, isGenerating, onNext, onBack, agentId, isP
                             <s.Button variant="secondary" type="button" onClick={onBack} disabled={isGenerating || isSending || isProcessing}>
                                 이전
                             </s.Button>
-                            <s.Button variant="primary" type="button" onClick={handleSend} disabled={isGenerating || isSending || isProcessing || docs.length === 0}>
+                            <s.Button variant="primary" type="button" onClick={handleSend} disabled={isGenerating || isSending || isProcessing || localDocs.length === 0}>
                                 {isSending ? '전송중...' : '내용전송'}
                             </s.Button>
                         </s.ButtonRow>

@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import myImage from '../../../public/sample.png';
 import * as s from './styles';
-import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { GoBug } from "react-icons/go";
 import { MdOutlineLogout } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
 import { useRecoilState } from 'recoil';
@@ -76,7 +76,7 @@ export default function Dropdown({ role, name, studentNumber, myImage: userProfi
     <s.DropdownContainer>
       <s.Icon>
         <IoSettingsOutline onClick={setting} />
-        <AiOutlineQuestionCircle onClick={question} />
+        <GoBug onClick={question} />
       </s.Icon>
       <s.User>
         <s.UserInfo>

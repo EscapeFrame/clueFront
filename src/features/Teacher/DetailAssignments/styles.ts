@@ -164,6 +164,7 @@ export const EditTitleInput = styled.input`
   padding: 0.5rem;
   border: 1px solid ${colors.gray[3]};
   border-radius: 0.25rem;
+  width: 100%;
 
   &:focus {
     outline: 2px solid ${colors.primary};

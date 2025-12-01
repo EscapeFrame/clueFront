@@ -216,6 +216,23 @@ export const FileRemoveButton = styled.button`
   }
 `;
 
+export const DeleteIcon = styled.span`
+  margin-left: auto;
+  color: ${colors.red[3]};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border-radius: 50%;
+  padding: 2px;
+
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+    transform: scale(1.1);
+  }
+`;
+
 export const ButtonSection = styled.div`
   display: flex;
   flex-direction: column;
