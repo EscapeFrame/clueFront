@@ -217,7 +217,7 @@ const MarkdownLineComponent: React.FC<{
                     <s.MBMarkdownContent>
                         <MDEditor.Markdown
                             source={line.content}
-                            style={{ padding: '4px 8px', background: 'transparent', margin: 0 }}
+                            style={{ padding: '4px 8px', background: 'transparent', margin: 0, fontSize: '18px' }}
                         />
                     </s.MBMarkdownContent>
                 )}
