@@ -3,17 +3,12 @@ import { LuTrophy } from "react-icons/lu";
 
 import * as s from "./styles";
 import { colors } from "@/shared/theme/theme.styles";
-
-type StudentAnswer = {
-    id: string;
-    name: string;
-    answers: Record<string, number>; // key: questionId, value: 선택한 옵션 index
-};
+import { Ranking as RankingType } from "../../model/quiz.model";
 
 type Props = {
-    students: StudentAnswer[];
-    currentQuestionId: string; // 지금 보는 문제 id
+    students: RankingType[];
     onNext: () => void;
+    onBack: () => void;
     current: number;
     total: number;
     handleQuit: () => void;
@@ -31,9 +26,8 @@ const npcColors: Record<CharacterKey, { bg: string; border: string }> = {
 
 const PODIUM_KEYS: CharacterKey[] = ["koala", "panda", "haeyul"]; // 1등~3등 색상 순서
 
-export default function Ranking({ students,onNext, current, total, handleQuit }: Props) {
-    // 랭킹 정렬 (여기서는 예시로 이름 순으로 정렬, 실제로는 점수나 시간으로 정렬)
-    const rankedStudents = [...students].sort((a, b) => a.name.localeCompare(b.name));
+export default function Ranking({ students, onNext, onBack, current, total, handleQuit }: Props) {
+    const rankedStudents = [...students].sort((a, b) => b.totalScore - a.totalScore);
     
     const topThree = rankedStudents.slice(0, 3);
     const remaining = rankedStudents.slice(3);
@@ -59,7 +53,7 @@ export default function Ranking({ students,onNext, current, total, handleQuit }:
                     const key = PODIUM_KEYS[index];
                     
                     return (
-                        <s.PodiumItem key={student.id} rank={rank}>
+                        <s.PodiumItem key={student.userId} rank={rank}>
                             <s.PodiumBox
                                 bgColor={npcColors[key].bg}
                                 borderColor={npcColors[key].border}
@@ -67,7 +61,7 @@ export default function Ranking({ students,onNext, current, total, handleQuit }:
                                 rank={rank}
                             >
                                 <s.RankBadge>
-                                    #{rank} {student.name}
+                                    #{rank} {student.username} - {student.totalScore}점
                                 </s.RankBadge>
                             </s.PodiumBox>
                         </s.PodiumItem>
@@ -75,14 +69,18 @@ export default function Ranking({ students,onNext, current, total, handleQuit }:
                 })}
             </s.PodiumContainer>
             
-            <s.SubmitButton onClick={onNext}>다음문제</s.SubmitButton>
+            <s.ButtonContainer>
+                <s.SubmitButton onClick={onBack}>뒤로가기</s.SubmitButton>
+                <s.SubmitButton onClick={onNext}>다음문제</s.SubmitButton>
+            </s.ButtonContainer>
 
             {remaining.length > 0 && (
                 <s.RemainingList>
                     {remaining.map((student, index) => (
-                        <s.RemainingItem key={student.id}>
+                        <s.RemainingItem key={student.userId}>
                             <s.RankNumber>{index + 4}</s.RankNumber>
-                            <s.StudentName>{student.name}</s.StudentName>
+                            <s.StudentName>{student.username}</s.StudentName>
+                            <s.StudentScore>{student.totalScore}점</s.StudentScore>
                         </s.RemainingItem>
                     ))}
                 </s.RemainingList>

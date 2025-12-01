@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import QuizHeader from "@/widgets/Quiz/Header";
 import * as s from "./styles";
-import Ranking from "../Ranking";
 import { colors } from "@/shared/theme/theme.styles";
 
 type Question = {
@@ -44,20 +42,13 @@ const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "ferret", "koala"];
 
 export default function QuizResult({ current, total, question, students, onSubmit, statistics, explanation, onShowRanking }: Props) {
     const navigate = useNavigate();
-    const [showRanking, setShowRanking] = useState(false);
 
     const handleQuit = () => navigate("/");
 
-    if (showRanking) {
-        return <Ranking students={students} currentQuestionId={question.id} onNext={onSubmit} current={current} total={total} handleQuit={handleQuit} />
-    }
-
-    // 각 옵션별 응답 수 계산 (서버 통계 우선, 없으면 클라이언트에서 계산)
+    // 각 옵션별 응답 수 계산 (서버 통계 우선)
     const optionCounts = statistics
         ? question.options.map((_, i) => statistics[i] || 0)
-        : question.options.map((_, i) =>
-            students.filter(student => student.answers[question.id] === i).length
-        );
+        : question.options.map(() => 0);
 
     // 최대값을 기준으로 높이 계산 (최소 100px, 최대 300px)
     const maxCount = Math.max(...optionCounts, 1);
@@ -107,13 +98,7 @@ export default function QuizResult({ current, total, question, students, onSubmi
             </s.Card>
 
             <s.Buttons>
-                <s.RakingButton onClick={() => {
-                    if (onShowRanking) {
-                        onShowRanking();
-                    } else {
-                        setShowRanking(true);
-                    }
-                }}>랭킹보기</s.RakingButton>
+                {onShowRanking && <s.RakingButton onClick={onShowRanking}>랭킹보기</s.RakingButton>}
                 <s.SubmitButton onClick={onSubmit}>다음 문제</s.SubmitButton>
             </s.Buttons>
         </s.Container>

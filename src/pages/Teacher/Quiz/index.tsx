@@ -11,10 +11,11 @@ import WaitingRoom from "@/entities/Quiz/Teacher/WaitingRoom";
 import QuizPlaying from "@/entities/Quiz/Teacher/QuizPlaying";
 import QuizResult from "@/entities/Quiz/Teacher/QuizResult";
 import FinalRanking from "@/entities/Quiz/Teacher/Ranking/Final";
+import Ranking from "@/entities/Quiz/Teacher/Ranking";
 import {
     Participant,
     Question,
-    Ranking,
+    Ranking as RankingType,
     AnswerRevealMessage,
 } from "@/entities/Quiz/model/quiz.model";
 
@@ -33,8 +34,8 @@ export default function TCHQuiz() {
     const [participants, setParticipants] = useState<Participant[]>([]); // 참가자 목록
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null); // 현재 질문
     const [totalQuestions, setTotalQuestions] = useState(10); // 총 문제 수
-    const [currentRanking, setCurrentRanking] = useState<Ranking[]>([]); // 현재 랭킹
-    const [finalRanking, setFinalRanking] = useState<Ranking[]>([]); // 최종 랭킹
+    const [currentRanking, setCurrentRanking] = useState<RankingType[]>([]); // 현재 랭킹
+    const [finalRanking, setFinalRanking] = useState<RankingType[]>([]); // 최종 랭킹
     const [answerReveal, setAnswerReveal] = useState<AnswerRevealMessage | null>(null); // 정답 공개 데이터
     const [quizSettings, setQuizSettings] = useState({
         maxParticipants: 30,
@@ -122,7 +123,7 @@ export default function TCHQuiz() {
                 `/topic/quiz/${roomCode}/game`,
                 (message: unknown) => {
                     console.log("[TCH Quiz] 📥 게임 메시지 수신:", message);
-                    const msg = message as Question & AnswerRevealMessage & { status?: string; finalRankings?: Ranking[] };
+                    const msg = message as Question & AnswerRevealMessage & { status?: string; finalRankings?: RankingType[] };
 
                     // 퀴즈 시작 카운트다운
                     if (msg.status === "QUIZ_STARTING") {
@@ -202,7 +203,7 @@ export default function TCHQuiz() {
             subscribe(
                 `/topic/quiz/${roomCode}/rankings`,
                 (message: unknown) => {
-                    const msg = message as { rankings?: Ranking[] };
+                    const msg = message as { rankings?: RankingType[] };
                     if (msg.rankings) {
                         setCurrentRanking(msg.rankings);
                     }
@@ -392,26 +393,20 @@ export default function TCHQuiz() {
 
             {/* 랭킹 화면 */}
             {connected && step === "ranking" && currentQuestion && (
-                <QuizResult
-                    question={{
-                        id: `q${currentQuestion.questionNumber}`,
-                        question: currentQuestion.questionText,
-                        options: currentQuestion.options,
-                        correctIndex: currentQuestion.correctAnswer ?? 0,
-                    } as Question & { id: string; question: string; correctIndex: number }}
+                <Ranking
+                    students={currentRanking}
                     current={currentQuestion.questionNumber}
                     total={totalQuestions}
-                    students={currentRanking.map(r => ({
-                        id: r.userId,
-                        name: r.username,
-                        answers: {} as Record<string, number>,
-                    }))}
-                    onSubmit={() => {
+                    onNext={() => {
                         if (!send || !roomCode || !connected) {
                             alert("연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
                             return;
                         }
                         send(`/app/quiz/next/${roomCode}`, {});
+                    }}
+                    onBack={() => setStep("answer_revealed")}
+                    handleQuit={() => {
+                        // TODO: handleQuit 구현
                     }}
                 />
             )}
