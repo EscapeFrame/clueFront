@@ -1,6 +1,6 @@
-import styled from '@emotion/styled';
-import { colors } from '@/shared/theme/theme.styles';
-import { fonts } from '@/shared/theme/font.styles';
+import styled from "@emotion/styled";
+import { colors } from "@/shared/theme/theme.styles";
+import { fonts } from "@/shared/theme/font.styles";
 
 export const Container = styled.div`
   margin-top: 1rem;
@@ -30,7 +30,7 @@ export const Button = styled.button`
   border: 1px solid ${colors.gray[2]};
   border-radius: 4px;
   cursor: pointer;
-
+  flex: 1 1 40%;
   display: flex;
   flex-direction: column;
   align-items: center;

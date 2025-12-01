@@ -54,6 +54,21 @@ export const Input = styled.input`
   }
 `;
 
+export const TextArea = styled.textarea`
+  padding: 10px 12px;
+  border: 1px solid ${colors.gray[4]};
+  border-radius: 6px;
+  ${fonts.P2}
+  width: 100%;
+  outline: none;
+  resize: vertical; /* allow vertical resize */
+
+  &:focus {
+    border-color: ${colors.primary};
+    box-shadow: 0 0 3px ${colors.primary};
+  }
+`;
+
 export const Icon = styled.div`
   position: absolute;
   right: 12px;

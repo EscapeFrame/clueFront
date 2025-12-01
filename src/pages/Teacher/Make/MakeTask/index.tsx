@@ -173,7 +173,14 @@ const MakeTask: React.FC = () => {
       </S.HeaderRow>
 
       <InputBox label="과제 이름" id="subject" required value={subject} onChange={e => setSubject(e.target.value)} />
-      <InputBox label="안내사항" id="description" value={description} onChange={e => setDescription(e.target.value)} />
+      <InputBox
+        label="안내사항"
+        id="description"
+        value={description}
+        onChange={e => setDescription(e.target.value)}
+        multiline
+        rows={6}
+      />
 
       {/* UI 상태 업데이트 시에는 mapToDomainAttachment 사용X */}
       <AttachmentBox
