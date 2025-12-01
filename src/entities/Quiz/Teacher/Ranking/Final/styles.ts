@@ -95,6 +95,14 @@ export const RankBadge = styled.div`
   text-align: center;
 `;
 
+export const ProfileImage = styled.img`
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: ${colors.white};
+    margin-bottom: 1rem;
+`;
+
 export const StudentName = styled.div`
   ${fonts.P2};
   font-weight: 600;

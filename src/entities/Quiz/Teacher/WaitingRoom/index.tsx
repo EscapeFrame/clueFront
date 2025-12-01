@@ -6,7 +6,7 @@ import { colors } from "@/shared/theme/theme.styles";
 interface Student {
     id: string;
     name: string;
-    character: string;
+    profileImage?: string;
     score: number;
     correct: number;
 }
@@ -19,20 +19,6 @@ interface WaitingRoomProps {
     students?: Student[];
     onStart?: () => void;
 }
-
-export type Character = "owl" | "haeyul" | "panda" | "ferret" | "I" | "koala";
-const Character = (character: string) => {
-    const lower = character.toLowerCase();
-
-    if (lower.includes("owl")) return "owl";
-    if (lower.includes("haeyul")) return "haeyul";
-    if (lower.includes("panda")) return "panda";
-    if (lower.includes("ferret")) return "ferret";
-    if (lower === "i") return "I";
-    if (lower.includes("koala")) return "koala";
-
-    return "owl";
-};
 
 export default function WaitingRoom({
     roomCode,
@@ -51,11 +37,6 @@ export default function WaitingRoom({
         setMemberCount(students.length);
     }, [students]);
 
-    const getCharacterImage = (character: string) => {
-        const key = character.replace(/1|2/gi, "");
-        return `/Paletto/${key}.png`;
-    };
-
     return (
         <s.Container>
             <s.Header>
@@ -67,27 +48,21 @@ export default function WaitingRoom({
                 <s.Left>
                     <s.SubTitle>참가자 목록</s.SubTitle>
                     <s.MemberList>
-                        {students.map((student) => {
-                            const key = Character(student.character);
-                            const npcColors = colors.npc[key];
-
-                            return (
-                                <s.Member
-                                    key={student.id}
-                                    bgColor={npcColors[0]}
-                                    borderColor={npcColors[1]}
-                                >
-                                    <s.MemberImageBox>
-                                        <img
-                                            src={getCharacterImage(student.character)}
-                                            alt={student.character}
-                                        />
-                                    </s.MemberImageBox>
-
-                                    <span>{student.name}</span>
-                                </s.Member>
-                            );
-                        })}
+                        {students.map((student) => (
+                            <s.Member
+                                key={student.id}
+                                bgColor={colors.gray[1]}
+                                borderColor={colors.gray[2]}
+                            >
+                                <s.MemberImageBox>
+                                    <img
+                                        src={student.profileImage || '/Paletto/panda.png'}
+                                        alt={student.name}
+                                    />
+                                </s.MemberImageBox>
+                                <span>{student.name}</span>
+                            </s.Member>
+                        ))}
                     </s.MemberList>
                 </s.Left>
 

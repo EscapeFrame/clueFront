@@ -88,6 +88,16 @@ export const ParticipantItem = styled.div`
     border-radius: 20px;
     font-size: 14px;
     color: ${colors.gray[4]};
+    display: flex;
+    align-items: center;
+    gap: 8px;
+`;
+
+export const ParticipantImage = styled.img`
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
 `;
 
 export const EmptyText = styled.p`

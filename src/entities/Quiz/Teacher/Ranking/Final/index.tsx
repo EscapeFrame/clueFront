@@ -21,6 +21,7 @@ type Student = {
     name: string;
     score?: number;
     correct?: number;
+    profileImage?: string;
 };
 
 type Props = {
@@ -34,7 +35,7 @@ export default function FinalRanking({ students, onRestart }: Props) {
     const [showRemaining, setShowRemaining] = useState(false);
     const [visibleRemainingCount, setVisibleRemainingCount] = useState(0);
 
-    const rankedStudents = [...students].sort((a, b) => a.name.localeCompare(b.name));
+    const rankedStudents = [...students].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
     const topThree = rankedStudents.slice(0, 3);
     const remaining = rankedStudents.slice(3);
 
@@ -96,6 +97,7 @@ export default function FinalRanking({ students, onRestart }: Props) {
                                 rank={rank}
                                 isVisible={isVisible}
                             >
+                                <s.ProfileImage src={student.profileImage || '/Paletto/panda.png'} alt={student.name} />
                                 <s.RankBadge>
                                     #{rank} {student.name}
                                 </s.RankBadge>
@@ -115,6 +117,7 @@ export default function FinalRanking({ students, onRestart }: Props) {
                     {remaining.slice(0, visibleRemainingCount).map((student, index) => (
                         <s.RemainingItem key={student.id} index={index}>
                             <s.RankNumber>{index + 4}</s.RankNumber>
+                            {student.profileImage && <s.ProfileImage src={student.profileImage} alt={student.name} style={{width: '30px', height: '30px', margin: 0}} />}
                             <s.StudentName>{student.name}</s.StudentName>
                         </s.RemainingItem>
                     ))}

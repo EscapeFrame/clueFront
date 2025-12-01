@@ -306,7 +306,7 @@ export default function TCHQuiz() {
                     students={participants.map(p => ({
                         id: p.userId,
                         name: p.username,
-                        character: "panda", // 기본값
+                        profileImage: p.profileImage,
                         score: p.score ?? 0,
                         correct: p.correctAnswers ?? 0,
                     }))}
@@ -424,7 +424,7 @@ export default function TCHQuiz() {
                         name: r.username,
                         score: r.totalScore,
                         correct: r.correctAnswers,
-                        character: "panda", // 기본값
+                        profileImage: r.profileImage,
                     }))}
                     onRestart={() => {
                         setStep("create");

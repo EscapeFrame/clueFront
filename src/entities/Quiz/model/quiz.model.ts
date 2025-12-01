@@ -8,6 +8,7 @@ export type Participant = {
     correctAnswers?: number;
     isReady?: boolean;
     joinedAt?: number;
+    profileImage?: string;
 };
 
 export type Question = {
@@ -22,11 +23,12 @@ export type Question = {
 export type Ranking = {
     rank: number;
     userId: string;
-    username: string;
+    username:string;
     totalScore: number;
     correctAnswers: number;
     totalQuestions: number;
     accuracy: number;
+    profileImage?: string;
 };
 
 // 정답 공개 메시지
