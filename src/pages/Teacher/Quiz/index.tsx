@@ -4,7 +4,7 @@ import useQuizSocket from "@/app/hooks/useQuizSocket";
 import { PageOverlay, PageSpinnerWrapper, Spinner, Message } from './styles';
 // ...existing code...
 
- 
+
 
 import CreateQuiz from "@/entities/Quiz/Teacher/CreateQuiz";
 import WaitingRoom from "@/entities/Quiz/Teacher/WaitingRoom";
@@ -81,8 +81,6 @@ export default function TCHQuiz() {
                 console.log("[TCH Quiz] Setting roomCode and moving to waiting");
                 setRoomCode(msg.roomCode);
 
-                setIsCreatingRoom(false);
-
                 // 서버에서 받은 실제 문제 개수로 업데이트
                 if (msg.questionCount) {
                     console.log("[TCH Quiz] 📊 서버 응답 문제 개수로 업데이트:", msg.questionCount);
@@ -92,6 +90,7 @@ export default function TCHQuiz() {
                         questionCount: msg.questionCount!
                     }));
                 }
+                setIsCreatingRoom(false);
 
                 setStep("waiting");
             } else {
@@ -180,7 +179,11 @@ export default function TCHQuiz() {
         };
     }, [roomCode, subscribe, connected]);
 
+    // Debug logging
+    console.log("[TCH Quiz] 🔍 Render state:", { isCreatingRoom, step, connected });
+
     if (isCreatingRoom) {
+        console.log("[TCH Quiz] 🚀 Rendering loading screen (early return)");
         return (
             <PageOverlay>
                 <PageSpinnerWrapper>
@@ -249,7 +252,9 @@ export default function TCHQuiz() {
                         console.log("[TCH Quiz] 📤 서버로 전송할 payload:", payload);
 
                         // server expects connect to /ws-quiz then app destination /app/quiz/create
+                        console.log("[TCH Quiz] 🔧 Setting isCreatingRoom to TRUE");
                         setIsCreatingRoom(true);
+                        console.log("[TCH Quiz] 📨 Sending create request...");
                         send("/app/quiz/create", payload);
                     }}
                 />
