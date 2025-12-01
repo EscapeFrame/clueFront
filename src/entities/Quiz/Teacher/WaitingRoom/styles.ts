@@ -72,10 +72,10 @@ export const Member = styled.div<{ bgColor: string; borderColor: string }>`
   margin: 8px;
   background-color: ${(p) => p.bgColor};
   border: 1.5px solid ${(p) => p.borderColor};
-  padding: 10px 14px;
+  padding: 16px 20px;
   border-radius: 12px;
   white-space: nowrap;
-  ${fonts.P2};
+  ${fonts.P3};
   gap: 10px;
 `;
 
@@ -86,7 +86,7 @@ export const MemberImageBox = styled.div`
 
   img {
     width: auto;
-    height: 50px;
+    height: 64px;
     display: block;
   }
 `;
@@ -122,7 +122,7 @@ export const SubTitle = styled.h2`
 `;
 
 export const SubTitle2 = styled.h2`
-  ${fonts.P2};
+  ${fonts.P3};
   color: ${colors.white};
   margin: 0px;
   padding: 0px;
@@ -173,7 +173,8 @@ export const Button = styled.button`
 export const SubmitButton = styled.button`
   margin-top: 1rem;
   padding: 0.8rem;
-  ${fonts.P2};
+  ${fonts.P3};
+  margin-top: auto;
   color: ${colors.white};
   background: ${colors.primary};
   border: none;
