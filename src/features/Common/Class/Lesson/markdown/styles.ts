@@ -31,6 +31,9 @@ export const ViewerContainer = styled.div`
 
 export const ViewerHeader = styled.div`
   margin-bottom: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   h1 {
     font-size: 28px;
@@ -39,6 +42,7 @@ export const ViewerHeader = styled.div`
     margin: 0;
     border-bottom: 2px solid ${colors.gray[3]};
     padding-bottom: 12px;
+    flex: 1;
   }
 `;
 

@@ -1,6 +1,30 @@
 import styled from "@emotion/styled";
 import { colors } from "@/shared/theme/theme.styles";
 import { fonts } from "@/shared/theme/font.styles";
+import { keyframes } from "@emotion/react";
+
+// 애니메이션 정의
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+export { spin, slideIn };
 
 export const Container = styled.div`
   display: flex;
@@ -20,6 +44,27 @@ export const Container = styled.div`
 
   &.no-top-offset {
     --app-top-offset: 0px;
+  }
+  
+  /* 애니메이션을 전역으로 적용 */
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 `;
 
