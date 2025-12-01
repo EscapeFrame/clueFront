@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useQuizSocket from "@/app/hooks/useQuizSocket";
-import { Overlay, ModalBox, Spinner, Message } from './styles';
+import { PageOverlay, PageSpinnerWrapper, Spinner, Message } from './styles';
+// ...existing code...
 
  
 
@@ -243,15 +244,15 @@ export default function TCHQuiz() {
                 />
             )}
 
-            {/* 방 생성 요청 대기 로딩 오버레이 */}
-                        {isCreatingRoom && (
-                                <Overlay>
-                                        <ModalBox>
-                                                <Spinner />
-                                                <Message>방을 생성중입니다... 잠시만 기다려주세요.</Message>
-                                        </ModalBox>
-                                </Overlay>
-                        )}
+            {/* 방 생성 요청 대기 - 전체 페이지 로딩 표시 */}
+            {isCreatingRoom && (
+                <PageOverlay>
+                    <PageSpinnerWrapper>
+                        <Spinner />
+                    </PageSpinnerWrapper>
+                    <Message>방을 생성중입니다... <br />잠시만 기다려주세요.</Message>
+                </PageOverlay>
+            )}
 
             {/* 대기실 */}
             {connected && step === "waiting" && (
