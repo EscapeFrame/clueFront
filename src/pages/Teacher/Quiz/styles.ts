@@ -1,25 +1,5 @@
 import styled from 'styled-components';
-
-export const Overlay = styled.div`
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.35);
-  z-index: 9999;
-`;
-
-export const ModalBox = styled.div`
-  background: white;
-  padding: 24px 28px;
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-`;
+import { gray } from '@/shared/theme/theme.styles';
 
 export const Spinner = styled.div`
   width: 64px;
@@ -58,5 +38,24 @@ export const Spinner = styled.div`
 
 export const Message = styled.div`
   font-size: 16px;
-  color: #6b7280; /* 회색 텍스트 */
+  text-align: center;
+  color: ${gray[600]};
+`;
+
+export const PageOverlay = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1.5rem;
+  height: calc(125vh - 60px);
+`;
+
+export const PageSpinnerWrapper = styled.div`
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
