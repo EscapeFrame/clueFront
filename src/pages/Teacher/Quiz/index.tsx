@@ -180,6 +180,18 @@ export default function TCHQuiz() {
         };
     }, [roomCode, subscribe, connected]);
 
+    // If creating room, render only the full-page loading to avoid underlying UI staying visible
+    if (isCreatingRoom) {
+        return (
+            <PageOverlay>
+                <PageSpinnerWrapper>
+                    <Spinner />
+                </PageSpinnerWrapper>
+                <Message>방을 생성중입니다... <br />잠시만 기다려주세요.</Message>
+            </PageOverlay>
+        );
+    }
+
     return (
         <>
             {/* WebSocket 연결 대기 중 */}
