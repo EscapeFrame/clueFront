@@ -61,10 +61,6 @@ export const deleteDirectory = async (directoryId: string): Promise<boolean> => 
 };
 
 export const deleteDocument = async (documentId: string): Promise<boolean> => {
-  const res = await Customapi.delete(`/api/document`, {
-    data: {
-      documentId: documentId,
-    },
-  });
+  const res = await Customapi.delete(`/api/document/${documentId}`);
   return res.status === 200;
 };
