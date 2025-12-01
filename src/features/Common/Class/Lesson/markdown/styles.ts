@@ -24,7 +24,7 @@ export const ViewerContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
   border-radius: 12px;
-  padding: 40px 60px;
+  padding: 40px 140px 40px 60px;
   height: fit-content;
   min-height: 100%;
 `;
