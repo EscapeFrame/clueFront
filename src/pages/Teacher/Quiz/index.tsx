@@ -147,6 +147,8 @@ export default function TCHQuiz() {
                             correctAnswer: msg.correctAnswer,
                         } as Question);
                         setAnswerReveal(null);
+                        // first question arrived, hide loading overlay if shown
+                        setIsCreatingRoom(false);
                         setStep("question");
                     }
                     // 정답 공개
@@ -272,6 +274,10 @@ export default function TCHQuiz() {
 
                         // send create room via websocket if available
                         if (!send || !connected) {
+                            // show loading overlay while server prepares first question
+                            console.log("[TCH Quiz] 🔧 Setting isCreatingRoom to TRUE for start");
+                            setIsCreatingRoom(true);
+
                             alert("퀴즈 서버 연결이 끊어졌습니다. 페이지를 새로고침해주세요.");
                             return;
                         }
