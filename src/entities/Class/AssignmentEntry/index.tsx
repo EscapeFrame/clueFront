@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as s from './styles';
 import { FaSearch } from 'react-icons/fa';
 import { DetailAssignmentStudent, AssignmentFile } from '@/shared/types/Class/Assignment/Attachment';
-import { getCheckStudent, getStudentSubmissionDetail } from '@/entities/Class/api';
+import { getCheckStudent, getStudentSubmissionDetail, downloadSubmissionAttachment } from '@/entities/Class/api';
 import { IoClose } from 'react-icons/io5';
 import Button from '@/entities/UI/Button';
-import Customapi from '@/shared/config/api';
+// ...existing code...
 import { AxiosError } from 'axios';
 
 // Local types for handling submission attachments
@@ -286,30 +286,32 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                           if (file.type === 'FILE') {
                             try {
                               console.log('전체 다운로드 시작:', file.submissionAttachmentId);
-                              const response = await Customapi.get(
-                                `/api/submissions/${file.submissionAttachmentId}/download`,
-                                { responseType: 'blob' }
-                              );
-                              
-                              // 파일명 추출
-                              const contentDisposition = response.headers['content-disposition'];
-                              let filename = file.fileName || 'download';
-                              if (contentDisposition) {
-                                const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
-                                if (match) filename = decodeURIComponent(match[1] || match[2]);
+                              const result = await downloadSubmissionAttachment(file.submissionAttachmentId);
+                              if (!result) {
+                                console.error('전체 다운로드: 파일 응답이 없습니다.', file.submissionAttachmentId);
+                                continue;
                               }
-                              
-                              // 다운로드
-                              const blob = new Blob([response.data]);
-                              const url = window.URL.createObjectURL(blob);
-                              const a = document.createElement('a');
-                              a.href = url;
-                              a.download = filename;
-                              document.body.appendChild(a);
-                              a.click();
-                              a.remove();
-                              window.URL.revokeObjectURL(url);
-                              console.log('파일 다운로드 완료:', filename);
+
+                              if ('url' in result && result.url) {
+                                // 서버가 직접 링크를 준 경우 새 탭으로 열기
+                                window.open(result.url, '_blank');
+                                continue;
+                              }
+
+                              if ('blob' in result && result.blob) {
+                                const filename = result.filename || file.fileName || 'download';
+                                const blob = result.blob;
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                window.URL.revokeObjectURL(url);
+                                console.log('파일 다운로드 완료:', filename);
+                                continue;
+                              }
                             } catch (error) {
                               const axiosError = error as AxiosError;
                               console.error('전체 다운로드 중 실패:', {
@@ -349,32 +351,31 @@ export const AssignmentEntry: React.FC<AssignmentEntryProps> = ({ assignmentId }
                             <Button type={2} width="90px" onClick={async () => {
                               try {
                                 console.log('개별 다운로드 시작:', file.submissionAttachmentId);
-                                const response = await Customapi.get(
-                                  `/api/submissions/${file.submissionAttachmentId}/download`,
-                                  { responseType: 'blob' }
-                                );
-                                
-                                console.log('다운로드 성공:', response.status, response.headers);
-                                
-                                // 파일명 추출
-                                const contentDisposition = response.headers['content-disposition'];
-                                let filename = file.fileName || 'download';
-                                if (contentDisposition) {
-                                  const match = contentDisposition.match(/filename\*=UTF-8''(.+)|filename="?([^";]+)"?/);
-                                  if (match) filename = decodeURIComponent(match[1] || match[2]);
+                                const result = await downloadSubmissionAttachment(file.submissionAttachmentId);
+                                if (!result) {
+                                  alert('파일을 다운로드할 수 없습니다. (응답 없음)');
+                                  return;
                                 }
-                                
-                                // 다운로드
-                                const blob = new Blob([response.data]);
-                                const url = window.URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = filename;
-                                document.body.appendChild(a);
-                                a.click();
-                                a.remove();
-                                window.URL.revokeObjectURL(url);
-                                console.log('파일 다운로드 완료:', filename);
+
+                                if ('url' in result && result.url) {
+                                  window.open(result.url, '_blank');
+                                  return;
+                                }
+
+                                if ('blob' in result && result.blob) {
+                                  const filename = result.filename || file.fileName || 'download';
+                                  const blob = result.blob;
+                                  const url = window.URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = filename;
+                                  document.body.appendChild(a);
+                                  a.click();
+                                  a.remove();
+                                  window.URL.revokeObjectURL(url);
+                                  console.log('파일 다운로드 완료:', filename);
+                                  return;
+                                }
                               } catch (error) {
                                 const axiosError = error as AxiosError;
                                 console.error('파일 다운로드 실패:', {
