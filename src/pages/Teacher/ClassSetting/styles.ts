@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
   padding: 2rem 30rem;
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     padding: 2rem 5rem;
   }
 `;
