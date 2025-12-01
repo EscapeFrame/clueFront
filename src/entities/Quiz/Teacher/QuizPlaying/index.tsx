@@ -23,7 +23,7 @@ const npcColors: Record<CharacterKey, { bg: string; border: string }> = {
     koala: { bg: colors.npc.koala[0], border: colors.npc.koala[1] },
 };
 
-const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "ferret", "koala"];
+const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "I", "koala"];
 
 type Props = {
     question: Question;

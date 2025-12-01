@@ -76,7 +76,7 @@ export default function Solving({
                 {question.type === "multiple" && (
                     <MultipleOptions
                         options={question.options}
-                        optionKeys={OPTION_KEYS.slice() as ("haeyul" | "panda" | "ferret" | "koala")[]}
+                        optionKeys={OPTION_KEYS.slice() as ("haeyul" | "panda" | "I" | "koala")[]}
                         onSelect={(i) => onSubmitAnswer(i)}
                     />
                 )}

@@ -18,7 +18,7 @@ const npcColors: Record<CharacterKey, { bg: string; border: string }> = {
     koala: { bg: colors.npc.koala[0], border: colors.npc.koala[1] },
 };
 
-const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "ferret", "koala"];
+const OPTION_KEYS: CharacterKey[] = ["haeyul", "panda", "I", "koala"];
 
 export default function MultipleOptions({ options, optionKeys, onSelect }: OptionProps) {
     const [selected, setSelected] = useState<number | null>(null);
