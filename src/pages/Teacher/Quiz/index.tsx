@@ -356,7 +356,6 @@ export default function TCHQuiz() {
                         // 정답 공개 요청 (통계 포함)
                         send(`/app/quiz/reveal-answer/${roomCode}`, {});
                     }}
-                    totalStudents={participants.length}
                     currentQuestionNumber={currentQuestion.questionNumber}
                     totalQuestions={totalQuestions}
                     timePerQuestion={quizSettings.timePerQuestion}
