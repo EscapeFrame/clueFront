@@ -30,7 +30,7 @@ export default function CreateQuiz({ onCreate }: CreateQuizProps) {
                     <s.Explanation>학생들이 참여할 퀴즈를 만들어보세요</s.Explanation>
                 </s.Header>
 
-                <s.Input
+                <s.TitleInput
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="퀴즈명을 입력하세요."

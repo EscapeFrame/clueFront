@@ -69,12 +69,27 @@ export const SubExplantion = styled.p`
   line-height: 1.2;
 `;
 
-export const Input = styled.input`
-    width: 100%;
+export const TitleInput = styled.input`
+    width: auto;
     border: 1.5px solid ${colors.gray[3]};
     border-radius: 10px;
     padding: 12px 14px;
     ${fonts.P3};
+
+    &:focus {
+        outline: none;
+        border-color: ${colors.primary};
+        box-shadow: 0 0 0 3px rgba(76, 110, 245, 0.15);
+    }
+`;
+
+export const Input = styled.input`
+    width: auto;
+    border: 1.5px solid ${colors.gray[3]};
+    border-radius: 10px;
+    padding: 12px 14px;
+    ${fonts.P3};
+    text-align: right;
 
     &:focus {
         outline: none;
