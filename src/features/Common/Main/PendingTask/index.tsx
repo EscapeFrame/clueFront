@@ -49,23 +49,29 @@ export default function PendingTask(): React.ReactNode {
   <s.Title>{isTeacher ? '나의 과제' : '미제출 과제'}</s.Title>
   <s.Explain>{isTeacher ? '내가 만든 과제 목록입니다.' : '기간 안에 과제를 제출하세요!'}</s.Explain>
       <s.CardContainer>
-        {tasks.map((post: PendingTaskItem, index: number) => {
-          if (!post.endDate) return null;
-          const endDate = dayjs(post.endDate);
-          const daysLeft = endDate.diff(today, 'day'); // 남은 일수 계산
+        {(() => {
+          type Mapped = { original: PendingTaskItem; daysLeft: number; endDate: dayjs.Dayjs };
+          const mapped: Array<Mapped> = tasks
+            .map((post: PendingTaskItem) => {
+              if (!post.endDate) return null;
+              const endDate = dayjs(post.endDate);
+              const daysLeft = endDate.diff(today, 'day');
+              return { original: post, daysLeft, endDate } as Mapped;
+            })
+            .filter((it): it is Mapped => it !== null && it !== undefined)
+            .filter((it) => !it.endDate.isBefore(today, 'day'));
 
-          if (endDate.isBefore(today, 'day')) return null; // 마감일이 오늘 이전인 경우 제외
+          mapped.sort((a, b) => a.daysLeft - b.daysLeft);
 
-          console.log('Rendering task:', post.title, 'End Date:', post.endDate, 'Days Left:', daysLeft);
-          return (
+          return mapped.map((item, index) => (
             <DdayCard
-              key={post.title || index}
-              dDay={daysLeft} // 예시: D-3
-              url={post.available ? post.link : ''}
-              title={post.title}
+              key={item.original.title || index}
+              dDay={item.daysLeft}
+              url={item.original.available ? item.original.link : ''}
+              title={item.original.title}
             />
-          );
-        })}
+          ));
+        })()}
       </s.CardContainer>
     </s.Container>
   );

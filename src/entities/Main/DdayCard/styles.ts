@@ -72,7 +72,7 @@ export const DDayText = styled.div<{ isUrgent: boolean }>`
   color: ${({ isUrgent }) =>
     isUrgent ? colors.red[3] : colors.blue.dep1};
   background-color: ${({ isUrgent }) =>
-    isUrgent ? colors.red[2] : colors.blue.light2};
+    isUrgent ? colors.red[1] : colors.blue.light2};
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   display: inline-block;
