@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import QuizBattleService from '../services/QuizBattleService';
 import type {
   ParticipantInfo,
@@ -52,40 +52,7 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [revealedAnswer, setRevealedAnswer] = useState<AnswerRevealMessage | null>(null);
 
-  useEffect(() => {
-    // WebSocket 연결 (token은 QuizBattleService가 자동으로 localStorage에서 가져옴)
-    QuizBattleService.connect(
-      token,
-      () => {
-        console.log('[QuizBattleRoom] Connected successfully');
-        // 방 참가
-        joinRoom();
-      },
-      (error) => {
-        console.error('[QuizBattleRoom] Connection error:', error);
-        const errorMessage = error?.message || '알 수 없는 오류';
-        alert('WebSocket 연결 실패: ' + errorMessage);
-      }
-    );
-
-    return () => {
-      // 컴포넌트 언마운트 시 방 나가기
-      QuizBattleService.leaveRoom(roomCode);
-      QuizBattleService.disconnect();
-    };
-  }, [roomCode]);
-
-  // 타이머 관리
-  useEffect(() => {
-    if (currentQuestion && timeLeft > 0 && gameStatus === 'playing') {
-      const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft, currentQuestion, gameStatus]);
-
-  const joinRoom = () => {
+  const joinRoom = useCallback(() => {
     QuizBattleService.joinRoom(roomCode, {
       // 참가자 업데이트
       onParticipantUpdate: (response) => {
@@ -187,17 +154,50 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
         alert('오류: ' + (error.message || '알 수 없는 오류'));
       },
     });
-  };
+  }, [onLeaveRoom, roomCode]);
 
-  const handleStartQuiz = () => {
+  useEffect(() => {
+    // WebSocket 연결 (token은 QuizBattleService가 자동으로 localStorage에서 가져옴)
+    QuizBattleService.connect(
+      token,
+      () => {
+        console.log('[QuizBattleRoom] Connected successfully');
+        // 방 참가
+        joinRoom();
+      },
+      (error) => {
+        console.error('[QuizBattleRoom] Connection error:', error);
+        const errorMessage = error?.message || '알 수 없는 오류';
+        alert('WebSocket 연결 실패: ' + errorMessage);
+      }
+    );
+
+    return () => {
+      // 컴포넌트 언마운트 시 방 나가기
+      QuizBattleService.leaveRoom(roomCode);
+      QuizBattleService.disconnect();
+    };
+  }, [joinRoom, roomCode, token]);
+
+  // 타이머 관리
+  useEffect(() => {
+    if (currentQuestion && timeLeft > 0 && gameStatus === 'playing') {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [timeLeft, currentQuestion, gameStatus]);
+
+  const handleStartQuiz = useCallback(() => {
     if (!isHost) {
       alert('호스트만 퀴즈를 시작할 수 있습니다.');
       return;
     }
     QuizBattleService.startQuiz(roomCode);
-  };
+  }, [isHost, roomCode]);
 
-  const handleSubmitAnswer = (answerIndex: number) => {
+  const handleSubmitAnswer = useCallback((answerIndex: number) => {
     if (!currentQuestion || answerResult !== null) return;
 
     // 새 명세서: timeSpent는 밀리초(ms) 단위
@@ -211,23 +211,23 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
       submittedAt: Date.now(), // epoch ms
       timeSpent: timeSpent, // 밀리초 (ms)
     });
-  };
+  }, [answerResult, currentQuestion, questionStartTime, roomCode]);
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = useCallback(() => {
     if (!isHost) {
       alert('호스트만 다음 문제로 넘어갈 수 있습니다.');
       return;
     }
     QuizBattleService.nextQuestion(roomCode);
-  };
+  }, [isHost, roomCode]);
 
-  const handleGetRankings = () => {
+  const handleGetRankings = useCallback(() => {
     QuizBattleService.getRankings(roomCode, (response) => {
       if (response.status === 'success' && response.rankings) {
         setRankings(response.rankings);
       }
     });
-  };
+  }, [roomCode]);
 
   const handleCancelRoom = () => {
     if (!isHost) {
@@ -258,8 +258,8 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
       <ParticipantsSection>
         <h2>참가자 ({participants.length}명)</h2>
         <ParticipantsList>
-          {participants.map((p, idx) => (
-            <ParticipantItem key={idx}>
+          {participants.map((p) => (
+            <ParticipantItem key={p.userId}>
               {p.username} {p.isHost ? '👑' : ''} - {p.score}점
             </ParticipantItem>
           ))}
@@ -364,8 +364,8 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
           <h2>🎉 퀴즈 종료!</h2>
           <h3>최종 순위</h3>
           <RankingsList>
-            {rankings.map((ranking, idx) => (
-              <RankingItem key={idx} rank={idx + 1}>
+             {rankings.map((ranking, idx) => (
+               <RankingItem key={ranking.userId} rank={idx + 1}>
                 <span className="rank">
                   {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}위`}
                 </span>
@@ -386,8 +386,8 @@ const QuizBattleRoom: React.FC<QuizBattleRoomProps> = ({
         <ParticipantsSection>
           <h3>현재 순위</h3>
           <RankingsList>
-            {rankings.map((ranking, idx) => (
-              <RankingItem key={idx} rank={idx + 1}>
+             {rankings.map((ranking, idx) => (
+               <RankingItem key={ranking.userId} rank={idx + 1}>
                 <span className="rank">{idx + 1}위</span>
                 <span className="username">{ranking.username}</span>
                 <span className="score">{ranking.totalScore}점</span>
