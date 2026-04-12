@@ -19,6 +19,7 @@ export const useAuth = (): AuthHook => {
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const justLoggedInRef = useRef(false);
+  const loginGraceTimerRef = useRef<number | null>(null);
 
   // 로그인 시 토큰 저장
   const setAuthInfo = useCallback((accessToken: string) => {
@@ -27,7 +28,10 @@ export const useAuth = (): AuthHook => {
     // mark that we just logged in to avoid immediate logout race
     justLoggedInRef.current = true;
     // give it a short grace period for other effects to settle
-    setTimeout(() => {
+    if (loginGraceTimerRef.current) {
+      window.clearTimeout(loginGraceTimerRef.current);
+    }
+    loginGraceTimerRef.current = window.setTimeout(() => {
       justLoggedInRef.current = false;
     }, 1500);
   }, []);
@@ -180,6 +184,14 @@ export const useAuth = (): AuthHook => {
 
     fetchUserInfo();
   }, [accessToken, setUser, removeAuthInfo]);
+
+  useEffect(() => {
+    return () => {
+      if (loginGraceTimerRef.current) {
+        window.clearTimeout(loginGraceTimerRef.current);
+      }
+    };
+  }, []);
 
   return { accessToken, user, setAuthInfo, removeAuthInfo, loading };
 };
