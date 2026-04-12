@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { memo, useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { IoClose } from "react-icons/io5";
@@ -14,6 +14,186 @@ import { deleteDirectory, deleteDocument, Directory as ApiDirectory } from '@/en
 import ToggleSwitch from '@/entities/UI/ToggleSwitch';
 
 // UI state: editingDocId, visibilityMap used below
+
+interface SubItemProps {
+  sub: SubDirectory;
+  dirId: string;
+  isTeacher: boolean;
+  isEditing: boolean;
+  vis: 'PRIVATE' | 'PUBLIC';
+  onDragStart: (e: React.DragEvent, parentDirId: string, docId: string) => void;
+  onDragEnd: () => void;
+  onNameDoubleClick: (e: React.MouseEvent, sub: SubDirectory) => void;
+  onNameClick: (e: React.MouseEvent, sub: SubDirectory) => void;
+  onTitleChange: (docId: string, newTitle: string) => void;
+  onTitleBlur: () => void;
+  onToggleVisibility: (docId: string) => void;
+  onDeleteDocument: (docId: string, e: React.MouseEvent) => void;
+}
+
+const SubItem = memo(({
+  sub,
+  dirId,
+  isTeacher,
+  isEditing,
+  vis,
+  onDragStart,
+  onDragEnd,
+  onNameDoubleClick,
+  onNameClick,
+  onTitleChange,
+  onTitleBlur,
+  onToggleVisibility,
+  onDeleteDocument,
+}: SubItemProps) => (
+  <s.SubItem
+    key={sub.id}
+    $isRead={sub.isRead}
+    draggable
+    onDragStart={(e) => onDragStart(e, dirId, sub.id)}
+    onDragEnd={onDragEnd}
+  >
+    <s.Check $isRead={sub.isRead} />
+
+    {isEditing ? (
+      <input
+        autoFocus={true}
+        style={{ width: 360, height: 36, fontSize: 14, padding: '6px 8px' }}
+        value={sub.name}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => onTitleChange(sub.id, e.target.value)}
+        onBlur={onTitleBlur}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            (e.target as HTMLInputElement).blur();
+          }
+        }}
+      />
+    ) : (
+      <s.Name
+        onDoubleClick={(e) => onNameDoubleClick(e, sub)}
+        onClick={(e) => onNameClick(e, sub)}
+      >
+        {sub.name}
+      </s.Name>
+    )}
+
+    {isTeacher && (
+      <>
+        <ToggleSwitch
+          id={`vis-${sub.id}`}
+          checked={vis === 'PUBLIC'}
+          onChange={() => { onToggleVisibility(sub.id); }}
+        />
+
+        <s.DeleteIcon onClick={(e) => { e.stopPropagation(); onDeleteDocument(sub.id, e); }}>
+          <IoClose size={18} />
+        </s.DeleteIcon>
+      </>
+    )}
+  </s.SubItem>
+));
+
+interface DirectoryItemProps {
+  dir: Directory;
+  isExpanded: boolean;
+  isTeacher: boolean;
+  editingDocId: string | null;
+  visibilityMap: Record<string, 'PRIVATE' | 'PUBLIC'>;
+  onDirectoryClick: (dir: Directory, isSubDirectory?: boolean) => void;
+  onDeleteDirectory: (dirId: string, e: React.MouseEvent) => void;
+  onAddSubClick: (dirId: string) => void;
+  onDragOver: (e: React.DragEvent) => void;
+  onDropToDir: (e: React.DragEvent, targetDirId: string) => void;
+  onSubDragStart: (e: React.DragEvent, parentDirId: string, docId: string) => void;
+  onSubDragEnd: () => void;
+  onNameDoubleClick: (e: React.MouseEvent, sub: SubDirectory) => void;
+  onNameClick: (e: React.MouseEvent, sub: SubDirectory) => void;
+  onTitleChange: (docId: string, newTitle: string) => void;
+  onTitleBlur: () => void;
+  onToggleVisibility: (docId: string) => void;
+  onDeleteDocument: (docId: string, e: React.MouseEvent) => void;
+}
+
+const DirectoryItem = memo(({
+  dir,
+  isExpanded,
+  isTeacher,
+  editingDocId,
+  visibilityMap,
+  onDirectoryClick,
+  onDeleteDirectory,
+  onAddSubClick,
+  onDragOver,
+  onDropToDir,
+  onSubDragStart,
+  onSubDragEnd,
+  onNameDoubleClick,
+  onNameClick,
+  onTitleChange,
+  onTitleBlur,
+  onToggleVisibility,
+  onDeleteDocument,
+}: DirectoryItemProps) => {
+  const readCount = dir.directoryList?.filter(d => d.isRead).length ?? 0;
+  const totalCount = dir.directoryList?.length ?? 0;
+  const progress = totalCount > 0 ? (readCount / totalCount) * 100 : 0;
+
+  return (
+    <s.DirectoryWrapper key={dir.id}>
+      <s.Item $isRead={dir.isRead} onClick={() => onDirectoryClick(dir)}>
+        <s.Left>
+          <s.Name>{dir.name}</s.Name>
+          <s.Progress>{readCount}/{totalCount}</s.Progress>
+        </s.Left>
+        <s.Right>
+          {isTeacher && (
+            <>
+              <s.DeleteIcon onClick={(e) => { e.stopPropagation(); onDeleteDirectory(dir.id, e); }}>
+                <IoClose size={18} />
+              </s.DeleteIcon>
+              <s.AddSub onClick={(e) => {
+                e.stopPropagation();
+                onAddSubClick(dir.id);
+              }}>+</s.AddSub>
+            </>
+          )}
+          <s.Icon>{isExpanded ? <IoIosArrowUp /> : <IoIosArrowDown />}</s.Icon>
+        </s.Right>
+      </s.Item>
+
+      <s.ProgressBarWrapper>
+        <s.ProgressBar $progress={progress} />
+        <s.ProgressText>{Math.round(progress)}%</s.ProgressText>
+      </s.ProgressBarWrapper>
+
+      <s.SubDirectoryList
+        $isExpanded={isExpanded}
+        onDragOver={onDragOver}
+        onDrop={(e) => onDropToDir(e, dir.id)}
+      >
+        {dir.directoryList?.map((sub) => (
+          <SubItem
+            key={sub.id}
+            sub={sub}
+            dirId={dir.id}
+            isTeacher={isTeacher}
+            isEditing={editingDocId === sub.id}
+            vis={visibilityMap[sub.id] ?? 'PUBLIC'}
+            onDragStart={onSubDragStart}
+            onDragEnd={onSubDragEnd}
+            onNameDoubleClick={onNameDoubleClick}
+            onNameClick={onNameClick}
+            onTitleChange={onTitleChange}
+            onTitleBlur={onTitleBlur}
+            onToggleVisibility={onToggleVisibility}
+            onDeleteDocument={onDeleteDocument}
+          />
+        ))}
+      </s.SubDirectoryList>
+    </s.DirectoryWrapper>
+  );
+});
 
 const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
   const navigate = useNavigate();
@@ -176,7 +356,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDropToDir = (e: React.DragEvent, targetDirId: string) => {
+  const handleDropToDir = useCallback((e: React.DragEvent, targetDirId: string) => {
     e.preventDefault();
     const src = dragSource.current;
     if (!src) return;
@@ -209,7 +389,7 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       return copy;
     });
     dragSource.current = null;
-  };
+  }, [visibilityMap]);
   // Drag & Drop: end
 
   const handleCodeSelect = () => {
@@ -294,10 +474,10 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
 
   // inline title edit handled via handleNameDoubleClick
 
-  const handleTitleChange = (docId: string, newTitle: string) => {
+  const handleTitleChange = useCallback((docId: string, newTitle: string) => {
   // only update UI locally while editing; do NOT enqueue PATCH for every keystroke
   setDirectories(prev => prev.map(d => ({ ...d, directoryList: d.directoryList?.map(sd => sd.id === docId ? { ...sd, name: newTitle } : sd) })));
-  };
+  }, []);
 
   const handleTitleBlur = () => {
     // when editing ends, send a single PATCH with full payload (directoryId, isPrivate, title)
@@ -395,6 +575,14 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     }
   };
 
+  const handleAddSubClick = (dirId: string) => {
+    if (isAIFlowMode) {
+      navigate(`${dirId}/make/lesson/MakeClassMaterials`);
+      return;
+    }
+    navigate(`${dirId}/make/lesson`);
+  };
+
   return (
     <s.Container>
       {isTeacher && (
@@ -413,98 +601,29 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
       )}
 
       <s.Section>
-        {directories.map((dir) => {
-          const isExpanded = expandedIds.has(dir.id);
-          const readCount = dir.directoryList?.filter(d => d.isRead).length ?? 0;
-          const totalCount = dir.directoryList?.length ?? 0;
-          const progress = totalCount > 0 ? (readCount / totalCount) * 100 : 0;
-
-          return (
-            <s.DirectoryWrapper key={dir.id}>
-              <s.Item $isRead={dir.isRead} onClick={() => handleDirectoryClick(dir)}>
-                <s.Left>
-                  <s.Name>{dir.name}</s.Name>
-                  <s.Progress>{readCount}/{totalCount}</s.Progress>
-                </s.Left>
-                <s.Right>
-                  {isTeacher && (
-                    <>
-                      <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDirectory(dir.id, e); }}>
-                        <IoClose size={18} />
-                      </s.DeleteIcon>
-                      <s.AddSub onClick={(e) => { 
-                        e.stopPropagation(); 
-                        if (isAIFlowMode) {
-                          navigate(`${dir.id}/make/lesson/MakeClassMaterials`);
-                        } else {
-                          navigate(`${dir.id}/make/lesson`);
-                        }
-                      }}>+</s.AddSub>
-                    </>
-                  )}
-                  <s.Icon>{isExpanded ? <IoIosArrowUp /> : <IoIosArrowDown />}</s.Icon>
-                </s.Right>
-              </s.Item>
-
-              <s.ProgressBarWrapper>
-                <s.ProgressBar $progress={progress} />
-                <s.ProgressText>{Math.round(progress)}%</s.ProgressText>
-              </s.ProgressBarWrapper>
-
-              <s.SubDirectoryList $isExpanded={isExpanded}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDropToDir(e, dir.id)}
-              >
-                {dir.directoryList?.map(sub => {
-                  const vis = visibilityMap[sub.id] ?? 'PUBLIC';
-                  const isEditing = editingDocId === sub.id;
-                  return (
-                    <s.SubItem key={sub.id} $isRead={sub.isRead}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, dir.id, sub.id)}
-                      onDragEnd={handleDragEnd}
-                    >
-                      <s.Check $isRead={sub.isRead} />
-
-                      { isEditing ? (
-                        <input
-                          autoFocus={true}
-                          style={{ width: 360, height: 36, fontSize: 14, padding: '6px 8px' }}
-                          value={sub.name}
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => handleTitleChange(sub.id, e.target.value)}
-                          onBlur={() => handleTitleBlur()}
-                          onKeyDown={(e) => { if (e.key === 'Enter') { (e.target as HTMLInputElement).blur(); } }}
-                        />
-                      ) : (
-                        <s.Name
-                          onDoubleClick={(e) => handleNameDoubleClick(e, sub)}
-                          onClick={(e) => handleNameClick(e, sub)}
-                        >
-                          {sub.name}
-                        </s.Name>
-                      )}
-
-                      {isTeacher && (
-                        <>
-                          <ToggleSwitch
-                            id={`vis-${sub.id}`}
-                            checked={vis === 'PUBLIC'}
-                            onChange={() => { toggleVisibility(sub.id); }}
-                          />
-
-                          <s.DeleteIcon onClick={(e) => { e.stopPropagation(); handleDeleteDocument(sub.id, e); }}>
-                            <IoClose size={18} />
-                          </s.DeleteIcon>
-                        </>
-                      )}
-                    </s.SubItem>
-                  );
-                })}
-              </s.SubDirectoryList>
-            </s.DirectoryWrapper>
-          );
-        })}
+        {directories.map((dir) => (
+          <DirectoryItem
+            key={dir.id}
+            dir={dir}
+            isExpanded={expandedIds.has(dir.id)}
+            isTeacher={isTeacher}
+            editingDocId={editingDocId}
+            visibilityMap={visibilityMap}
+            onDirectoryClick={handleDirectoryClick}
+            onDeleteDirectory={handleDeleteDirectory}
+            onAddSubClick={handleAddSubClick}
+            onDragOver={handleDragOver}
+            onDropToDir={handleDropToDir}
+            onSubDragStart={handleDragStart}
+            onSubDragEnd={handleDragEnd}
+            onNameDoubleClick={handleNameDoubleClick}
+            onNameClick={handleNameClick}
+            onTitleChange={handleTitleChange}
+            onTitleBlur={handleTitleBlur}
+            onToggleVisibility={toggleVisibility}
+            onDeleteDocument={handleDeleteDocument}
+          />
+        ))}
       </s.Section>
       {/* 선생님만 디렉토리 추가 가능: 인라인으로 DirectorySelect 사용 */}
       {isTeacher && !isAIFlowMode && (
