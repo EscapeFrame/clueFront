@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import myImage from '../../../public/sample.png';
+import myImage from '@/assets/images/sample.webp';
 import * as s from './styles';
 import { GoBug } from "react-icons/go";
 import { MdOutlineLogout } from "react-icons/md";

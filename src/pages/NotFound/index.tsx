@@ -1,5 +1,6 @@
 import * as s from './styles';
 import { useLocation, useNavigate } from 'react-router-dom';
+import notFoundImage from '@/assets/images/notFound.svg';
 
 export default function NotFound() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function NotFound() {
           </s.Retry>
         </s.ButtonContainer>
       </div>
-      <s.Image src="/NotFound.png" alt="error" />
+      <s.Image src={notFoundImage} alt="error" />
     </s.Container>
   );
 }
