@@ -1,34 +1,39 @@
 /** @jsxImportSource @emotion/react */
+import { memo, useCallback } from 'react';
 import * as s from './styles';
 import Dropdown from '@/widgets/UserMenu/index';
 import clueLogo from '../../../public/clueLogo.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/hooks/useAccessToken'; // Import useAuth hook
 
-export default function Navbar() {
+function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth(); // Get user from useAuth hook
 
   // CLUE 메인 페이지로 이동
-  const Main = () => {
+  const Main = useCallback(() => {
     navigate("/"); // CLUE 메인 페이지 경로로 이동
-  };
+  }, [navigate]);
 
   // LinkSave 메인 페이지로 이동
-  const LinkSave = () => {
+  const LinkSave = useCallback(() => {
     navigate("/linksave"); // LinkSave 메인 페이지 경로로 이동
-  };
+  }, [navigate]);
 
   const isLinkSavePage = location.pathname.startsWith('/linksave');
 
-  const handleLinkSaveClick = () => {
+  const handleLinkSaveClick = useCallback(() => {
     if (isLinkSavePage) {
       Main(); // 현재 페이지가 /linksave라면 CLUE 메인 페이지로 이동
     } else {
       LinkSave(); // 그렇지 않으면 LinkSave 메인 페이지로 이동
     }
-  };
+  }, [isLinkSavePage, LinkSave, Main]);
+
+  const handleQuizNavigate = useCallback(() => {
+    navigate('/quiz');
+  }, [navigate]);
 
   const formatStudentNumber = (grade?: number, classNo?: number, number?: number): string => {
     if (grade === undefined || classNo === undefined || number === undefined) {
@@ -73,7 +78,7 @@ export default function Navbar() {
             </>
             {user.role !== 'TEACHER' && (
               <li>
-                <s.NavItem onClick={() => navigate('/quiz')}>
+                <s.NavItem onClick={handleQuizNavigate}>
                   퀴즈
                 </s.NavItem>
               </li>
@@ -96,3 +101,5 @@ export default function Navbar() {
     </s.NavbarWrapper>
   );
 }
+
+export default memo(Navbar);
