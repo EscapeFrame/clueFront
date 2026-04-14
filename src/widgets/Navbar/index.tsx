@@ -2,7 +2,7 @@
 import { memo, useCallback } from 'react';
 import * as s from './styles';
 import Dropdown from '@/widgets/UserMenu/index';
-import clueLogo from '../../../public/clueLogo.png';
+import clueLogo from '@/assets/images/clueLogo.webp';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/hooks/useAccessToken'; // Import useAuth hook
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Image from '@/../public/registerImg.png';
+import Image from '@/assets/images/registerImg.webp';
 import Customapi from '@/shared/config/api';
 import * as s from './styles';
 

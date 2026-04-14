@@ -3,7 +3,7 @@ import { userState } from '@/shared/model/userState';
 import { useContext } from 'react';
 import { UserContext } from '@/entities/Context/LoginContext';
 import * as s from './Button.styles';
-import googleLogo from '../../../public/google.png';
+import googleLogo from '@/assets/images/google.webp';
 import Customapi from '@/shared/config/api';
 
 function LoginButton() {

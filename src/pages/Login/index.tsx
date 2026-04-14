@@ -1,7 +1,7 @@
 import LoginButton from "@/entities/Login/LoginButton"
 import * as S from './styles'
 import { useEffect, useRef } from "react";
-import Image from '@/../public/registerImg.png';
+import Image from '@/assets/images/registerImg.webp';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "@/app/hooks/useAccessToken";
 
