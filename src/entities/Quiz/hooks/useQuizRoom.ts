@@ -29,6 +29,8 @@ export const useQuizRoom = (
     queryKey: quizRoomKeys.detail(roomCode),
     queryFn: () => getQuizRoom(roomCode),
     enabled: !!roomCode,
+    staleTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
     ...options,
   });
 };
