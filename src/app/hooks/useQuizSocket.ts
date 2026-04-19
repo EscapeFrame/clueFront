@@ -41,6 +41,13 @@ export function useQuizSocket({
   const maxReconnectAttempts = 5;
   // stabilize autoSubscribe for effect dependencies
   const autoSubscribeString = useMemo(() => JSON.stringify(autoSubscribe), [autoSubscribe]);
+  // 부모 리렌더링 시 콜백 재생성으로 인한 WebSocket 재연결 방지
+  const onConnectRef = useRef(onConnect);
+  const onErrorRef = useRef(onError);
+  useEffect(() => {
+    onConnectRef.current = onConnect;
+    onErrorRef.current = onError;
+  });
   // 강제 리렌더링을 위한 카운터
   const [, forceUpdate] = useState(0);
 
@@ -269,7 +276,7 @@ export function useQuizSocket({
           pendingSendQueueRef.current = [];
         }
 
-        onConnect?.(frame);
+        onConnectRef.current?.(frame);
       },
 
       onStompError: (frame) => {
@@ -293,7 +300,7 @@ export function useQuizSocket({
           alert("인증에 실패했습니다. 다시 로그인해주세요.");
         }
 
-        onError?.(frame);
+        onErrorRef.current?.(frame);
       },
 
       onDisconnect: () => {
@@ -346,7 +353,7 @@ export function useQuizSocket({
       }
       clientRef.current = null;
     };
-  }, [onConnect, onError, autoSubscribeString]);
+  }, [autoSubscribeString]);
 
   const subscribe = useCallback(
     (
