@@ -45,7 +45,7 @@ function Navbar() {
     return `${grade}${formattedClassNo}${formattedNumber}`;
   };
 
-  const studentNumber = formatStudentNumber(user.grade, user.classNo, user.number);
+  const studentNumber = user.userId ? formatStudentNumber(user.grade, user.classNo, user.number) : '';
 
   return (
     <s.NavbarWrapper>
