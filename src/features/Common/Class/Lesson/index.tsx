@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '@/shared/model/userState';
 import DirectorySelect from '@/entities/Make/Lesson/directory/DirectorySelect';
 import { deleteDirectory, deleteDocument, Directory as ApiDirectory } from '@/entities/Make/api/useLesson';
+import Customapi from '@/shared/config/api';
 import ToggleSwitch from '@/entities/UI/ToggleSwitch';
 
 // UI state: editingDocId, visibilityMap used below
@@ -439,29 +440,20 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
     const entries = Object.entries(pendingPatch);
     if (entries.length === 0) return;
 
-    entries.forEach(async ([docId, payload]) => {
+    const patch = async (docId: string, payload: typeof entries[0][1]) => {
       if (!payload) return;
-      if (patchInFlight.current[docId]) return; // already sending
+      if (patchInFlight.current[docId]) return;
       patchInFlight.current[docId] = true;
-        try {
-          // Build body according to API shape
-          const body: Record<string, string> = {};
-          if (payload.directoryId !== undefined) body.directoryId = String(payload.directoryId);
-          if (payload.isPrivate !== undefined) body.isPrivate = String(payload.isPrivate);
-          if (payload.title !== undefined) body.title = String(payload.title);
+      try {
+        const body: Record<string, string> = {};
+        if (payload.directoryId !== undefined) body.directoryId = String(payload.directoryId);
+        if (payload.isPrivate !== undefined) body.isPrivate = String(payload.isPrivate);
+        if (payload.title !== undefined) body.title = String(payload.title);
 
-          const res = await fetch(`/api/document/${encodeURIComponent(docId)}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-          });
-        if (!res.ok) {
-          console.error('PATCH failed for document', docId, await res.text());
-        }
+        await Customapi.patch(`/api/document/${encodeURIComponent(docId)}`, body);
       } catch (err) {
         console.error('Error patching document', docId, err);
       } finally {
-        // mark done and remove pending for this doc
         patchInFlight.current[docId] = false;
         setPendingPatch(prev => {
           const copy = { ...prev };
@@ -469,7 +461,8 @@ const LessonComponent: React.FC<LessonProps> = ({ classRoomId }) => {
           return copy;
         });
       }
-    });
+    };
+    entries.forEach(([docId, payload]) => patch(docId, payload));
   }, [pendingPatch]);
 
   // inline title edit handled via handleNameDoubleClick

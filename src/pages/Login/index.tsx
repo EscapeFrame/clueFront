@@ -1,15 +1,17 @@
 import LoginButton from "@/entities/Login/LoginButton"
 import * as S from './styles'
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from '@/assets/images/registerImg.webp';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "@/app/hooks/useAccessToken";
 
 export function Login() {
-    const { setAuthInfo, user, loading } = useAuth();
+    const { setAuthInfo } = useAuth();
     const navigate = useNavigate();
+    const handledRef = useRef(false);
 
     useEffect(() => {
+        if (handledRef.current) return;
         const params = new URLSearchParams(window.location.search);
         const urlToken = params.get('access_token');
 
@@ -18,32 +20,23 @@ export function Login() {
             return;
         }
 
-        console.log("로그인 페이지: URL에서 Access Token을 발견했습니다. 인증 정보를 설정합니다. 사용자 정보 로딩 완료 시 메인으로 이동합니다.");
+        handledRef.current = true;
+        console.log("로그인 페이지: URL에서 Access Token을 발견했습니다.");
         setAuthInfo(urlToken);
 
         const start = Date.now();
-        let timeoutId: number | null = null;
-
+        let timeoutId: number;
         const checkAndNav = () => {
-            if ((user && user.userId) || !loading) {
+            if (localStorage.getItem('accessToken') || Date.now() - start > 3000) {
                 navigate('/', { replace: true });
                 return;
             }
-            if (Date.now() - start > 3000) {
-                navigate('/', { replace: true });
-                return;
-            }
-            timeoutId = window.setTimeout(checkAndNav, 200) as unknown as number;
+            timeoutId = window.setTimeout(checkAndNav, 200);
         };
         checkAndNav();
 
-        return () => {
-            if (timeoutId !== null) {
-                clearTimeout(timeoutId);
-            }
-        };
-    }, [setAuthInfo, navigate, user, loading]);
-
+        return () => clearTimeout(timeoutId);
+    }, [setAuthInfo, navigate]);
 
     return (
         <S.Container>
